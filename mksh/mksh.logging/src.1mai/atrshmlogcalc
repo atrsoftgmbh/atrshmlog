@@ -1,0 +1,377 @@
+#!/usr/bin/perl
+
+# statistics for atrshmlog
+
+# see entry  
+# 000000000003000001  hallo welt 10 times gettime
+# in the info txt and divide by 10...
+
+# hydra, p9600 , 6 mb cache, centrino core duo 2
+$timeoffset = 453; # nanos for a gettime
+
+# splited lines
+@slines = ();
+
+# splited index, per pid
+%per_pid = ();
+
+
+
+@deltas = ();
+
+%summ_events = ();
+
+%summ_events_user = ();
+
+%deltasummen = ();
+
+%deltasummenuser = ();
+
+# this is the mksh build 52b for db systel.
+# if you plan to make use of eventnames you have to collect these
+# frm the source you want to use
+%eventnames = (
+    #eval.c
+    100 => "eval : substitute : starttime",
+    101 => "eval : substitute : substitute input",
+    102 => "eval : substitute : result",
+    110 => "eval : eval : starttime",
+    111 => "eval : eval : result",
+    120 => "eval : evalstr : starttime",
+    121 => "eval : evalstr : endtime",
+    122 => "eval : evalstr : input end",
+    123 => "eval : evalstr : result",
+    130 => "eval : expand : starttime",
+    131 => "eval : expand : input end",
+
+    # exec
+
+    200 => "exec : execute : starttime",
+    202 => "exec : execute : executable prefix", # no more log, redundant to 204  278
+    204 => "exec : execute : command",
+    205 => "exec : execute : left parenthesis (",
+    206 => "exec : execute : pipe |",
+    207 => "exec : execute : list ;",
+    208 => "exec : execute : coprocess |&",
+    209 => "exec : execute : async process &",
+    210 => "exec : execute : or / and",
+    211 => "exec : execute : negate !",
+    212 => "exec : execute : double brackets [[",
+    213 => "exec : execute : for / select variable",
+    214 => "exec : execute : while / until end",
+    215 => "exec : execute : while / until break",
+    216 => "exec : execute : while / until err",
+    218 => "exec : execute : if / elif",
+    219 => "exec : execute : case input",
+    299 => "exec : execute : case check",
+    220 => "exec : execute : group {",
+    221 => "exec : execute : function define",
+    222 => "exec : execute : time",
+    223 => "exec : execute : executable before exec", # removed, only one line in subshell process and only before  execve
+    201 => "exec : execute : end", # no more log. only redundant info see 204..
+    270 => "exec : comexec : starttime",
+    271 => "exec : comexec : buildin", # redundant 281
+    274 => "exec : comexec : function",
+    275 => "exec : comexec : cat",
+    276 => "exec : comexec : print",
+    277 => "exec : comexec : executable not found error",
+    278 => "exec : comexec : executable",
+    279 => "exec : comexec : end", # redundant no more log
+    250 => "exec : scriptexec : starttime",
+    251 => "exec : scriptexec : before exec",
+    290 => "exec : define : starttime",
+    291 => "exec : define : undefine",
+    292 => "exec : define : end", # redundant to 221
+    280 => "exec : buildin : starttime",
+    281 => "exec : buildin : end",
+    260 => "exec : iosetup : starttime",
+    269 => "exec : iosetup : end",
+    261 => "exec : iosetup : error",
+    268 => "exec : iosetup : idempotent",
+    262 => "exec : iosetup : open error",
+    264 => "exec : iosetup : error",
+
+    # main
+    3 => "main : main_init : starttime",
+    4 => "main : main_init : shell",
+    5 => "main : main_init : systemprofile ",
+    6 => "main : main_init : .profile",
+    8 => "main : main_init : ENV",
+    7 => "main : main_init : suid include",
+    9 => "main : main_init : end",
+
+    0 => "main : main : starttime",
+    1 => "main : main : hallo welt",
+    2 => "main : main : end allo welt",
+
+    10 => "main : main : after comexec init",
+    11 => "main : main : end",
+
+    20 => "main : include : starttime",
+    21 => "main : include : no access",
+    22 => "main : include : end error",
+    23 => "main : include : signal",
+    24 => "main : include : end",
+
+    30 => "main : command : starttime",
+    31 => "main : command : end",
+
+    40 => "main : shell : starttime",
+    41  => "main : shell : exit",
+    42  => "main : shell : error",
+    43  => "main : shell : end",
+
+    50 => "main : quitenv : starttime", # redundant, alle
+    51 => "main : quitenv : exit",
+    52 => "main : quitenv : end",
+
+    300 => "syn : compile : starttime",
+    301 => "syn : compile : end",
+
+    400 => "expr : v_evaluate : starttime",
+    401 => "expr : v_evaluate : end",
+
+    500 => "funcs : dot file : starttime",
+    501 => "funcs : dot file : end error",
+    502 => "funcs : dot file : end",
+
+    503 => "funcs : wait : starttime",
+    504 => "funcs : wait : end",
+    
+    -1 => "dummy"
+    );
+
+if ($#ARGV < 0)
+{
+    print "usage : atrshmlogcalc inputfile [ inputfile ... ] \n";
+    exit(1);
+}
+
+%maxdeltas=();
+
+while ($#ARGV > -1) {
+
+    $argv0 = shift @ARGV;
+
+    my $maxdelta = 0;
+    
+    open (FIN, "$argv0") or die "cannot open file $argv0 ...\n";
+
+    while (<FIN>) {
+	$line = $_;
+
+#pid tid start end event flag user rest
+	if ( $line =~ m:^([\d]+) ([\w\d]+) ([\d]+) ([\d]+) ([\d]+) ([\w]) ([\d]+) (.*)$: )
+	{
+	    my $pid = $1;
+	    my $tid = $2;
+	    my $start = $3;
+	    my $end = $4;
+	    my $event = $5;
+	    my $flag = $6;
+	    my $userev = $7;
+	    my $rest = $8;
+	    
+	    if ($flag ne "P") {
+		my $delta ; 
+
+		$delta = $end - $start;
+		if($delta > $timeoffset) {
+		    $delta -= $timeoffset;
+		}
+		
+		push @deltas , $delta;
+
+		if ($maxdelta < $delta) {
+		    $maxdelta = $delta;
+		}
+		
+		my %vals = (pid=> $pid, tid => $tid, start => $start, end => $end, event => $event , flag => $flag, userevent => $userev, rest => $rest , delta => $delta);
+		push @slines, \%vals;
+		
+		if (defined $per_pid{$pid}) {
+		  my $i_r = $per_pid{$pid};
+		  push @{$i_r} , $#slines;
+		} else {
+		    my @i = ($#slines);
+		    $per_pid{$pid} =  \@i;
+		}
+	    }
+	}
+    }
+
+    close FIN;
+
+    print "file $argv0 has maxdelta $maxdelta \n";
+}
+
+# ok. we have read in all the info
+
+{
+    foreach my $pid (keys %per_pid) {
+	&analyse_per_pid($pid, $per_pid{$pid});
+    }
+}
+
+
+{
+    print "maxdeltas per pid\n";
+    foreach my $md (sort { $a <=> $b } keys %maxdeltas) {
+	print $maxdeltas{$md} . " " . $md . " \n";
+    }
+}
+
+exit(0);
+
+# end main
+
+sub analyse_per_pid {
+    my $pid = $_[0];
+    my $i_r = $_[1];
+
+    my $ofile = "f_${pid}_info.txt";
+    open (FOUT, ">$ofile") or die "cannot open $ofile for write ...\n";
+
+    print FOUT "pid ${pid} : per pid times\n";
+
+    my $i ;
+
+    my $maxdelta = 0;
+
+    {
+    
+	for ($i = 0; $i <= $#{$i_r}; $i ++) {
+	    my $index = $i_r->[$i];
+	    my $v_r = $slines[$index];
+
+	    if ($v_r->{delta} > $maxdelta) {
+		$maxdelta = $v_r->{delta};
+	    }
+	}
+
+	if ($maxdelta < 10000) {
+	    $maxdelta = 10000;
+	}
+
+	my $maxdeltalen = length $maxdelta;
+	
+	my @l = sort { $slines[$a]->{start} <=> $slines[$b]->{start}} @$i_r;
+	
+	print FOUT "start                end                  delta" . ( " " x  ($maxdeltalen - 5)) . " userevent           info\n\n" ;
+	
+	for ($i = 0; $i <= $#l; $i ++) {
+	    my $index = $l[$i];
+	    my $v_r = $slines[$index];
+
+	    my $delta = $v_r->{delta};
+	    
+	    print FOUT $v_r->{start} 
+	    . " " . $v_r->{end} 
+	    . " " . (" " x ($maxdeltalen - length $delta)) . $delta 
+		. " " . $v_r->{event} # if you want to use the eventname seebelow
+		. " " . $v_r->{userevent} 
+	    # . " " . $eventnames{$v_r->{event}} 
+	    . " " . $v_r->{rest} . "\n";
+	}
+    }
+
+    close FOUT;
+
+    $maxdeltas{$maxdelta} = $pid;
+    
+    # now we want to have it by delta time
+
+    my @d = sort { $slines[$b]->{delta} <=> $slines[$a]->{delta}} @$i_r;
+
+#    my $maxdelta = 100;
+
+    my $maxdeltalen = 3;
+    if ($#d >= 0) {
+	$maxdelta = $slines[$d[0]]->{delta} + 0.0;
+	$maxdeltalen = length $maxdelta;
+	if($maxdeltalen < 5 ) {
+	    $maxdeltalen = 5;
+	}
+    }
+    
+    my $ofile = "f_${pid}_userevent_sorted.txt";
+    open (FOUT, ">$ofile") or die "cannot open $ofile for write ...\n";
+
+    print FOUT "pid ${pid}\ndelta sorted, max $maxdelta \n";
+    print FOUT "start                end                  percent   delta" . (" " x (-5 + $maxdeltalen) ) . " event              userevent           info \n\n";
+
+
+    my %userevents_sum = ();
+    
+    for ($i = 0; $i <= $#d; $i ++) {
+	my $index = $d[$i];
+	my $v_r = $slines[$index];
+
+	my $delta = $v_r->{delta};
+
+	my $ndelta = " " x ($maxdeltalen - length $delta) . $delta ;
+	
+	my $npercent = sprintf ("%7.5f", ($delta * 100.0 / $maxdelta));
+	my $percent = " " x ((length "100.00000") - (length $npercent))  . $npercent;
+	my $uv = $v_r->{userevent};
+	my $ev = $v_r->{event};
+	
+	print FOUT $v_r->{start} 
+	. " " . $v_r->{end} 
+	. " " . $percent 
+	    . " " . $ndelta 
+	    . " " . $ev 
+	    . " " . $uv  
+	    # . " " . $eventnames{$ev} 
+	    . " " . $v_r->{rest} . "\n";
+
+	# we calc the user events now
+	if (defined $userevents_sum{$uv}) {
+	    $userevents_sum{$uv} += $delta;
+	} else {
+	    $userevents_sum{$uv} = $delta;
+	}
+    }
+
+    my $maxuserevent = 100;
+
+    
+    close FOUT;
+
+    my $ofile = "f_${pid}_deltasum_per_userevent_sorted.txt";
+    open (FOUT, ">$ofile") or die "cannot open $ofile for write ...\n";
+
+    
+    print FOUT "pid ${pid}\nuserevent sorted, max $maxdelta \n";
+
+print FOUT  "userevent          deltasum   percent\n\n";
+    
+    {
+	my %vals = ();
+	
+	foreach my $userevent (keys %userevents_sum) {
+	    $vals{$userevents_sum{$userevent}} = $userevent;
+	}
+
+	my $maxdelta = 0;
+	
+	foreach my $deltasum (sort { $b <=> $a } keys %vals) {
+	    if( $vals{$deltasum} < 1000000) {
+		if ($maxdelta == 0) {
+		    $maxdelta = $deltasum;
+		    if ($maxdelta == 0) {
+			$maxdelta = 100;
+		    }
+		}
+		
+		my $p = sprintf ("%7.5f", ($deltasum * 100.0 / $maxdelta));
+		print FOUT $vals{$deltasum} . " " . $deltasum  .  " " . $p . "\n";
+	    }
+	}
+
+
+    }
+    
+    close FOUT;
+
+}

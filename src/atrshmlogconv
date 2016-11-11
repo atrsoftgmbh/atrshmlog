@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ ! -d $1 ]
+then
+    echo "parameter one must be a filled dierctory"
+    exit 1
+fi
+
+find $1 -type f -name 'atrshmlog_*.bin' | while read i
+do
+    atrshmlogconvert "${i}" "${i%%.bin}.txt"
+done
+

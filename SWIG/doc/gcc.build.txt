@@ -1,0 +1,11 @@
+ To create a shared library or DLL, you often need to look at the manual pages for your compiler and linker. However, the procedure for a few common platforms is shown below:
+
+# Build a shared library for Solaris
+gcc -fpic -c example.c example_wrap.c -I/usr/local/include
+ld -G example.o example_wrap.o -o example.so
+
+# Build a shared library for Linux
+gcc -fpic -c example.c example_wrap.c -I/usr/local/include
+gcc -shared example.o example_wrap.o -o example.so
+
+

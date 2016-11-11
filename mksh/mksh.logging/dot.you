@@ -1,0 +1,7 @@
+#!/home/shmlog/mksh/mksh.logging/mksh
+
+# you have to adjust the above lines to your box
+
+print 4711
+
+exit 0

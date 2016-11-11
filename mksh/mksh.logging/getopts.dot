@@ -1,0 +1,14 @@
+while getopts :abo: c
+do
+case $c in
+a) aflag=x ;;
+b) bflag=x ;;
+o) oflag=x oflagfile= $OPTARG ;;
+:) print -u2 "$0 : $OPTARG needs a value " 
+   exit 1 ;;
+\?) print "$0 : unknown option $OPTARG"
+    print "usage : $0 [-a -b -o arg ] file ... 
+    exit 2 ;;
+esac
+done
+shift $((OPTIND-1)) # shift to last option argument next position 

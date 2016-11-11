@@ -1,0 +1,93 @@
+#geht nicht
+
+1.
+set -o nicht gleich ... lines bei ksh, multiple lines bei mksh
+
+2.
+FIGNORE geht nicht
+
+4.
+a.b=hugo geht nicht
+
+5.
+${@:2} geht nicht
+
+6.
+print -f '%02d' 1 geht nicht
+
+7.
+typeset -E geht nicht
+
+
+8 .
+for ((i=0; i < 10 ; i++))
+geht nicht
+
+9.
+typeset -A geht nicht
+
+10.
+builtin geht nicht - empty output
+
+11.
+. function geht nicht
+
+12.
+discipline function get/set/unset geht nicht
+
+13.
+compound variabels geht nicht
+
+picture=( bitmap=thispath/hugo.pic
+color=([apple]=red [banana]=yellow)
+)
+
+print -r $picture
+
+14.
+
+character klassen gehn nicht
+
+$ ls [[:alpha:]]*
+
+
+$ ls [d]1
+b10.bin  b11.bin  b12.bin  b13.bin  b14.bin  b15.bin  b16.bin  b1.bin  b2.bin  b3.bin  b4.bin  b5.bin  b6.bin  b7.bin  b8.bin  b9.bin  big1.txt
+b10.txt  b11.txt  b12.txt  b13.txt  b14.txt  b15.txt  b16.txt  b1.txt  b2.txt  b3.txt  b4.txt  b5.txt  b6.txt  b7.txt  b8.txt  b9.txt  b*.txt
+$ ls [[:alpha:]]1                                                                                                                                                                                                    
+ls: Zugriff auf [[:alpha:]]1 nicht möglich: Datei oder Verzeichnis nicht gefunden
+
+
+15.
+
+\n in pattern geht nicht
+
+ABER :
+
+ksh
+print d?(12)\1
+d1212
+
+mksh
+print d?(12)\1
+d1
+
+16.
+
+print -f '%d' 3+4
+
+mksh: print: -f: unknown option
+
+17.
+hugo=2#1010
+
+geht nicht
+
+print $hugo
+2#1010
+
+18. basis ist sticky bei i/o von integer variablen.
+nicht so in ksh
+
+19. typeset -L-R wird ohne "" anders ausgegeben.
+in ksh ohne modifikation, in mksh mit modifikation

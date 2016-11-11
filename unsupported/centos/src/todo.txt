@@ -1,0 +1,63 @@
+----
+
+doc
+
+------
+
+verify with COUNT
+
+
+-----
+
+dump with COUNT
+
+
+----
+
+reset with COUNT
+
+----
+
+fork with COUNT
+
+-----
+
+finish with COUNT
+
+-----
+
+autoflush
+
+-----
+
+install script in bin
+
+------
+
+perl
+
+------
+
+python
+
+------
+
+SWIG
+
+-------
+
+* doc : \ref \see cross references
+
+----
+
+* doc: defgroup für funktionale gruppen
+
+----
+
+* multiple buffer test
+
+----
+
+* alle shm vars via helper procedure wie ich habe fertig ..
+
+

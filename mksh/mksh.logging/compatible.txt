@@ -1,0 +1,137 @@
+# geht
+
+1.
+name variabels
+
+$
+function reverse {
+typeset -n foo=$1
+typeset temp
+integer i n
+n=${#foo[@]}
+i=0 
+while ((i < n/2 ))
+do
+temp=${foo[i]}
+foo[i]=${foo[n-i-1]}
+foo[n-i-1]=$temp
+(( i++ ))
+done
+}
+
+a[0]=0
+a[1]=1
+a[2]=2
+reverse a
+print ${a[@]}
+
+2.
+trap 'print "hallo welt" ' INT  
+
+3.
+typeset -ft für function xtrace geht
+
+$ function hugo {
+> print $KSHV_VERSION
+> }
+$ typeset -ft hugo
+$ hugo
++ print
+
+4.
+$' ..' geht !
+
+5.
+HISTFILE geht
+
+[kshell@hydra mksh]$ HISTFILE=$HOME/kshhist mksh 
+$ print $HISTFILE 
+/home/kshell/kshhist
+$ set -o emacs
+$ print $KSH_VERSION
+@(#)MIRBSD KSH R52 2016/01/20 ATRSoft GmbH Log Patched
+$ typeset -o
+mksh: typeset: -o: unknown option
+$ history
+1       print $HISTFILE 
+2       set -o emacs
+3       print $KSH_VERSION
+4       typeset -o
+$ exit
+
+6.
+PS1 geht
+
+7.
+set -f geht
+
+$ set -f
+$ ls *
+ls: Zugriff auf * nicht möglich: Datei oder Verzeichnis nicht gefunden
+$ set +f
+$ ls *
+atrlog_event_null.txt.old  atrlog_event_onoff.txt  atrlog_event_onoff.txt.old  atrlog_shmid.txt.old  dot.kshrc
+
+8.
+pattern prefix ? * + @ ! geht
+
+$ ls
+atrlog_event_null.txt.old  atrlog_event_onoff.txt  atrlog_event_onoff.txt.old  atrlog_shmid.txt.old  d1  d2  d3  d4  dot.kshrc
+$ print d?(1|2|3)
+d1 d2 d3
+$ print d?(1|2|3|5)                                                                                                                                                                                                  
+d1 d2 d3
+$ print d*(1|2|3|5)                                                                                                                                                                                                  
+d1 d2 d3
+$ print d+(1|2|3|5)                                                                                                                                                                                                  
+d1 d2 d3
+$ print d@(1|2|3|5)                                                                                                                                                                                                  
+d1 d2 d3
+$ mkdir d12
+$ print d@(1|2|3|5)                                                                                                                                                                                                  
+d1 d2 d3
+$ print d+(1|2|3|5)                                                                                                                                                                                                  
+d1 d12 d2 d3
+$ print d*(1|2|3|5)                                                                                                                                                                                                  
+d1 d12 d2 d3
+$ print d?(1|2|3|5)                                                                                                                                                                                                  
+d1 d2 d3
+$ print d!(1|2|3|5)                                                                                                                                                                                                  
+d12 d4 dot.kshrc
+
+print d+(12)
+d12 d1212
+
+
+ABER :
+
+ksh
+print d?(12)\1
+d1212
+
+mksh
+print d?(12)\1
+d1
+
+\n geht also nicht
+
+
+9.
+? : geht
+
+print $(( 1 == 1 ? 4 : 0 ))
+
+10.
+
+pattern in [[ geht
+
+$ if [[ "hugo" == +(hu)?(go) ]]
+> then print ok
+> fi
+
+10.
+typeset -L geht
+
+11.
+
+typeset -R geht

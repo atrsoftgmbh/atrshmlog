@@ -1,0 +1,893 @@
+#!/usr/bin/perl
+#
+# $Id:$
+#
+# we try to figure out what platform  we are.
+#
+# so we do some silly checks and then give the user a hint
+#
+
+my $p = $ENV{'PATH'};
+
+my $c = $p;
+
+$c =~ s:[^;]*::g;
+
+
+# for the rest ...
+
+########################################################
+# @the_sys = ();
+# unknown
+# linux
+# cygwin
+# mingw
+# solaris
+# bsd
+# darwin
+# aix
+#
+      
+# @the_flavour = ();
+# unknown
+# fedora
+# rhel ret head enterprise
+# centos 
+# suse
+# sels suse enterprise linux system
+# ubuntu
+# debian
+# Macintosh    darwin 
+# netbsd
+# mirbsd
+# cygwin64 
+# cygwin32
+# mingw64
+# mingw32
+
+# @the_architecture = ();
+# unknown
+# x86
+# x86_64
+# sparc
+# sparc64
+# ppc
+# ppc64
+# ia64 itanium
+# ia64 alpha
+# mips
+# mips64
+# arm
+# arm64
+#
+
+# @the_compiler = ();
+# unknown
+# cc
+# gcc
+# clang
+# portland
+# watcom
+# icc
+# xlc
+# decc
+# mingw
+
+# @the_standard = ();
+# unknown
+# 1989
+# 1999
+# 2011
+
+
+# @the_cpp_compiler = ();
+# unknown
+# cc
+# g++
+# clang
+# portland
+# watcom
+# mingw
+#
+
+# @the_cpp_standard = ();
+# unknown
+# 1998
+# 2011
+# 2014
+# 2017
+#
+
+################################################
+
+@hints = ();
+
+$vers = 0;
+
+$minor = 0;
+
+$patch = 0;
+
+open(IN, "./atrshmlog_internal.h") or die "Please change in the src directory for execution.\n";
+
+while (<IN>) {
+    if (m:ATRSHMLOGVERSION[\s]+\(([\d]+):) {
+	$vers = $1;
+    }
+    if (m:ATRSHMLOGMINORVERSION[\s]+\(([\d]+):) {
+	$minor = $1;
+    }
+    if (m:ATRSHMLOGPATCHVERSION[\s]+\(([\d]+):) {
+	$patch = $1;
+    }
+}
+
+close IN;
+
+print "\nHello to atrshmlog version $vers, $minor, $patch .\n\n";
+$success = 0;
+
+print "This is the system and architecture check program.\n";
+
+print "You get first the hits it gets in the analyse.\n";
+
+print "Then you get possible defines for supported platforms\nif any match is there.\n\n";
+
+# are we on the dark side of the force ?
+
+if( length $c > 3) {
+   print 'Found multiple ";" in path. 
+
+Assume its a "fenster;plural" system.
+
+Please install cygwin for the minimum build support.
+
+If you want to do it without you have to
+adapt the scripts.
+
+If you want to build native use the mingw ports.
+
+If you want to use another compiler it has
+at least to have ISO 9899:2011 support.
+
+If you want to build the C++ programs
+you need C11 support for threads.
+
+Check the 
+ATRSHMLOG_PLATFORM_LINUX_X86_64_GNU
+platform define in the source for the things
+you have to handle with your compiler.
+
+And dont underestimate the support for 
+click time , see wikipedia tsc support for it.
+
+Best luck for building.
+
+';
+
+   exit(1);
+}
+
+
+# so now we are on the grey side ... 
+    
+&check_uname;
+
+foreach my $h (@hints) {
+    print "\nFound hint for " . $h->{driver} . ' ' . $h->{name} . " \n";
+
+    print "  define you can use is " . $h->{define} . "\n";
+
+    print "  the ipc model is " . $h->{ipc} . "\n";
+
+    if ($h->{alternative} ne '') {
+	print "  the alternative model is " . $h->{alternative} . "\n";
+    }
+
+    print "\n";
+}
+
+exit($success);
+
+# end of main
+
+sub make_hint {
+
+    my $sys = $_[0];
+    my $architecture = $_[1];
+    my $flavour = $_[2];
+    my $compiler = $_[3];
+    my $driver = $_[4];
+    
+    # these  are the supported
+    # if you dont have one you are on the new platform track
+    # so if you can make a new onr sent me a post card and
+    # i add it here for your fellowers
+    
+    my %h = ('linux_x86_64_unknown_gcc' => 	   
+	     { 
+		 'name' =>  'linux_x86_64_unknown_gcc',
+		 'define' => 'ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC' ,
+		 'ipc' => 'posix',
+		 'alternative' => ''
+	     },
+	     
+	     'linux_x86_64_fedora_gcc'  => 
+	     {
+		 'name' => 'linux_x86_64_fedora_gcc',
+		 'define' => 'ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC' ,
+		 'ipc' => 'posix',
+		 'alternative' => ''
+	     },
+	     
+	     'cygwin_x86_64_cygwin64_gcc' =>      
+	     {
+		 'name' => 'cygwin_x86_64_cygwin64_gcc',
+		 'define' => 'ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC',
+		 'ipc' => 'XSI ipc via cygrunsrv and libpthread.dll' ,
+		 'alternative' => ''
+	     },
+	     
+	     'cygwin_x86_64_mingw_x86_64_gcc' =>        
+	     {
+		 'name' => 'cygwin_x86_64_mingw_x86_64_gcc',
+		 'define' => 'ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC',
+		 'ipc' => 'win32 as default',
+		 'alternative' => 'libpthread.dll for setting ATRSHMLOG_USE_PTHREAD' 
+	     }
+	);
+
+    my $key  = $sys . '_' . $architecture . '_' . $flavour . '_' .  $compiler ;
+
+    $key  = lc $key;
+
+    if (defined $h{$key}) {
+	my $h_r = $h{$key};
+
+	my %r = %{$h_r};
+
+	$r{driver} = $driver;
+	
+	push @hints, \%r;
+    }
+}
+
+
+sub check_xlc {
+    my $name = $_[0];
+    my $class = $_[1];
+    my $sys = $_[2];
+    my $architecture = $_[3];
+    my $flavour = $_[4];
+    
+    print "No support for the $sys with architecture  $architecture  and compiler $name \n";
+
+    return;
+}
+
+sub check_vac {
+    my $name = $_[0];
+    my $class = $_[1];
+    my $sys = $_[2];
+    my $architecture = $_[3];
+    my $flavour = $_[4];
+    
+    print "No support for the $sys with architecture  $architecture  and compiler $name \n";
+
+    return;
+}
+
+sub check_icc {
+    my $name = $_[0];
+    my $class = $_[1];
+    my $sys = $_[2];
+    my $architecture = $_[3];
+    my $flavour = $_[4];
+
+    
+    print "No support for the $sys with architecture  $architecture  and compiler $name \n";
+    return;
+}
+
+sub check_clang {
+    my $name = $_[0];
+    my $class = $_[1];
+    my $sys = $_[2];
+    my $architecture = $_[3];
+    my $flavour = $_[4];
+
+    
+    print "No support for the $sys with architecture  $architecture  and compiler $name \n";
+
+    return;
+}
+
+sub check_watcom {
+    my $name = $_[0];
+    my $class = $_[1];
+    my $sys = $_[2];
+    my $architecture = $_[3];
+    my $flavour = $_[4];
+
+    
+    print "No support for the $sys with architecture  $architecture  and compiler $name \n";
+
+    return;
+}
+
+sub check_portland {
+    my $name = $_[0];
+    my $class = $_[1];
+    my $sys = $_[2];
+    my $architecture = $_[3];
+    my $flavour = $_[4];
+    
+    print "No support for the $sys with architecture  $architecture  and compiler $name \n";
+    return;
+}
+
+
+sub check_gcc {
+    my $name = $_[0];
+
+    my $class = $_[1];
+
+    my $sys = $_[2];
+    my $architecture = $_[3];
+    my $flavour = $_[4];
+    
+    my $target_sys = $_[5];
+    my $target_architecture = $_[6];
+    
+    my $ret = system "$name -std=gnu11 --version > /dev/null 2>&1";
+    
+    if ($ret == 0) {
+	open(IN, "$name -std=gnu11 --version 2>&1 |");
+
+	my @all = <IN>;
+
+	close IN;
+
+	my $all = join(' ', @all);
+
+	if ($all =~ m/\bgcc:/i) {
+	    print "found a gcc compiler, but option gnu11 not there. too old?.\n";
+	} else {
+	    if ($sys eq $target_sys) {
+		# cross compiler or not ?
+		if ($architecture eq $target_architecture) {
+		    # no crosscompile
+		    
+		    &make_hint($sys, $architecture, $flavour, $class, $name);
+		} else {
+		    &make_hint($sys, $architecture, $target_sys . '_' . $target_architecture, $class, $name);
+		}
+	    } else {
+		# diffrent sys, so it must be a crosscompiler
+		&make_hint($sys, $architecture, $target_sys . '_' . $target_architecture, $class, $name);
+	    }
+		    
+
+	    return;
+	}
+    }
+
+    $ret = system "$name -std=gnu99 --version > /dev/null 2>&1";
+    
+    if ($ret == 0) {
+	open(IN, "$name -std=gnu99 --version 2>&1|");
+
+	my @all = <IN>;
+
+	close IN;
+
+	my $all = join(' ', @all);
+
+	if ($all =~ m/\bgcc:/i) {
+	    print "found a gcc compiler, but option gnu99 not there. too old?.\n";
+	} else {
+	    if ($sys eq $target_sys) {
+		# cross compiler or not ?
+		if ($architecture eq $target_architecture) {
+		    # no crosscompile
+		    
+		    &make_hint($sys, $architecture, $flavour, $class, $name);
+		} else {
+		    &make_hint($sys, $architecture, $target_sys . '_' . $target_architecture, $class, $name);
+		}
+	    } else {
+		# diffrent sys, so it must be a crosscompiler
+		&make_hint($sys, $architecture, $target_sys . '_' . $target_architecture, $class, $name);
+	    }
+		    
+	    return;
+	}
+    }
+
+    print "The compiler $name seems not to have a valid standard.\n";
+    
+    &make_hint($target_sys, $target_architecture, $flavour, $class, $name);
+
+    return;
+}
+
+
+sub check_cc {
+    my $name = $_[0];
+    my $class = $_[1];
+    my $sys = $_[2];
+    my $architecture = $_[3];
+    my $flavour = $_[4];
+    
+    # ok. there is a cc. we try it first with -version 
+
+    my $ret = system "$name -version > /dev/null 2>&1";
+
+    if ($ret == 0) {
+	# ok. we are in with -version
+
+	open(IN, "$name -version|");
+
+	my @o = <IN>;
+	
+	my $o = join(' ' , @o);
+
+	if ($o =~ m:gcc:i) {
+	    &check_gcc($name, 'gcc', $sys, $architecture, $flavour, $sys, $architecture);
+
+	    return;
+	}
+
+	&make_hint($sys, $architecture, $flavour, $class, $name);
+	    
+	return;
+    }
+
+    # we try the gnu and new systems way 
+    $ret = system "$name --version > /dev/null 2>&1";
+
+    if ($ret == 0) {
+	# ok. we are in with -version
+
+	open(IN, "$name --version|");
+
+	my @o = <IN>;
+
+	my $o = join(' ' , @o);
+
+	if ($o =~ m:gcc:i) {
+	    &check_gcc($name, 'gcc', $sys, $architecture, $flavour, $sys, $architecture);
+
+	    return;
+	}
+
+	&make_hint($sys, $architecture, $flavour, $class, $name);
+
+	return;
+    }
+
+    # we try the old days way 
+    $ret = system "$name -v > /dev/null 2>&1";
+
+    if ($ret == 0) {
+	# ok. we are in with -v
+
+	open(IN, "$name -v|");
+
+	my @o = <IN>;
+
+	my $o = join(' ' , @o);
+	    
+	if ($o =~ m:gcc:i) {
+	    &check_gcc($name, 'gcc', $sys, $architecture, $flavour, $sys, $architecture);
+
+	    return;
+	}
+
+	&make_hint($sys, $architecture, $flavour, $class, $name);
+
+	return;
+    }
+
+
+    # strange. no -v either ? try a bad thing at least ..
+    open(IN, "$name xxx xxx xxx|");
+
+    my @o = <IN>;
+
+    my $o = join(' ' , @o);
+	    
+    if ($o =~ m:gcc:i) {
+	
+	&check_gcc($name, 'gcc', $sys, $architecture, $flavour, $sys, $architecture);
+
+	return;
+    }
+
+    print "found no version available for cc.\n";
+    
+    &make_hint($sys, $architecture, $flavour, $class, $name);
+
+    return;
+}
+
+
+sub check_for_compiler {
+
+    my $sys = $_[0];
+    my $architecture = $_[1];
+    my $flavour = $_[2];
+
+    my $hits = 0;
+    
+    # we check here for the tool chain.
+    # so we start with the rare once first.
+    # at the end we get to the cc default
+
+    # gnu
+    my $ret = system "which gcc > /dev/null 2>&1";
+    
+    if ($ret == 0) {
+	print "found a gcc compiler.\n";
+	
+	&check_gcc('gcc', 'gcc', $sys, $architecture, $flavour, $sys, $architecture);
+	$hits ++;
+    }
+ 
+    # clang c
+    $ret = system "which clang > /dev/null 2>&1";
+
+    if ($ret == 0) {
+	print "found a clang compiler.\n";
+	&check_clang('clang', 'clang', $sys, $architecture, $flavour);
+	$hits ++;
+    }
+    
+    
+    # mingw w32
+    $ret = system "which i686-w64-mingw32-gcc > /dev/null 2>&1";
+    
+    if ($ret == 0) {
+	print "found a gcc mingw crosscompiler compiler.\n";
+	&check_gcc('i686-w64-mingw32-gcc', 'gcc', $sys, $architecture, $flavour, 'mingw', 'x86');
+	$hits ++;
+    }
+ 
+    # mingw w64
+    $ret = system "which x86_64-w64-mingw32-gcc > /dev/null 2>&1";
+    
+    if ($ret == 0) {
+	print "found a gcc mingw crosscompiler compiler.\n";
+	&check_gcc('x86_64-w64-mingw32-gcc', 'gcc', $sys, $architecture, $flavour, 'mingw', 'x86_64');
+	$hits ++;
+    }
+ 
+    # Intel icc
+    $ret = system "which icc > /dev/null 2>&1";
+
+    if ($ret == 0) {
+	print "found a icc compiler.\n";
+	&check_icc('icc','icc',$sys, $architecture, $flavour);
+	$hits ++;
+    }
+
+    # watcom
+    $ret = system "which watcomc > /dev/null 2>&1";
+    
+    if ($ret == 0) {
+	print "found a watcom compiler.\n";
+	&check_watcom('watcomc', 'watcom', $sys, $architecture, $flavour);
+	$hits ++;
+    }
+ 
+    # portland
+    $ret = system "which portlandc > /dev/null 2>&1";
+    
+    if ($ret == 0) {
+	print "found a portland compiler.\n";
+	&check_portland('portlandc','portland',$sys, $architecture, $flavour);
+	$hits ++;
+    }
+ 
+    # AIX L xlc 
+    $ret = system "which xlc > /dev/null 2>&1";
+
+    if ($ret == 0) {
+	print "found a xlc compiler.\n";
+	&check_xlc('xlc','xlc',$sys, $architecture, $flavour);
+	$hits ++;
+    }
+
+    # AIX L visual age c compiler
+    $ret = system "which vac > /dev/null 2>&1";
+
+    if ($ret == 0) {
+	print "found a visual age compiler.\n";
+	&check_vac('vac','vac',$sys, $architecture, $flavour);
+	$hits ++;
+    }
+
+    # cc
+    $ret = system "which cc > /dev/null 2>&1";
+    
+    if ($ret == 0) {
+	print "found a naked cc compiler.\n";
+	&check_cc('cc','cc',$sys, $architecture, $flavour);
+	$hits ++;
+    }
+ 
+    if ($hits == 0) {
+	print "cannot find a compiler for $sys and $architecture.\n";
+    }
+    
+    return;
+}
+
+
+sub check_for_flavour {
+
+    my $sys = $_[0];
+
+    my $architecture = $_[1];
+    
+    if ($sys eq 'cygwin') {
+	# we are on a cygwin system.
+
+	# primary is the system itself
+	if ($architecture eq 'x86_64') {
+	    print "found a flavor win64\n";
+	    &check_for_compiler($sys, $architecture, 'cygwin64');
+	    return;
+	}
+	elsif ($architecture eq 'x86') {
+	    print "found a flavor win32\n";
+	    &check_for_compiler($sys, $architecture, 'cygwin32');
+	    return;
+	}
+
+	# secondary can be a other compiler.
+	# see the compiler checks
+	# its possible to get crosscmpiles with mingw
+	# and alternative with clang
+	# so we have diffrent flavours in case a clang or mingw is there
+
+	print "we are on a $sys with architecture $architecture, but no match possible.\n";
+	
+	return;
+    }
+   
+    if ($sys eq 'linux') {
+
+	# primary checks
+	if (-r '/etc/fedora-release') {
+	    print "found a flavor fedora\n";
+	    &check_for_compiler($sys, $architecture, 'fedora');
+	    return;
+	}
+
+	# ther is no secondary for now. any kvm solution is a separate
+	# system. but we think about cross compiler later ..
+	# if there is  asecond compiler tool chain its a second flavour ...
+
+	&check_for_compiler($sys, $architecture, 'unknown');
+    }
+
+    if ($sys eq 'darwin') {
+	if (!open(IN, "uname -a|")) {
+	    print "cannot find a working uname program.\n";
+
+	    return;
+	}
+
+	my @o = <IN>;
+	
+	my $o = join(' ' , @o);
+
+	close IN;
+
+	if ($o =~ m:macintosh:i) {
+	    print "found a flavor macintosh\n";
+	    &check_for_compiler($sys, $architecture, 'Macintosh');
+	    return;
+	}
+    }
+    
+    return;
+}
+
+sub check_for_arch {
+
+    my $sys = $_[0];
+
+    my $ret  = system "uname -a > /dev/null 2>&1";
+
+    if ($ret != 0) {
+	print "cannot find a working uname -a program.\n";
+
+	return;
+    }
+	
+    if (!open(IN, "uname -a|")) {
+	print "cannot find a working uname program.\n";
+
+	return;
+    }
+
+    my @o = <IN>;
+    
+    my $o = join(' ' , @o);
+
+    close IN;
+
+    if ($sys eq 'cygwin') {
+	# we are on a cygwin system.
+
+	# primary is the system itself
+	if ($o =~ m:\bx86_64\b:i) {
+	    print "found a x86 64 architecture.\n";
+	    &check_for_flavour($sys, 'x86_64');
+	    return;
+	}
+	
+	if ($o =~ m:\bx86\b:i) {
+	    print "found a x86 32 architecture.\n";
+	    &check_for_flavour($sys, 'x86');
+	    return;
+	}
+       
+	print "we have a $sys, but we cant detect the architecture.\nplease check the uname -a : \n $o \n";
+
+	return;
+    }
+   
+    if ($sys eq 'linux') {
+	if ($o =~ m:\bx86_64\b:i) {
+	    print "found a x86 64 architecture.\n";
+	    &check_for_flavour($sys, 'x86_64');
+	    return;
+	}
+	
+	if ($o =~ m:\bx86\b:i) {
+	    print "found a x86 32 architecture.\n";
+	    &check_for_flavour($sys, 'x86');
+	    return;
+	}
+
+	if ($o =~ m:\bsparc64\b:i) {
+	    print "found a sparc 64 architecture.\n";
+	    &check_for_flavour($sys, 'sparc64');
+	    
+	    return;
+	}
+
+	if ($o =~ m:\bsparc\b:i) {
+	    print "found a sparc 32 architecture.\n";
+	    &check_for_flavour($sys, 'sparc');
+	    
+	    return;
+	}
+
+
+	if ($o =~ m:\bppc64\b:i) {
+	    print "found a power 64 architecture.\n";
+	    &check_for_flavour($sys, 'ppc64');
+
+	    return;
+	}
+
+	if ($o =~ m:\bppc\b:i) {
+	    print "found a power 32 architecture.\n";
+	    &check_for_flavour($sys, 'ppc');
+
+	    return;
+	}
+
+	if ($o =~ m:\barm64\b:i) {
+	    print "found an arm 64 architecture.\n";
+	    &check_for_flavour($sys, 'arm64');
+
+	    return;
+	}
+
+	if ($o =~ m:\barm\b:i) {
+	    print "found an arm 32 architecture.\n";
+	    &check_for_flavour($sys, 'arm');
+
+	    return;
+	}
+
+	if ($o =~ m:\bmips64\b:i) {
+	    print "found a mips 64 architecture.\n";
+	    &check_for_flavour($sys, 'mips64');
+
+	    return;
+	}
+
+	if ($o =~ m:\bmips\b:i) {
+	    print "found a mips 32 architecture.\n";
+	    &check_for_flavour($sys, 'mips');
+	    return;
+	}
+
+	if ($o =~ m:\bia64\b:i) {
+	    print "found an itanium 64 architecture.\n";
+	    &check_for_flavour($sys, 'ia64');
+	    return;
+	}
+
+	print "we have a $sys, but we cant detect the architecture.\nplease check the uname -a : \n $o \n";
+
+	return;
+    }
+
+    print "we have a $sys, but we cant detect the architecture.\nplease check the uname -a : \n $o \n";
+    
+    return;
+}
+
+sub check_uname {
+
+    $ret = system "uname > /dev/null 2>&1";
+
+    if ($ret != 0) {
+	print "cannot find a working uname program.\n";
+	
+	return;
+    }
+	
+    if (!open(IN, "uname|")) {
+	print "cannot find a working uname program.\n";
+	
+	return;
+    }
+
+    my $o = <IN>;
+
+    close IN;
+    
+    if ($o =~ m:cygwin:i) {
+	print "found a cygwin system.\n";
+	
+	&check_for_arch('cygwin');
+	return;
+    }
+
+    if ($o =~ m:linux:i) {
+	print "found a linux system.\n";
+
+	&check_for_arch('linux');
+	return;
+    }
+
+    if ($o =~ m:solaris:i) {
+	print "found a solaris system.\n";
+
+	&check_for_arch('solaris');
+	return;
+    }
+
+    if ($o =~ m:aix:i) {
+	print "found an aix system.\n";
+
+	&check_for_arch('aix');
+	return;
+    }	
+    
+    if ($o =~ m:darwin:i) {
+	print "found a darwin system.\n";
+
+	&check_for_arch('darwin');
+	return;
+    }
+    
+    if ($o =~ m:bsd:i) {
+	print "found a bsd system.\n";
+
+	&check_for_arch('bsd');
+	return;
+    }
+
+    print "no system found so far.\nplease check you uname output :\n $o \n";
+}
+
+# end of file  
