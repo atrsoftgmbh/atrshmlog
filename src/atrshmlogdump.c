@@ -58,15 +58,28 @@ int main (int argc, char*argv[])
       exit(1);
     }
 
+  const char *s_anz;
+  
   if (argc != 2)
     {
-      printf("usage: %s countbuffer\n", argv[0]);
-      printf("argument count is wrong.\n");
-      printf("logsystem version is %d.\n", ATRSHMLOGVERSION);
-      exit(1);
+      if (ATRSHMLOG_GET_ENV("_COUNT"))
+	{
+	  s_anz = ATRSHMLOG_GET_ENV("_COUNT");
+	}
+      else
+	{
+	  printf("usage: %s countbuffer\n", argv[0]);
+	  printf("parameter count wrong.\n");
+	  printf("logsystem version is %d.\n", ATRSHMLOGVERSION);
+	  exit(1);
+	}
     }
-
-  lanz = strtol(argv[1], 0, 10);
+  else
+    {
+      s_anz = argv[1];
+    }
+  
+  lanz = strtol(s_anz, 0, 10);
   
   printf("shm log attach and dump %d.\n", (int)lanz);
   printf("logsystem version is %d.\n", ATRSHMLOGVERSION);
