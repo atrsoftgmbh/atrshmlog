@@ -46,16 +46,16 @@ int main (int argc, char*argv[])
 
   if (shmid_ptr == (void*)0)
     {
-      printf("usage: %s count\n", argv[0]);
+      printf("usage: %s\n", argv[0]);
       printf("ENVIRONMENT VARIABLE NOT SET !!!\n");
       printf("%s_ID\n",ATRSHMLOG_GET_ENV_PREFIX());
       printf("logsystem version is %d.\n", ATRSHMLOGVERSION);
       exit(1);
     }
 
-  if (argc != 2)
+  if (argc != 1)
     {
-      printf("usage: %s count\n", argv[0]);
+      printf("usage: %s\n", argv[0]);
       printf("parameter count wrong.\n");
       printf("logsystem version is %d.\n", ATRSHMLOGVERSION);
       exit(1);
