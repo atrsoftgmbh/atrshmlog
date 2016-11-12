@@ -7,27 +7,6 @@ together with remove and change of list
 attach putenv mess
 
 -----
-verify with COUNT
-
-
------
-
-dump with COUNT
-
-
-----
-
-reset with COUNT
-
-----
-
-fork with COUNT
-
------
-
-finish with COUNT
-
------
 
 autoflush
 
