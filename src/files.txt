@@ -1,0 +1,611 @@
+The list of files for this distro that have to be there
+We dont check for everything, just the basic stuff.
+So we add to the src the basic doc files and the layers
+files for java for the reference jdks.
+No check for the mksh demo.
+
+$Id:$
+
+FILES
+
+# main module code reminder
+atrshmlog.c
+
+# the program code files
+atrshmlogcheckc.c
+atrshmlogconvert.c
+atrshmlogcreate.c
+atrshmlogdefect.c
+atrshmlogdelete.c
+atrshmlogdump.c
+atrshmlogfinish.c
+atrshmlogfork.c
+atrshmlogforkwrite.c
+atrshmloginit.c
+atrshmlog_internal.c
+atrshmlogoff.c
+atrshmlogon.c
+atrshmlogreaderb.c
+atrshmlogreader.c
+atrshmlogreaderc.c
+atrshmlogreaderd.c
+atrshmlogreset.c
+atrshmlogsignalreader.c
+atrshmlogsignalwriter.c
+atrshmlogtee.c
+atrshmlogtest00.c
+atrshmlogtest01.c
+atrshmlogverify.c
+atrshmlogtest02.C
+atrshmlogtest03.C
+
+# the headers
+atrshmlog.h
+atrshmlog_internal.h
+
+# scripts
+atrshmlogcalc
+atrshmlogcheckcomplete
+atrshmlogconv
+atrshmlogsort
+atrshmlogchecksystem.cmd
+atrshmlogchecksystem
+atrshmlogerror
+atrshmlogstat
+atrshmlogstopreader
+
+# helper and configurations
+Doxyfile
+makeall.sh
+shmcfiles
+shmCPPfiles
+shmallfiles
+shmallbinfiles
+shmbinfiles
+shmbininternalfiles
+files.txt
+
+DIRECTORY src impls
+
+# the implementation files
+atrshmlogimpl_acquire_buffer.c
+atrshmlogimpl_acquire_count_flag.c
+atrshmlogimpl_active_slaves_flag.c
+atrshmlogimpl_alloc.c
+atrshmlogimpl_attach.c
+atrshmlogimpl_attach_once_flag.c
+atrshmlogimpl_attach_pid_flag.c
+atrshmlogimpl_base_ptr.c
+atrshmlogimpl_buffer_id_flag.c
+atrshmlogimpl_buffer_infosize_flag.c
+atrshmlogimpl_buffer_slave_proc.c
+atrshmlogimpl_cleanup_locks.c
+atrshmlogimpl_clock_id_flag.c
+atrshmlogimpl_connect_buffers_list.c
+atrshmlogimpl_create.c
+atrshmlogimpl_create_mapped_file.c
+atrshmlogimpl_create_slave.c
+atrshmlogimpl_decrement_slave_count.c
+atrshmlogimpl_delete.c
+atrshmlogimpl_delimiter_flag.c
+atrshmlogimpl_dispatch_buffer.c
+atrshmlogimpl_event_locks_buffer.c
+atrshmlogimpl_exit_cleanup.c
+atrshmlogimpl_fence10_flag.c
+atrshmlogimpl_fence11_flag.c
+atrshmlogimpl_fence12_flag.c
+atrshmlogimpl_fence13_flag.c
+atrshmlogimpl_fence1_flag.c
+atrshmlogimpl_fence2_flag.c
+atrshmlogimpl_fence3_flag.c
+atrshmlogimpl_fence4_flag.c
+atrshmlogimpl_fence5_flag.c
+atrshmlogimpl_fence6_flag.c
+atrshmlogimpl_fence7_flag.c
+atrshmlogimpl_fence8_flag.c
+atrshmlogimpl_fence9_flag.c
+atrshmlogimpl_flush.c
+atrshmlogimpl_free.c
+atrshmlogimpl_full_list.c
+atrshmlogimpl_get_acquire_count.c
+atrshmlogimpl_get_area.c
+atrshmlogimpl_get_area_count.c
+atrshmlogimpl_get_area_version.c
+atrshmlogimpl_get_buffer_id.c
+atrshmlogimpl_get_buffer_max.c
+atrshmlogimpl_get_buffer_size.c
+atrshmlogimpl_get_clock_id.c
+atrshmlogimpl_get_env.c
+atrshmlogimpl_get_env_id_suffix.c
+atrshmlogimpl_get_env_prefix.c
+atrshmlogimpl_get_env_shmid.c
+atrshmlogimpl_get_event.c
+atrshmlogimpl_get_event_locks.c
+atrshmlogimpl_get_fence_10.c
+atrshmlogimpl_get_fence_11.c
+atrshmlogimpl_get_fence_12.c
+atrshmlogimpl_get_fence_13.c
+atrshmlogimpl_get_fence_1.c
+atrshmlogimpl_get_fence_2.c
+atrshmlogimpl_get_fence_3.c
+atrshmlogimpl_get_fence_4.c
+atrshmlogimpl_get_fence_5.c
+atrshmlogimpl_get_fence_6.c
+atrshmlogimpl_get_fence_7.c
+atrshmlogimpl_get_fence_8.c
+atrshmlogimpl_get_fence_9.c
+atrshmlogimpl_get_f_list_buffer_slave_count.c
+atrshmlogimpl_get_ihf.c
+atrshmlogimpl_get_init_buffers_in_advance.c
+atrshmlogimpl_get_inittime.c
+atrshmlogimpl_get_inittime_tsc_after.c
+atrshmlogimpl_get_inittime_tsc_before.c
+atrshmlogimpl_get_logging.c
+atrshmlogimpl_get_minor.c
+atrshmlogimpl_get_next_sl.c
+atrshmlogimpl_get_patch.c
+atrshmlogimpl_get_prealloc_count.c
+atrshmlogimpl_get_raw_buffers.c
+atrshmlogimpl_get_realtime.c
+atrshmlogimpl_get_shmid.c
+atrshmlogimpl_get_slave_wait.c
+atrshmlogimpl_get_stats.c
+atrshmlogimpl_get_stats_max_index.c
+atrshmlogimpl_get_strategy.c
+atrshmlogimpl_get_strategy_process.c
+atrshmlogimpl_get_tid.c
+atrshmlogimpl_get_tl_tid.c
+atrshmlogimpl_get_version.c
+atrshmlogimpl_get_wait_for_slaves.c
+atrshmlogimpl_id_flag.c
+atrshmlogimpl_in_advance_flag.c
+atrshmlogimpl_init_events.c
+atrshmlogimpl_init_in_write.c
+atrshmlogimpl_init_shm_log.c
+atrshmlogimpl_init_thread_local.c
+atrshmlogimpl_inittimes_flag.c
+atrshmlogimpl_init_via_env.c
+atrshmlogimpl_init_via_file.c
+atrshmlogimpl_logging_off_final_flag.c
+atrshmlogimpl_logging_process_flag.c
+atrshmlogimpl_mapped_files_defaults.c
+atrshmlogimpl_non_inline_code_cygwin.c
+atrshmlogimpl_non_inline_code_linux_gcc.c
+atrshmlogimpl_non_inline_code_mingw.c
+atrshmlogimpl_prealloc_buffers.c
+atrshmlogimpl_prealloc_count_flag.c
+atrshmlogimpl_prefix_buffer.c
+atrshmlogimpl_read.c
+atrshmlogimpl_read_fetch.c
+atrshmlogimpl_remove_sl.c
+atrshmlogimpl_set_advance_off.c
+atrshmlogimpl_set_advance_on.c
+atrshmlogimpl_set_buffer_size.c
+atrshmlogimpl_set_clock_id.c
+atrshmlogimpl_set_env_prefix.c
+atrshmlogimpl_set_event.c
+atrshmlogimpl_set_event_locks.c
+atrshmlogimpl_set_fence_10.c
+atrshmlogimpl_set_fence_11.c
+atrshmlogimpl_set_fence_12.c
+atrshmlogimpl_set_fence_13.c
+atrshmlogimpl_set_fence_1.c
+atrshmlogimpl_set_fence_2.c
+atrshmlogimpl_set_fence_3.c
+atrshmlogimpl_set_fence_4.c
+atrshmlogimpl_set_fence_5.c
+atrshmlogimpl_set_fence_6.c
+atrshmlogimpl_set_fence_7.c
+atrshmlogimpl_set_fence_8.c
+atrshmlogimpl_set_fence_9.c
+atrshmlogimpl_set_final.c
+atrshmlogimpl_set_f_list_buffer_slave_count.c
+atrshmlogimpl_set_ihf.c
+atrshmlogimpl_set_logging_process_off.c
+atrshmlogimpl_set_logging_process_on.c
+atrshmlogimpl_set_prealloc_count.c
+atrshmlogimpl_set_slave_wait_nanos.c
+atrshmlogimpl_set_strategy.c
+atrshmlogimpl_set_strategy_process.c
+atrshmlogimpl_set_thread_fence.c
+atrshmlogimpl_set_wait_for_slaves_off.c
+atrshmlogimpl_set_wait_for_slaves_on.c
+atrshmlogimpl_slave_list.c
+atrshmlogimpl_slave_run_off.c
+atrshmlogimpl_slaves_counter_flag.c
+atrshmlogimpl_slave_shm_wait_flag.c
+atrshmlogimpl_slave_waiter_flag.c
+atrshmlogimpl_slave_wait_st_wait_flag.c
+atrshmlogimpl_sleep_nanos.c
+atrshmlogimpl_stats_buffer.c
+atrshmlogimpl_stop.c
+atrshmlogimpl_stop_slaves_flag.c
+atrshmlogimpl_strategy_flag.c
+atrshmlogimpl_transfer_mem_to_shm.c
+atrshmlogimpl_transfer_to_shm_time_flag.c
+atrshmlogimpl_turn_logging.off.c
+atrshmlogimpl_verify.c
+atrshmlogimpl_wait_for_slaves_flag.c
+atrshmlogimpl_write0.c
+atrshmlogimpl_write1.c
+atrshmlogimpl_write2.c
+atrshmlogimpl_last_mem_to_shm.c
+atrshmlogimpl_reuse_thread_buffers.c
+
+DIRECTORY src alreadythere
+
+# adapted headers and list files
+atrshmlog.h.linux
+atrshmlog.h.cygwin
+atrshmlog.h.mingw
+atrshmlog_internal.h.linux
+atrshmlog_internal.h.cygwin
+atrshmlog_internal.h.mingw
+shmCPPfiles.mingw
+
+DIRECTORY bin
+# helper scripts
+buddydoc.sh 
+buddylib.sh 
+cleanall.sh 
+ell.sh 
+g++14w.sh 
+g99.sh 
+packdistro.sh 
+setpath.cmd
+seal.sh
+unseal.sh
+
+DIRECTORY doc
+
+# the tick timer codes
+cycle.h
+
+# the doc files
+adjustmodule.markdown 
+atrshmlogcalc_perl.markdown 
+atrshmlog_c.markdown 
+atrshmlogconvert_c.markdown 
+atrshmlogconv_sh.markdown 
+atrshmlogcreate_c.markdown 
+atrshmlogdefect_c.markdown 
+atrshmlogdelete_c.markdown 
+atrshmlogdump_c.markdown 
+atrshmlogfork_c.markdown 
+atrshmlogforkwrite_c.markdown 
+atrshmlog_h.markdown 
+atrshmloginit_c.markdown 
+atrshmlog_internal_c.markdown 
+atrshmlog_internal_h.markdown 
+atrshmlogoff_c.markdown 
+atrshmlogon_c.markdown 
+atrshmlogreaderb_c.markdown 
+atrshmlogreaderc_c.markdown 
+atrshmlogreader_c.markdown 
+atrshmlogreaderd_c.markdown 
+atrshmlogreset_c.markdown 
+atrshmlogsignalreader_c.markdown 
+atrshmlogsignalwriter_c.markdown 
+atrshmlogsort_sh.markdown 
+atrshmlogtee_c.markdown 
+atrshmlogtest01_c.markdown 
+atrshmlogtest02_C.markdown 
+atrshmlogtest03_C.markdown 
+atrshmlogverify_c.markdown 
+checkforcompleteness.markdown 
+checkforyoursystem.markdown 
+compilemodule.markdown 
+compileradjutments.markdown 
+cygwin.markdown 
+download.markdown 
+Doxyfile_script.markdown 
+files_txt.markdown 
+frontpage.markdown 
+implementconverter.markdown 
+implementlogging.markdown 
+layer_java_jni.markdown 
+layer_python.markdown 
+layer_perl.markdown 
+layer_swig.markdown 
+makeall_script.markdown 
+shmallfiles_script.markdown 
+shmbinfiles_script.markdown 
+shmbininternalfiles_script.markdown 
+test.markdown
+
+# the doc file
+atrshmlog.odt
+
+# the pdf from the odt
+atrshmlog.pdf
+
+DIRECTORY java
+readme.txt
+
+DIRECTORY java bin
+compile_jni_stub.sh
+compile_to_class_package_version.sh 
+compile_to_class.sh 
+copyjnilib.sh 
+create_header_package_version.sh
+create_header.sh 
+create_jni_lib.sh 
+dot.java.sh 
+dot.java.sh.linux
+dot.java.sh.mingw
+getfrommain.sh
+start_hello.sh
+start_package_hello.sh
+start_package_log.sh
+wrong_create_header_package_version.sh
+
+DIRECTORY java src
+
+# the java sources
+ATRSHMLOG.java
+ATRSHMLOGTest.java
+atrshmlogjnipackage.c
+
+DIRECTORY java oracle 
+readme.txt
+
+DIRECTORY java oracle jdk1.8.0_66 bin
+compile_jni_stub.sh
+compile_to_class_package_version.sh
+compile_to_class.sh
+copyjnilib.sh
+create_header_package_version.sh
+create_header.sh
+create_jni_lib.sh
+dot.java.sh
+start_hello.sh
+start_package_hello.sh
+start_package_log.sh
+wrong_create_header_package_version.sh
+
+DIRECTORY java oracle jdk1.8.0_66 src
+atrshmlogjnipackage.c
+compile_jni_stub.sh
+compile_to_class_package_version.sh
+compile_to_class.sh
+copyjnilib.sh
+create_header_package_version.sh
+create_header.sh
+create_jni_lib.sh
+dot.java.sh
+hellojni.h
+HelloJNI.java
+hellojnitest01.c
+hellojnitestpackage01.c
+start_hello.sh
+start_package_hello.sh
+start_package_log.sh
+wrong_create_header_package_version.sh
+
+DIRECTORY java oracle jdk1.8.0_66 src includes
+hellojni.h
+
+DIRECTORY java oracle jdk1.8.0_66 src myjnipackage
+HelloJNI.java
+
+DIRECTORY java oracle jdk1.8.0_66 src de atrsoft successorofoak utilities logging atrshmlog
+ATRSHMLOG.java
+ATRSHMLOGTest.java
+
+DIRECTORY java oracle jdk1.8.0_102 bin
+compile_jni_stub.sh
+compile_to_class_package_version.sh
+copyjnilib.sh
+create_header_package_version.sh
+create_jni_lib.sh
+dot.java.sh
+start_package_log.cmd
+start_package_log.sh
+
+DIRECTORY java oracle jdk1.8.0_102 src
+atrshmlogjnipackage.c
+compile_jni_stub.sh
+compile_to_class_package_version.sh
+copyjnilib.sh
+create_header_package_version.sh
+create_jni_lib.sh
+dot.java.sh
+start_package_log.cmd
+start_package_log.sh
+wrong_create_header_package_version.sh
+
+DIRECTORY java oracle jdk1.8.0_102 src includes
+
+DIRECTORY java oracle jdk1.8.0_102 src de atrsoft successorofoak utilities logging atrshmlog
+ATRSHMLOG.java
+ATRSHMLOGTest.java
+
+DIRECTORY java fedora
+readme.txt
+
+DIRECTORY java fedora openjdk-1.8.0.111 bin
+compile_jni_stub.sh
+compile_to_class_package_version.sh
+compile_to_class.sh
+copyjnilib.sh
+create_header_package_version.sh
+create_header.sh
+create_jni_lib.sh
+dot.java.sh
+start_hello.sh
+start_package_hello.sh
+start_package_log.sh
+wrong_create_header_package_version.sh
+
+DIRECTORY java  fedora openjdk-1.8.0.111 src
+atrshmlogjnipackage.c
+compile_jni_stub.sh
+compile_to_class_package_version.sh
+compile_to_class.sh
+copyjnilib.sh
+create_header_package_version.sh
+create_header.sh
+create_jni_lib.sh
+dot.java.sh
+hellojni.h
+HelloJNI.java
+hellojnitest01.c
+hellojnitestpackage01.c
+start_hello.sh
+start_package_hello.sh
+start_package_log.sh
+wrong_create_header_package_version.sh
+
+DIRECTORY java  fedora openjdk-1.8.0.111 src includes
+hellojni.h
+
+DIRECTORY java  fedora openjdk-1.8.0.111 src myjnipackage
+HelloJNI.java
+
+DIRECTORY java  fedora openjdk-1.8.0.111 src de atrsoft successorofoak utilities logging atrshmlog
+ATRSHMLOG.java
+ATRSHMLOGTest.java
+
+DIRECTORY java ibm
+readme.txt
+
+DIRECTORY java  ibm java-x86_64-80 bin
+compile_jni_stub.sh
+compile_to_class_package_version.sh
+compile_to_class.sh
+copyjnilib.sh
+create_header_package_version.sh
+create_header.sh
+create_jni_lib.sh
+dot.java.sh
+start_hello.sh
+start_package_hello.sh
+start_package_log.sh
+wrong_create_header_package_version.sh
+
+DIRECTORY java  ibm java-x86_64-80 src
+atrshmlogjnipackage.c
+compile_jni_stub.sh
+compile_to_class_package_version.sh
+compile_to_class.sh
+copyjnilib.sh
+create_header_package_version.sh
+create_header.sh
+create_jni_lib.sh
+dot.java.sh
+hellojni.h
+HelloJNI.java
+hellojnitest01.c
+hellojnitestpackage01.c
+start_hello.sh
+start_package_hello.sh
+start_package_log.sh
+wrong_create_header_package_version.sh
+
+DIRECTORY java  ibm java-x86_64-80 src includes
+hellojni.h
+
+DIRECTORY java  ibm java-x86_64-80 src myjnipackage
+HelloJNI.java
+
+DIRECTORY java ibm java-x86_64-80 src de atrsoft successorofoak utilities logging atrshmlog
+ATRSHMLOG.java
+ATRSHMLOGTest.java
+
+DIRECTORY python
+readme.txt
+
+DIRECTORY python bin
+compile_python_stub.sh
+create_python_lib.sh
+getfrommain.sh
+
+DIRECTORY python doc
+gcc.notes.1.txt
+
+DIRECTORY python src
+atrshmlogmodule.c
+atrshmlogtest2.py
+atrshmlogtest3.py
+atrshmlogtest.py
+compile_python_stub.sh
+create_python_lib.sh
+dot.python2.sh
+dot.python3.sh
+dot.python.sh
+
+DIRECTORY python src includes
+atrshmlogmodule.h
+
+DIRECTORY perl
+readme.txt
+
+DIRECTORY perl bin
+compile_perl_stub.sh
+create_perl_lib.sh
+doswig.sh
+dot.perl.sh
+dot.perl.sh.linux
+getfrommain.sh
+
+DIRECTORY perl doc
+gcc.build.txt
+
+DIRECTORY perl src
+Atrshmlog.i
+atrshmlog_perlwrapper.c
+atrshmlogread.pl
+atrshmlogtest.pl
+compile_perl_stub.sh
+create_perl_lib.sh
+doswig.sh
+dot.perl.sh
+dot.perl.sh.linux
+
+DIRECTORY perl src includes
+# nothing so far, only copy
+
+DIRECTORY SWIG
+readme.txt
+
+DIRECTORY SWIG bin
+compile_swig_stub.sh
+create_swig_lib.sh
+doswig.sh
+dot.swig.sh
+dot.swig.sh.linux
+getfrommain.sh
+
+DIRECTORY SWIG doc
+gcc.build.txt
+
+DIRECTORY SWIG src
+Atrshmlog.i
+atrshmlog_swigwrapper.c
+atrshmlogtest.tcl
+compile_swig_stub.sh
+create_swig_lib.sh
+doswig.sh
+dot.swig.sh
+dot.swig.sh.linux
+
+DIRECTORY SWIG src includes
+# nothing so far, only copy
+
+FILESEND
+
+We use a small helper to check if our distro is complete.
+
+It uses the list of files in between of FILES and FILESEND.
+
+The thing needs a working perl 5. No modules, only the binary.
+
+Its
+
+atrshmlogcheckcomplete
+
+and you execute it in the BASEDIR/src directory, where this file
+and it is located.
+
+So if you are unlucky you can at least use this to check
+manually if the stuff is there.
