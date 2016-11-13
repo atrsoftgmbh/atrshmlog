@@ -1,12 +1,14 @@
 The ATRSHMLOG module.
 
-The direcoties are
+The directories are
 - bin
   The binary files that are needed to build the module
   The files in the folder itself are for the linux
   x86 64 architecture. You find subdirectories for the
   other architectures and have to replace the files in bin
   with them.
+  The files work also for cygwin and for the cygwin based
+  mingw port.
 
 - doc
   The documentation build for the last version which is
@@ -33,7 +35,10 @@ The direcoties are
 To start : take the html documentation index file in your
 browser and start to read it.
 
-For the impatient : change to src and run makeall,
+For the impatient :
+load a dot file, 
+change to src,
+and run makeall.sh,
 then to the other things as you like - i cannot help
 you anyway, so do as you please.....
 
