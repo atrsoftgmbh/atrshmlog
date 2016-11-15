@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+#!/usr/local/bin/perl
 #
 # $Id:$
 #
@@ -234,11 +235,20 @@ sub make_hint {
 		 'define' => 'ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC',
 		 'ipc' => 'win32 as default',
 		 'alternative' => 'libpthread.dll for setting ATRSHMLOG_USE_PTHREAD' 
+	     },
+
+	     'bsd_amd64_freebsd_clang'  => 
+	     {
+		 'name' => 'bsd_amd64_freebsd_clang',
+		 'define' => 'ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG' ,
+		 'ipc' => 'posix',
+		 'alternative' => ''
 	     }
+	     
 	);
 
     my $key  = $sys . '_' . $architecture . '_' . $flavour . '_' .  $compiler ;
-
+    print $key . "\n";
     $key  = lc $key;
 
     if (defined $h{$key}) {
@@ -296,8 +306,79 @@ sub check_clang {
     my $architecture = $_[3];
     my $flavour = $_[4];
 
+    my $target_sys = $_[5];
+    my $target_architecture = $_[6];
     
-    print "No support for the $sys with architecture  $architecture  and compiler $name \n";
+    my $ret = system "$name -std=c11 --version > /dev/null 2>&1";
+    
+    if ($ret == 0) {
+	open(IN, "$name -std=c11 --version 2>&1 |");
+
+	my @all = <IN>;
+
+	close IN;
+
+	my $all = join(' ', @all);
+
+	if ($all =~ m/\bgcc:/i) {
+	    print "found a gcc compiler, but option gnu11 not there. too old?.\n";
+	} else {
+	    &check_c($name, "-std=c11" );
+	    
+	    if ($sys eq $target_sys) {
+		# cross compiler or not ?
+		if ($architecture eq $target_architecture) {
+		    # no crosscompile
+		    
+		    &make_hint($sys, $architecture, $flavour, $class, $name);
+		} else {
+		    &make_hint($sys, $architecture, $target_sys . '_' . $target_architecture, $class, $name);
+		}
+	    } else {
+		# diffrent sys, so it must be a crosscompiler
+		&make_hint($sys, $architecture, $target_sys . '_' . $target_architecture, $class, $name);
+	    }
+		    
+
+	    return;
+	}
+    }
+
+    $ret = system "$name -std=c99 --version > /dev/null 2>&1";
+    
+    if ($ret == 0) {
+	open(IN, "$name -std=c99 --version 2>&1|");
+
+	my @all = <IN>;
+
+	close IN;
+
+	my $all = join(' ', @all);
+
+	if ($all =~ m/\bgcc:/i) {
+	    print "found a gcc compiler, but option gnu99 not there. too old?.\n";
+	} else {
+	    if ($sys eq $target_sys) {
+		# cross compiler or not ?
+		if ($architecture eq $target_architecture) {
+		    # no crosscompile
+		    
+		    &make_hint($sys, $architecture, $flavour, $class, $name);
+		} else {
+		    &make_hint($sys, $architecture, $target_sys . '_' . $target_architecture, $class, $name);
+		}
+	    } else {
+		# diffrent sys, so it must be a crosscompiler
+		&make_hint($sys, $architecture, $target_sys . '_' . $target_architecture, $class, $name);
+	    }
+		    
+	    return;
+	}
+    }
+
+    print "The compiler $name seems not to have a valid standard.\n";
+    
+    &make_hint($target_sys, $target_architecture, $flavour, $class, $name);
 
     return;
 }
@@ -440,6 +521,12 @@ sub check_cc {
 	    return;
 	}
 
+	if ($o =~ m:clang:i) {
+	    &check_clang($name, 'clang', $sys, $architecture, $flavour, $sys, $architecture);
+
+	    return;
+	}
+
 	&make_hint($sys, $architecture, $flavour, $class, $name);
 	    
 	return;
@@ -541,7 +628,7 @@ sub check_for_compiler {
 
     if ($ret == 0) {
 	print "found a clang compiler.\n";
-	&check_clang('clang', 'clang', $sys, $architecture, $flavour);
+	&check_clang('clang', 'clang', $sys, $architecture, $flavour, $sys, $architecture);
 	$hits ++;
     }
     
@@ -704,6 +791,31 @@ sub check_for_flavour {
 	}
     }
     
+    if ($sys eq 'bsd') {
+	if (!open(IN, "uname -a|")) {
+	    print "cannot find a working uname program.\n";
+
+	    return;
+	}
+
+	my @o = <IN>;
+	
+	my $o = join(' ' , @o);
+
+	close IN;
+
+	if ($o =~ m:freebsd:i) {
+	    print "found a flavor FreeBSD\n";
+	    &check_for_compiler($sys, $architecture, 'FreeBSD');
+	    return;
+	}
+	# ther is no secondary for now. any kvm solution is a separate
+	# system. but we think about cross compiler later ..
+	# if there is  asecond compiler tool chain its a second flavour ...
+
+	&check_for_compiler($sys, $architecture, 'unknown');
+    }
+    
     return;
 }
 
@@ -827,6 +939,18 @@ sub check_for_arch {
 	    return;
 	}
 
+	print "we have a $sys, but we cant detect the architecture.\nplease check the uname -a : \n $o \n";
+
+	return;
+    }
+
+    if ($sys eq 'bsd') {
+	if ($o =~ m:\bamd64\b:i) {
+	    print "found a x86 64 architecture.\n";
+	    &check_for_flavour($sys, 'amd64');
+	    return;
+	}
+	
 	print "we have a $sys, but we cant detect the architecture.\nplease check the uname -a : \n $o \n";
 
 	return;

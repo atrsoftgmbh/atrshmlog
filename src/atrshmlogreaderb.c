@@ -105,6 +105,18 @@
 #endif
 
 
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+
+/* for the mkdir and its mode flags */
+#include <sys/stat.h>
+
+#include <unistd.h>
+
+/* file creation masks */
+#include <fcntl.h>
+
+#endif
+
 #include <stdio.h>
 
 

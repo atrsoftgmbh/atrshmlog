@@ -36,6 +36,12 @@ atrshmlog_ret_t atrshmlog_delete(const int i_shmid)
   int shmctl_result = 0;
 #endif
   
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+  
+  int shmctl_result = shmctl(i_shmid, IPC_RMID, (struct shmid_ds *)0);
+
+#endif
+  
   return shmctl_result;
 }
 

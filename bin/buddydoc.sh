@@ -1,4 +1,5 @@
 #!/bin/bash
+#!/usr/local/bin/bash
 #!/usr/bin/ksh
 # $Id:$
 #
@@ -30,6 +31,12 @@ case $ATRSHMLOG_PLATFORM in
 	DOXYGEN=
 	;;
 
+
+    bsd)
+        # freebsd x86_64 clang 
+        DOXYGEN=
+        ;;
+    
     *)
 
 	echo "no platform found. i gave up."

@@ -1,4 +1,5 @@
 #!/bin/bash
+#!/usr/local/bin/bash
 #!/usr/bin/ksh
 # $Id:$
 #
@@ -31,6 +32,13 @@ case $ATRSHMLOG_PLATFORM in
     mingw)
 	# mingw x86_64 gnu via cygwin
 	CC="x86_64-w64-mingw32-gcc -std=gnu11"
+	PICFLAG=
+	OPTMODE=-O3
+	;;
+
+    bsd)
+	# 
+	CC="clang -std=c11 -fgnu-keywords "
 	PICFLAG=
 	OPTMODE=-O3
 	;;

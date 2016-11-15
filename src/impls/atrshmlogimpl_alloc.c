@@ -121,8 +121,8 @@ atrshmlog_tbuff_t* atrshmlog_alloc(void)
   // We pop from  stack now
   while (ta
 	 && !atomic_compare_exchange_weak_explicit(&atrshmlog_tpa,
-						   &ta,
-						   ta->next_append,
+						   (intptr_t*)&ta,
+						   (intptr_t)ta->next_append,
 						   memory_order_consume,
 						   memory_order_relaxed))
     ;

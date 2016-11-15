@@ -43,6 +43,7 @@
 
 
 #include <unistd.h>
+
 /* file creation masks */
 #include <fcntl.h>
 
@@ -69,6 +70,7 @@
 
 
 #include <unistd.h>
+
 /* file creation masks */
 #include <fcntl.h>
 
@@ -84,6 +86,7 @@
 
 /* file creation masks */
 #include <fcntl.h>
+
 #include <sys/stat.h>
 
 #define access _access
@@ -98,6 +101,18 @@
 #include <windows.h>
 
 #define sleep(__s) Sleep((__s) * 1000)
+
+#endif
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+
+/* for the mkdir and its mode flags */
+#include <sys/stat.h>
+
+#include <unistd.h>
+
+/* file creation masks */
+#include <fcntl.h>
 
 #endif
 

@@ -86,8 +86,8 @@ int main (int argc, char*argv[])
 
     if (creat_result < 1)
       {
-    printf("error %d , errno %d.\n", creat_result, errno);
-    exit(1);
+	printf("error %d , errno %d.\n", creat_result, errno);
+	exit(1);
       }
 
     printf("\npaste this into the user process environment startshell\n");
@@ -120,7 +120,7 @@ int main (int argc, char*argv[])
 
 	fprintf(f, "export %s_COUNT\n", ATRSHMLOG_GET_ENV_PREFIX());
 
-	fprintf(f, "# end of file\n", ATRSHMLOG_GET_ENV_PREFIX());
+	fprintf(f, "# end of file\n");
 
 	fclose(f);
       }
@@ -142,7 +142,7 @@ int main (int argc, char*argv[])
 	
 	fprintf(f, "SET %s_COUNT=%d\r\n", ATRSHMLOG_GET_ENV_PREFIX(), count);
 	
-	fprintf(f, "rem end of file\r\n", ATRSHMLOG_GET_ENV_PREFIX());
+	fprintf(f, "rem end of file\r\n");
 	
 	fclose(f);
       }

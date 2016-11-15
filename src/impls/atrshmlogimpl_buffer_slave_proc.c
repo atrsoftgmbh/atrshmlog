@@ -98,8 +98,8 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
 
   // Push on stack ...
   while(!atomic_compare_exchange_weak_explicit(&atrshmlog_tpslave,
-					       &g->next,
-					       g,
+					       (intptr_t*)&g->next,
+					       (intptr_t)g,
 					       memory_order_relaxed,
 					       memory_order_relaxed))
     ;
@@ -139,8 +139,8 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
       // Pop from list
       while (tbuff &&
 	     !atomic_compare_exchange_weak_explicit(&atrshmlog_tpf,
-						    &tbuff,
-						    tbuff->next_full,
+						    (intptr_t*)&tbuff,
+						    (intptr_t)tbuff->next_full,
 						    memory_order_relaxed,
 						    memory_order_relaxed))
 	;

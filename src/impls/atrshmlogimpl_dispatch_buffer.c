@@ -56,8 +56,8 @@ void atrshmlog_dispatch_buffer(atrshmlog_tbuff_t* restrict i_atrshmlog_targetbuf
       
       // Push on stack ...
       while(!atomic_compare_exchange_weak_explicit(&atrshmlog_tpf,
-						   &i_atrshmlog_targetbuffer->next_full,
-						   i_atrshmlog_targetbuffer,
+						   (intptr_t*)&i_atrshmlog_targetbuffer->next_full,
+						   (intptr_t)i_atrshmlog_targetbuffer,
 						   memory_order_relaxed,
 						   memory_order_relaxed))
 	;
