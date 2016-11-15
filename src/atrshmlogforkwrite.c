@@ -217,7 +217,7 @@ int main (int argc, char*argv[])
 	  a->readerflag =4711;
 	  a->readerpid = cpid;
 	  
-	  printf("sended to client %d.\n" , a->readerpid);
+	  printf("sended to client %ld.\n" , (long)a->readerpid);
 	  
 	  while (a->readerpid != 0)
 	    ;
