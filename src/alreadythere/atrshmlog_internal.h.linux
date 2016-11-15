@@ -63,7 +63,7 @@
  * Can mean additional functions for fences, sleeps etc.
  * Not meaning a simple bugfix.
  */
-#define ATRSHMLOGMINORVERSION (0)
+#define ATRSHMLOGMINORVERSION (1)
 
 /**
  * \brief Patch level version for handling of errors and changes internal .
@@ -352,6 +352,12 @@
 #endif
 
 
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+
+#define ATRSHMLOGCDECLBINDING /**/
+
+#endif
+
 
 
 /* os specifics includes */
@@ -432,6 +438,36 @@ typedef long atrshmlog_key_t;
 
 #endif
 
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+
+/** Include of types for unix stuff */
+# include <sys/types.h>
+
+/** The ipc stuff */
+# include <sys/ipc.h>
+
+/** The shm stuff */
+# include <sys/shm.h>
+
+/** The thread stuff */
+#include <sys/thr.h>
+
+/** All the rest of unix */
+# include <unistd.h>
+
+/** File creation masks */
+# include <fcntl.h>
+
+/* the shared memory key in posix */
+
+typedef key_t atrshmlog_key_t;
+
+# define ATRSHMLOGINITINADVANCEDEFAULT 0
+
+# define ATRSHMLOGSCALECLICKTONANO(__click) (((__click) * 5LL ) / 2LL)
+
+#endif
+
 /**************************************************************/
 
 #if ATRSHMLOG_USE_PTHREAD == 1
@@ -475,16 +511,20 @@ typedef void atrshmlog_thread_ret_t;
 #endif
 
 #if ATRSHMLOG_USE_PTHREAD_TID == 1
-#define ATRSHMLOG_GETTHREADID (pthread_self())
+#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (pthread_self()))
 #endif
 
 #if ATRSHMLOG_USE_SYSCALL_TID == 1
-#define ATRSHMLOG_GETTHREADID (syscall(SYS_gettid))
+#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (syscall(SYS_gettid)))
 #endif
 
 #if ATRSHMLOG_USE_WINTHREAD_TID == 1
-#define ATRSHMLOG_GETTHREADID ((long)GetCurrentThreadId())
+#define ATRSHMLOG_GETTHREADID(__o) ((__o) = ((long)GetCurrentThreadId()))
 #endif 
+
+#if ATRSHMLOG_USE_THR_SELF_TID == 1
+#define ATRSHMLOG_GETTHREADID(__o) do { (__o) = 0; thr_self((long*)&(__o)); } while(0)
+#endif
 
 
 #if ATRSHMLOG_LEVEL > 0

@@ -1,4 +1,5 @@
 #!/bin/bash
+#!/usr/local/bin/bash
 #!/usr/bin/ksh
 # $Id:$
 #
@@ -31,6 +32,14 @@ case $ATRSHMLOG_PLATFORM in
     mingw)
 	# mingw x86_64 gnu via cygwin
 	AR="x86_64-w64-mingw32-ar"
+	LIB=libatrshmlog.a
+	OBJ="atrshmlog.o $(ls impls/*.o | grep atrshmlogimpl )"
+	;;
+
+
+    bsd)
+	# 
+	AR=ar
 	LIB=libatrshmlog.a
 	OBJ="atrshmlog.o $(ls impls/*.o | grep atrshmlogimpl )"
 	;;

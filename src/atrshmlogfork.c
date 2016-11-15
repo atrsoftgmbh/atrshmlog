@@ -136,12 +136,12 @@ int main (int argc, char*argv[])
       int i = 0;
       
       if (anzahl_buffer != anzahl_shm)
-    printf("%d count buffer wrong: expect is %d, in shm is %d.\n",
-           cpid, anzahl_buffer, anzahl_shm);
+	printf("%d count buffer wrong: expect is %d, in shm is %d.\n",
+	       cpid, anzahl_buffer, anzahl_shm);
 
       if (a->shmsafeguard != ATRSHMLOGSAFEGUARDVALUE)
-    printf("%d safeguard wrong : 0X%lx , expect 0X%lx\n",
-           cpid, a->shmsafeguard, ATRSHMLOGSAFEGUARDVALUE);
+	printf("%d safeguard wrong : 0X%lx , expect 0X%lx\n",
+	       cpid, a->shmsafeguard, ATRSHMLOGSAFEGUARDVALUE);
       
       for (i = 0; i < anzahl_shm ; i++)
     {
@@ -172,11 +172,11 @@ int main (int argc, char*argv[])
 
       size = a->logbuffers[i].shmsize;
 
-      printf("%d buffer %d : size is %ld, limit %ld\n",
+      printf("%d buffer %d : size is %ld, limit %d\n",
          cpid,
          i,
          size,
-         ATRSHMLOGBUFFER_INFOSIZE);
+	 ATRSHMLOGBUFFER_INFOSIZE);
     }
 
   if (cpid == 0)
@@ -198,7 +198,7 @@ int main (int argc, char*argv[])
       a->readerflag =4711;
       a->readerpid = cpid;
 
-      printf("sended to client %d.\n" , a->readerpid);
+      printf("sended to client %ld.\n" , (long)a->readerpid);
 
       while (a->readerpid != 0)
     ;

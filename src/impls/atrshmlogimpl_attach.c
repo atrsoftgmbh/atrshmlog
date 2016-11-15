@@ -284,6 +284,14 @@ atrshmlog_ret_t atrshmlog_attach(void)
 
 #endif
 
+# if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+
+      int shmflg = 0; 
+		
+      void *shmat_result = shmat(shmid, shmaddr, shmflg);
+
+#endif
+
       if (shmat_result != (void*)-1)
 	{
 	  atrshmlog_base_ptr = shmat_result;

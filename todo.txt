@@ -1,5 +1,8 @@
 ----
 
+remove reader to readerc and move to unsupported obsolet
+
+----
 get next slave mess.
 together with remove and change of list
 

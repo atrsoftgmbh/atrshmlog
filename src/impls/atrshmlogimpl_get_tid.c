@@ -18,7 +18,7 @@
  {
    atrshmlog_tid_t t;
 
-   t = ATRSHMLOG_GETTHREADID;
+   ATRSHMLOG_GETTHREADID(t);
 
    return t;
  }

@@ -208,7 +208,7 @@ atrshmlog_ret_t atrshmlog_read_fetch(volatile const void* i_area,
   b->next_append = atomic_load_explicit(&i_shm->shma, memory_order_acquire);
       
   while (!atomic_compare_exchange_weak_explicit(&i_shm->shma,
-						&b->next_append,
+						(int*)&b->next_append,
 						isfull,
 						memory_order_release,
 						memory_order_relaxed))

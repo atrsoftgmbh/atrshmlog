@@ -1,8 +1,9 @@
 #!/bin/bash
+#!/usr/local/bin/bash
 
 if [ ! -d $1 ]
 then
-    echo "parameter one must be a filled dierctory"
+    echo "parameter one must be a filled directory tree"
     exit 1
 fi
 

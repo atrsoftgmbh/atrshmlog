@@ -28,7 +28,19 @@ echo "set platform"
 
 ATRSHMLOG_PLATFORM=mingw
 
+# ATRSHMLOG_PLATFORM=bsd
+
 export ATRSHMLOG_PLATFORM
+
+# ATRSHMLOG_FLAVOUR=fedora
+
+# ATRSHMLOG_FLAVOUR=cygwin64
+
+ATRSHMLOG_FLAVOUR=mingw64
+
+# ATRSHMLOG_FLAVOUR=freebsd
+
+export ATRSHMLOG_FLAVOUR
 
 echo "set path"
 # we need a working path. so we assume its the basedir relative in bin

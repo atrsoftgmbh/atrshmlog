@@ -211,7 +211,7 @@ atrshmlog_tbuff_t atrshmlog_buffers_prealloced[ATRSHMLOGBUFFER_PREALLOCED_COUNT]
  * AFTER an exit call ...
  *
  */
-atomic_intptr_t atrshmlog_tps = ATOMIC_VAR_INIT(atrshmlog_buffers_prealloced);
+atomic_intptr_t atrshmlog_tps = ATOMIC_VAR_INIT((intptr_t)atrshmlog_buffers_prealloced);
 
 
 /********************************************************************/
@@ -242,7 +242,7 @@ atomic_intptr_t atrshmlog_tps = ATOMIC_VAR_INIT(atrshmlog_buffers_prealloced);
  * Be sure you know what you do if you try to use a buffer after a dispose 
  * in the old thread ....
  */
-atomic_intptr_t atrshmlog_tpa = ATOMIC_VAR_INIT(atrshmlog_buffers_prealloced);
+atomic_intptr_t atrshmlog_tpa = ATOMIC_VAR_INIT((intptr_t)atrshmlog_buffers_prealloced);
 
 void atrshmlog_memset_prealloced(void)
 {

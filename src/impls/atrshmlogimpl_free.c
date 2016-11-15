@@ -43,7 +43,9 @@ void atrshmlog_free(atrshmlog_tbuff_t* restrict t)
   // we push it now only on the a list for reuse
   t->next_append = (atrshmlog_tbuff_t*)atomic_load(&atrshmlog_tpa);
 
-  while (!atomic_compare_exchange_weak(&atrshmlog_tpa, &t->next_append, t))
+  while (!atomic_compare_exchange_weak(&atrshmlog_tpa,
+				       (intptr_t*)&t->next_append,
+				       (intptr_t)t))
     ;
 }
 

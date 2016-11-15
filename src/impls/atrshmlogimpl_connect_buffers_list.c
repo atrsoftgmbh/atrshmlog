@@ -34,9 +34,9 @@
  * \li non zero : error
  */
 int atrshmlog_il_connect_buffers_list(atrshmlog_tbuff_t* const raw,
-					     const int i_buffer_count,
-					     char* i_chunkbuffer,
-					     const int i_buffer_size)
+				      const int i_buffer_count,
+				      char* i_chunkbuffer,
+				      const int i_buffer_size)
 {
   atrshmlog_tbuff_t* n = raw;
 
@@ -85,13 +85,17 @@ int atrshmlog_il_connect_buffers_list(atrshmlog_tbuff_t* const raw,
   // We push all members in one move on the s list for cleanup
   t->next_cleanup = (atrshmlog_tbuff_t*)atomic_load(&atrshmlog_tps);
 
-  while (!atomic_compare_exchange_weak(&atrshmlog_tps, &t->next_cleanup, n))
+  while (!atomic_compare_exchange_weak(&atrshmlog_tps,
+				       (intptr_t*)&t->next_cleanup,
+				       (intptr_t)n))
     ;
 
   // We push all members in one move on the a list for use
   t->next_append = (atrshmlog_tbuff_t*)atomic_load(&atrshmlog_tpa);
 
-  while (!atomic_compare_exchange_weak(&atrshmlog_tpa, &t->next_append, n))
+  while (!atomic_compare_exchange_weak(&atrshmlog_tpa,
+				       (intptr_t*)&t->next_append,
+				       (intptr_t)n))
     ;
 
   return atrshmlog_error_ok;

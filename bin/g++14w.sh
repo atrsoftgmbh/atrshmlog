@@ -1,4 +1,5 @@
 #!/bin/bash
+#!/usr/local/bin/bash
 #!/usr/bin/ksh
 #
 # $Id:$
@@ -37,6 +38,14 @@ case $ATRSHMLOG_PLATFORM in
 	PICFLAG= 
 	OPTMODE=-O3
 	LIBMODULE=-latrshmlog
+	;;
+
+    bsd)
+	# 
+	CPP="clang++ -std=c++14 "
+	PICFLAG=
+	OPTMODE=-O3
+	LIBMODULE="-latrshmlog  -lpthread"
 	;;
 
     *)

@@ -72,6 +72,13 @@
  */
 #define ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC 0
 
+/** 
+ * \brief We have a x86 64 bit, a bsd and a clang c 
+ *
+ * No java support tested so far.
+ */
+#define ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG 0
+
 /********************************************************/
 
 
@@ -128,6 +135,11 @@
 # define ATRSHMLOG_USE_PTHREAD 1
 #endif
 
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+# undef ATRSHMLOG_USE_PTHREAD
+# define ATRSHMLOG_USE_PTHREAD 1
+#endif
+
 /** 
  * \brief Do we use the windows thread lib 
  *
@@ -166,6 +178,11 @@
 # define ATRSHMLOG_SYSCALL 1
 #endif
 
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+# undef ATRSHMLOG_SYSCALL
+# define ATRSHMLOG_SYSCALL 1
+#endif
+
 /** 
  * \brief Do we use the clock_gettime here 
  */
@@ -186,6 +203,11 @@
 #  undef ATRSHMLOG_USE_CLOCK_GETTIME
 #  define ATRSHMLOG_USE_CLOCK_GETTIME 1
 # endif
+#endif
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+# undef ATRSHMLOG_USE_CLOCK_GETTIME
+# define ATRSHMLOG_USE_CLOCK_GETTIME 1
 #endif
 
 /** 
@@ -239,6 +261,11 @@
 # endif
 #endif
 
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+# undef ATRSHMLOG_USE_NANOSLEEP
+# define ATRSHMLOG_USE_NANOSLEEP 1
+#endif
+
 
 /** 
  * \brief Do we use the syscall for linux to get TID 
@@ -271,6 +298,16 @@
 # define ATRSHMLOG_USE_WINTHREAD_TID 1
 #endif
 
+/**
+ * \brief We use the thr_self call of freebsd here
+ */
+#define ATRSHMLOG_USE_THR_SELF_TID 0
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+# undef ATRSHMLOG_USE_THR_SELF_TID
+# define ATRSHMLOG_USE_THR_SELF_TID 1
+#endif
+
 
 
 // candidates for the platform tsc call function
@@ -300,6 +337,12 @@
 #if ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 1
 # undef ATRSHMLOG_GET_TSC_CALL
 # define  ATRSHMLOG_GET_TSC_CALL atrshmlog_get_tsc_x86_64_gnu
+#endif
+
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+# undef ATRSHMLOG_GET_TSC_CALL
+# define  ATRSHMLOG_GET_TSC_CALL atrshmlog_get_tsc_amd64_clang
 #endif
 
 /********************************************************************/
@@ -519,14 +562,14 @@ extern "C" {
   extern volatile const atrshmlog_event_t*  atrshmlog_event_locks;
 
 #ifdef SWIG
-  %mutable;
-  #endif
+%mutable;
+#endif
   
 
   
 #ifdef SWIG
-  %immutable;
-  #endif
+%immutable;
+#endif
   
     /** 
    * \brief Our process wide log on off flag. 
@@ -544,13 +587,13 @@ extern "C" {
   extern volatile atrshmlog_int32_t atrshmlog_logging_process;
 
 #ifdef SWIG
-  %mutable;
-  #endif
+%mutable;
+#endif
   
 
 #ifdef SWIG
-  %immutable;
-  #endif
+%immutable;
+#endif
   
     /** 
    * \brief The clock id for the get clicktime. 
@@ -562,8 +605,8 @@ extern "C" {
   extern volatile int atrshmlog_clock_id;
   
 #ifdef SWIG
-  %mutable;
-  #endif
+%mutable;
+#endif
   
 
   /************************************************************/
@@ -4263,6 +4306,75 @@ extern "C" {
 #endif
   // mingw x86_64_gnu
   
+  #if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1 
+
+  /**
+   * We use the modern cpu version of reading the click counter
+   * register tsc.
+   *
+   * \return
+   * The 64 bit number with the tick count.
+   */
+  inline uint64_t  atrshmlog_get_tsc_par_amd64_clang(void)
+  {
+    uint32_t hi, lo;
+
+    __asm volatile
+      ("rdtscp" : "=a" (lo), "=d" (hi));
+
+    return  ((uint64_t)hi << 32) | lo;
+  }
+
+
+  /**
+   * We use the old cpu version of reading the click counter
+   * register tsc. We use a lfence for multicore here.
+   *
+   * \return
+   * The 64 bit number with the tick count.
+   */
+  inline uint64_t  atrshmlog_get_tsc_fence_amd64_clang(void)
+  {
+    uint32_t hi, lo;
+    
+    __asm volatile
+      ("lfence");
+    
+    __asm volatile
+      ("rdtsc" : "=a" (lo), "=d" (hi));
+    
+    return  ((uint64_t)hi << 32) | lo;
+  }
+
+  /**
+   * We use the old cpu version of reading the click counter
+   * register tsc. No syncronization here.
+   *
+   * \return
+   * The 64 bit number with the tick count.
+   */
+  inline  uint64_t atrshmlog_get_tsc_amd64_clang(void)
+  {
+    uint32_t hi, lo;
+
+    __asm volatile
+      ("rdtsc" : "=a" (lo), "=d" (hi));
+
+    return  ((uint64_t)hi << 32) | lo;
+  }
+
+  /**
+   * The well know dummy 
+   * \return 
+   * Null.
+   */
+  inline  uint64_t  atrshmlog_get_tsc_null_amd64_clang(void)
+  {
+    return 0;
+  }
+#endif
+  // bsd amd64 clang
+  
   #else
 
   // no inline, prototypes needed
@@ -4386,6 +4498,46 @@ extern "C" {
   // mingw 86 64 gnu
 
 
+# if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1 
+  
+  /**
+   * We use the modern cpu version of reading the click counter
+   * register tsc.
+   *
+   * \return
+   * The 64 bit number with the tick count.
+   */
+  extern uint64_t atrshmlog_get_tsc_par_amd64_clang(void);
+
+  /**
+   * We use the old cpu version of reading the click counter
+   * register tsc. We use a lfence for multicore here.
+   *
+   * \return
+   * The 64 bit number with the tick count.
+   */
+  extern uint64_t atrshmlog_get_tsc_fence_amd64_clang(void);
+
+  /**
+   * We use the old cpu version of reading the click counter
+   * register tsc. No syncronization here.
+   *
+   * \return
+   * The 64 bit number with the tick count.
+   */
+  extern uint64_t atrshmlog_get_tsc_amd64_clang(void);
+
+  /**
+   * The well know dummy 
+   * \return 
+   * Null.
+   */
+  extern uint64_t atrshmlog_get_tsc_null_amd64_clang(void);
+
+# endif
+  // bsd amd64 clang
+
+
 #endif
 
 #if ATRSHMLOG_INLINE_GETTIME == 1  
@@ -4494,6 +4646,41 @@ extern "C" {
       }
     
     return (atrshmlog_time_t)atrshmlog_get_tsc_null_x86_64_gnu();
+  }
+
+# endif
+# if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1 
+
+
+  /**
+   * \brief We get the click time from here.
+   *
+   * This is used in later versions, for now its a start.
+   * We adress here the possibility to use code for 
+   * similar architecture on diffrent systems.
+   * So we need to choose a low level function by id.
+   *
+   * \return
+   * The 64 bit  click time 
+   */
+  inline atrshmlog_time_t  atrshmlog_get_clicktime(void)
+  {
+    if (atrshmlog_clock_id == 3)
+      {
+	return (atrshmlog_time_t)atrshmlog_get_tsc_par_amd64_clang();
+      }
+    
+    if (atrshmlog_clock_id == 2)
+      {
+	return (atrshmlog_time_t)atrshmlog_get_tsc_fence_amd64_clang();
+      }
+    
+    if (atrshmlog_clock_id == 1)
+      {
+	return (atrshmlog_time_t)atrshmlog_get_tsc_amd64_clang();
+      }
+    
+    return (atrshmlog_time_t)atrshmlog_get_tsc_null_amd64_clang();
   }
 
 # endif
