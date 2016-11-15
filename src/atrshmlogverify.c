@@ -109,67 +109,66 @@ int main (int argc, char*argv[])
 
     /*******************************************/
     {
-      const atrshmlog_area_t * a = (const atrshmlog_area_t *)ATRSHMLOG_GET_AREA();
+      atrshmlog_area_t * a = (atrshmlog_area_t *)ATRSHMLOG_GET_AREA();
       
       int anzahl_buffer = (int)lanz;
       int anzahl_shm = a->shmcount;
       int i = 0;
       
       if (anzahl_buffer != anzahl_shm)
-    printf("count of buffer wrong: expected was %d, in shm is %d.\n",
-           anzahl_buffer, anzahl_shm);
+	printf("count of buffer wrong: expected was %d, in shm is %d.\n",
+	       anzahl_buffer, anzahl_shm);
 
       if (a->shmsafeguard != ATRSHMLOGSAFEGUARDVALUE)
-    printf("safeguard wrong : 0X%lx , expect 0X%lx\n",
-           a->shmsafeguard, ATRSHMLOGSAFEGUARDVALUE);
+	printf("safeguard wrong : 0X%lx , expect 0X%lx\n",
+	       a->shmsafeguard, ATRSHMLOGSAFEGUARDVALUE);
 
       printf("ich habe fertig is %d at %ld\n", a->ich_habe_fertig, (long)((char*)(&(a->ich_habe_fertig)) - (char*)a));
       
       for (i = 0; i < anzahl_shm ; i++)
-    {
-      int state = atomic_load(&a->logbuffers[i].state);
-      long size;
+	{
+	  int state = atomic_load(&a->logbuffers[i].state);
+	  long size;
           
-      if (!(state == atrshmlog_writeable
-        || state == atrshmlog_write_halffull
-        || state == atrshmlog_full))
-        {
-          printf("error in buffer %d : state is %d.\n"
-             "  allowed %d, %d, %d, %d, %d.\n",
-             i,
-             state,
-             atrshmlog_uninit,
-             atrshmlog_writeable,
-              atrshmlog_write_halffull,
-             atrshmlog_full,
-             atrshmlog_illegal);
-        }
+	  if (!(state == atrshmlog_writeable
+		|| state == atrshmlog_write_halffull
+		|| state == atrshmlog_full))
+	    {
+	      printf("error in buffer %d : state is %d.\n"
+		     "  allowed %d, %d, %d, %d, %d.\n",
+		     i,
+		     state,
+		     atrshmlog_uninit,
+		     atrshmlog_writeable,
+		     atrshmlog_write_halffull,
+		     atrshmlog_full,
+		     atrshmlog_illegal);
+	    }
 
-      if (a->logbuffers[i].safeguard != ATRSHMLOGSAFEGUARDVALUE)
-        {
-          printf("error in buffer %d, safeguard is 0X%lx, expect 0X%lx.\n",
-             i,
-             a->logbuffers[i].safeguard,
-             ATRSHMLOGSAFEGUARDVALUE);
-        }
+	  if (a->logbuffers[i].safeguard != ATRSHMLOGSAFEGUARDVALUE)
+	    {
+	      printf("error in buffer %d, safeguard is 0X%lx, expect 0X%lx.\n",
+		     i,
+		     a->logbuffers[i].safeguard,
+		     ATRSHMLOGSAFEGUARDVALUE);
+	    }
+	  
+	  size = a->logbuffers[i].shmsize;
+	  
+	  printf("buffer %d : size is %ld, limit %d, state is %s\n",
+		 i,
+		 size,
+		 ATRSHMLOGBUFFER_INFOSIZE,
+		 state == atrshmlog_uninit ? "uninit" :
+		 state == atrshmlog_writeable ? "writeable" :
+		 state == atrshmlog_write_halffull ? "write_halffull":
+		 state == atrshmlog_full ? "full" :
+		 state == atrshmlog_illegal ? "illegal" :
+		 "corrupt");
 
-      size = a->logbuffers[i].shmsize;
-
-      printf("buffer %d : size is %ld, limit %ld, state is %s\n",
-         i,
-         size,
-         ATRSHMLOGBUFFER_INFOSIZE,
-         state == atrshmlog_uninit ? "uninit" :
-         state == atrshmlog_writeable ? "writeable" :
-         state == atrshmlog_write_halffull ? "write_halffull":
-         state == atrshmlog_full ? "full" :
-         state == atrshmlog_illegal ? "illegal" :
-         "corrupt");
-
-    }
+	}
     }
   }
-
 
   return 0;
 }
