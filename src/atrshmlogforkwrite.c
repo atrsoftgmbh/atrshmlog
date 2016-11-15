@@ -154,76 +154,77 @@ int main (int argc, char*argv[])
       int i = 0;
       
       if (anzahl_buffer != anzahl_shm)
-    printf("%d count buffer wrong: expect is %d, in shm is %d.\n",
-           cpid, anzahl_buffer, anzahl_shm);
+	printf("%d count buffer wrong: expect is %d, in shm is %d.\n",
+	       cpid, anzahl_buffer, anzahl_shm);
 
       if (a->shmsafeguard != ATRSHMLOGSAFEGUARDVALUE)
-    printf("%d safeguard wrong : 0X%lx , expect 0X%lx\n",
-           cpid, a->shmsafeguard, ATRSHMLOGSAFEGUARDVALUE);
+	printf("%d safeguard wrong : 0X%lx , expect 0X%lx\n",
+	       cpid, a->shmsafeguard, ATRSHMLOGSAFEGUARDVALUE);
       
       for (i = 0; i < anzahl_shm ; i++)
-    {
-      int state = atomic_load(&a->logbuffers[i].state);
-      long size;
+	{
+	  int state = atomic_load(&a->logbuffers[i].state);
+	  long size;
           
-      if (!(state == atrshmlog_writeable || state == atrshmlog_full))
-        {
-          printf("%d error in buffer %d : state is %d.\n"
-             "  allowed %d, %d, %d, %d.\n",
-             cpid,
-             i,
-             state,
-             atrshmlog_uninit,
-             atrshmlog_writeable,
-             atrshmlog_full,
-             atrshmlog_illegal);
+	  if (!(state == atrshmlog_writeable || state == atrshmlog_full))
+	    {
+	      printf("%d error in buffer %d : state is %d.\n"
+		     "  allowed %d, %d, %d, %d.\n",
+		     cpid,
+		     i,
+		     state,
+		     atrshmlog_uninit,
+		     atrshmlog_writeable,
+		     atrshmlog_full,
+		     atrshmlog_illegal);
         }
+	  
+	  if (a->logbuffers[i].safeguard != ATRSHMLOGSAFEGUARDVALUE)
+	    {
+	      printf("%d error in buffer %d, safeguard is 0X%lx, expect 0X%lx.\n",
+		     cpid,
+		     i,
+		     a->logbuffers[i].safeguard,
+		     ATRSHMLOGSAFEGUARDVALUE);
+	    }
+	  
+	  size = a->logbuffers[i].shmsize;
+	  
+	  printf("%d buffer %d : size is %ld, limit %d\n",
+		 cpid,
+		 i,
+		 size,
+		 ATRSHMLOGBUFFER_INFOSIZE);
+	}
 
-      if (a->logbuffers[i].safeguard != ATRSHMLOGSAFEGUARDVALUE)
-        {
-          printf("%d error in buffer %d, safeguard is 0X%lx, expect 0X%lx.\n",
-             cpid,
-             i,
-             a->logbuffers[i].safeguard,
-             ATRSHMLOGSAFEGUARDVALUE);
-        }
-
-      size = a->logbuffers[i].shmsize;
-
-      printf("%d buffer %d : size is %ld, limit %ld\n",
-         cpid,
-         i,
-         size,
-         ATRSHMLOGBUFFER_INFOSIZE);
-    }
-
-  if (cpid == 0)
-    {
-      /* we are the child */
-      printf("father has pid %d\n", getppid());
-      
-      while (a->readerpid != getpid())
-    ;
-      printf("got from father %d\n", a->readerflag);
-      fflush(stdout);
-      a->readerpid = 0;
-      a->readerflag = 0;
-    }
+      if (cpid == 0)
+	{
+	  /* we are the child */
+	  printf("father has pid %d\n", getppid());
+	  
+	  while (a->readerpid != getpid())
+	    ;
+	  
+	  printf("got from father %d\n", a->readerflag);
+	  fflush(stdout);
+	  a->readerpid = 0;
+	  a->readerflag = 0;
+	}
   
-  if (cpid != 0)
-    {
-      /* we are the father */
-      a->readerflag =4711;
-      a->readerpid = cpid;
-
-      printf("sended to client %d.\n" , a->readerpid);
-
-      while (a->readerpid != 0)
-    ;
+      if (cpid != 0)
+	{
+	  /* we are the father */
+	  a->readerflag =4711;
+	  a->readerpid = cpid;
+	  
+	  printf("sended to client %ld.\n" , (long)a->readerpid);
+	  
+	  while (a->readerpid != 0)
+	    ;
+	}
     }
-    }
-
-
+    
+    
   }
 
 

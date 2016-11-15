@@ -44,8 +44,8 @@ atrshmlog_ret_t atrshmlog_remove_slave_via_local(volatile const void* i_thread_l
       // Pop from stack ...
       while(n
 	    && !atomic_compare_exchange_weak_explicit(&atrshmlog_tpslave,
-						   &n,
-						   n->next,
+						   (intptr_t*)&n,
+						   (intptr_t)n->next,
 						   memory_order_relaxed,
 						   memory_order_relaxed))
 	;

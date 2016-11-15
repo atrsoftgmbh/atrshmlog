@@ -1,4 +1,5 @@
 #!/bin/bash
+#!/usr/local/bin/bash
 #!/usr/bin/ksh
 #
 # $Id:$
@@ -31,6 +32,12 @@ case $ATRSHMLOG_PLATFORM in
 	# mingw x86_64 gnu via cygwin - optional -pthread  -pthread for libpthread support
 	CC="x86_64-w64-mingw32-gcc"
 	LIBMODULE=-latrshmlog
+	;;
+
+    bsd)
+	# 
+	CC="clang "
+	LIBMODULE="-latrshmlog  -lpthread"
 	;;
 
     *)

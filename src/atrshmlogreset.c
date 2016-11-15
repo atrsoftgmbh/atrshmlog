@@ -169,7 +169,7 @@ int main (int argc, char*argv[])
 
 	  size = a->logbuffers[i].shmsize;
 
-	  printf("buffer %d : size is %ld, limit %ld, state is %s\n",
+	  printf("buffer %d : size is %ld, limit %d, state is %s\n",
 		 i,
 		 size,
 		 ATRSHMLOGBUFFER_INFOSIZE,

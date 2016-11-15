@@ -589,7 +589,7 @@ int main (int argc, char*argv[])
       again:
 	result_len = fread(pos, 1, read_len - total_len + 1, fin);
     
-	if (result_len < 0)
+	if (result_len < (read_len - total_len))
 	  {
 	    if (errno != EINTR)
 	      {
@@ -625,24 +625,24 @@ int main (int argc, char*argv[])
     // if we have statistics and we have a stat file
     if(fstat != NULL)
       {
-	fprintf(fstat, "atrshmlogstat 12 %ld\n", counter_write0);
-	fprintf(fstat, "atrshmlogstat 17 %ld\n", counter_write0_discard);
-	fprintf(fstat, "atrshmlogstat 18 %ld\n", counter_write0_wait);
-	fprintf(fstat, "atrshmlogstat 19 %ld\n", counter_write0_adaptive);
-	fprintf(fstat, "atrshmlogstat 20 %ld\n", counter_write0_adaptive_fast);
-	fprintf(fstat, "atrshmlogstat 21 %ld\n", counter_write0_adaptive_very_fast);
-	fprintf(fstat, "atrshmlogstat 24 %ld\n", counter_write1);
-	fprintf(fstat, "atrshmlogstat 29 %ld\n", counter_write1_discard);
-	fprintf(fstat, "atrshmlogstat 30 %ld\n", counter_write1_wait);
-	fprintf(fstat, "atrshmlogstat 31 %ld\n", counter_write1_adaptive);
-	fprintf(fstat, "atrshmlogstat 32 %ld\n", counter_write1_adaptive_fast);
-	fprintf(fstat, "atrshmlogstat 33 %ld\n", counter_write1_adaptive_very_fast);
-	fprintf(fstat, "atrshmlogstat 37 %ld\n", counter_write2);
-	fprintf(fstat, "atrshmlogstat 42 %ld\n", counter_write2_discard);
-	fprintf(fstat, "atrshmlogstat 43 %ld\n", counter_write2_wait);
-	fprintf(fstat, "atrshmlogstat 44 %ld\n", counter_write2_adaptive);
-	fprintf(fstat, "atrshmlogstat 45 %ld\n", counter_write2_adaptive_fast);
-	fprintf(fstat, "atrshmlogstat 46 %ld\n", counter_write2_adaptive_very_fast);
+	fprintf(fstat, "atrshmlogstat 12 %ld\n", (long)counter_write0);
+	fprintf(fstat, "atrshmlogstat 17 %ld\n", (long)counter_write0_discard);
+	fprintf(fstat, "atrshmlogstat 18 %ld\n", (long)counter_write0_wait);
+	fprintf(fstat, "atrshmlogstat 19 %ld\n", (long)counter_write0_adaptive);
+	fprintf(fstat, "atrshmlogstat 20 %ld\n", (long)counter_write0_adaptive_fast);
+	fprintf(fstat, "atrshmlogstat 21 %ld\n", (long)counter_write0_adaptive_very_fast);
+	fprintf(fstat, "atrshmlogstat 24 %ld\n", (long)counter_write1);
+	fprintf(fstat, "atrshmlogstat 29 %ld\n", (long)counter_write1_discard);
+	fprintf(fstat, "atrshmlogstat 30 %ld\n", (long)counter_write1_wait);
+	fprintf(fstat, "atrshmlogstat 31 %ld\n", (long)counter_write1_adaptive);
+	fprintf(fstat, "atrshmlogstat 32 %ld\n", (long)counter_write1_adaptive_fast);
+	fprintf(fstat, "atrshmlogstat 33 %ld\n", (long)counter_write1_adaptive_very_fast);
+	fprintf(fstat, "atrshmlogstat 37 %ld\n", (long)counter_write2);
+	fprintf(fstat, "atrshmlogstat 42 %ld\n", (long)counter_write2_discard);
+	fprintf(fstat, "atrshmlogstat 43 %ld\n", (long)counter_write2_wait);
+	fprintf(fstat, "atrshmlogstat 44 %ld\n", (long)counter_write2_adaptive);
+	fprintf(fstat, "atrshmlogstat 45 %ld\n", (long)counter_write2_adaptive_fast);
+	fprintf(fstat, "atrshmlogstat 46 %ld\n", (long)counter_write2_adaptive_very_fast);
       }
   }
   
@@ -1107,7 +1107,7 @@ static void convertucs2(char *inputstringbuffer,
 			const char *prefix,
 			FILE *i_fout)
 {
-  unsigned char *p = inputstringbuffer;
+  unsigned char *p = (unsigned char*)inputstringbuffer;
 
   char *target = inputstringbuffer; // dirty. we use the buffer itself for write
 

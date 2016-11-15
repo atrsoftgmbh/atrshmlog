@@ -172,6 +172,7 @@ atrshmlogimpl_mapped_files_defaults.c
 atrshmlogimpl_non_inline_code_cygwin.c
 atrshmlogimpl_non_inline_code_linux_gcc.c
 atrshmlogimpl_non_inline_code_mingw.c
+atrshmlogimpl_non_inline_code_bsd_clang.c
 atrshmlogimpl_prealloc_buffers.c
 atrshmlogimpl_prealloc_count_flag.c
 atrshmlogimpl_prefix_buffer.c
@@ -238,9 +239,11 @@ DIRECTORY src alreadythere
 atrshmlog.h.linux
 atrshmlog.h.cygwin
 atrshmlog.h.mingw
+atrshmlog.h.freebsd
 atrshmlog_internal.h.linux
 atrshmlog_internal.h.cygwin
 atrshmlog_internal.h.mingw
+atrshmlog_internal.h.freebsd
 shmCPPfiles.mingw
 
 DIRECTORY bin

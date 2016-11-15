@@ -43,8 +43,8 @@
 /* for the mkdir and its mode flags */
 #include <sys/stat.h>
 
-
 #include <unistd.h>
+
 /* file creation masks */
 #include <fcntl.h>
 
@@ -69,8 +69,8 @@
 /* for the mkdir and its mode flags */
 #include <sys/stat.h>
 
-
 #include <unistd.h>
+
 /* file creation masks */
 #include <fcntl.h>
 
@@ -83,8 +83,10 @@
 #define mkdir(__f,__m) _mkdir((__f))
 
 #include <io.h>
+
 /* file creation masks */
 #include <fcntl.h>
+
 #include <sys/stat.h>
 
 #define access _access
@@ -101,6 +103,19 @@
 #define sleep(__s) Sleep((__s) * 1000)
 
 #endif
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+
+/* for the mkdir and its mode flags */
+#include <sys/stat.h>
+
+#include <unistd.h>
+
+/* file creation masks */
+#include <fcntl.h>
+
+#endif
+
 
 #include <stdio.h>
 
@@ -246,11 +261,15 @@ static atomic_long writerops = 0;
 int create_fetcher()
 {
 #if  ATRSHMLOG_USE_PTHREAD  == 1
+
+  pthread_t tmp;
   
-  int ret = pthread_create(&f_list_buffer_fetch,
+  int ret = pthread_create(&tmp,
 			   NULL,
 			   f_list_buffer_fetch_proc,
 			   NULL);
+  f_list_buffer_fetch = (atrshmlog_tid_t)tmp;
+  
 #endif
 
 #if  ATRSHMLOG_USE_C11_THREAD == 1
@@ -290,10 +309,14 @@ int create_writer()
 {
 #if  ATRSHMLOG_USE_PTHREAD  == 1
   
-  int ret = pthread_create(&f_list_buffer_write,
+  pthread_t tmp;
+
+  int ret = pthread_create(&tmp,
 			   NULL,
 			   f_list_buffer_write_proc,
 			   NULL);
+
+  f_list_buffer_write = (atrshmlog_tid_t)tmp;
 #endif
 
 #if  ATRSHMLOG_USE_C11_THREAD == 1
@@ -752,11 +775,11 @@ int atrshmlog_write_transfer(char *target, mb_t* ob)
 
 	   /* we correct the last buffer */
 	   mb--;
-	   mb->next = 0;
+	   mb->next = 0; 
 	   mb->next_append = 0;
 
-	   atomic_store(&tps, m);
-	   atomic_store(&tpa, m);
+	   atomic_store(&tps, (intptr_t)m);
+	   atomic_store(&tpa, (intptr_t)m);
 	   
 	   return 0;
 	 }
@@ -793,16 +816,16 @@ int atrshmlog_write_transfer(char *target, mb_t* ob)
 
 	   // push on stack ...
 	   while(!atomic_compare_exchange_weak_explicit(&tps,
-						       &mb->next,
-						       m,
+							(intptr_t*)&mb->next,
+							(intptr_t)m,
 						       memory_order_release,
 						       memory_order_relaxed))
 	    ;
 
 	   // push on stack ...
 	   while(!atomic_compare_exchange_weak_explicit(&tpa,
-						       &mb->next_append,
-						       m,
+							(intptr_t*)&mb->next_append,
+							(intptr_t)m,
 						       memory_order_release,
 						       memory_order_relaxed))
 	    ;
@@ -1153,7 +1176,10 @@ static atrshmlog_thread_ret_t f_list_buffer_fetch_proc(void* i_arg)
 
       // pop from list
       while (tbuff &&
-    !atomic_compare_exchange_weak_explicit(&tpa, &tbuff, tbuff->next_append, memory_order_acq_rel, memory_order_relaxed))
+    !atomic_compare_exchange_weak_explicit(&tpa,
+					   (intptr_t*)&tbuff,
+					   (intptr_t)tbuff->next_append,
+					   memory_order_acq_rel, memory_order_relaxed))
 	;
 
       if (tbuff)
@@ -1199,8 +1225,8 @@ static atrshmlog_thread_ret_t f_list_buffer_fetch_proc(void* i_arg)
 
 	  // push on stack ...
 	  while(!atomic_compare_exchange_weak_explicit(&tpf,
-						       &tbuff->next_full,
-						       tbuff,
+						       (intptr_t*)&tbuff->next_full,
+						       (intptr_t)tbuff,
 						       memory_order_release,
 						       memory_order_relaxed))
 	    ;
@@ -1232,7 +1258,10 @@ static atrshmlog_thread_ret_t f_list_buffer_write_proc(void* i_arg)
 
       // pop from list
       while (tbuff &&
-    !atomic_compare_exchange_weak_explicit(&tpf, &tbuff, tbuff->next_full, memory_order_acq_rel, memory_order_relaxed))
+    !atomic_compare_exchange_weak_explicit(&tpf,
+					   (intptr_t*)&tbuff,
+					   (intptr_t)tbuff->next_full,
+					   memory_order_acq_rel, memory_order_relaxed))
 	;
 
       if (tbuff)
@@ -1273,8 +1302,8 @@ static atrshmlog_thread_ret_t f_list_buffer_write_proc(void* i_arg)
 
 	  // push on stack ...
 	  while(!atomic_compare_exchange_weak_explicit(&tpa,
-						       &tbuff->next_append,
-						       tbuff,
+						       (intptr_t*)&tbuff->next_append,
+						       (intptr_t)tbuff,
 						       memory_order_release,
 						       memory_order_relaxed))
 	    ;
