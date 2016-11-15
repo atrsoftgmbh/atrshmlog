@@ -523,7 +523,7 @@ typedef void atrshmlog_thread_ret_t;
 #endif 
 
 #if ATRSHMLOG_USE_THR_SELF_TID == 1
-#define ATRSHMLOG_GETTHREADID(__o) ((__o) = 0; thr_self((long*)&(__o)))
+#define ATRSHMLOG_GETTHREADID(__o) do { (__o) = 0; thr_self((long*)&(__o)); } while(0)
 #endif
 
 
