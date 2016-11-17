@@ -54,7 +54,7 @@
  * the major development platform. in doubt its the master.
  * if you need a new platform try this as a clone first
  */
-#define ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC 0
+#define ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC 1
 
 
 
@@ -63,7 +63,7 @@
  *
  * Testet. Java wont work with it for now.
  */
-#define ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC 1
+#define ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC 0
 
 /** 
  * \brief We have a x86 64 bit, a cygwin mingw64 and a gnu c 
