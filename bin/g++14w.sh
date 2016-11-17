@@ -1,6 +1,7 @@
 #!/bin/bash
 #!/usr/local/bin/bash
 #!/usr/bin/ksh
+#!/bin/ksh
 #
 # $Id:$
 #
@@ -17,11 +18,31 @@ fi
 
 case $ATRSHMLOG_PLATFORM in
     linux)
-	# linux x86_64 gnu
-	CPP="g++ -std=c++14 -pthread -Wall -Weffc++ -fdump-tree-original"
-	PICFLAG=-fPIC
-	OPTMODE=-O3
-	LIBMODULE=-latrshmlog
+	case $ATRSHMLOG_FLAVOUR in
+	    1) # fedora 
+		# linux x86_64 gnu
+		CPP="g++ -std=c++14 -pthread -Wall -Weffc++ -fdump-tree-original  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
+		PICFLAG=-fPIC
+		OPTMODE=-O3
+		LIBMODULE=-latrshmlog
+		;;
+
+	    2) # centos 7.2 with a somewhat outdated g++
+		CPP="g++ -std=gnu++1y -pthread -Wall -Weffc++ -fdump-tree-original"
+		PICFLAG=-fPIC
+		OPTMODE=-O3
+		LIBMODULE=-latrshmlog
+		;;
+
+	    *)
+		# linux x86_64 gnu
+		CPP="g++ -std=c++14 -pthread -Wall -Weffc++ -fdump-tree-original  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
+		PICFLAG=-fPIC
+		OPTMODE=-O3
+		LIBMODULE=-latrshmlog
+		;;
+	esac
+
 	;;
 
     cygwin)
@@ -41,12 +62,32 @@ case $ATRSHMLOG_PLATFORM in
 	;;
 
     bsd)
-	# 
-	CPP="clang++ -std=c++14 "
-	PICFLAG=
-	OPTMODE=-O3
-	LIBMODULE="-latrshmlog  -lpthread"
+	case $ATRSHMLOG_FLAVOUR in
+	    1)
+		# 
+		CPP="clang++ -std=c++14  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
+		PICFLAG=
+		OPTMODE=-O3
+		LIBMODULE="-latrshmlog  -lpthread"
+		;;
+
+	    2)
+		CPP="clang++ -std=c++14  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
+		PICFLAG=
+		OPTMODE=-O3
+		LIBMODULE="-latrshmlog -lpthread"
+		;;
+
+	    *)
+		CPP="CC "
+		PICFLAG=
+		OPTMODE=-O3
+		LIBMODULE="-latrshmlog "
+		;;
+
+	esac
 	;;
+		
 
     *)
 
