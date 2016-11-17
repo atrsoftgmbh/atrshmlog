@@ -1,6 +1,6 @@
 The ATRSHMLOG module.
 
-The direcoties are
+The directories are
 - bin
   The binary files that are needed to build the module
   The files in the folder itself are for the linux
