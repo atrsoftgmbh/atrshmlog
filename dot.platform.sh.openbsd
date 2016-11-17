@@ -32,14 +32,14 @@ ATRSHMLOG_PLATFORM=bsd
 
 export ATRSHMLOG_PLATFORM
 
-# default is 1
-
+# flavour
 # linux fedora 1
 # linux centos 2
 
 # bsd freebsd 1
 # bsd openbsd 2
-ATRSHMLOG_FLAVOUR=1
+
+ATRSHMLOG_FLAVOUR=2
 
 export ATRSHMLOG_FLAVOUR
 
