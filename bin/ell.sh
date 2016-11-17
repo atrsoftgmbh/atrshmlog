@@ -1,6 +1,7 @@
 #!/bin/bash
 #!/usr/local/bin/bash
 #!/usr/bin/ksh
+#!/bin/ksh
 #
 # $Id:$
 #
@@ -17,9 +18,25 @@ fi
 
 case $ATRSHMLOG_PLATFORM in
     linux)
-	# linux x86_64 gnu
-	CC="gcc -pthread"
-	LIBMODULE=-latrshmlog
+	case $ATRSHMLOG_FLAVOUR in
+	    1) # fedora way
+		# linux x86_64 gnu
+		CC="gcc -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+
+	    2) # centos 7.2 after manual compile of gcc 5.4
+		CC="x86_64-unknown-linux-gnu-gcc-5.4.0 -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+
+	    *)
+		# linux x86_64 gnu
+		CC="gcc -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+	esac
+
 	;;
 
     cygwin)
@@ -35,11 +52,24 @@ case $ATRSHMLOG_PLATFORM in
 	;;
 
     bsd)
-	# 
-	CC="clang "
-	LIBMODULE="-latrshmlog  -lpthread"
+	case $ATRSHMLOG_FLAVOUR in
+	    1)
+		# 
+		CC="clang "
+		LIBMODULE="-latrshmlog  -lpthread"
+		;;
+	    2)
+		#
+		CC="clang "
+		LIBMODULE="-latrshmlog -lpthread"
+		;;
+	    *)
+		CC=cc
+		LIBMODULE=-latrshmlog
+		;;
+	esac
 	;;
-
+    
     *)
 
 	echo "no platform found. i gave up."
