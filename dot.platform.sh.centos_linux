@@ -37,8 +37,8 @@ export ATRSHMLOG_PLATFORM
 # linux fedora 1
 # linux centos 2
 
-# bsd freebsd 1
-# bsd openbsd 2
+# bsd freebsd 3
+# bsd openbsd 4
 ATRSHMLOG_FLAVOUR=2
 
 export ATRSHMLOG_FLAVOUR

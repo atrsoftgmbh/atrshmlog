@@ -242,7 +242,14 @@ sub make_hint {
 		 'name' => 'bsd_amd64_freebsd_clang',
 		 'define' => 'ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG' ,
 		 'ipc' => 'posix',
-		 'alternative' => ''
+		 'alternative' => ' : WARNING: you have to set the ATRSHMLOG_FLAVOUR to 1 for this system'
+	     },
+	     'bsd_amd64_openbsd_clang'  => 
+	     {
+		 'name' => 'bsd_amd64_openbsd_clang',
+		 'define' => 'ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG' ,
+		 'ipc' => 'posix',
+		 'alternative' => ' : WARNING: if it is 6.0 you have to set the ATRSHMLOG_FLAVOUR to 2 for this system'
 	     }
 	     
 	);
@@ -807,6 +814,12 @@ sub check_for_flavour {
 	if ($o =~ m:freebsd:i) {
 	    print "found a flavor FreeBSD\n";
 	    &check_for_compiler($sys, $architecture, 'FreeBSD');
+	    return;
+	}
+
+	if ($o =~ m:openbsd:i) {
+	    print "found a flavor OpenBSD\n";
+	    &check_for_compiler($sys, $architecture, 'OpenBSD');
 	    return;
 	}
 	# ther is no secondary for now. any kvm solution is a separate

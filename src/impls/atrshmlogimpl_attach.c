@@ -6,6 +6,23 @@
  * \file atrshmlogimpl_attach.c
  */
 
+
+// this is for openbsd 6.0 for now.
+
+#if ATRSHMLOG_THREAD_LOCAL == 0
+
+pthread_key_t atrshmlog_pthread_key;
+
+static void atrshmlog_destruct_specific(void* i_data)
+{
+  if (i_data != NULL)
+    free(i_data);
+
+  return ;
+}
+
+#endif
+
 /**
  * helper. we putenv
  */
@@ -157,6 +174,33 @@ atrshmlog_ret_t atrshmlog_attach(void)
       return atrshmlog_error_attach_1;
     }
 
+#if ATRSHMLOG_THREAD_LOCAL == 0
+  // this is for openbsd. we need something similar to thread local
+  // but they don't hve it for now.
+  // so we use the function to get it in fact as a factory.
+  // and this needs a call for pthread_getspecific.
+  // so we need a valid key here.
+  // and this is the deal : if you try it without first making the attach
+  // then BUMMM
+  
+  int ret = pthread_key_create(&atrshmlog_pthread_key, atrshmlog_destruct_specific);
+
+  if (ret != 0)
+    {
+
+      // sorry pal - but we simply out of options.
+      /*
+       * We clear the lock.
+       */
+      atomic_flag_clear(&atrshmlog_attach_once_flag);
+
+      return -1;
+    }
+
+  // ok. we have a key. now its up to the user to use the function...
+  
+#endif
+  
   /* Second thing after the init of vars : make timestamp */
   atrshmlog_inittimetsc_before = atrshmlog_get_clicktime();
 

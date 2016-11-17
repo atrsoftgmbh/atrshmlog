@@ -58,14 +58,14 @@ case $ATRSHMLOG_PLATFORM in
 
     bsd)
 	case $ATRSHMLOG_FLAVOUR in
-	    1)
+	    3)
 		# 
 		CC="clang -std=c11 -fgnu-keywords  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
 		PICFLAG=
 		OPTMODE=-O3
 		;;
 
-	   2)
+	   4)
 		# 
 		CC="clang -std=c11 -fgnu-keywords  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
 		PICFLAG=

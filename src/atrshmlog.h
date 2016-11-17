@@ -303,12 +303,45 @@
  */
 #define ATRSHMLOG_USE_THR_SELF_TID 0
 
-#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+#if ATRSHMLOG_FLAVOUR == 3
 # undef ATRSHMLOG_USE_THR_SELF_TID
 # define ATRSHMLOG_USE_THR_SELF_TID 1
 #endif
 
+/**
+ * \brief We use the getthrid call on openbsd here
+ */
+#define ATRSHMLOG_USE_GETTHRID 0
 
+#if ATRSHMLOG_FLAVOUR == 4
+# undef ATRSHMLOG_USE_GETTHRID
+# define ATRSHMLOG_USE_GETTHRID 1
+#endif
+
+#define ATRSHMLOG_THREAD_LOCAL 0
+
+#if  ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
+# undef ATRSHMLOG_THREAD_LOCAL
+# define ATRSHMLOG_THREAD_LOCAL 1
+#endif
+
+#if  ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC == 1
+# undef ATRSHMLOG_THREAD_LOCAL
+# define ATRSHMLOG_THREAD_LOCAL 1
+#endif
+
+#if  ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 1
+# undef ATRSHMLOG_THREAD_LOCAL
+# define ATRSHMLOG_THREAD_LOCAL 1
+#endif
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+// freebsd has it
+# if ATRSHMLOG_FLAVOUR == 3
+#  undef ATRSHMLOG_THREAD_LOCAL
+#  define ATRSHMLOG_THREAD_LOCAL 1
+# endif
+#endif
 
 // candidates for the platform tsc call function
 // #define ATRSHMLOG_GET_TSC_CALL atrshmlog_get_tsc_par_x86_64_gnu

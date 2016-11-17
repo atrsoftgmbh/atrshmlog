@@ -35,7 +35,7 @@
 
 /********************************************************************/
 
-
+#if ATRSHMLOG_THREAD_LOCAL == 1
 
 /**
  * \brief The one struct containing all thread locals.
@@ -70,6 +70,56 @@ volatile const void* atrshmlog_get_thread_locals_adress(void)
   return (volatile const void*)&atrshmlog_g_tl;
 }
 
+#endif
+
+#if ATRSHMLOG_THREAD_LOCAL == 0
+
+// the hard way. we use pthreads key and specifics here
+extern pthread_key_t atrshmlog_pthread_key;
+
+// this is now a new thing. we use internal the key from  - hopeful - attach.
+// then we check for it and get our data ptr.
+// if no ptr is there we malloc and deliver the thing
+// to the caller.
+// we need a destroy here, but this is for later ...
+volatile const void* atrshmlog_get_thread_locals_adress(void)
+{
+  void *my_tls = pthread_getspecific(atrshmlog_pthread_key);
+
+  if (my_tls == NULL)
+    {
+      atrshmlog_g_tl_t * p = (atrshmlog_g_tl_t*)calloc(1, sizeof(atrshmlog_g_tl_t));
+
+      if (p)
+	{
+	  p->atrshmlog_idnotok = -1;
+
+	  int ret = pthread_setspecific(atrshmlog_pthread_key, (const void*)p);
+
+	  if (ret == 0)
+	    {
+	      // ok. we have at least now a valid buffer.
+	      return (volatile const void*)p;
+	    }
+	  else
+	    {
+	      free(p);
+
+	      return 0;
+	    }
+	}
+      else
+	{
+	  return 0;
+	}
+    }
+  else
+    {
+      return (volatile const void*)my_tls;
+    }
+}
+
+#endif
 
 
 /*******************************************************************/

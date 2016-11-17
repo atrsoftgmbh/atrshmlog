@@ -63,7 +63,7 @@ case $ATRSHMLOG_PLATFORM in
 
     bsd)
 	case $ATRSHMLOG_FLAVOUR in
-	    1)
+	    3)
 		# 
 		CPP="clang++ -std=c++14  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
 		PICFLAG=
@@ -71,7 +71,7 @@ case $ATRSHMLOG_PLATFORM in
 		LIBMODULE="-latrshmlog  -lpthread"
 		;;
 
-	    2)
+	    4)
 		CPP="clang++ -std=c++14  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
 		PICFLAG=
 		OPTMODE=-O3

@@ -53,13 +53,13 @@ case $ATRSHMLOG_PLATFORM in
 
     bsd)
 	case $ATRSHMLOG_FLAVOUR in
-	    1)
-		# 
+	    3)
+		#  freebsd
 		CC="clang "
 		LIBMODULE="-latrshmlog  -lpthread"
 		;;
-	    2)
-		#
+	    4)
+		# openbsd
 		CC="clang "
 		LIBMODULE="-latrshmlog -lpthread"
 		;;

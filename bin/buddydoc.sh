@@ -35,11 +35,11 @@ case $ATRSHMLOG_PLATFORM in
 
     bsd)
 	case $ATRHMLOG_FLAVOUR in
-	    1) # freebsd didn't make it for me. too long timeout
+	    3) # freebsd didn't make it for me. too long timeout
 		DOXYGEN=
 	    ;;
 
-	    2) # the openbsd did it
+	    4) # the openbsd did it
 		DOXYGEN=doxygen
 		;;
 
