@@ -39,6 +39,16 @@ void atrshmlog_exit_cleanup (void)
 
   atrshmlog_g_tl_t* g  = (atrshmlog_g_tl_t* )atrshmlog_get_thread_locals_adress();
 
+#if ATRSHMLOG_THREAD_LOCAL == 0
+
+  // if we need the pthread specific this can happen
+  if (g == NULL)
+    {
+      return;
+    }
+
+#endif
+  
   // Do we have to initialize ?
   if (g->atrshmlog_idnotok)
     atrshmlog_init_thread_local (g);

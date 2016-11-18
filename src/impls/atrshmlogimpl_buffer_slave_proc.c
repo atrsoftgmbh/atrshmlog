@@ -24,6 +24,9 @@
  * buffer free if it is set.
  *
  * Then we start to wait again.
+ *
+ * \return
+ * Depends on the OS.
  */
 atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
 {
@@ -36,6 +39,17 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
   union u conv;
   
   atrshmlog_g_tl_t* g  = (atrshmlog_g_tl_t* )atrshmlog_get_thread_locals_adress();
+
+#if ATRSHMLOG_THREAD_LOCAL == 0
+
+  // if we use pthread specific this can happen
+  if (g == NULL)
+    {
+      conv.ui = atrshmlog_error_buffer_slave_1;
+      return conv.p;
+    }
+
+#endif
   
   if (g->atrshmlog_idnotok)
     {
@@ -60,6 +74,17 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
   
   atrshmlog_g_tl_t* g  = (atrshmlog_g_tl_t* )atrshmlog_get_thread_locals_adress();
   
+#if ATRSHMLOG_THREAD_LOCAL == 0
+
+  // if we use pthread specific this can happen
+  if (g == NULL)
+    {
+      conv.ui = atrshmlog_error_buffer_slave_1;
+      return conv.p;
+    }
+
+#endif
+  
   if (g->atrshmlog_idnotok)
     {
       int tlret = atrshmlog_init_thread_local (g);
@@ -78,6 +103,8 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
 #if ATRSHMLOG_USE_WINTHREAD == 1
   
   atrshmlog_g_tl_t* g  = (atrshmlog_g_tl_t* )atrshmlog_get_thread_locals_adress();
+
+  // no need here for pthread specifics
   
   if (g->atrshmlog_idnotok)
     {

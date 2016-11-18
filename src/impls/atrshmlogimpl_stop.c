@@ -27,6 +27,14 @@ void atrshmlog_stop(void)
   
   atrshmlog_g_tl_t* g  = (atrshmlog_g_tl_t* )atrshmlog_get_thread_locals_adress();
   
+#if ATRSHMLOG_THREAD_LOCAL == 0
+
+  // this can happen if pthread specific is in
+  if (g == NULL)
+    return ;
+
+#endif
+
   if (g->atrshmlog_idnotok == 0)
     {
       for (int i = 0; i < ATRSHMLOGTARGETBUFFERMAX; i++)

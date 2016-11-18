@@ -74,8 +74,13 @@ volatile const void* atrshmlog_get_thread_locals_adress(void)
 
 #if ATRSHMLOG_THREAD_LOCAL == 0
 
+extern int atrshmlog_key_once;
+
 // the hard way. we use pthreads key and specifics here
 extern pthread_key_t atrshmlog_pthread_key;
+
+// the destructor
+extern void atrshmlog_destruct_specific(void* i_data);
 
 // this is now a new thing. we use internal the key from  - hopeful - attach.
 // then we check for it and get our data ptr.
@@ -84,6 +89,24 @@ extern pthread_key_t atrshmlog_pthread_key;
 // we need a destroy here, but this is for later ...
 volatile const void* atrshmlog_get_thread_locals_adress(void)
 {
+  // are we before attach ? 
+  if (atrshmlog_key_once == 0)
+    {
+      int ret = pthread_key_create(&atrshmlog_pthread_key, atrshmlog_destruct_specific);
+
+      ++atrshmlog_key_once; 
+
+      if (ret != 0)
+	{
+
+	  // sorry pal - but we are simply out of options.
+
+	  // no more tries
+	
+	  return 0;
+	}
+    }
+  
   void *my_tls = pthread_getspecific(atrshmlog_pthread_key);
 
   if (my_tls == NULL)

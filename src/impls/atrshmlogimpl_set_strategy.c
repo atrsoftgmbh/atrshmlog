@@ -15,6 +15,9 @@
  * \param i_strategy
  * see enum atrshmlog_strategy
  *
+ * \return
+ * - negativ error
+ * - old value
  */
 atrshmlog_ret_t atrshmlog_set_strategy(const enum atrshmlog_strategy i_strategy)
 {
@@ -22,6 +25,14 @@ atrshmlog_ret_t atrshmlog_set_strategy(const enum atrshmlog_strategy i_strategy)
   
   atrshmlog_g_tl_t* g  = (atrshmlog_g_tl_t* )atrshmlog_get_thread_locals_adress();
 
+#if ATRSHMLOG_THREAD_LOCAL == 0
+
+  // this can happen if pthread specific is in
+  if (g == NULL)
+    return atrshmlog_error_set_strategy_1;
+
+#endif
+  
   int old = g->strategy;
 
   if (i_strategy >= atrshmlog_strategy_first && i_strategy <= atrshmlog_strategy_last)

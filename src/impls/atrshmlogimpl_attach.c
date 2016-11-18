@@ -11,9 +11,11 @@
 
 #if ATRSHMLOG_THREAD_LOCAL == 0
 
+int atrshmlog_key_once = 0;
+
 pthread_key_t atrshmlog_pthread_key;
 
-static void atrshmlog_destruct_specific(void* i_data)
+void atrshmlog_destruct_specific(void* i_data)
 {
   if (i_data != NULL)
     free(i_data);
@@ -185,16 +187,17 @@ atrshmlog_ret_t atrshmlog_attach(void)
   
   int ret = pthread_key_create(&atrshmlog_pthread_key, atrshmlog_destruct_specific);
 
+  ++atrshmlog_key_once; 
+
   if (ret != 0)
     {
 
-      // sorry pal - but we simply out of options.
-      /*
-       * We clear the lock.
-       */
+      // sorry pal - but we are simply out of options.
+
+      // We clear the lock.
       atomic_flag_clear(&atrshmlog_attach_once_flag);
 
-      return -1;
+      return atrshmlog_error_attach_7;
     }
 
   // ok. we have a key. now its up to the user to use the function...
