@@ -1,6 +1,7 @@
 #!/bin/bash
 #!/usr/local/bin/bash
 #!/usr/bin/ksh
+#!/bin/ksh
 # $Id:$
 #
 # generate the documentation via doxygen
@@ -33,8 +34,20 @@ case $ATRSHMLOG_PLATFORM in
 
 
     bsd)
-        # freebsd x86_64 clang 
-        DOXYGEN=
+	case $ATRSHMLOG_FLAVOUR in
+	    3) # freebsd didn't make it for me. too long timeout
+		DOXYGEN=
+	    ;;
+
+	    4) # the openbsd did it
+		DOXYGEN=doxygen
+		;;
+
+	    *)
+		DOXYGEN=
+		;;
+	esac
+	
         ;;
     
     *)

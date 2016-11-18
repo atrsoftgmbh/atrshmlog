@@ -32,13 +32,14 @@ ATRSHMLOG_PLATFORM=mingw
 
 export ATRSHMLOG_PLATFORM
 
-# ATRSHMLOG_FLAVOUR=fedora
+# default is 1
 
-# ATRSHMLOG_FLAVOUR=cygwin64
+# linux fedora 1
+# linux centos 2
 
-ATRSHMLOG_FLAVOUR=mingw64
-
-# ATRSHMLOG_FLAVOUR=freebsd
+# bsd freebsd 3
+# bsd openbsd 4
+ATRSHMLOG_FLAVOUR=1
 
 export ATRSHMLOG_FLAVOUR
 

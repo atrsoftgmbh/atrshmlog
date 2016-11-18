@@ -180,7 +180,27 @@
     
     -185 => [ 'atrshmlog_error_verify_5 ' , 'Area buffer state corrupt in atrshmlog_verify. ' ] ,
     
-    -186 => [ 'atrshmlog_error_verify_6 ' , 'Buffer safeguard corrupted in atrshmlog_verify. ' ]
+    -186 => [ 'atrshmlog_error_verify_6 ' , 'Buffer safeguard corrupted in atrshmlog_verify. ' ] ,
+    
+    -190 => [ 'atrshmlog_error_buffer_slave_1 ' , 'Pthread specific buffer not available. ' ] ,
+
+    -191 => [ 'atrshmlog_error_get_strategy_1 ' , 'Pthread specific buffer not available. ' ] ,
+
+    -166 => [ 'atrshmlog_error_read_6 ' , 'Pthread specific buffer not available. ' ] ,
+
+    -174 => [ 'atrshmlog_error_read_fetch_6 ' , 'Pthread specific buffer not available. ' ] ,
+
+    -192 => [ 'atrshmlog_error_set_strategy_1 ' , 'Pthread specific buffer not available. ' ] ,
+
+    -66 => [ 'atrshmlog_error_write0_10 ' , 'Pthread specific buffer not available. ' ] ,
+
+    -79 => [ 'atrshmlog_error_write1_13 ' , 'Pthread specific buffer not available. ' ] ,
+
+    -89 => [ 'atrshmlog_error_write2_13 ' , 'Pthread specific buffer not available. ' ] ,
+
+    -46 => [ 'atrshmlog_error_attach_7 ' , 'Pthread specific buffer not available. ' ] 
+
+    
     );
     
 

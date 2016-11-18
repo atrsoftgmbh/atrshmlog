@@ -449,8 +449,16 @@ typedef long atrshmlog_key_t;
 /** The shm stuff */
 # include <sys/shm.h>
 
+// bsd freebsd 
+#if ATRSHMLOG_FLAVOUR == 1
 /** The thread stuff */
 #include <sys/thr.h>
+#endif
+
+// bsd openbsd
+#if ATRSHMLOG_FLAVOUR == 2
+#include <unistd.h>
+#endif
 
 /** All the rest of unix */
 # include <unistd.h>
@@ -524,6 +532,10 @@ typedef void atrshmlog_thread_ret_t;
 
 #if ATRSHMLOG_USE_THR_SELF_TID == 1
 #define ATRSHMLOG_GETTHREADID(__o) do { (__o) = 0; thr_self((long*)&(__o)); } while(0)
+#endif
+
+#if ATRSHMLOG_USE_GETTHRID == 1
+#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (getthrid()))
 #endif
 
 

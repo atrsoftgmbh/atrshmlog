@@ -887,11 +887,11 @@ int operate(FILE* i_fout,
 	char eventflagstr[40];
 	char userstr[40];
 	
-	sprintf(tidstr, "%016ld", tid);
+	snprintf(tidstr, 40, "%016ld", tid);
 
-        sprintf(bnr, "%03d", i_buffernumber);
+        snprintf(bnr, 40, "%03d", i_buffernumber);
 
-	sprintf(fnr, "%018d", i_filenumber);
+	snprintf(fnr, 40, "%018d", i_filenumber);
 	
 	atrshmlog_time_t stime;
 
@@ -970,26 +970,90 @@ int operate(FILE* i_fout,
 	sprintf(endtimestr, "%018ld %018ld", (long)etime.tv_sec, (long)etime.tv_nsec );
 #else
 
-	sprintf(starttimestr, "%018lld", s);
+	snprintf(starttimestr, 40, "%018lld", s);
 	
-	sprintf(endtimestr, "%018lld", e);
+	snprintf(endtimestr, 40, "%018lld", e);
 
-	sprintf(deltastr, "%018lld", e - s);
+	snprintf(deltastr, 40, "%018lld", e - s);
 
 
-	sprintf(realstarttimestr, "%018lld", reals);
+	snprintf(realstarttimestr, 40, "%018lld", reals);
 	
-	sprintf(realendtimestr, "%018lld", reale);
+	snprintf(realendtimestr, 40, "%018lld", reale);
 
-	sprintf(realdeltastr, "%018lld", reald);
+	snprintf(realdeltastr, 40, "%018lld", reald);
 
 	
 #endif
 	
-	sprintf(controlbuffer,
+	snprintf(controlbuffer, 256,
 		"%010ld ",
 		(long)i_pid);
 
+#if ATRSHMLOG_FLAVOUR == 3 || ATRSHMLOG_FLAVOUR == 4
+
+	strlcat(controlbuffer, tidstr, 256);
+
+	strlcat(controlbuffer, " ", 256);
+
+	strlcat(controlbuffer, bnr, 256);
+
+	strlcat(controlbuffer, " ", 256);
+
+	strlcat(controlbuffer, fnr, 256);
+
+	strlcat(controlbuffer, " ", 256);
+
+	strlcat(controlbuffer, starttimestr, 256);
+
+	strlcat(controlbuffer , " ", 256);
+
+	strlcat(controlbuffer, endtimestr, 256);
+
+	strlcat(controlbuffer , " ", 256);
+
+	strlcat(controlbuffer, deltastr, 256);
+
+	strlcat(controlbuffer , " ", 256);
+
+	strlcat(controlbuffer, realstarttimestr, 256);
+
+	strlcat(controlbuffer , " ", 256);
+
+	strlcat(controlbuffer, realendtimestr, 256);
+
+	strlcat(controlbuffer , " ", 256);
+
+	strlcat(controlbuffer, realdeltastr, 256);
+
+	strlcat(controlbuffer , " ", 256);
+
+	atrshmlog_int32_t eventnumber;
+
+	memcpy(&eventnumber, h + sizeof(atrshmlog_time_t) + sizeof(atrshmlog_time_t) + sizeof(atrshmlog_int32_t), sizeof(atrshmlog_int32_t));
+    
+	snprintf(eventstr, 40, "%010ld ", (long)eventnumber);
+
+	strlcat(controlbuffer, eventstr, 256);
+	eventflag = *(h + (ATRSHMLOGCONTROLDATASIZE - 1));
+	eventflagstr[0] = eventflag;
+	eventflagstr[1] = ' ' ; 
+	eventflagstr[2] = '\0';
+	
+	strlcat(controlbuffer, eventflagstr, 256);
+
+	if (eventflag == ATRSHMLOGPOINTINTIMEp || eventflag == ATRSHMLOGPOINTINTIMEi)
+	  ucs2string = 1;
+	
+	atrshmlog_int32_t userevent;
+
+	memcpy(&userevent, h + sizeof(atrshmlog_time_t) + sizeof(atrshmlog_time_t) + sizeof(atrshmlog_int32_t) + sizeof(atrshmlog_int32_t), sizeof(atrshmlog_int32_t));
+    
+	snprintf(userstr, 40, "%010ld", (long)userevent);
+    
+	strlcat(controlbuffer, userstr, 256);
+
+#else
 	strcat(controlbuffer, tidstr);
 
 	strcat(controlbuffer, " ");
@@ -1050,7 +1114,8 @@ int operate(FILE* i_fout,
 	sprintf(userstr, "%010ld", (long)userevent);
     
 	strcat(controlbuffer, userstr);
-
+#endif
+	
 	nextcontrol = payloadbuffer, lastpos = payloadbuffer;
 
 	/* printf(" payoad %s\n", payloadbuffer); */
