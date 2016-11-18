@@ -1,5 +1,6 @@
 #!/bin/bash
 #!/usr/local/bin/bash
+#!/bin/ksh
 
 if [ ! -d $1 ]
 then

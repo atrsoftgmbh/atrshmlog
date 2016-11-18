@@ -1,6 +1,7 @@
 #!/bin/bash
 #!/usr/local/bin/bash
 #!/usr/bin/ksh
+#!/bin/ksh
 # $Id:$
 #
 # Compile the thing into an object
@@ -16,10 +17,29 @@ fi
 
 case $ATRSHMLOG_PLATFORM in
     linux)
-	# linux x86_64 gnu
-	CC="gcc -std=gnu11"
-	PICFLAG=-fPIC
-	OPTMODE=-O3
+	case $ATRSHMLOG_FLAVOUR in
+	    1) # fedora
+		# linux x86_64 gnu
+		CC="gcc -std=gnu11 -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
+		PICFLAG=-fPIC
+		OPTMODE=-O3
+		;;
+
+	    2) # centos 7.2 with manual 5.4 gcc
+		CC="x86_64-unknown-linux-gnu-gcc-5.4.0 -std=gnu11 -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
+		PICFLAG=-fPIC
+		OPTMODE=-O3
+		;;
+
+	    *)
+		# linux x86_64 gnu
+		CC="gcc -std=gnu11 -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
+		PICFLAG=-fPIC
+		OPTMODE=-O3
+		;;
+
+	esac
+
 	;;
 
     cygwin)
@@ -37,11 +57,32 @@ case $ATRSHMLOG_PLATFORM in
 	;;
 
     bsd)
-	# 
-	CC="clang -std=c11 -fgnu-keywords "
-	PICFLAG=
-	OPTMODE=-O3
+	case $ATRSHMLOG_FLAVOUR in
+	    3)
+		# 
+		CC="clang -std=c11 -fgnu-keywords  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
+		PICFLAG=
+		OPTMODE=-O3
+		;;
+
+	   4)
+		# 
+		CC="clang -std=c11 -fgnu-keywords  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
+		PICFLAG=
+		OPTMODE=-O3
+		;;
+
+	    *)
+		# 
+		CC="cc "
+		PICFLAG=
+		OPTMODE=-O3
+		;;
+
+	esac
 	;;
+
+		
 
     *)
 

@@ -36,6 +36,14 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 {
   atrshmlog_g_tl_t* g  = (atrshmlog_g_tl_t* )atrshmlog_get_thread_locals_adress();
 
+#if ATRSHMLOG_THREAD_LOCAL == 0
+
+  // this can happen if pthread specific is in
+  if (g == NULL)
+    return atrshmlog_error_write1_13;
+
+#endif
+
   ATRSHMLOGSTATLOCAL(g,counter_write1);
 
   /* This is a two way used one. Its the size and the flag too */

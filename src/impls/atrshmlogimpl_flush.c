@@ -23,6 +23,14 @@ void atrshmlog_flush(void)
   
   atrshmlog_g_tl_t* g  = (atrshmlog_g_tl_t* )atrshmlog_get_thread_locals_adress();
   
+#if ATRSHMLOG_THREAD_LOCAL == 0
+  
+  // if we use pthread specific this can happen
+  if (g == NULL)
+    return;
+
+#endif
+  
   for (int i = 0; i < ATRSHMLOGTARGETBUFFERMAX; i++)
     {
       atrshmlog_tbuff_t* t = g->atrshmlog_targetbuffer_arr[i];

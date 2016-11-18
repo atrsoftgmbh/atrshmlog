@@ -80,6 +80,14 @@ atrshmlog_ret_t atrshmlog_read_fetch(volatile const void* i_area,
 
   atrshmlog_g_tl_t* g  = (atrshmlog_g_tl_t* )atrshmlog_get_thread_locals_adress();
   
+#if ATRSHMLOG_THREAD_LOCAL == 0
+
+  // this can happen if thread specific is in
+  if (g == NULL)
+    return atrshmlog_error_read_fetch_6;
+
+#endif
+  
   if (g->atrshmlog_idnotok)
     {
       int tlret = atrshmlog_init_thread_local (g);

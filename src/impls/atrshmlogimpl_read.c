@@ -101,6 +101,14 @@ atrshmlog_ret_t atrshmlog_read(volatile const void* i_area,
   /* Ok. We can now do the transfer */
 
   atrshmlog_g_tl_t* g  = (atrshmlog_g_tl_t* )atrshmlog_get_thread_locals_adress();
+
+#if ATRSHMLOG_THREAD_LOCAL == 0
+
+  // this can happen if pthread specific is used
+  if (g == NULL)
+    return atrshmlog_error_read_6;
+
+#endif
   
   if (g->atrshmlog_idnotok)
     {

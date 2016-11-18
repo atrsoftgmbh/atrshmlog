@@ -303,12 +303,45 @@
  */
 #define ATRSHMLOG_USE_THR_SELF_TID 0
 
-#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+#if ATRSHMLOG_FLAVOUR == 3
 # undef ATRSHMLOG_USE_THR_SELF_TID
 # define ATRSHMLOG_USE_THR_SELF_TID 1
 #endif
 
+/**
+ * \brief We use the getthrid call on openbsd here
+ */
+#define ATRSHMLOG_USE_GETTHRID 0
 
+#if ATRSHMLOG_FLAVOUR == 4
+# undef ATRSHMLOG_USE_GETTHRID
+# define ATRSHMLOG_USE_GETTHRID 1
+#endif
+
+#define ATRSHMLOG_THREAD_LOCAL 0
+
+#if  ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
+# undef ATRSHMLOG_THREAD_LOCAL
+# define ATRSHMLOG_THREAD_LOCAL 1
+#endif
+
+#if  ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC == 1
+# undef ATRSHMLOG_THREAD_LOCAL
+# define ATRSHMLOG_THREAD_LOCAL 1
+#endif
+
+#if  ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 1
+# undef ATRSHMLOG_THREAD_LOCAL
+# define ATRSHMLOG_THREAD_LOCAL 1
+#endif
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+// freebsd has it
+# if ATRSHMLOG_FLAVOUR == 3
+#  undef ATRSHMLOG_THREAD_LOCAL
+#  define ATRSHMLOG_THREAD_LOCAL 1
+# endif
+#endif
 
 // candidates for the platform tsc call function
 // #define ATRSHMLOG_GET_TSC_CALL atrshmlog_get_tsc_par_x86_64_gnu
@@ -1075,9 +1108,37 @@ extern "C" {
     atrshmlog_error_verify_5 = -185,
     /**< Area buffer state corrupt in atrshmlog_verify. */
     
-    atrshmlog_error_verify_6 = -186
+    atrshmlog_error_verify_6 = -186,
     /**< Buffer safeguard corrupted in atrshmlog_verify.      */
+
+    atrshmlog_error_buffer_slave_1 = -190,
+    /**< Pthread specific buffer not available.      */
     
+    atrshmlog_error_get_strategy_1 = -191,
+    /**< Pthread specific buffer not available.      */
+
+    atrshmlog_error_read_6 = -166,
+    /**< Pthread specific buffer not available.      */
+    
+    atrshmlog_error_read_fetch_6 = -174,
+    /**< Pthread specific buffer not available.      */
+    
+    atrshmlog_error_set_strategy_1 = -192,
+    /**< Pthread specific buffer not available.      */
+
+    atrshmlog_error_write0_10 = -66,
+    /**< Pthread specific buffer not available.      */
+
+    atrshmlog_error_write1_13 = -79,
+    /**< Pthread specific buffer not available.      */
+
+    atrshmlog_error_write2_13 = -89,
+    /**< Pthread specific buffer not available.      */
+
+    atrshmlog_error_attach_7 = -46,
+    /**< Pthread specific buffer not available.      */
+
+
   };
   
   /**

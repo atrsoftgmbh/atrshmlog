@@ -466,7 +466,7 @@ int atrshmlog_write_transfer(char *target, mb_t* ob)
 
       char filename[255];
 	  
-      sprintf(filename, target, lpid, ltid); 
+      snprintf(filename, 255, target, lpid, ltid); 
 
       //      printf("write %p\n", ob);
       
@@ -607,7 +607,7 @@ int main (int argc, char*argv[])
       }
 
     char buff[256];
-    sprintf(buff, "%s/%d", argv[1] , dirnumber);
+    snprintf(buff, 256, "%s/%d", argv[1] , dirnumber);
 
     acc_result = access(buff, R_OK|W_OK);
 
@@ -749,7 +749,7 @@ int main (int argc, char*argv[])
     while (ob)
       {
 	char target[256];
-	sprintf(target, "%s/%d/atrshmlog_p%%ld_t%%lld_f%d.bin", argv[1], dirnumber, filenumber);
+	snprintf(target, 256, "%s/%d/atrshmlog_p%%ld_t%%lld_f%d.bin", argv[1], dirnumber, filenumber);
 	      
 	int ret = atrshmlog_write_transfer(target, ob);
 
@@ -764,7 +764,7 @@ int main (int argc, char*argv[])
 		++dirnumber;
 
 		printf("new directory number %d\n", dirnumber);
-		sprintf(buff, "%s/%d", argv[1], dirnumber );
+		snprintf(buff, 256, "%s/%d", argv[1], dirnumber );
 	    
 		int result = mkdir (buff, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 		if (result != 0)
