@@ -843,7 +843,7 @@ int atrshmlog_write_transfer(char *target, mb_t* ob)
 
       char filename[255];
 	  
-      sprintf(filename, target, lpid, ltid); 
+      snprintf(filename, 255, target, lpid, ltid); 
 
       fout = open(filename ,O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR|S_IWUSR);
 
@@ -1023,7 +1023,7 @@ int create_dirs(char* i_basepath, int i_start, int i_count, int i_verbose)
     {
       int newdir = i_start + index;
       
-      sprintf(buff, "%s/%d", i_basepath , newdir);
+      snprintf(buff, 256, "%s/%d", i_basepath , newdir);
 
       int acc_result = access(buff, R_OK|W_OK);
 
@@ -1126,7 +1126,11 @@ int main(int argc, char*argv[])
       exit(1);
     }
 
+#if ATRSHMLOG_FLAVOUR == 3 || ATRSHMLOG_FLAVOUR == 4
+  strlcpy(basepath, argv[1],256);
+#else
   strcpy(basepath, argv[1]);
+#endif
   
   version = ATRSHMLOG_GET_VERSION();
   
@@ -1473,7 +1477,7 @@ static atrshmlog_thread_ret_t f_list_buffer_write_proc(void* i_arg)
 
 	  int seq = tbuff->number_dispatched;
 	  
-	  sprintf(target, "%s/%d/atrshmlog_p%%ld_t%%ld_s%d_f%d.bin", basepath, dirnumber, seq, filenumber);
+	  snprintf(target, 256, "%s/%d/atrshmlog_p%%ld_t%%ld_s%d_f%d.bin", basepath, dirnumber, seq, filenumber);
 
 	  #if ATRSHMLOGDEBUG == 1
 	  printf("write %ld\n", (long)filenumber);

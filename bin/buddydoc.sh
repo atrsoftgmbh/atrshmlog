@@ -34,7 +34,7 @@ case $ATRSHMLOG_PLATFORM in
 
 
     bsd)
-	case $ATRHMLOG_FLAVOUR in
+	case $ATRSHMLOG_FLAVOUR in
 	    3) # freebsd didn't make it for me. too long timeout
 		DOXYGEN=
 	    ;;

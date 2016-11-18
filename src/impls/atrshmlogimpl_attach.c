@@ -248,8 +248,14 @@ atrshmlog_ret_t atrshmlog_attach(void)
       // we try the file approch
       char buff[255];
 
+#if ATRSHMLOG_FLAVOUR == 3 || ATRSHMLOG_FLAVOUR == 4
+      strlcpy(buff, atrshmlog_prefix_name_buffer, 255);
+      strlcat(buff, ATRSHMLOGENVSUFFIX, 255);
+      strlcat(buff, ".TXT", 255);
+#else
       strcat(strcat(strcpy(buff, atrshmlog_prefix_name_buffer), ATRSHMLOGENVSUFFIX),".TXT");
-    
+#endif
+      
       FILE *f = fopen(buff, "r");
 
       if (f)

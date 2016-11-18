@@ -70,8 +70,13 @@ void atrshmlog_init_events(const int i_use_file)
     {
 #if ATRSHMLOG_LEVEL > 0
       
+#if ATRSHMLOG_FLAVOUR == 3 || ATRSHMLOG_FLAVOUR == 4
+      strlcpy(buff,atrshmlog_prefix_name_buffer, 255);
+      strlcat(buff, ATRSHMLOGEVENTNULLSUFFIX, 255);
+      strlcat(buff, ".TXT", 255);
+#else
       strcat(strcat(strcpy(buff,atrshmlog_prefix_name_buffer), ATRSHMLOGEVENTNULLSUFFIX),".TXT");
-      
+#endif 
       FILE *f = fopen(buff, "r");
 
       if (f)
@@ -84,7 +89,13 @@ void atrshmlog_init_events(const int i_use_file)
 
       memset((void*)atrshmlog_event_locks, flag, atrshmlog_event_locks_max);
 
+#if ATRSHMLOG_FLAVOUR == 3 || ATRSHMLOG_FLAVOUR == 4
+      strlcpy(buff, atrshmlog_prefix_name_buffer, 255);
+      strlcat(buff, ATRSHMLOGEVENTONOFFSUFFIX, 255);
+      strlcat(buff, ".TXT", 255);
+#else
       strcat(strcat(strcpy(buff, atrshmlog_prefix_name_buffer), ATRSHMLOGEVENTONOFFSUFFIX),".TXT");
+#endif
 
       f = fopen(buff, "r");
 

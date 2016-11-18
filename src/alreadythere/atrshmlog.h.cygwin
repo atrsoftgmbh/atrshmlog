@@ -1108,9 +1108,37 @@ extern "C" {
     atrshmlog_error_verify_5 = -185,
     /**< Area buffer state corrupt in atrshmlog_verify. */
     
-    atrshmlog_error_verify_6 = -186
+    atrshmlog_error_verify_6 = -186,
     /**< Buffer safeguard corrupted in atrshmlog_verify.      */
+
+    atrshmlog_error_buffer_slave_1 = -190,
+    /**< Pthread specific buffer not available.      */
     
+    atrshmlog_error_get_strategy_1 = -191,
+    /**< Pthread specific buffer not available.      */
+
+    atrshmlog_error_read_6 = -166,
+    /**< Pthread specific buffer not available.      */
+    
+    atrshmlog_error_read_fetch_6 = -174,
+    /**< Pthread specific buffer not available.      */
+    
+    atrshmlog_error_set_strategy_1 = -192,
+    /**< Pthread specific buffer not available.      */
+
+    atrshmlog_error_write0_10 = -66,
+    /**< Pthread specific buffer not available.      */
+
+    atrshmlog_error_write1_13 = -79,
+    /**< Pthread specific buffer not available.      */
+
+    atrshmlog_error_write2_13 = -89,
+    /**< Pthread specific buffer not available.      */
+
+    atrshmlog_error_attach_7 = -46,
+    /**< Pthread specific buffer not available.      */
+
+
   };
   
   /**

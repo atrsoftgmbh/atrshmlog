@@ -32,8 +32,15 @@ void atrshmlog_init_via_file(const char *i_suffix,
 {
   char buff[256];
   
+#if ATRSHMLOG_FLAVOUR == 3 || ATRSHMLOG_FLAVOUR == 4
+  strlcpy(buff, atrshmlog_prefix_name_buffer,256);
+  strlcat(buff, i_suffix,256);
+  strlcat(buff,".TXT",256);
+
+#else 
   strcat(strcat(strcpy(buff, atrshmlog_prefix_name_buffer), i_suffix),".TXT");
-		    
+#endif
+  
   FILE* f= fopen(buff, "r");
 
   if (f)
@@ -46,7 +53,7 @@ void atrshmlog_init_via_file(const char *i_suffix,
 	      && new_max <= i_max)
 	    {
 	      *v = new_max;
-	      sprintf(buff, "%s%s=%ld", atrshmlog_prefix_name_buffer, i_suffix, new_max);
+	      snprintf(buff, 256, "%s%s=%ld", atrshmlog_prefix_name_buffer, i_suffix, new_max);
 	      putenv(buff);
 	    }
 	}

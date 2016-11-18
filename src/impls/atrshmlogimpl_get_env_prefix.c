@@ -63,10 +63,17 @@ const char* atrshmlog_get_env_prefix(void)
 
       if (once == 1)
         {
-	  /* alredy set via program ? */
+	  /* already set via program ? */
+#if ATRSHMLOG_FLAVOUR == 3 || ATRSHMLOG_FLAVOUR == 4
+	  if (*atrshmlog_prefix_name_buffer == '\0')
+	    strlcpy(atrshmlog_prefix_name_buffer, ATRSHMLOG_ENV_PREFIX,ATRSHMLOG_PREFIX_SIZE);
+
+#else
 	  if (*atrshmlog_prefix_name_buffer == '\0')
 	    strcpy(atrshmlog_prefix_name_buffer, ATRSHMLOG_ENV_PREFIX);
-      
+
+#endif
+	  
 	  if (getenv(ATRSHMLOG_ENV_PREFIX))
 	    {
 	      int len = strlen(getenv(ATRSHMLOG_ENV_PREFIX));
@@ -78,7 +85,12 @@ const char* atrshmlog_get_env_prefix(void)
 		}
 	    }
 
+#if ATRSHMLOG_FLAVOUR == 3 || ATRSHMLOG_FLAVOUR == 4
+	  strlcpy(buff, atrshmlog_prefix_name_buffer, ATRSHMLOG_PREFIX_SIZE);
+
+#else
 	  strcpy(buff, atrshmlog_prefix_name_buffer);
+#endif
 	}
     }
   
