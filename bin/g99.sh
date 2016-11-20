@@ -72,6 +72,13 @@ case $ATRSHMLOG_PLATFORM in
 		OPTMODE=-O3
 		;;
 
+	   5)
+		# 
+		CC="gcc -std=gnu11 -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
+		PICFLAG=-fPIC
+		OPTMODE=-O3
+		;;
+
 	    *)
 		# 
 		CC="cc "

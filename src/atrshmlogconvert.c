@@ -990,7 +990,7 @@ int operate(FILE* i_fout,
 		"%010ld ",
 		(long)i_pid);
 
-#if ATRSHMLOG_FLAVOUR == 3 || ATRSHMLOG_FLAVOUR == 4
+#if ATRSHMLOG_USE_SAFER_COPY == 1 
 
 	strlcat(controlbuffer, tidstr, 256);
 

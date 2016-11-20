@@ -65,6 +65,16 @@ int atrshmlog_create(const atrshmlog_key_t i_key,
 
 #endif
   
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
+  
+  if (i_key == 0 || i_key  == IPC_PRIVATE) {
+    ATRSHMLOGSTAT(  atrshmlog_counter_create_abort1);
+    
+    return atrshmlog_error_create_1;
+  }
+
+#endif
+  
   /* At least ATRSHMLOGBUFFER_MINCOUNT .. */
   if (i_count < ATRSHMLOGBUFFER_MINCOUNT) {
     ATRSHMLOGSTAT(  atrshmlog_counter_create_abort2);
@@ -125,6 +135,18 @@ int atrshmlog_create(const atrshmlog_key_t i_key,
 #endif
   
 #if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+  
+
+  int shmflg = IPC_CREAT | IPC_EXCL;
+
+  shmflg |= ATRSHMLOG_ACCESS; 
+
+  
+  int result_shmget = shmget(i_key, wantedsize, shmflg);
+
+#endif
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
   
 
   int shmflg = IPC_CREAT | IPC_EXCL;

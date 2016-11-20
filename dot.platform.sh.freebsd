@@ -39,6 +39,7 @@ export ATRSHMLOG_PLATFORM
 
 # bsd freebsd 3
 # bsd openbsd 4
+# bsd netbsd 5
 ATRSHMLOG_FLAVOUR=3
 
 export ATRSHMLOG_FLAVOUR

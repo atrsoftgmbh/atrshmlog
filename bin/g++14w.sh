@@ -78,6 +78,13 @@ case $ATRSHMLOG_PLATFORM in
 		LIBMODULE="-latrshmlog -lpthread"
 		;;
 
+	    5)
+		CPP="g++ -std=gnu++14  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
+		PICFLAG=-fPIC
+		OPTMODE=-O3
+		LIBMODULE="-latrshmlog -lpthread"
+		;;
+	    
 	    *)
 		CPP="CC "
 		PICFLAG=

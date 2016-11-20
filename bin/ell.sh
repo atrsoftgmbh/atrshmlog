@@ -63,6 +63,13 @@ case $ATRSHMLOG_PLATFORM in
 		CC="clang "
 		LIBMODULE="-latrshmlog -lpthread"
 		;;
+
+	    
+	    5) # netbsd has a gcc 6.2 in /usr/pkg/gcc6/bin
+		CC="gcc -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+
 	    *)
 		CC=cc
 		LIBMODULE=-latrshmlog

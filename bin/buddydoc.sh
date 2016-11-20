@@ -43,6 +43,10 @@ case $ATRSHMLOG_PLATFORM in
 		DOXYGEN=doxygen
 		;;
 
+	    5) # the netbsd did it
+		DOXYGEN=doxygen
+		;;
+
 	    *)
 		DOXYGEN=
 		;;

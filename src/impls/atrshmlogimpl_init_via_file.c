@@ -32,7 +32,7 @@ void atrshmlog_init_via_file(const char *i_suffix,
 {
   char buff[256];
   
-#if ATRSHMLOG_FLAVOUR == 3 || ATRSHMLOG_FLAVOUR == 4
+#if ATRSHMLOG_USE_SAFER_COPY == 1 
   strlcpy(buff, atrshmlog_prefix_name_buffer,256);
   strlcat(buff, i_suffix,256);
   strlcat(buff,".TXT",256);

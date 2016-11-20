@@ -21,7 +21,7 @@ const char* atrshmlog_get_env(const char* i_suffix)
 
   if (strlen(i_suffix) < (ATRSHMLOG_PREFIX_SIZE / 2 - 2) && strlen(i_suffix) > 0)
     {
-#if ATRSHMLOG_FLAVOUR == 3 || ATRSHMLOG_FLAVOUR == 4
+#if ATRSHMLOG_USE_SAFER_COPY == 1
       strlcpy(buff, atrshmlog_get_env_prefix(), ATRSHMLOG_PREFIX_SIZE);
       strlcat(buff, i_suffix, ATRSHMLOG_PREFIX_SIZE);
 #else

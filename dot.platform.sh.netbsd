@@ -40,7 +40,7 @@ export ATRSHMLOG_PLATFORM
 # bsd freebsd 3
 # bsd openbsd 4
 # bsd netbsd 5
-ATRSHMLOG_FLAVOUR=4
+ATRSHMLOG_FLAVOUR=5
 
 export ATRSHMLOG_FLAVOUR
 
@@ -48,7 +48,7 @@ echo "set path"
 # we need a working path. so we assume its the basedir relative in bin
 # what makes the thing
 
-PATH="$PATH:$ATRSHMLOG_BASEDIR/bin:."
+PATH="/usr/pkg/gcc6/bin:$PATH:$ATRSHMLOG_BASEDIR/bin:."
 
 export PATH
 

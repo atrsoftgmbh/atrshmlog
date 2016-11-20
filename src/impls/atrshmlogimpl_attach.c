@@ -248,7 +248,7 @@ atrshmlog_ret_t atrshmlog_attach(void)
       // we try the file approch
       char buff[255];
 
-#if ATRSHMLOG_FLAVOUR == 3 || ATRSHMLOG_FLAVOUR == 4
+#if ATRSHMLOG_USE_SAFER_COPY == 1
       strlcpy(buff, atrshmlog_prefix_name_buffer, 255);
       strlcat(buff, ATRSHMLOGENVSUFFIX, 255);
       strlcat(buff, ".TXT", 255);
@@ -338,6 +338,14 @@ atrshmlog_ret_t atrshmlog_attach(void)
 #endif
 
 # if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+
+      int shmflg = 0; 
+		
+      void *shmat_result = shmat(shmid, shmaddr, shmflg);
+
+#endif
+
+# if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
 
       int shmflg = 0; 
 		

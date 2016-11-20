@@ -116,6 +116,18 @@
 
 #endif
 
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
+
+/* for the mkdir and its mode flags */
+#include <sys/stat.h>
+
+#include <unistd.h>
+
+/* file creation masks */
+#include <fcntl.h>
+
+#endif
+
 
 #include <stdio.h>
 
@@ -939,7 +951,7 @@ int main(int argc, char*argv[])
       exit(1);
     }
 
-#if ATRSHMLOG_FLAVOUR == 3 || ATRSHMLOG_FLAVOUR == 4
+#if ATRSHMLOG_USE_SAFER_COPY == 1
   strlcpy(basepath, argv[1], 256);
 #else
   strcpy(basepath, argv[1]);
