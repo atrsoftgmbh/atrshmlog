@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 #!/usr/local/bin/perl
+#!/usr/pkg/bin/perl
 #
 # $Id:$
 #
@@ -250,12 +251,19 @@ sub make_hint {
 		 'define' => 'ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG' ,
 		 'ipc' => 'posix',
 		 'alternative' => ' : WARNING: if it is 6.0 you have to set the ATRSHMLOG_FLAVOUR to 2 for this system'
+	     },
+	     'bsd_amd64_netbsd_gcc'  => 
+	     {
+		 'name' => 'bsd_amd64_netbsd_gcc',
+		 'define' => 'ATRSHMLOG_PLATFORM_BSD_AMD64_GCC' ,
+		 'ipc' => 'posix',
+		 'alternative' => ' : WARNING: you have to set the ATRSHMLOG_FLAVOUR to 5 for this system'
 	     }
 	     
 	);
 
     my $key  = $sys . '_' . $architecture . '_' . $flavour . '_' .  $compiler ;
-    print $key . "\n";
+#    print $key . "\n";
     $key  = lc $key;
 
     if (defined $h{$key}) {
@@ -822,6 +830,13 @@ sub check_for_flavour {
 	    &check_for_compiler($sys, $architecture, 'OpenBSD');
 	    return;
 	}
+
+	if ($o =~ m:netbsd:i) {
+	    print "found a flavor NetBSD\n";
+	    &check_for_compiler($sys, $architecture, 'NetBSD');
+	    return;
+	}
+
 	# ther is no secondary for now. any kvm solution is a separate
 	# system. but we think about cross compiler later ..
 	# if there is  asecond compiler tool chain its a second flavour ...
@@ -1075,6 +1090,37 @@ sub check_c {
      
     }
 
+    if ($ret == 256) {
+	$ret = system "$name $option atrshmlogcheckc_nothreads_h.c -o atrshmlogcheckc_nothreads_h > /dev/null 2>&1 ";
+
+	if ($ret == 0) {
+	    if (!open(IN, "atrshmlogcheckc_nothreads_h|") ) {
+		# bad thing. not there
+		print "seems the compile didnt make it. assume you need a better compiler - nothreads_h .\n";
+		return;
+	    }
+
+	    my $head = <IN>;
+	    my $atomics = <IN>;
+	    my $threads = <IN>;
+	    
+	    close IN;
+
+	    if ($atomics == 0) {
+		print "found atomics for $name $option.\n";
+	    } else {
+		print "found no atomics. you need a better compiler.\n";
+	    }
+	    
+	    if ($threads == 0) {
+		print "found threads for $name $option, but it does not include - a fake.\n";
+	    } else {
+		print "found no threads. you need a thread library.\n";
+	    }
+	    
+	}
+	
+    }
 }
 
 # end of file  

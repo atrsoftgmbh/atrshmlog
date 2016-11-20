@@ -62,6 +62,14 @@ writer signals to start stop ....
 -----
 verify mit logbuffer content
 
+-----
+
+sql logger
+
+------
+
+no sql logger
+
 ------
 
 * doc : \ref \see cross references

@@ -358,6 +358,12 @@
 
 #endif
 
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
+
+#define ATRSHMLOGCDECLBINDING /**/
+
+#endif
+
 
 
 /* os specifics includes */
@@ -476,6 +482,39 @@ typedef key_t atrshmlog_key_t;
 
 #endif
 
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
+
+/** Include of types for unix stuff */
+# include <sys/types.h>
+
+/** The ipc stuff */
+# include <sys/ipc.h>
+
+/** The shm stuff */
+# include <sys/shm.h>
+
+// bsd netbsd 
+#if ATRSHMLOG_FLAVOUR == 5
+/** The thread stuff */
+#include <lwp.h>
+#endif
+
+/** All the rest of unix */
+# include <unistd.h>
+
+/** File creation masks */
+# include <fcntl.h>
+
+/* the shared memory key in posix */
+
+typedef key_t atrshmlog_key_t;
+
+# define ATRSHMLOGINITINADVANCEDEFAULT 0
+
+# define ATRSHMLOGSCALECLICKTONANO(__click) (((__click) * 5LL ) / 2LL)
+
+#endif
+
 /**************************************************************/
 
 #if ATRSHMLOG_USE_PTHREAD == 1
@@ -536,6 +575,10 @@ typedef void atrshmlog_thread_ret_t;
 
 #if ATRSHMLOG_USE_GETTHRID == 1
 #define ATRSHMLOG_GETTHREADID(__o) ((__o) = (getthrid()))
+#endif
+
+#if ATRSHMLOG_USE_LWP_SELF == 1
+#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (_lwp_self()))
 #endif
 
 

@@ -13,6 +13,7 @@ atrshmlog.c
 
 # the program code files
 atrshmlogcheckc.c
+atrshmlogcheckc_nothreads_h.c
 atrshmlogconvert.c
 atrshmlogcreate.c
 atrshmlogdefect.c
@@ -173,6 +174,7 @@ atrshmlogimpl_non_inline_code_cygwin.c
 atrshmlogimpl_non_inline_code_linux_gcc.c
 atrshmlogimpl_non_inline_code_mingw.c
 atrshmlogimpl_non_inline_code_bsd_clang.c
+atrshmlogimpl_non_inline_code_bsd_gcc.c
 atrshmlogimpl_prealloc_buffers.c
 atrshmlogimpl_prealloc_count_flag.c
 atrshmlogimpl_prefix_buffer.c
@@ -236,14 +238,20 @@ atrshmlogimpl_reuse_thread_buffers.c
 DIRECTORY src alreadythere
 
 # adapted headers and list files
-atrshmlog.h.linux
+atrshmlog.h.centos_linux
 atrshmlog.h.cygwin
-atrshmlog.h.mingw
+atrshmlog.h.fedora_linux
 atrshmlog.h.freebsd
-atrshmlog_internal.h.linux
+atrshmlog.h.mingw
+atrshmlog.h.netbsd
+atrshmlog.h.openbsd
+atrshmlog_internal.h.centos_linux
 atrshmlog_internal.h.cygwin
-atrshmlog_internal.h.mingw
+atrshmlog_internal.h.fedora_linux
 atrshmlog_internal.h.freebsd
+atrshmlog_internal.h.mingw
+atrshmlog_internal.h.netbsd
+atrshmlog_internal.h.openbsd
 shmCPPfiles.mingw
 
 DIRECTORY bin
