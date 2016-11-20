@@ -48,6 +48,12 @@ atrshmlog_ret_t atrshmlog_delete(const int i_shmid)
 
 #endif
   
+#if ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC == 1
+  
+  int shmctl_result = shmctl(i_shmid, IPC_RMID, (struct shmid_ds *)0);
+
+#endif
+  
   return shmctl_result;
 }
 

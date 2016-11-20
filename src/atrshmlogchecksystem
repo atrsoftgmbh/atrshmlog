@@ -258,6 +258,13 @@ sub make_hint {
 		 'define' => 'ATRSHMLOG_PLATFORM_BSD_AMD64_GCC' ,
 		 'ipc' => 'posix',
 		 'alternative' => ' : WARNING: you have to set the ATRSHMLOG_FLAVOUR to 5 for this system'
+	     },
+	     'sunos_x86_64_opensolaris11_gcc'  => 
+	     {
+		 'name' => 'sunos_x86_64_opensolaris11_gcc',
+		 'define' => 'ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC' ,
+		 'ipc' => 'posix',
+		 'alternative' => ' : WARNING: you have to set the ATRSHMLOG_FLAVOUR to 6 for this system'
 	     }
 	     
 	);
@@ -844,6 +851,32 @@ sub check_for_flavour {
 	&check_for_compiler($sys, $architecture, 'unknown');
     }
     
+    if ($sys eq 'sunos') {
+	if (!open(IN, "uname -a|")) {
+	    print "cannot find a working uname program.\n";
+
+	    return;
+	}
+
+	my @o = <IN>;
+	
+	my $o = join(' ' , @o);
+
+	close IN;
+
+	if ($o =~ m:5.11:i) {
+	    print "found a flavor opensolaris11\n";
+	    &check_for_compiler($sys, $architecture, 'opensolaris11');
+	    return;
+	}
+
+	# ther is no secondary for now. any kvm solution is a separate
+	# system. but we think about cross compiler later ..
+	# if there is  asecond compiler tool chain its a second flavour ...
+
+	&check_for_compiler($sys, $architecture, 'unknown');
+    }
+
     return;
 }
 
@@ -984,6 +1017,33 @@ sub check_for_arch {
 	return;
     }
 
+    if ($sys eq 'sunos') {
+	if ($o =~ m:\bi386\b:i) {
+	    print "found a x86.\n";
+	    if (!open(IN, "isainfo -b|")) {
+		print "cannot find a working isainfo program.\n";
+
+		return;
+	    }
+	
+
+	    my @o = <IN>;
+       
+	    my $o = join(' ', @o);
+	    
+	    close IN;
+    
+	    if ($o =~ m:\b64\b:i) {
+		print "found a x86 64 architecture.\n";
+		&check_for_flavour($sys, 'x86_64');
+		return;
+	    }
+	
+	    print "we have a $sys on x86, but we cant detect the architecture.\nplease check the uname -a : \n $o \n";
+	}
+	return;
+    }
+
     print "we have a $sys, but we cant detect the architecture.\nplease check the uname -a : \n $o \n";
     
     return;
@@ -1023,10 +1083,10 @@ sub check_uname {
 	return;
     }
 
-    if ($o =~ m:solaris:i) {
-	print "found a solaris system.\n";
+    if ($o =~ m:sunos:i) {
+	print "found a sunos system.\n";
 
-	&check_for_arch('solaris');
+	&check_for_arch('sunos');
 	return;
     }
 

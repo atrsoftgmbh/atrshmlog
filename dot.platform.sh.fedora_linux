@@ -30,6 +30,8 @@ ATRSHMLOG_PLATFORM=linux
 
 # ATRSHMLOG_PLATFORM=bsd
 
+# ATRSHMLOG_PLATFORM=solaris
+
 export ATRSHMLOG_PLATFORM
 
 # default is 1
@@ -40,6 +42,9 @@ export ATRSHMLOG_PLATFORM
 # bsd freebsd 3
 # bsd openbsd 4
 # bsd netbsd 5
+
+# solaris opensolaris11 6
+
 ATRSHMLOG_FLAVOUR=1
 
 export ATRSHMLOG_FLAVOUR

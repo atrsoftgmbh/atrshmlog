@@ -111,4 +111,77 @@ void atrshmlog_sleep_nanos(atrshmlog_int32_t i_nanos)
 # endif
 
 #endif
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+  const int timeframe = 100000;
+
+  if (i_nanos < 0)
+    i_nanos = 1;
+
+  int limit = i_nanos / timeframe;
+  int rest = i_nanos % timeframe;
+  
+  struct timespec ts;
+  ts.tv_sec = 0;
+  ts.tv_nsec = timeframe;
+  
+  for (int i = 0; i < limit; i++) 
+    nanosleep(&ts, NULL);
+
+  if (rest > 0)
+    {
+      ts.tv_nsec = rest;
+
+      nanosleep(&ts, NULL);
+    }
+#endif
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
+  const int timeframe = 100000;
+
+  if (i_nanos < 0)
+    i_nanos = 1;
+
+  int limit = i_nanos / timeframe;
+  int rest = i_nanos % timeframe;
+  
+  struct timespec ts;
+  ts.tv_sec = 0;
+  ts.tv_nsec = timeframe;
+  
+  for (int i = 0; i < limit; i++) 
+    nanosleep(&ts, NULL);
+
+  if (rest > 0)
+    {
+      ts.tv_nsec = rest;
+
+      nanosleep(&ts, NULL);
+    }
+#endif
+
+#if ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC  == 1
+  const int timeframe = 100000;
+
+  if (i_nanos < 0)
+    i_nanos = 1;
+
+  int limit = i_nanos / timeframe;
+  int rest = i_nanos % timeframe;
+  
+  struct timespec ts;
+  ts.tv_sec = 0;
+  ts.tv_nsec = timeframe;
+  
+  for (int i = 0; i < limit; i++) 
+    nanosleep(&ts, NULL);
+
+  if (rest > 0)
+    {
+      ts.tv_nsec = rest;
+
+      nanosleep(&ts, NULL);
+    }
+#endif
+
 }  
