@@ -96,6 +96,13 @@ case $ATRSHMLOG_PLATFORM in
 	;;
 		
 
+    solaris)
+	CPP="g++ -std=gnu++14  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
+	PICFLAG=-fPIC
+	OPTMODE=-O3
+	LIBMODULE="-latrshmlog -lthread -lpthread"
+	;;
+
     *)
 
 	echo "no platform found. i gave up."

@@ -76,7 +76,12 @@ case $ATRSHMLOG_PLATFORM in
 		;;
 	esac
 	;;
-    
+
+    solaris)
+	CC="gcc -pthread"
+	LIBMODULE="-latrshmlog -lthread -lpthread"
+	;;
+
     *)
 
 	echo "no platform found. i gave up."

@@ -128,6 +128,22 @@
 
 #endif
 
+#if ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC == 1
+
+#ifndef _DEFAULT_SOURCE
+#define _DEFAULT_SOURCE 1
+#endif
+
+/* for the mkdir and its mode flags */
+#include <sys/stat.h>
+
+#include <unistd.h>
+
+/* file creation masks */
+#include <fcntl.h>
+
+#endif
+
 /* c standard */
 #include <stdio.h>
 

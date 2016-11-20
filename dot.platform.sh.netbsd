@@ -28,6 +28,8 @@ echo "set platform"
 
 # ATRSHMLOG_PLATFORM=mingw
 
+# ATRSHMLOG_PLATFORM=solaris
+
 ATRSHMLOG_PLATFORM=bsd
 
 export ATRSHMLOG_PLATFORM
@@ -40,6 +42,9 @@ export ATRSHMLOG_PLATFORM
 # bsd freebsd 3
 # bsd openbsd 4
 # bsd netbsd 5
+
+# solaris opensolaris11 6
+
 ATRSHMLOG_FLAVOUR=5
 
 export ATRSHMLOG_FLAVOUR

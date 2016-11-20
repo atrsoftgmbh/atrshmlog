@@ -90,6 +90,12 @@ case $ATRSHMLOG_PLATFORM in
 	;;
 
 		
+    solaris)
+	# 
+	CC="gcc -std=gnu11 -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
+	PICFLAG=-fPIC
+	OPTMODE=-O3
+	;;
 
     *)
 

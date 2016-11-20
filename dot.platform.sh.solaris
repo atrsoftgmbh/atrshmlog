@@ -26,11 +26,11 @@ echo "set platform"
 
 # ATRSHMLOG_PLATFORM=cygwin
 
-ATRSHMLOG_PLATFORM=mingw
+# ATRSHMLOG_PLATFORM=mingw
 
 # ATRSHMLOG_PLATFORM=bsd
 
-# ATRSHMLOG_PLATFORM=solaris
+ATRSHMLOG_PLATFORM=solaris
 
 export ATRSHMLOG_PLATFORM
 
@@ -44,8 +44,7 @@ export ATRSHMLOG_PLATFORM
 # bsd netbsd 5
 
 # solaris opensolaris11 6
-
-ATRSHMLOG_FLAVOUR=1
+ATRSHMLOG_FLAVOUR=6
 
 export ATRSHMLOG_FLAVOUR
 
@@ -53,7 +52,7 @@ echo "set path"
 # we need a working path. so we assume its the basedir relative in bin
 # what makes the thing
 
-PATH="$PATH:$ATRSHMLOG_BASEDIR/bin:."
+PATH="/opt/csw/bin:$PATH:$ATRSHMLOG_BASEDIR/bin:."
 
 export PATH
 
