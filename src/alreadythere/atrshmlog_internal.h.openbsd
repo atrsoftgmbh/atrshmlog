@@ -365,6 +365,19 @@
 #endif
 
 
+#if ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC == 1
+
+/** 
+ * This is for the gnu linux compiler system 
+ */
+#ifndef _DEFAULT_SOURCE
+# define _DEFAULT_SOURCE 1
+#endif
+
+#define ATRSHMLOGCDECLBINDING /**/
+
+#endif
+
 
 /* os specifics includes */
 
@@ -515,6 +528,41 @@ typedef key_t atrshmlog_key_t;
 
 #endif
 
+/* os specifics includes */
+
+#if ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC == 1
+
+/** Include of types for unix stuff */
+# include <sys/types.h>
+
+/** The ipc stuff */
+# include <sys/ipc.h>
+
+/** The shm stuff */
+# include <sys/shm.h>
+
+// solaris 
+#if ATRSHMLOG_FLAVOUR == 6
+/** The thread stuff */
+#include <thread.h>
+#endif
+
+/** All the rest of unix */
+# include <unistd.h>
+
+/** File creation masks */
+# include <fcntl.h>
+
+/* the shared memory key in posix */
+
+typedef key_t atrshmlog_key_t;
+
+# define ATRSHMLOGINITINADVANCEDEFAULT 0
+
+#define ATRSHMLOGSCALECLICKTONANO(__click) (((__click) * 5LL ) / 2LL)
+
+#endif
+
 /**************************************************************/
 
 #if ATRSHMLOG_USE_PTHREAD == 1
@@ -579,6 +627,10 @@ typedef void atrshmlog_thread_ret_t;
 
 #if ATRSHMLOG_USE_LWP_SELF == 1
 #define ATRSHMLOG_GETTHREADID(__o) ((__o) = (_lwp_self()))
+#endif
+
+#if ATRSHMLOG_USE_SOLARIS_THR_SELF == 1
+#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (thr_self()))
 #endif
 
 
