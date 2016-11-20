@@ -63,7 +63,7 @@
  *
  * Testet. Java wont work with it for now.
  */
-#define ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC 1
+#define ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC 0
 
 /** 
  * \brief We have a x86 64 bit, a cygwin mingw64 and a gnu c 
@@ -79,7 +79,14 @@
  */
 #define ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG 0
 
-/********************************************************/
+/** 
+ * \brief We have a x86 64 bit, a bsd and a gcc c 
+ *
+ * No java support tested so far.
+ */
+#define ATRSHMLOG_PLATFORM_BSD_AMD64_GCC 1
+
+/*******************************************************/
 
 
 /** 
@@ -140,6 +147,11 @@
 # define ATRSHMLOG_USE_PTHREAD 1
 #endif
 
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
+# undef ATRSHMLOG_USE_PTHREAD
+# define ATRSHMLOG_USE_PTHREAD 1
+#endif
+
 /** 
  * \brief Do we use the windows thread lib 
  *
@@ -183,6 +195,11 @@
 # define ATRSHMLOG_SYSCALL 1
 #endif
 
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
+# undef ATRSHMLOG_SYSCALL
+# define ATRSHMLOG_SYSCALL 1
+#endif
+
 /** 
  * \brief Do we use the clock_gettime here 
  */
@@ -206,6 +223,11 @@
 #endif
 
 #if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+# undef ATRSHMLOG_USE_CLOCK_GETTIME
+# define ATRSHMLOG_USE_CLOCK_GETTIME 1
+#endif
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
 # undef ATRSHMLOG_USE_CLOCK_GETTIME
 # define ATRSHMLOG_USE_CLOCK_GETTIME 1
 #endif
@@ -266,6 +288,11 @@
 # define ATRSHMLOG_USE_NANOSLEEP 1
 #endif
 
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
+# undef ATRSHMLOG_USE_NANOSLEEP
+# define ATRSHMLOG_USE_NANOSLEEP 1
+#endif
+
 
 /** 
  * \brief Do we use the syscall for linux to get TID 
@@ -318,6 +345,16 @@
 # define ATRSHMLOG_USE_GETTHRID 1
 #endif
 
+/**
+ * \brief We use the _lwp_self call on netbsd here
+ */
+#define ATRSHMLOG_USE_LWP_SELF 0
+
+#if ATRSHMLOG_FLAVOUR == 5
+# undef ATRSHMLOG_USE_LWP_SELF
+# define ATRSHMLOG_USE_LWP_SELF 1
+#endif
+
 #define ATRSHMLOG_THREAD_LOCAL 0
 
 #if  ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
@@ -340,6 +377,27 @@
 # if ATRSHMLOG_FLAVOUR == 3
 #  undef ATRSHMLOG_THREAD_LOCAL
 #  define ATRSHMLOG_THREAD_LOCAL 1
+# endif
+#endif
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
+// netbsd has it
+# undef ATRSHMLOG_THREAD_LOCAL
+# define ATRSHMLOG_THREAD_LOCAL 1
+#endif
+
+
+/**
+ * BSD unix like a way of copy for strings that they believe is safer
+ * than the old one. 
+ * Perhaps we will use it on fenster;plural too.
+ */
+#define ATRSHMLOG_USE_SAFER_COPY 0
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1 || ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
+# if ATRSHMLOG_FLAVOUR == 3 || ATRSHMLOG_FLAVOUR == 4 || ATRSHMLOG_FLAVOUR == 5
+#  undef ATRSHMLOG_USE_SAFER_COPY
+#  define ATRSHMLOG_USE_SAFER_COPY 1
 # endif
 #endif
 
@@ -376,6 +434,11 @@
 #if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
 # undef ATRSHMLOG_GET_TSC_CALL
 # define  ATRSHMLOG_GET_TSC_CALL atrshmlog_get_tsc_amd64_clang
+#endif
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
+# undef ATRSHMLOG_GET_TSC_CALL
+# define  ATRSHMLOG_GET_TSC_CALL atrshmlog_get_tsc_amd64_gnu
 #endif
 
 /********************************************************************/
@@ -1108,9 +1171,37 @@ extern "C" {
     atrshmlog_error_verify_5 = -185,
     /**< Area buffer state corrupt in atrshmlog_verify. */
     
-    atrshmlog_error_verify_6 = -186
+    atrshmlog_error_verify_6 = -186,
     /**< Buffer safeguard corrupted in atrshmlog_verify.      */
+
+    atrshmlog_error_buffer_slave_1 = -190,
+    /**< Pthread specific buffer not available.      */
     
+    atrshmlog_error_get_strategy_1 = -191,
+    /**< Pthread specific buffer not available.      */
+
+    atrshmlog_error_read_6 = -166,
+    /**< Pthread specific buffer not available.      */
+    
+    atrshmlog_error_read_fetch_6 = -174,
+    /**< Pthread specific buffer not available.      */
+    
+    atrshmlog_error_set_strategy_1 = -192,
+    /**< Pthread specific buffer not available.      */
+
+    atrshmlog_error_write0_10 = -66,
+    /**< Pthread specific buffer not available.      */
+
+    atrshmlog_error_write1_13 = -79,
+    /**< Pthread specific buffer not available.      */
+
+    atrshmlog_error_write2_13 = -89,
+    /**< Pthread specific buffer not available.      */
+
+    atrshmlog_error_attach_7 = -46,
+    /**< Pthread specific buffer not available.      */
+
+
   };
   
   /**
@@ -4408,7 +4499,76 @@ extern "C" {
 #endif
   // bsd amd64 clang
   
-  #else
+  #if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1 
+
+  /**
+   * We use the modern cpu version of reading the click counter
+   * register tsc.
+   *
+   * \return
+   * The 64 bit number with the tick count.
+   */
+  inline uint64_t  atrshmlog_get_tsc_par_amd64_gnu(void)
+  {
+    uint32_t hi, lo;
+
+    __asm volatile
+      ("rdtscp" : "=a" (lo), "=d" (hi));
+
+    return  ((uint64_t)hi << 32) | lo;
+  }
+
+
+  /**
+   * We use the old cpu version of reading the click counter
+   * register tsc. We use a lfence for multicore here.
+   *
+   * \return
+   * The 64 bit number with the tick count.
+   */
+  inline uint64_t  atrshmlog_get_tsc_fence_amd64_gnu(void)
+  {
+    uint32_t hi, lo;
+    
+    __asm volatile
+      ("lfence");
+    
+    __asm volatile
+      ("rdtsc" : "=a" (lo), "=d" (hi));
+    
+    return  ((uint64_t)hi << 32) | lo;
+  }
+
+  /**
+   * We use the old cpu version of reading the click counter
+   * register tsc. No syncronization here.
+   *
+   * \return
+   * The 64 bit number with the tick count.
+   */
+  inline  uint64_t atrshmlog_get_tsc_amd64_gnu(void)
+  {
+    uint32_t hi, lo;
+
+    __asm volatile
+      ("rdtsc" : "=a" (lo), "=d" (hi));
+
+    return  ((uint64_t)hi << 32) | lo;
+  }
+
+  /**
+   * The well know dummy 
+   * \return 
+   * Null.
+   */
+  inline  uint64_t  atrshmlog_get_tsc_null_amd64_gnu(void)
+  {
+    return 0;
+  }
+#endif
+  // bsd amd64 gnu
+
+#else
 
   // no inline, prototypes needed
 # if ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1 
@@ -4570,6 +4730,45 @@ extern "C" {
 # endif
   // bsd amd64 clang
 
+# if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1 
+  
+  /**
+   * We use the modern cpu version of reading the click counter
+   * register tsc.
+   *
+   * \return
+   * The 64 bit number with the tick count.
+   */
+  extern uint64_t atrshmlog_get_tsc_par_amd64_gnu(void);
+
+  /**
+   * We use the old cpu version of reading the click counter
+   * register tsc. We use a lfence for multicore here.
+   *
+   * \return
+   * The 64 bit number with the tick count.
+   */
+  extern uint64_t atrshmlog_get_tsc_fence_amd64_gnu(void);
+
+  /**
+   * We use the old cpu version of reading the click counter
+   * register tsc. No syncronization here.
+   *
+   * \return
+   * The 64 bit number with the tick count.
+   */
+  extern uint64_t atrshmlog_get_tsc_amd64_gnu(void);
+
+  /**
+   * The well know dummy 
+   * \return 
+   * Null.
+   */
+  extern uint64_t atrshmlog_get_tsc_null_amd64_gnu(void);
+
+# endif
+  // bsd amd64 clang
+
 
 #endif
 
@@ -4682,6 +4881,7 @@ extern "C" {
   }
 
 # endif
+
 # if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1 
 
 
@@ -4714,6 +4914,42 @@ extern "C" {
       }
     
     return (atrshmlog_time_t)atrshmlog_get_tsc_null_amd64_clang();
+  }
+
+# endif
+
+# if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1 
+
+
+  /**
+   * \brief We get the click time from here.
+   *
+   * This is used in later versions, for now its a start.
+   * We adress here the possibility to use code for 
+   * similar architecture on diffrent systems.
+   * So we need to choose a low level function by id.
+   *
+   * \return
+   * The 64 bit  click time 
+   */
+  inline atrshmlog_time_t  atrshmlog_get_clicktime(void)
+  {
+    if (atrshmlog_clock_id == 3)
+      {
+	return (atrshmlog_time_t)atrshmlog_get_tsc_par_amd64_gnu();
+      }
+    
+    if (atrshmlog_clock_id == 2)
+      {
+	return (atrshmlog_time_t)atrshmlog_get_tsc_fence_amd64_gnu();
+      }
+    
+    if (atrshmlog_clock_id == 1)
+      {
+	return (atrshmlog_time_t)atrshmlog_get_tsc_amd64_gnu();
+      }
+    
+    return (atrshmlog_time_t)atrshmlog_get_tsc_null_amd64_gnu();
   }
 
 # endif
