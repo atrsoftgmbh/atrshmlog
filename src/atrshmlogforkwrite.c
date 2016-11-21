@@ -249,7 +249,7 @@ int main (int argc, char*argv[])
   // we no longer log
   ATRSHMLOG_STOP();
       
-  system ("pstree");
+  int ret = system ("pstree");
 
   sleep (3);
   
