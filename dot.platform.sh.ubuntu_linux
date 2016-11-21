@@ -22,9 +22,9 @@ export ATRSHMLOG_BASEDIR
 echo "set platform"
 # we set the platform for build
 
-# ATRSHMLOG_PLATFORM=linux
+ATRSHMLOG_PLATFORM=linux
 
-ATRSHMLOG_PLATFORM=cygwin
+# ATRSHMLOG_PLATFORM=cygwin
 
 # ATRSHMLOG_PLATFORM=mingw
 
@@ -46,7 +46,7 @@ export ATRSHMLOG_PLATFORM
 
 # solaris opensolaris11 6
 
-ATRSHMLOG_FLAVOUR=1
+ATRSHMLOG_FLAVOUR=7
 
 export ATRSHMLOG_FLAVOUR
 
