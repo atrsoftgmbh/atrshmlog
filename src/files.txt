@@ -247,6 +247,7 @@ atrshmlog.h.mingw
 atrshmlog.h.netbsd
 atrshmlog.h.openbsd
 atrshmlog.h.solaris
+atrshmlog.h.ubuntu_linux
 atrshmlog_internal.h.centos_linux
 atrshmlog_internal.h.cygwin
 atrshmlog_internal.h.fedora_linux
@@ -255,6 +256,7 @@ atrshmlog_internal.h.mingw
 atrshmlog_internal.h.netbsd
 atrshmlog_internal.h.openbsd
 atrshmlog_internal.h.solaris
+atrshmlog_internal.h.ubuntu_linux
 shmCPPfiles.mingw
 
 DIRECTORY bin
