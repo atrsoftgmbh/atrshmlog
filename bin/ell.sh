@@ -30,6 +30,12 @@ case $ATRSHMLOG_PLATFORM in
 		LIBMODULE=-latrshmlog
 		;;
 
+	    7) # ubuntu way
+		# linux x86_64 gnu
+		CC="gcc -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+		
 	    *)
 		# linux x86_64 gnu
 		CC="gcc -pthread"
