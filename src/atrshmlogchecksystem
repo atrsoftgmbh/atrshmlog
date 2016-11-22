@@ -279,6 +279,13 @@ sub make_hint {
 		 'define' => 'ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC' ,
 		 'ipc' => 'posix',
 		 'alternative' => ' : WARNING: you have to set the ATRSHMLOG_FLAVOUR to 8 for this system and a gcc-6 in place'
+	     },
+	     'linux_x86_64_debian_gcc'  => 
+	     {
+		 'name' => 'linux_x86_64_debian_gcc',
+		 'define' => 'ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC' ,
+		 'ipc' => 'posix',
+		 'alternative' => ''
 	     }
 	     
 
@@ -827,6 +834,12 @@ sub check_for_flavour {
 	    if ($osr =~ m:opensuse:i) {
 		print "found a flavor opensuse\n";
 		&check_for_compiler($sys, $architecture, 'opensuse');
+		return;
+	    }
+
+	    if ($osr =~ m:debian:i) {
+		print "found a flavor debian\n";
+		&check_for_compiler($sys, $architecture, 'debian');
 		return;
 	    }
 

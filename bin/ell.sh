@@ -42,6 +42,12 @@ case $ATRSHMLOG_PLATFORM in
 		LIBMODULE=-latrshmlog
 		;;
 		
+	    9) # debian 8.6 
+		# linux x86_64 gnu
+		CC="gcc -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+
 	    *)
 		# linux x86_64 gnu
 		CC="gcc -pthread"

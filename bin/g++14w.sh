@@ -50,6 +50,14 @@ case $ATRSHMLOG_PLATFORM in
 		LIBMODULE=-latrshmlog
 		;;
 
+	    9) # debian 8.6
+		# linux x86_64 gnu
+		CPP="g++ -std=c++14 -pthread -Wall -Weffc++ -fdump-tree-original  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
+		PICFLAG=-fPIC
+		OPTMODE=-O3
+		LIBMODULE=-latrshmlog
+		;;
+
 	    *)
 		# linux x86_64 gnu
 		CPP="g++ -std=c++14 -pthread -Wall -Weffc++ -fdump-tree-original  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
