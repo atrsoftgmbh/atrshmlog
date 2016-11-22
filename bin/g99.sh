@@ -45,7 +45,7 @@ case $ATRSHMLOG_PLATFORM in
 		OPTMODE=-O3
 		;;
 
-	    1) # debian 8.6
+	    9) # debian 8.6
 		# linux x86_64 gnu
 		CC="gcc -std=gnu11 -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
 		PICFLAG=-fPIC
