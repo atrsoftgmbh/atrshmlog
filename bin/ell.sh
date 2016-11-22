@@ -36,6 +36,12 @@ case $ATRSHMLOG_PLATFORM in
 		LIBMODULE=-latrshmlog
 		;;
 		
+	    8) # opensuse
+		# linux x86_64 gnu
+		CC="gcc-6 -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+		
 	    *)
 		# linux x86_64 gnu
 		CC="gcc -pthread"

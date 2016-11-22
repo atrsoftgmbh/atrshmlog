@@ -273,6 +273,13 @@ sub make_hint {
 		 'ipc' => 'posix',
 		 'alternative' => ''
 	     },
+	     'linux_x86_64_opensuse_gcc'  => 
+	     {
+		 'name' => 'linux_x86_64_opensuse_gcc',
+		 'define' => 'ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC' ,
+		 'ipc' => 'posix',
+		 'alternative' => ' : WARNING: you have to set the ATRSHMLOG_FLAVOUR to 8 for this system and a gcc-6 in place'
+	     }
 	     
 
 	     
@@ -653,7 +660,18 @@ sub check_for_compiler {
 	&check_gcc('gcc', 'gcc', $sys, $architecture, $flavour, $sys, $architecture);
 	$hits ++;
     }
- 
+
+    # some systems need a gcc5 or gcc-6
+    # so at least for opensuse its gcc-6 
+    $ret = system "which gcc-6 > /dev/null 2>&1";
+    
+    if ($ret == 0) {
+	print "found a gcc-6 compiler.\n";
+	
+	&check_gcc('gcc-6', 'gcc', $sys, $architecture, $flavour, $sys, $architecture);
+	$hits ++;
+    }    
+
     # clang c
     $ret = system "which clang > /dev/null 2>&1";
 
@@ -805,6 +823,13 @@ sub check_for_flavour {
 		&check_for_compiler($sys, $architecture, 'ubuntu');
 		return;
 	    }
+
+	    if ($osr =~ m:opensuse:i) {
+		print "found a flavor opensuse\n";
+		&check_for_compiler($sys, $architecture, 'opensuse');
+		return;
+	    }
+
 	}
 
 	# ther is no secondary for now. any kvm solution is a separate

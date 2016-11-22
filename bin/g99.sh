@@ -38,6 +38,13 @@ case $ATRSHMLOG_PLATFORM in
 		OPTMODE=-O3
 		;;
 
+	    8) # opensuse
+		# linux x86_64 gnu
+		CC="gcc-6 -std=gnu11 -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
+		PICFLAG=-fPIC
+		OPTMODE=-O3
+		;;
+
 	    *)
 		# linux x86_64 gnu
 		CC="gcc -std=gnu11 -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "

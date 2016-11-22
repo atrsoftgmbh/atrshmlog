@@ -39,6 +39,7 @@ export ATRSHMLOG_PLATFORM
 # linux fedora 1
 # linux centos 2
 # linux ubuntu 7
+# linux opensuse 8
 
 # bsd freebsd 3
 # bsd openbsd 4

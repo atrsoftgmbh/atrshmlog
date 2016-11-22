@@ -42,6 +42,14 @@ case $ATRSHMLOG_PLATFORM in
 		LIBMODULE=-latrshmlog
 		;;
 
+	    8) # opensuse
+		# linux x86_64 gnu
+		CPP="g++-6 -std=c++14 -pthread -Wall -Weffc++ -fdump-tree-original  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
+		PICFLAG=-fPIC
+		OPTMODE=-O3
+		LIBMODULE=-latrshmlog
+		;;
+
 	    *)
 		# linux x86_64 gnu
 		CPP="g++ -std=c++14 -pthread -Wall -Weffc++ -fdump-tree-original  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
