@@ -241,21 +241,27 @@ DIRECTORY src alreadythere
 # adapted headers and list files
 atrshmlog.h.centos_linux
 atrshmlog.h.cygwin
+atrshmlog.h.debian_linux
 atrshmlog.h.fedora_linux
 atrshmlog.h.freebsd
 atrshmlog.h.mingw
 atrshmlog.h.netbsd
 atrshmlog.h.openbsd
+atrshmlog.h.opensuse_linux
 atrshmlog.h.solaris
+atrshmlog.h.sles_linux
 atrshmlog.h.ubuntu_linux
 atrshmlog_internal.h.centos_linux
 atrshmlog_internal.h.cygwin
 atrshmlog_internal.h.fedora_linux
+atrshmlog_internal.h.debian_linux
 atrshmlog_internal.h.freebsd
 atrshmlog_internal.h.mingw
 atrshmlog_internal.h.netbsd
 atrshmlog_internal.h.openbsd
+atrshmlog_internal.h.opensuse_linux
 atrshmlog_internal.h.solaris
+atrshmlog_internal.h.sles_linux
 atrshmlog_internal.h.ubuntu_linux
 shmCPPfiles.mingw
 
