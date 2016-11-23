@@ -11,9 +11,6 @@ atrshmloginit.c
 atrshmlog_internal.c
 atrshmlogoff.c
 atrshmlogon.c
-atrshmlogreaderb.c
-atrshmlogreader.c
-atrshmlogreaderc.c
 atrshmlogreaderd.c
 atrshmlogreset.c
 atrshmlogsignalreader.c

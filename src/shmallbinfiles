@@ -16,9 +16,6 @@ atrshmlogfinish
 atrshmlogfork
 atrshmlogforkwrite
 atrshmloginit
-atrshmlogreader
-atrshmlogreaderb
-atrshmlogreaderc
 atrshmlogreaderd
 atrshmlogreset
 atrshmlogverify

@@ -948,7 +948,9 @@ extern "C" {
     /**< The number of calls to \ref  atrshmlog_init_buffers_in_advance_off() */
     atrshmlog_counter_reuse_thread_buffers      = 85,
     /**< The number of calls to \ref  atrshmlog_reuse_thread_buffers() */
-    atrshmlog_counter_end                       = 85
+    atrshmlog_counter_set_autoflush             = 86,
+    /**< The number of calls to \ref  atrshmlog_set_autoflush() */
+    atrshmlog_counter_end                       = 86
     /**< The highes index in use */
   };
 
@@ -1258,7 +1260,13 @@ extern "C" {
     atrshmlog_error_attach_7 = -46,
     /**< Pthread specific buffer not available.      */
 
+    atrshmlog_error_get_autoflush_1 = -200,
+    /**< Pthread specific buffer not available.      */
 
+    atrshmlog_error_set_autoflush_1 = -201
+    /**< Pthread specific buffer not available.      */
+
+    
   };
   
   /**
@@ -2394,6 +2402,45 @@ extern "C" {
    */
 #define  ATRSHMLOG_REUSE_THREAD_BUFFERS(__tid)  atrshmlog_reuse_thread_buffers((__tid))
 
+  /**
+   * \brief Set the autoflush for the process
+   *
+   * \param __f
+   * Our new autoflush flag
+   *
+   * \return 
+   * The old flag
+   */
+#define  ATRSHMLOG_SET_AUTOFLUSH_PROCESS(__f)  atrshmlog_set_autoflush_process((__f))
+
+  /**
+   *  \brief The autoflush flag
+   *
+   * \return
+   * The flag
+   */
+#define  ATRSHMLOG_GET_AUTOFLUSH_PROCESS() atrshmlog_get_autoflush_process()
+  
+  /**
+   * \brief Set the autoflush for the thread
+   *
+   * \param __f
+   * Our new autoflush flag
+   *
+   * \return 
+   * The old flag
+   */
+#define  ATRSHMLOG_SET_AUTOFLUSH(__f) atrshmlog_set_autoflush((__f))
+
+  /**
+   *  \brief The autoflush flag
+   *
+   * \return
+   * The flag
+   */
+#define  ATRSHMLOG_GET_AUTOFLUSH() atrshmlog_get_autoflush()
+
+  
 #if ATRSHMLOG_LEVEL > 0
 
 
@@ -3898,6 +3945,44 @@ extern "C" {
    */
   extern atrshmlog_ret_t atrshmlog_reuse_thread_buffers(atrshmlog_tid_t i_tid);
 
+  /**
+   * \brief Set the autoflush for the process
+   *
+   * \param i_flag
+   * Our new autoflush flag
+   *
+   * \return 
+   * The old flag
+   */
+  extern atrshmlog_ret_t atrshmlog_set_autoflush_process(int i_flag);
+
+  /**
+   *  \brief The autoflush flag
+   *
+   * \return
+   * The flag
+   */
+  extern atrshmlog_ret_t atrshmlog_get_autoflush_process(void);
+  
+  /**
+   * \brief Set the autoflush for the thread
+   *
+   * \param i_flag
+   * Our new autoflush flag
+   *
+   * \return 
+   * The old flag
+   */
+  extern atrshmlog_ret_t atrshmlog_set_autoflush(int i_flag);
+
+  /**
+   *  \brief The autoflush flag
+   *
+   * \return
+   * The flag
+   */
+  extern atrshmlog_ret_t atrshmlog_get_autoflush(void);
+  
 #if ATRSHMLOG_LEVEL > 0
 
   /** 

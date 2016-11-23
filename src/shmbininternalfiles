@@ -5,8 +5,5 @@ atrshmlogreset
 atrshmlogfork
 atrshmlogforkwrite
 atrshmloginit
-atrshmlogreader
-atrshmlogreaderb
-atrshmlogreaderc
 atrshmlogreaderd
 atrshmlogverify

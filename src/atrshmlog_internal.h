@@ -1586,6 +1586,11 @@ struct atrshmlog_g_tl_s {
    * The strategy for this thread.
    */
   int strategy;
+
+  /**
+   * The autoflush for the thread.
+   */
+  int autoflush;
   
   /** 
    * This is the thread pid on init.
@@ -1623,7 +1628,7 @@ struct atrshmlog_g_tl_s {
    * and so about the one that holds the valid last thread statistics
    */
   int number_dispatched;
-  
+
   /**
    * thread specific statistics are here.
    * so we can colect them later from the buffers in files.
@@ -1742,6 +1747,7 @@ extern int atrshmlog_slave_to_shm_wait;
 extern int atrshmlog_strategy_wait_wait_time;
 extern int atrshmlog_wait_for_slaves;
 extern int atrshmlog_buffer_strategy;
+extern int atrshmlog_autoflush;
 extern int atrshmlog_thread_fence_1;
 extern int atrshmlog_thread_fence_2;
 extern int atrshmlog_thread_fence_3;

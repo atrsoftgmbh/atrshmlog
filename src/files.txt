@@ -26,9 +26,6 @@ atrshmloginit.c
 atrshmlog_internal.c
 atrshmlogoff.c
 atrshmlogon.c
-atrshmlogreaderb.c
-atrshmlogreader.c
-atrshmlogreaderc.c
 atrshmlogreaderd.c
 atrshmlogreset.c
 atrshmlogsignalreader.c
@@ -76,6 +73,7 @@ atrshmlogimpl_alloc.c
 atrshmlogimpl_attach.c
 atrshmlogimpl_attach_once_flag.c
 atrshmlogimpl_attach_pid_flag.c
+atrshmlogimpl_autoflush_flag.c
 atrshmlogimpl_base_ptr.c
 atrshmlogimpl_buffer_id_flag.c
 atrshmlogimpl_buffer_infosize_flag.c
@@ -112,6 +110,8 @@ atrshmlogimpl_get_acquire_count.c
 atrshmlogimpl_get_area.c
 atrshmlogimpl_get_area_count.c
 atrshmlogimpl_get_area_version.c
+atrshmlogimpl_get_autoflush.c
+atrshmlogimpl_get_autoflush_process.c
 atrshmlogimpl_get_buffer_id.c
 atrshmlogimpl_get_buffer_max.c
 atrshmlogimpl_get_buffer_size.c
@@ -184,6 +184,8 @@ atrshmlogimpl_read_fetch.c
 atrshmlogimpl_remove_sl.c
 atrshmlogimpl_set_advance_off.c
 atrshmlogimpl_set_advance_on.c
+atrshmlogimpl_set_autoflush.c
+atrshmlogimpl_set_autoflush_process.c
 atrshmlogimpl_set_buffer_size.c
 atrshmlogimpl_set_clock_id.c
 atrshmlogimpl_set_env_prefix.c

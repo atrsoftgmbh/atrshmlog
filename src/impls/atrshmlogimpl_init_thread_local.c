@@ -55,6 +55,8 @@ int atrshmlog_init_thread_local (atrshmlog_g_tl_t* restrict i_g)
 
 	  i_g->strategy = atrshmlog_buffer_strategy; 
 
+	  i_g->autoflush = atrshmlog_autoflush;
+	  
 	  i_g->number_dispatched = 0;
 
 	  i_g->counter_write0 = 0;

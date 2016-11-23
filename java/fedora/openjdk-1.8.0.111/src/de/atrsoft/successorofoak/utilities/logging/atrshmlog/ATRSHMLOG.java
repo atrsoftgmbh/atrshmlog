@@ -509,8 +509,13 @@ public class ATRSHMLOG {
 	/**
 	 * The number of calls to @ref  atrshmlog_reuse_thread_buffers() 
 	 */
-	atrshmlog_counter_reuse_thread_buffers (85);
+	atrshmlog_counter_reuse_thread_buffers (85),
 
+	/**
+	 * The number of calls to @ref  atrshmlog_set_autoflush()
+	 */
+	atrshmlog_counter_set_autoflush (86);
+	
     	final int  err_code;
     	
     	private atrshmlog_counter(int err_code) {
@@ -980,8 +985,43 @@ public class ATRSHMLOG {
 	/**
 	 * Buffer safeguard corrupted in atrshmlog_verify. 
 	 */
-        atrshmlog_error_verify_6 (-186);
-    	
+        atrshmlog_error_verify_6 (-186),
+
+	/**
+	 * Pthread specific buffer not available. 
+	 */
+	atrshmlog_error_buffer_slave_1 (-190),
+	
+	/**
+	 * Pthread specific buffer not available. 
+	 */
+	atrshmlog_error_write0_10 (-66),
+	
+	/**
+	 * Pthread specific buffer not available. 
+	 */
+	atrshmlog_error_write1_13 (-79),
+
+	/**
+	 * Pthread specific buffer not available. 
+	 */
+	atrshmlog_error_write2_13 (-89),	
+
+	/**
+	 * Pthread specific buffer not available. 
+	 */
+	atrshmlog_error_attach_7 (-46),
+	
+	/**
+	 * Pthread specific buffer not available. 
+	 */
+	atrshmlog_error_get_autoflush_1 (-200),
+	
+	/**
+	 * Pthread specific buffer not available. 
+	 */
+	atrshmlog_error_set_autoflush_1 (-201);
+	
     	final int  err_code;
     	
     	private atrshmlog_error(int err_code) {
@@ -1370,6 +1410,94 @@ public class ATRSHMLOG {
 			    long starttime,
 			    long endtime,
 			    String payload,
+			    int lengthLimit);
+
+    /** 
+     * We write an entry, one buffer as additional payload.
+     * the string is transfered with the number of chars in length
+     *
+     * We have to do something we cannot solve with a payload of
+     * only the userflag and the event alone. So we add an info.
+     * Its a buffer of memory, and we can put inside whatever we want.
+     * It is defined by the pointer and the size only.
+     * You can embed whatever you want. Its transfered binary, so
+     * you can use embedded zeros, unicode chars, structs ...
+     * The only problem is that binary data will corrupt the converter.
+     * But not the reader. So its up to you to use a self taylored 
+     * converter if binary data is in place.
+     * If you ONLY use printable char data you can live with the 
+     * standard converter.
+     * But its up to you if you need more - then take the converter code
+     * and hack it to your needs.
+     * Its only up to you.
+     *
+     *  @param  i_eventnumber
+     * A 32 bit event number. This should not be overused, check for 
+     * the event flag limit. You should hold this stable, meaning
+     * it should identify the spot of logging.
+     * So you can swith it on or off via events. And it identifies 
+     * the spot where you log.
+     *
+     *  @param  i_eventflag
+     * The flag to identify the kind of logging.
+     * Its a well known fact that we use normally an interval. So the 
+     * flag is indead a char and it is then a big I ....
+     * If you need a instant info - like an additional info or so - you 
+     * normally use no interval. This is then a point in time entry, so I use a
+     * big P for this.
+     * Anything else is left for the user. But you are limited to a char, and 
+     * it is a BAD THING t switch to unprintable values ....
+     * Update: a small i and a small p is used in the Java jni layer.
+     * So dont use them. The converter knows little about it,
+     * but it is at least aware of it and trys its best.
+     *
+     *  @param  i_userflag
+     * This is a 32 integer and its totally for the user.
+     * So you can put inside as an info what you think is so important 
+     * that it must come out.
+     * Because it is the ONLY user info that is free of limitations
+     * beside the size use it wisely - I suggest you use it together with
+     * the event to make some kind of combined has map key and then 
+     * use it to give you rough 10000 * 4 billion possible strings as 
+     * real info 
+     * which is a lot of informafion for many people ...
+     * And because you use write1 there is more info in the additional payload.
+     * 
+     *  @param  i_starttime
+     *  a click time. 
+     *
+     *  @param  i_endtime
+     *  a click time.
+     * Side note: per convention the convert use a starttime and a endtime to 
+     * do some calculation to interpret this as the start of the log entry
+     * and end of the log entra. IT calcs the diffrence as the duration.
+     * And it try to calc the real times with a linear approch from the 
+     * time points init and last and the values for start and end assuming
+     * they were taken with the same click counter - i.e. it claculates
+     * an interpretes real time assuming you got the tick time 
+     * and put it into start and ende...
+     * So dont play games with those. They are used and if you insist you can
+     * even corrupt the converter by using some nonsence data.
+     *
+     *  @param  i_local
+     * Points to the data that will be embedded as additional payload 
+     * by memcpy it.
+     *
+     *  @param  i_size
+     * The size of the embedded payload starting at i_local interpreted as
+     * an adress in memory. size 0 is allowed.
+     *
+     * @return
+     * - 0 for a working log write
+     * - else for an error or a suppressed one
+     */
+    public native int write(int eventnumber,
+			    int eventflag,
+			    int userflag,
+			    long starttime,
+			    long endtime,
+			    String payload,
+			    int startIndex,
 			    int lengthLimit);
 
     /** 
@@ -2343,7 +2471,7 @@ public class ATRSHMLOG {
      * - non zero error
      */
     public native int removeSlaveViaLocal(long i_thread_local);
-
+	
     /** 
      *  We make reuse of buffers of a dead thread
      *
@@ -2355,6 +2483,44 @@ public class ATRSHMLOG {
      */
     public native int reuseThreadBuffers(long i_tid);
 
+    /**
+     *  Set the autoflush for the process
+     *
+     * @param i_flag
+     * Our new autoflush flag
+     *
+     * @return 
+     * The old flag
+     */
+    public native int setAutoflushProcess(int i_flag);
+
+    /**
+     * The autoflush flag
+     *
+     * @return
+     * The flag
+     */
+    public native int getAutoflushProcess();
+  
+    /**
+     * Set the autoflush for the thread
+     *
+     * @param i_flag
+     * Our new autoflush flag
+     *
+     * @return 
+     * The old flag
+     */
+    public native int setAutoflush(int i_flag);
+
+    /**
+     * The autoflush flag
+     *
+     * @return
+     * The flag
+     */
+    public native int getAutoflush();
+	
     /** 
      * We verify the buffer is inited and structural ok .
      *
