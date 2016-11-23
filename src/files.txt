@@ -249,6 +249,7 @@ atrshmlog.h.netbsd
 atrshmlog.h.openbsd
 atrshmlog.h.opensuse_linux
 atrshmlog.h.solaris
+atrshmlog.h.sles_linux
 atrshmlog.h.ubuntu_linux
 atrshmlog_internal.h.centos_linux
 atrshmlog_internal.h.cygwin
@@ -260,6 +261,7 @@ atrshmlog_internal.h.netbsd
 atrshmlog_internal.h.openbsd
 atrshmlog_internal.h.opensuse_linux
 atrshmlog_internal.h.solaris
+atrshmlog_internal.h.sles_linux
 atrshmlog_internal.h.ubuntu_linux
 shmCPPfiles.mingw
 

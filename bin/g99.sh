@@ -52,6 +52,13 @@ case $ATRSHMLOG_PLATFORM in
 		OPTMODE=-O3
 		;;
 
+	    10) # sles , gcc 5.4.0 from source
+		# linux x86_64 gnu
+		CC="gcc -std=gnu11 -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "
+		PICFLAG=-fPIC
+		OPTMODE=-O3
+		;;
+
 	    *)
 		# linux x86_64 gnu
 		CC="gcc -std=gnu11 -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR "

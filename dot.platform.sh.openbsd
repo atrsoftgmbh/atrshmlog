@@ -41,6 +41,7 @@ export ATRSHMLOG_PLATFORM
 # linux ubuntu 7
 # linux opensuse 8
 # linux debian 9
+# linux sles 10
 
 # bsd freebsd 3
 # bsd openbsd 4

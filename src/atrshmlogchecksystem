@@ -286,6 +286,13 @@ sub make_hint {
 		 'define' => 'ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC' ,
 		 'ipc' => 'posix',
 		 'alternative' => ''
+	     },
+	     'linux_x86_64_sles_gcc'  => 
+	     {
+		 'name' => 'linux_x86_64_sles_gcc',
+		 'define' => 'ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC' ,
+		 'ipc' => 'posix',
+		 'alternative' => ' : WARNING: you have to set the ATRSHMLOG_FLAVOUR to 10 for this system and a gcc better 4.8 in place, take 5.4 source in doubt.'
 	     }
 	     
 
@@ -840,6 +847,12 @@ sub check_for_flavour {
 	    if ($osr =~ m:debian:i) {
 		print "found a flavor debian\n";
 		&check_for_compiler($sys, $architecture, 'debian');
+		return;
+	    }
+
+	    if ($osr =~ m:sles:i) {
+		print "found a flavor sles\n";
+		&check_for_compiler($sys, $architecture, 'sles');
 		return;
 	    }
 

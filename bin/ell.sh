@@ -48,6 +48,12 @@ case $ATRSHMLOG_PLATFORM in
 		LIBMODULE=-latrshmlog
 		;;
 
+	    10) # sles , gcc 5.4.0 from source
+		# linux x86_64 gnu
+		CC="gcc -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+	    
 	    *)
 		# linux x86_64 gnu
 		CC="gcc -pthread"
