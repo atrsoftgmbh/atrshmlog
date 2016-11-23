@@ -31,9 +31,17 @@ void atrshmlog_destruct_specific(void* i_data)
 void atrshmlog_putenv(const char* i_suffix, long val)
 {
 #if ATRSHMLOG_PUTENV_IN_ATTACH == 1
-  char b[512];
+  // why ?
+  // why do we leak memory here ?
+  // the answer is : perl
+  // they assume the thing is allocated.
+  // so they simply do a free.
+  // and so we need to alloc the memory ourself.
+  // if you really need the putenv - then you have to pay this price
+  // or the perl layer will not work - at least on my platform.
+  char *b = (char*)calloc(1,512);
 
-  sprintf(b, "%s%s=%ld", atrshmlog_prefix_name_buffer, i_suffix, val);
+  snprintf(b, 512, "%s%s=%ld", atrshmlog_prefix_name_buffer, i_suffix, val);
   
   putenv(b);
 #endif
