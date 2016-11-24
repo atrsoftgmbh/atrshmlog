@@ -515,6 +515,14 @@ extern void atratrshmlog_read_fetch(volatile const void* area,
    %rename(get_realtime) atratrshmlog_get_realtime;  
    %rename(read) atratrshmlog_read;
    %rename(read_fetch) atratrshmlog_read_fetch;  
+   %rename(get_slave_tid) atrshmlog_get_slave_tid;
+   %rename(turn_slave_off) atrshmlog_turn_slave_off;
+   %rename(get_checksum) atrshmlog_get_checksum;  
+   %rename(get_autoflush) atrshmlog_get_autoflush;  
+   %rename(get_autoflush_process) atrshmlog_get_autoflush_process;  
+   %rename(set_checksum) atrshmlog_set_checksum;  
+   %rename(set_autoflush) atrshmlog_set_autoflush;  
+   %rename(set_autoflush_process) atrshmlog_set_autoflush_process;  
    %rename(EVENT_POINT_IN_TIME_C) ATRSHMLOG_POINT_IN_TIME_C;
    %rename(EVENT_POINT_IN_TIME_UCS2) ATRSHMLOG_POINT_IN_TIME_UCS2;
    %rename(EVENT_INTERVAL_IN_TIME_C) ATRSHMLOG_INTERVAL_IN_TIME_C;
