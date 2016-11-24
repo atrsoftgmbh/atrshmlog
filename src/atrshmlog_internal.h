@@ -881,6 +881,10 @@ typedef void atrshmlog_thread_ret_t;
  */
 #define ATRSHMLOG_FENCE_13_SUFFIX "_FENCE_13"
 
+/**
+ * \brief The checksum swith
+ */
+#define ATRSHMLOG_CHECKSUM_SUFFIX "_CHECKSUM"
 
 /**
  * \brief The dispose flag for reuse
@@ -1767,6 +1771,7 @@ extern int atrshmlog_strategy_wait_wait_time;
 extern int atrshmlog_wait_for_slaves;
 extern int atrshmlog_buffer_strategy;
 extern int atrshmlog_autoflush;
+extern int atrshmlog_checksum;
 extern int atrshmlog_thread_fence_1;
 extern int atrshmlog_thread_fence_2;
 extern int atrshmlog_thread_fence_3;

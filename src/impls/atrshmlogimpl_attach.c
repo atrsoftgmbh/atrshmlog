@@ -644,6 +644,13 @@ atrshmlog_ret_t atrshmlog_attach(void)
 		1
 	      },
 
+	      {
+		ATRSHMLOG_CHECKSUM_SUFFIX,
+		&atrshmlog_checksum,
+		0,
+		1
+	      },
+
 	      /*
 	       * This is the exception env variable.
 	       *

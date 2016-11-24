@@ -1,7 +1,26 @@
 -----
 
-get next slave mess.
-together with remove and change of list
+layer aktualisieren , platforms
+
+---
+
+full test c, jni, perl, python, swig ...
+
+----
+
+* multiple buffer test
+
+------
+
+packdistro mit omit
+
+-----
+
+sql logger
+
+------
+
+no sql logger
 
 -----
 
@@ -22,10 +41,6 @@ c++ module
 
 -------
 
-packdistro mit omit
-
-------
-
 dynamic use of flag files in get_env
 
 ------
@@ -34,33 +49,19 @@ converter byte order
 
 ------
 
-names pl py tcl etc in the shared libs ?
-
-------
 support programs in target langues
 
 -----
-full test c, jni, perl, python, swig ...
----
 
-slave start delivers a thing ...
-
------
 get_statistics via shm or buffer out
 
 ----
+
 writer signals to start stop ....
 
 -----
+
 verify mit logbuffer content
-
------
-
-sql logger
-
-------
-
-no sql logger
 
 ------
 
@@ -72,9 +73,6 @@ no sql logger
 
 ----
 
-* multiple buffer test
-
-----
 
 * alle shm vars via helper procedure wie ich habe fertig ..
 

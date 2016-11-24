@@ -80,6 +80,7 @@ atrshmlogimpl_buffer_infosize_flag.c
 atrshmlogimpl_buffer_slave_proc.c
 atrshmlogimpl_cleanup_locks.c
 atrshmlogimpl_clock_id_flag.c
+atrshmlogimpl_checksum_flag.c
 atrshmlogimpl_connect_buffers_list.c
 atrshmlogimpl_create.c
 atrshmlogimpl_create_mapped_file.c
@@ -116,6 +117,7 @@ atrshmlogimpl_get_buffer_id.c
 atrshmlogimpl_get_buffer_max.c
 atrshmlogimpl_get_buffer_size.c
 atrshmlogimpl_get_clock_id.c
+atrshmlogimpl_get_checksum.c
 atrshmlogimpl_get_env.c
 atrshmlogimpl_get_env_id_suffix.c
 atrshmlogimpl_get_env_prefix.c
@@ -189,6 +191,7 @@ atrshmlogimpl_set_autoflush.c
 atrshmlogimpl_set_autoflush_process.c
 atrshmlogimpl_set_buffer_size.c
 atrshmlogimpl_set_clock_id.c
+atrshmlogimpl_set_checksum.c
 atrshmlogimpl_set_env_prefix.c
 atrshmlogimpl_set_event.c
 atrshmlogimpl_set_event_locks.c

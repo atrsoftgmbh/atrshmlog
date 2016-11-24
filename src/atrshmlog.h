@@ -2467,6 +2467,26 @@ extern "C" {
    */
 #define ATRSHMLOG_GET_SLAVE_TID(__slave)  atrshmlog_get_slave_tid((__slave))
 
+      
+  /**
+   * \brief Set the checksum flag
+   *
+   * \param __flag
+   * Our new  flag
+   *
+   * \return 
+   * The old flag
+   */
+#define  ATRSHMLOG_SET_CHECKSUM(__flag) atrshmlog_set_checksum((__flag))
+
+  /**
+   *  \brief The checksum flag
+   *
+   * \return
+   * The flag
+   */
+#define  ATRSHMLOG_GET_CHECKSUM()  atrshmlog_get_checksum()
+
   
 #if ATRSHMLOG_LEVEL > 0
 
@@ -4032,6 +4052,26 @@ extern "C" {
    * - tid
    */
   extern atrshmlog_tid_t atrshmlog_get_slave_tid (volatile const void *i_slave);
+
+    
+  /**
+   * \brief Set the checksum flag
+   *
+   * \param i_flag
+   * Our new  flag
+   *
+   * \return 
+   * The old flag
+   */
+  extern atrshmlog_ret_t atrshmlog_set_checksum(int i_flag);
+
+  /**
+   *  \brief The checksum flag
+   *
+   * \return
+   * The flag
+   */
+  extern atrshmlog_ret_t atrshmlog_get_checksum(void);
 
 #if ATRSHMLOG_LEVEL > 0
 
