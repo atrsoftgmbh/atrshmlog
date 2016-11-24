@@ -1,9 +1,5 @@
 -----
 
-layer aktualisieren 
-
----
-
 full test c, jni, perl, python, swig ...
 
 ----
