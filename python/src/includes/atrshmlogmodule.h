@@ -56,6 +56,7 @@ typedef long pyatrshmlog_int32_t;
    */
 typedef const volatile void* pyatrshmlog_area_t;
 typedef const volatile void* pyatrshmlog_threadlocal_t;
+typedef const volatile void* pyatrshmlog_slavelocal_t;
 
 typedef void (*pyatrshmlog_vfctv_t)(void);
   
@@ -439,8 +440,8 @@ typedef void (*pyatrshmlog_vfctv_t)(void);
 #define PyAtrshmlog_get_init_buffers_in_advance_PROTO (void)
   
 #define PyAtrshmlog_get_next_slave_local_NUM 92
-#define PyAtrshmlog_get_next_slave_local_RETURN  pyatrshmlog_threadlocal_t
-#define PyAtrshmlog_get_next_slave_local_PROTO  (pyatrshmlog_threadlocal_t tl)
+#define PyAtrshmlog_get_next_slave_local_RETURN  pyatrshmlog_slavelocal_t
+#define PyAtrshmlog_get_next_slave_local_PROTO  (pyatrshmlog_slavelocal_t tl)
   
 #define PyAtrshmlog_get_thread_local_tid_NUM 93
 #define PyAtrshmlog_get_thread_local_tid_RETURN pyatrshmlog_uint64_t
@@ -448,7 +449,7 @@ typedef void (*pyatrshmlog_vfctv_t)(void);
   
 #define PyAtrshmlog_remove_slave_via_local_NUM 94
 #define PyAtrshmlog_remove_slave_via_local_RETURN long
-#define PyAtrshmlog_remove_slave_via_local_PROTO  (pyatrshmlog_threadlocal_t tl)
+#define PyAtrshmlog_remove_slave_via_local_PROTO  (pyatrshmlog_slavelocal_t tl)
 
 #define PyAtrshmlog_reuse_thread_buffers_NUM 95
 #define PyAtrshmlog_reuse_thread_buffers_RETURN int 
@@ -564,10 +565,41 @@ typedef void (*pyatrshmlog_vfctv_t)(void);
 #define PyAtrshmlog_peek_RETURN long
 #define PyAtrshmlog_peek_PROTO  (pyatrshmlog_area_t area, pyatrshmlog_int32_t index)
   
+#define PyAtrshmlog_get_slave_tid_NUM 105
+#define PyAtrshmlog_get_slave_tid_RETURN pyatrshmlog_uint64_t
+#define PyAtrshmlog_get_slave_tid_PROTO  (pyatrshmlog_slavelocal_t tl)
+  
+#define PyAtrshmlog_turn_slave_off_NUM 106
+#define PyAtrshmlog_turn_slave_off_RETURN void
+#define PyAtrshmlog_turn_slave_off_PROTO  (pyatrshmlog_slavelocal_t tl)
+  
+#define PyAtrshmlog_set_autoflush_process_NUM 107
+#define PyAtrshmlog_set_autoflush_process_RETURN long 
+#define PyAtrshmlog_set_autoflush_process_PROTO (pyatrshmlog_int32_t flag) 
+
+#define PyAtrshmlog_set_autoflush_NUM 108
+#define PyAtrshmlog_set_autoflush_RETURN long 
+#define PyAtrshmlog_set_autoflush_PROTO (pyatrshmlog_int32_t flag) 
+
+#define PyAtrshmlog_set_checksum_NUM 109
+#define PyAtrshmlog_set_checksum_RETURN long 
+#define PyAtrshmlog_set_checksum_PROTO (pyatrshmlog_int32_t flag) 
+
+#define PyAtrshmlog_get_checksum_NUM 110
+#define PyAtrshmlog_get_checksum_RETURN long 
+#define PyAtrshmlog_get_checksum_PROTO (void) 
+
+#define PyAtrshmlog_get_autoflush_NUM 111
+#define PyAtrshmlog_get_autoflush_RETURN long 
+#define PyAtrshmlog_get_autoflush_PROTO (void) 
+
+#define PyAtrshmlog_get_autoflush_process_NUM 112
+#define PyAtrshmlog_get_autoflush_process_RETURN long 
+#define PyAtrshmlog_get_autoflush_process_PROTO (void) 
 
 /* Total number of C API pointers */
 
-#define PyAtrshmlog_API_pointers 105
+#define PyAtrshmlog_API_pointers 113
 
 
 
@@ -684,6 +716,14 @@ typedef void (*pyatrshmlog_vfctv_t)(void);
   static PyAtrshmlog_init_shm_log_RETURN PyAtrshmlog_init_shm_log PyAtrshmlog_init_shm_log_PROTO;
   static PyAtrshmlog_poke_RETURN PyAtrshmlog_poke PyAtrshmlog_poke_PROTO;
   static PyAtrshmlog_peek_RETURN PyAtrshmlog_peek PyAtrshmlog_peek_PROTO;
+  static PyAtrshmlog_set_autoflush_process_RETURN PyAtrshmlog_set_autoflush_process PyAtrshmlog_set_autoflush_process_PROTO;
+  static PyAtrshmlog_get_autoflush_process_RETURN PyAtrshmlog_get_autoflush_process PyAtrshmlog_get_autoflush_process_PROTO;
+  static PyAtrshmlog_set_autoflush_RETURN PyAtrshmlog_set_autoflush PyAtrshmlog_set_autoflush_PROTO;
+  static PyAtrshmlog_get_autoflush_RETURN PyAtrshmlog_get_autoflush PyAtrshmlog_get_autoflush_PROTO;
+  static PyAtrshmlog_turn_slave_off_RETURN PyAtrshmlog_turn_slave_off PyAtrshmlog_turn_slave_off_PROTO;
+  static PyAtrshmlog_get_slave_tid_RETURN PyAtrshmlog_get_slave_tid PyAtrshmlog_get_slave_tid_PROTO;
+  static PyAtrshmlog_set_checksum_RETURN PyAtrshmlog_set_checksum PyAtrshmlog_set_checksum_PROTO;
+  static PyAtrshmlog_get_checksum_RETURN PyAtrshmlog_get_checksum PyAtrshmlog_get_checksum_PROTO;
   
 #else
   // the usage macros are here
@@ -1007,8 +1047,30 @@ static pyatrshmlog_vfctv_t *PyAtrshmlog_API;
 #define PyAtrshmlog_peek \
   (*(PyAtrshmlog_peek_RETURN (*)PyAtrshmlog_peek_PROTO) PyAtrshmlog_API[PyAtrshmlog_peek_NUM])
   
-
-
+#define PyAtrshmlog_set_autoflush_process \
+  (*(PyAtrshmlog_set_autoflush_process_RETURN (*)PyAtrshmlog_set_autoflush_process_PROTO) PyAtrshmlog_API[PyAtrshmlog_set_autoflush_process_NUM])
+  
+#define PyAtrshmlog_get_autoflush_process \
+  (*(PyAtrshmlog_get_autoflush_process_RETURN (*)PyAtrshmlog_get_autoflush_process_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_autoflush_process_NUM])
+  
+#define PyAtrshmlog_set_autoflush \
+  (*(PyAtrshmlog_set_autoflush_RETURN (*)PyAtrshmlog_set_autoflush_PROTO) PyAtrshmlog_API[PyAtrshmlog_set_autoflush_NUM])
+  
+#define PyAtrshmlog_get_autoflush \
+  (*(PyAtrshmlog_get_autoflush_RETURN (*)PyAtrshmlog_get_autoflush_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_autoflush_NUM])
+  
+#define PyAtrshmlog_turn_slave_off \
+  (*(PyAtrshmlog_turn_slave_off_RETURN (*)PyAtrshmlog_turn_slave_off_PROTO) PyAtrshmlog_API[PyAtrshmlog_turn_slave_off_NUM])
+  
+#define PyAtrshmlog_get_slave_tid \
+  (*(PyAtrshmlog_get_slave_tid_RETURN (*)PyAtrshmlog_get_slave_tid_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_slave_tid_NUM])
+  
+#define PyAtrshmlog_set_checksum \
+  (*(PyAtrshmlog_set_checksum_RETURN (*)PyAtrshmlog_set_checksum_PROTO) PyAtrshmlog_API[PyAtrshmlog_set_checksum_NUM])
+  
+#define PyAtrshmlog_get_checksum \
+  (*(PyAtrshmlog_get_checksum_RETURN (*)PyAtrshmlog_get_checksum_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_checksum_NUM])
+  
 
   /* Return -1 on error, 0 on success.
    * PyCapsule_Import will set an exception if there's an error.
