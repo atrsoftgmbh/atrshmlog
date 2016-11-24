@@ -59,9 +59,6 @@ int atrshmlog_transfer_mem_to_shm(const atrshmlog_tbuff_t* restrict i_mem,
   if (atrshmlog_logging_process_off_final != 0)
     return atrshmlog_error_mem_to_shm_8;
   
-#if ATRSHMLOGDEBUG == 1
-  printf("mem to %ld %ld %ld\n", (long)i_mem->id, (long)i_size, (long)i_g->atrshmlog_idnotok);
-#endif
   
   /* Those normally never change */
 
@@ -85,11 +82,17 @@ int atrshmlog_transfer_mem_to_shm(const atrshmlog_tbuff_t* restrict i_mem,
   
   int chksum = 0;
 
-#if ATRSHMLOGDEBUG == 1
-  for (int k = 0; k < i_size; k++)
+  // we calc the checksum trivial. but this is ok for our needs
+  if (atrshmlog_checksum)
     {
-      chksum += i_mem->b[k];
+      for (int k = 0; k < i_mem->size; k++)
+	{
+	  chksum += i_mem->b[k];
+	}
     }
+
+#if ATRSHMLOGDEBUG == 1
+  printf("mem to %ld %ld %ld %ld\n", (long)i_mem->id, (long)i_mem->size, (long)chksum, (long)i_g->atrshmlog_idnotok);
 #endif
 
   /* 
