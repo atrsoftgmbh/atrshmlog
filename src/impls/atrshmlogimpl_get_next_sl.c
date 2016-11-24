@@ -22,11 +22,11 @@ volatile const void* atrshmlog_get_next_slave_local(volatile const void* i_actua
   if (i_actual == NULL)
     {
       // get top.
-      n = (atrshmlog_g_tl_t*)atomic_load_explicit(&atrshmlog_tpslave, memory_order_relaxed);      
+      n = (atrshmlog_slave_t*)atomic_load_explicit(&atrshmlog_tpslave, memory_order_relaxed);      
     }
   else
     {
-      atrshmlog_g_tl_t* a = (atrshmlog_g_tl_t*)i_actual;
+      atrshmlog_slave_t* a = (atrshmlog_slave_t*)i_actual;
 
       n = a->next;
     }

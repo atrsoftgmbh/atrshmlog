@@ -10,32 +10,29 @@
 /** 
  * \n Main code:
  *
- * \brief We remove the save from the list of slaves
+ * \brief We remove the slave from the list of slaves
  *
  */
-atrshmlog_ret_t atrshmlog_remove_slave_via_local(volatile const void* i_thread_local)
+atrshmlog_ret_t atrshmlog_remove_slave_via_local(volatile const void* i_slave)
 {
   int result = 0;
-  
-  atrshmlog_g_tl_t* g = (atrshmlog_g_tl_t*) i_thread_local;
 
-  if (g == NULL)
-    return -1;
+  atrshmlog_slave_t* i = (atrshmlog_slave_t*)i_slave;
   
-  atrshmlog_g_tl_t *l =  (atrshmlog_g_tl_t*)atomic_load_explicit(&atrshmlog_tpslave, memory_order_relaxed);
+  atrshmlog_slave_t *l =  (atrshmlog_slave_t*)atomic_load_explicit(&atrshmlog_tpslave, memory_order_relaxed);
 
   while (l != NULL
-	 && l != g
-	 && l->next != g)
+	 && l != i
+	 && l->next != i)
     l = l->next;
 
   if (l == NULL)
     return 1; // noting to do, list is empty
-  else if (l == g)
+  else if (l == i)
     {
       // ok. we are on top. we have to be removed from the slave list only
 
-      atrshmlog_g_tl_t* n = g;
+      atrshmlog_slave_t* n = i;
       
 #if ATRSHMLOGDEBUG == 1
       printf("we are on top.\n");
@@ -53,9 +50,12 @@ atrshmlog_ret_t atrshmlog_remove_slave_via_local(volatile const void* i_thread_l
   else 
     {
       // ok. we are the l->next. skip it from now on
-      l->next = g->next;
+      l->next = i->next;
     }
 
+  // we can now get rid of the memory
+  free(i);
+  
   return result;
 }
 

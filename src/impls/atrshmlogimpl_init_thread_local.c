@@ -28,9 +28,6 @@ int atrshmlog_init_thread_local (atrshmlog_g_tl_t* restrict i_g)
       if (atrshmlog_thread_fence_9)
 	atomic_thread_fence(memory_order_acquire); 
 
-      // we are normally not linked
-      i_g->next = 0;
-
       // we clear the pointers
       for (int i = 0; i < ATRSHMLOGTARGETBUFFERMAX; i++)
 	i_g->atrshmlog_targetbuffer_arr[i] = NULL;

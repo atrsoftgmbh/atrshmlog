@@ -56,14 +56,13 @@
  */
 #define ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC 1
 
-
-
 /** 
  * \brief We have a x86 64 bit, a cygwin and a gnu c 
  *
  * Testet. Java wont work with it for now.
  */
 #define ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC 0
+
 
 /** 
  * \brief We have a x86 64 bit, a cygwin mingw64 and a gnu c 
@@ -72,12 +71,14 @@
  */
 #define ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC 0
 
+
 /** 
  * \brief We have a x86 64 bit, a bsd and a clang c 
  *
  * No java support tested so far.
  */
 #define ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG 0
+
 
 /** 
  * \brief We have a x86 64 bit, a bsd and a gcc c 
@@ -86,11 +87,13 @@
  */
 #define ATRSHMLOG_PLATFORM_BSD_AMD64_GCC 0
 
+
 /** 
  * \brief We have a x86 64 bit, a solaris and a gnu c 
  *
  */
 #define ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC 0
+
 
 /*******************************************************/
 
@@ -102,7 +105,7 @@
       + ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC ) == 1
 // we are ok. one platform is active
 #else
-bumm bumm bumm bumm more than one platform active
+bumm bumm bumm bumm error in platform active count
 #endif
 
 /*******************************************************/
@@ -2440,6 +2443,30 @@ extern "C" {
    */
 #define  ATRSHMLOG_GET_AUTOFLUSH() atrshmlog_get_autoflush()
 
+    
+  /**
+   * \brief We switch the thread off 
+   *
+   * \param __slave
+   * The adress of the slave locals
+   *
+   * \return 
+   * void
+   */
+#define ATRSHMLOG_TURN_SLAVE_OFF(__slave) atrshmlog_turn_slave_off((__slave))
+
+  /** 
+   * \brief We get the tid of a slave
+   *
+   * \param __slave
+   * Pointer to a slave local or NULL
+   *
+   * \return
+   * - 0 if pointer is NULL
+   * - tid
+   */
+#define ATRSHMLOG_GET_SLAVE_TID(__slave)  atrshmlog_get_slave_tid((__slave))
+
   
 #if ATRSHMLOG_LEVEL > 0
 
@@ -3983,6 +4010,29 @@ extern "C" {
    */
   extern atrshmlog_ret_t atrshmlog_get_autoflush(void);
   
+  /**
+   * \brief We switch the thread off 
+   *
+   * \param i_slave
+   * The adress of the slave locals
+   *
+   * \return 
+   * void
+   */
+  extern void atrshmlog_turn_slave_off(volatile const void* i_slave);
+
+  /** 
+   * \brief We get the tid of a slave
+   *
+   * \param i_slave
+   * Pointer to a slave local or NULL
+   *
+   * \return
+   * - 0 if pointer is NULL
+   * - tid
+   */
+  extern atrshmlog_tid_t atrshmlog_get_slave_tid (volatile const void *i_slave);
+
 #if ATRSHMLOG_LEVEL > 0
 
   /** 

@@ -46,6 +46,7 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
   if (g == NULL)
     {
       conv.ui = atrshmlog_error_buffer_slave_1;
+
       return conv.p;
     }
 
@@ -80,6 +81,7 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
   if (g == NULL)
     {
       conv.ui = atrshmlog_error_buffer_slave_1;
+
       return conv.p;
     }
 
@@ -119,18 +121,26 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
 
 #endif
 
+  atrshmlog_slave_t* i = (atrshmlog_slave_t*)i_arg;
+  
   // we connect to the slave list
   
-  g->next = (atrshmlog_g_tl_t*)atomic_load_explicit(&atrshmlog_tpslave, memory_order_relaxed);
+  i->next = (atrshmlog_slave_t*)atomic_load_explicit(&atrshmlog_tpslave, memory_order_relaxed);
 
   // Push on stack ...
   while(!atomic_compare_exchange_weak_explicit(&atrshmlog_tpslave,
-					       (intptr_t*)&g->next,
-					       (intptr_t)g,
+					       (intptr_t*)&i->next,
+					       (intptr_t)i,
 					       memory_order_relaxed,
 					       memory_order_relaxed))
     ;
 
+  i->tid = g->atrshmlog_thread_tid;
+
+  i->g = g;
+
+  g->i = i;
+  
   // we are on the list now
   
   atrshmlog_f_list_active_slaves++;
@@ -203,7 +213,7 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
   ;
 
   // remove from list 
-  atrshmlog_remove_slave_via_local(g);
+  atrshmlog_remove_slave_via_local(i);
   
   // balance the counter
   atrshmlog_f_list_active_slaves--;

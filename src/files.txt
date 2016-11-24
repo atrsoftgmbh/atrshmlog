@@ -150,6 +150,7 @@ atrshmlogimpl_get_raw_buffers.c
 atrshmlogimpl_get_realtime.c
 atrshmlogimpl_get_shmid.c
 atrshmlogimpl_get_slave_wait.c
+atrshmlogimpl_get_slave_tid.c
 atrshmlogimpl_get_stats.c
 atrshmlogimpl_get_stats_max_index.c
 atrshmlogimpl_get_strategy.c
@@ -229,7 +230,8 @@ atrshmlogimpl_stop_slaves_flag.c
 atrshmlogimpl_strategy_flag.c
 atrshmlogimpl_transfer_mem_to_shm.c
 atrshmlogimpl_transfer_to_shm_time_flag.c
-atrshmlogimpl_turn_logging.off.c
+atrshmlogimpl_turn_logging_off.c
+atrshmlogimpl_turn_slave_off.c
 atrshmlogimpl_verify.c
 atrshmlogimpl_wait_for_slaves_flag.c
 atrshmlogimpl_write0.c

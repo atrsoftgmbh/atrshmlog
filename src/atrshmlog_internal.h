@@ -1527,6 +1527,10 @@ typedef struct atrshmlog_tbuff_s atrshmlog_tbuff_t;
 
 /*******************************************************************/
 
+/* we need a forward here */
+
+struct atrshmlog_slave_s;
+
 
 /** 
  * thread locals
@@ -1545,13 +1549,7 @@ typedef struct atrshmlog_tbuff_s atrshmlog_tbuff_t;
  */
 struct atrshmlog_g_tl_s {
 
-  /**
-   * This is normally not used by simple threads, only by the slaves.
-   * So slaves can be iterated and killed by an owner process.
-   * Simply switch the idnotok to 1.
-   */
-  struct atrshmlog_g_tl_s* next;
-
+  struct atrshmlog_slave_s* i;
   /** 
    * This is used as an initialized flag and a not ok flag .
    * For the initialize it must be -1. 
@@ -1716,6 +1714,27 @@ struct atrshmlog_g_tl_s {
 /** the type for the thread locals struct */
 typedef struct atrshmlog_g_tl_s atrshmlog_g_tl_t;
 
+/**
+ * \brief The list of slaves
+ */
+struct atrshmlog_slave_s {
+  /**
+   * The list 
+   */
+  struct atrshmlog_slave_s * next;
+
+  /**
+   * This is the thread tid.
+   */
+  atrshmlog_tid_t tid;
+
+  /**
+   * the thread locals
+   */
+  atrshmlog_g_tl_t* g;
+};
+
+typedef struct atrshmlog_slave_s atrshmlog_slave_t;
 
 /* 
  * the following is a pure result of the breaking of the module into
