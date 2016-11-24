@@ -2323,6 +2323,79 @@ JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlo
   return result;
 }
 
+/**
+ * \brief We switch the thread off 
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    turnSlaveOff
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_turnSlaveOff
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_area)
+{
+  u_t u;
+
+  u.l = i_area;
+
+  ATRSHMLOG_TURN_SLAVE_OFF(u.p);
+
+  return;
+}
+
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getSlaveTid
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getSlaveTid
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_area)
+{
+  jlong result;
+  
+  u_t u;
+
+  u.l = i_area;
+
+  result = ATRSHMLOG_GET_SLAVE_TID(u.p);
+
+  return result;
+}
+
+/**
+ * \brief Set the checksum flag
+ *
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    setChecksum
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_setChecksum
+  (JNIEnv *i_jnienv, jobject i_myself, jint i_flag)
+{
+  jint result;
+  
+  result = ATRSHMLOG_SET_CHECKSUM(i_flag);
+
+  return result;
+}
+
+
+/**
+ * \brief The checksum flag
+ *
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getChecksum
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getChecksum
+  (JNIEnv *i_jnienv, jobject i_myself)
+{
+  jint result;
+
+  result = ATRSHMLOG_GET_CHECKSUM();
+
+  return result;
+}
+
 
 /**
  * \brief verify the shared memory is intact

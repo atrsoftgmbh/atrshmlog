@@ -528,13 +528,13 @@ public class ATRSHMLOG {
 		    return e;
 		}
 	    }
-			
+	    
 	    // default
 	    return atrshmlog_counter_time_low;
 	}
         
     };
-
+    
 
     /**
      * The error codes as enums for the better usage.
@@ -545,7 +545,7 @@ public class ATRSHMLOG {
      * Real error is a value thats not 0.
      */
     static enum atrshmlog_error {
-
+	
 	/**
 	 * Operation was successful, no error.
 	 */
@@ -1037,7 +1037,7 @@ public class ATRSHMLOG {
 		    return e;
 		}
 	    }
-			
+	    
 	    // default
 	    return atrshmlog_error_error;
 	}
@@ -1060,7 +1060,7 @@ public class ATRSHMLOG {
 	 * We discard the log 
 	 */
 	atrshmlog_strategy_discard (0),
-    
+	
 	/**
 	 * We spin loop till one is free
 	 */
@@ -2521,6 +2521,49 @@ public class ATRSHMLOG {
      */
     public native int getAutoflush();
 	
+    /**
+     *  We switch the thread off 
+     *
+     * @param i_slave
+     * The adress of the slave locals
+     *
+     * @return 
+     * void
+     */
+    public native void turnSlaveOff(long i_slave);
+
+    /** 
+     *  We get the tid of a slave
+     *
+     * @param i_slave
+     * Pointer to a slave local or NULL
+     *
+     * @return
+     * - 0 if pointer is NULL
+     * - tid
+     */
+    public native long getSlaveTid(long i_slave);
+
+    
+    /**
+     * Set the checksum flag
+     *
+     * @param i_flag
+     * Our new  flag
+     *
+     * @return 
+     * The old flag
+     */
+    public native int setChecksum(int i_flag);
+
+    /**
+     * The checksum flag
+     *
+     * @return
+     * The flag
+     */
+    public native int getChecksum();
+
     /** 
      * We verify the buffer is inited and structural ok .
      *
