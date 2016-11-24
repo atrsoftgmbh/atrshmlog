@@ -48,14 +48,18 @@
 // and optional the os
 // and if you are depending on compiler stuff.
 
+#ifndef ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC
 /** 
  * \brief We have a x86 64 bit, a linux and a gnu c 
  *
  * the major development platform. in doubt its the master.
  * if you need a new platform try this as a clone first
  */
-#define ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC 1
+#define ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC 0
 
+#endif
+
+#ifndef ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC
 /** 
  * \brief We have a x86 64 bit, a cygwin and a gnu c 
  *
@@ -63,7 +67,10 @@
  */
 #define ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC 0
 
+#endif
 
+
+#ifndef ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC
 /** 
  * \brief We have a x86 64 bit, a cygwin mingw64 and a gnu c 
  *
@@ -71,7 +78,10 @@
  */
 #define ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC 0
 
+#endif
 
+
+#ifndef ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG
 /** 
  * \brief We have a x86 64 bit, a bsd and a clang c 
  *
@@ -79,7 +89,9 @@
  */
 #define ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG 0
 
+#endif
 
+#ifndef ATRSHMLOG_PLATFORM_BSD_AMD64_GCC
 /** 
  * \brief We have a x86 64 bit, a bsd and a gcc c 
  *
@@ -87,13 +99,17 @@
  */
 #define ATRSHMLOG_PLATFORM_BSD_AMD64_GCC 0
 
+#endif
 
+
+#ifndef ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC
 /** 
  * \brief We have a x86 64 bit, a solaris and a gnu c 
  *
  */
 #define ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC 0
 
+#endif
 
 /*******************************************************/
 
