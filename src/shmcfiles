@@ -15,7 +15,4 @@ atrshmlogreaderd.c
 atrshmlogreset.c
 atrshmlogsignalreader.c
 atrshmlogsignalwriter.c
-atrshmlogtee.c
-atrshmlogtest00.c
-atrshmlogtest01.c
 atrshmlogverify.c

@@ -78,11 +78,25 @@ done
 
 #############################
 
-for i in $( cat shmCPPfiles | egrep -v '^#' )
+cd tests
+
+echo "in tests now ..."
+
+for i in $( cat ../shmtestcfiles | egrep -v '^#' )
+do
+    $RM -f ${i%%.c}.o
+    
+    echo $i compile
+    g99.sh $i
+    ell.sh ${i%%.c}
+done
+
+for i in $( cat ../shmCPPfiles | egrep -v '^#' )
 do
     $RM -f ${i%%.C}
     echo ${i%%.C} build
     g++14w.sh $i
 done
+
 
 # end of file

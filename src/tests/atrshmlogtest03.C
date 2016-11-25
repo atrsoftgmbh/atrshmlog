@@ -9,7 +9,7 @@
  * \brief We are a C++ test programm with multi threading.
  */
 
-#include "atrshmlog.h"
+#include "../atrshmlog.h"
 
 
 #include <iostream>

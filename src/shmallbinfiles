@@ -5,11 +5,6 @@ atrshmlogoff
 atrshmlogon
 atrshmlogsignalreader
 atrshmlogsignalwriter
-atrshmlogtee
-atrshmlogtest00
-atrshmlogtest01
-atrshmlogtest02
-atrshmlogtest03
 atrshmlogcreate
 atrshmlogdelete
 atrshmlogfinish

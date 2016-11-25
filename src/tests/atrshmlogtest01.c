@@ -16,9 +16,9 @@
  * \brief We are a test program.
  */
 
-#include "atrshmlog.h"
+#include "../atrshmlog.h"
 
-#include "atrshmlog_internal.h"
+#include "../atrshmlog_internal.h"
 
 /*
  * ------------------------------------------------------------

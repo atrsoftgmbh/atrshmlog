@@ -8,7 +8,7 @@
  * \brief We are a C++ test program.
  */
 
-#include "atrshmlog.h"
+#include "../atrshmlog.h"
 
 
 #include <iostream>

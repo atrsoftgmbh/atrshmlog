@@ -21,7 +21,7 @@
  * So we dublicate the input. 
  */
 
-#include "atrshmlog.h"
+#include "../atrshmlog.h"
 
 
 #include <stdlib.h>

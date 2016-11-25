@@ -16,7 +16,7 @@
  * \brief We are a minimum test program.
  */
 
-#include "atrshmlog.h"
+#include "../atrshmlog.h"
 
 /*
  * ------------------------------------------------------------
