@@ -1396,6 +1396,11 @@ struct atrshmlog_tbuff_s
   atrshmlog_int32_t id;
 
   /**
+   * We have a checksum in place if we need the thing to make a fence check
+   */
+  int chksum;
+  
+  /**
    * The content size.
    *
    * This is used to decide if the buffer is empty  - is 0 - or not.

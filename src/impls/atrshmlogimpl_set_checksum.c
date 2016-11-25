@@ -16,7 +16,7 @@ atrshmlog_ret_t atrshmlog_set_checksum(int i_flag)
 {
   int old  = atrshmlog_checksum;
 
-  atrshmlog_checksum = i_flag ? 1 : 0;
+  atrshmlog_checksum = i_flag;
 
   return old;
 }

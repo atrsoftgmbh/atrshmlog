@@ -80,17 +80,22 @@ int atrshmlog_transfer_mem_to_shm(const atrshmlog_tbuff_t* restrict i_mem,
 
   ATRSHMLOGSTAT(atrshmlog_counter_mem_to_shm_doit);
   
-  int chksum = 0;
-
   // we calc the checksum trivial. but this is ok for our needs
   if (atrshmlog_checksum)
     {
+      int chksum = 0;
+
       for (int k = 0; k < i_mem->size; k++)
 	{
 	  chksum += i_mem->b[k];
 	}
-    }
 
+      if (i_mem->chksum != chksum)
+	{
+	  ATRSHMLOGSTAT(atrshmlog_counter_fence_alarm_1);
+	}
+    }
+  
 #if ATRSHMLOGDEBUG == 1
   printf("mem to %ld %ld %ld %ld\n", (long)i_mem->id, (long)i_mem->size, (long)chksum, (long)i_g->atrshmlog_idnotok);
 #endif
@@ -137,7 +142,7 @@ int atrshmlog_transfer_mem_to_shm(const atrshmlog_tbuff_t* restrict i_mem,
 	  
 	  b->shmsize = i_mem->size;
 
-	  b->chksum = chksum;
+	  b->chksum = i_mem->chksum;
 
 	  b->inittime = atrshmlog_inittime;
 	  b->inittimetsc_before = atrshmlog_inittimetsc_before;

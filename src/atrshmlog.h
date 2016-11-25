@@ -969,7 +969,11 @@ extern "C" {
     /**< The number of calls to \ref  atrshmlog_reuse_thread_buffers() */
     atrshmlog_counter_set_autoflush             = 86,
     /**< The number of calls to \ref  atrshmlog_set_autoflush() */
-    atrshmlog_counter_end                       = 86
+    atrshmlog_counter_fence_alarm_1             = 87,
+    /**< The number of checksum errors in tranfer mem to shm part 1 */
+    atrshmlog_counter_fence_alarm_2             = 88,
+    /**< The number of checksum errors in tranfer shm to mem part 2 */
+    atrshmlog_counter_end                       = 88
     /**< The highes index in use */
   };
 
