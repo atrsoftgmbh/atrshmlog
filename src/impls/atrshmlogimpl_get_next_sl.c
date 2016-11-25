@@ -13,7 +13,8 @@
  * \brief We get the next element on slave list
  *
  * If we deliver a 0 we start from top.
- * 
+ *
+ * test t_buffer_slave_proc.c
  */
 volatile const void* atrshmlog_get_next_slave_local(volatile const void* i_actual)
 {

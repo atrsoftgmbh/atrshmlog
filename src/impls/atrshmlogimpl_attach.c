@@ -130,6 +130,7 @@ static atomic_flag atrshmlog_attach_once_flag = ATOMIC_FLAG_INIT;
  *
  * So check the code to see if a thing can be changed after.
  *
+ * test t_attach.c
  */
 atrshmlog_ret_t atrshmlog_attach(void)
 {

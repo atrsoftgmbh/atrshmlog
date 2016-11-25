@@ -19,6 +19,8 @@
  *
  * \return
  * The adress of the buffer to use now for the thread.
+ *
+ * test t_acquire_buffer.c
  */
 atrshmlog_tbuff_t *atrshmlog_acquire_buffer(const atrshmlog_g_tl_t* restrict i_g)
 {

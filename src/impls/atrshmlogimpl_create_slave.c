@@ -40,6 +40,8 @@ volatile atrshmlog_tid_t atrshmlog_f_list_buffer_slave;
  * of threads for the slaves too.
  *
  * So you call this one and a new slave is created.
+ *
+ * test t_create_slave.c
  */
 int atrshmlog_create_slave(void)
 {

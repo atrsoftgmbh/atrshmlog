@@ -27,6 +27,8 @@
  *
  * \return
  * Depends on the OS.
+ *
+ * test t_buffer_slave_proc.c
  */
 atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
 {
@@ -121,6 +123,10 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
 
 #endif
 
+#if ATRSHMLOG_DEBUG == 1
+  printf("slave start success\n");
+#endif
+  
   atrshmlog_slave_t* i = (atrshmlog_slave_t*)i_arg;
   
   // we connect to the slave list

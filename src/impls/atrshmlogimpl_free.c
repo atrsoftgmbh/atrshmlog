@@ -27,6 +27,8 @@
  *
  * \return 
  * void
+ *
+ * test t_free.c
  */
 void atrshmlog_free(atrshmlog_tbuff_t* restrict t)
 {

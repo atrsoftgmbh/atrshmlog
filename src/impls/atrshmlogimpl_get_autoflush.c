@@ -15,6 +15,8 @@
  * \return
  * - negativ for error
  * - The value 
+ *
+ * test t_get_autoflush.c
  */
 atrshmlog_ret_t atrshmlog_get_autoflush()
 {

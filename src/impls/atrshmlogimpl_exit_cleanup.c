@@ -29,6 +29,8 @@
  *
  * So be sure to finish only if you have no problems with the 
  * slaves.
+ *
+ * test t_exit_cleanup.c
  */
 void atrshmlog_exit_cleanup (void)
 {

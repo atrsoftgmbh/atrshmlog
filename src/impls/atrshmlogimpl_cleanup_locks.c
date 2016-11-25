@@ -18,6 +18,8 @@
  * It is itself not mt safe.
  * So use a simple program for that
  * see the atrshmlogfinish.c
+ *
+ * test t_cleanup_locks.c
  */
 void atrshmlog_cleanup_locks(volatile const void *i_area)
 {
@@ -67,5 +69,9 @@ void atrshmlog_cleanup_locks(volatile const void *i_area)
     atomic_thread_fence(memory_order_release); 
   
   a->shmsafeguard = 0L;
+
+  a->shmcount = 0;
+
+  a->shmversion = 0;
 }
 

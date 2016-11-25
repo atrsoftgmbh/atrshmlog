@@ -11,6 +11,8 @@
  * \n Main code:
  *
  * \brief The autoflush flag
+ *
+ * test t_get_autoflush_process.c
  */
 atrshmlog_ret_t atrshmlog_get_autoflush_process(void)
 {
