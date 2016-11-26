@@ -15,6 +15,8 @@
  * Get also the ich habe fertig.
  *
  * Check also for attached shm buffer.
+ *
+ * test t_get_logging.c
  */
 atrshmlog_ret_t atrshmlog_get_logging(void)
 {

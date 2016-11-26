@@ -11,6 +11,8 @@
  * \n Main code:
  *
  * \brief The major version of the shmlog system
+ *
+ * test NA
  */
 atrshmlog_ret_t atrshmlog_get_version(void)
 {

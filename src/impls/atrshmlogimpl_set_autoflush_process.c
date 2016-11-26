@@ -11,6 +11,8 @@
  * \n Main code:
  *
  * \brief Set the autoflush for the process
+ *
+ * test t_set_autoflush_process.c
  */
 atrshmlog_ret_t atrshmlog_set_autoflush_process(int i_flag)
 {

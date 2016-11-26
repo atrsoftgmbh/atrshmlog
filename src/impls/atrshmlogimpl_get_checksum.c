@@ -11,6 +11,8 @@
  * \n Main code:
  *
  * \brief The checksum flag
+ *
+ * test t_get_checksum.c
  */
 atrshmlog_ret_t atrshmlog_get_checksum(void)
 {

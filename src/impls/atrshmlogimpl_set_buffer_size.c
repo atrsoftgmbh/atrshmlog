@@ -21,6 +21,8 @@
  *
  * You cannot increase .
  * You cannot change the static allocated buffers sizes.
+ *
+ * test t_set_buffer_size.c
  */
 atrshmlog_ret_t atrshmlog_set_buffer_size(atrshmlog_int32_t i_size)
 {

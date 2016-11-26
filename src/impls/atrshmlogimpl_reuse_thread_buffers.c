@@ -18,6 +18,8 @@
  * You need the tid f the thread. And its the module tid.
  *
  * Be sure the thread is dead. Its a race if not. consider be warned.
+ *
+ * test t_reuse_thread_buffers.c
  */
 atrshmlog_ret_t atrshmlog_reuse_thread_buffers(atrshmlog_tid_t i_tid)
 {

@@ -67,6 +67,9 @@ int main (int argc, char *argv[])
       atrshmlog_slave_t* slave = s;
 
       printf("%d : self %p tid %ld  next %p local %p\n", i, slave, (long)slave->tid, slave->next, slave->g);
+
+      PN(atrshmlog_get_slave_tid(slave));
+
       s = atrshmlog_get_next_slave_local(s);
     }
   

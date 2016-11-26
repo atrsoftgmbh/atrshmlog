@@ -19,6 +19,8 @@
  *
  * \return 
  * void
+ *
+ * test t_init_events.c
  */
 void atrshmlog_init_events(const int i_use_file)
 {

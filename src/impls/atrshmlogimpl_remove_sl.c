@@ -12,6 +12,7 @@
  *
  * \brief We remove the slave from the list of slaves
  *
+ * test t_remove_slave_via_local.c
  */
 atrshmlog_ret_t atrshmlog_remove_slave_via_local(volatile const void* i_slave)
 {

@@ -12,6 +12,7 @@
  *
  * \brief We get the tid of a slave
  *
+ * test t_buffer_slave_proc.c
  */
 atrshmlog_tid_t atrshmlog_get_slave_tid (volatile const void *i_local)
 {

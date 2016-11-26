@@ -10,6 +10,8 @@
  * \n Main code:
  *
  * \brief The number of slave threads for the process is delivered.
+ *
+ * test t_get_f_list_buffer_slave_count.c
  */ 
 atrshmlog_ret_t atrshmlog_get_f_list_buffer_slave_count(void)
 {

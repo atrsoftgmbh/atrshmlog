@@ -18,6 +18,8 @@
  * \return 
  * - 0 : ok
  * - non zero : error
+ *
+ * test t_get_tid.c
  */
 int atrshmlog_init_thread_local (atrshmlog_g_tl_t* restrict i_g)
 {

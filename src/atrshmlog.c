@@ -64,6 +64,8 @@ _Thread_local static atrshmlog_g_tl_t atrshmlog_g_tl = { .atrshmlog_idnotok = -1
  * g_tl struct.
  *
  * We can then switch logging off for the thread with a helper
+ *
+ * test t_get_tid.c
  */
 volatile const void* atrshmlog_get_thread_locals_adress(void)
 {

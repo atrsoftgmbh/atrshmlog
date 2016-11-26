@@ -11,6 +11,8 @@
  * \n Main code:
  *
  * \brief The patch version
+ *
+ * test NA
  */
 atrshmlog_ret_t atrshmlog_get_patch_version(void)
 {

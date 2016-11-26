@@ -11,6 +11,8 @@
  * \n Main code:
  *
  * \brief Get the environment value for the shm id
+ *
+ * test t_get_env_shmid.c
  */
 const char* atrshmlog_get_env_shmid(void)
 {

@@ -21,6 +21,8 @@
  *  The memory is transfered into the reader process.
  *
  * so the reader then has to handle it.
+ *
+ * test t_read_fetch.c
  */
 atrshmlog_ret_t atrshmlog_read_fetch(volatile const void* i_area,
 				     atrshmlog_int32_t *o_index_buffer,

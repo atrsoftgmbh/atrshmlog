@@ -12,6 +12,8 @@
  * \n Main code:
  *
  * \brief The clock id can be set with this.
+ *
+ * test t_set_clock_id.c
  */
 atrshmlog_ret_t atrshmlog_set_clock_id(atrshmlog_int32_t i_id)
 {

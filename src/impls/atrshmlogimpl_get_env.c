@@ -14,6 +14,8 @@
  *
  * The prefix is set from attach, from the PREFIX Environment Var or
  * with set envprefix.
+ *
+ * test t_get_env.c
  */
 const char* atrshmlog_get_env(const char* i_suffix)
 {
