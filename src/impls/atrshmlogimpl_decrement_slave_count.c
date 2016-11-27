@@ -15,6 +15,8 @@
  * 
  * We deliver the old one and decrement. Till 0.
  * This is for the case you kill slaves.
+ *
+ * test t_decrement_slave_count.c
  */
 atrshmlog_ret_t atrshmlog_decrement_slave_count(void)
 {

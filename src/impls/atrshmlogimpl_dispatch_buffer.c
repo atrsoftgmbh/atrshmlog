@@ -28,6 +28,8 @@
  *
  * \return 
  * void
+ *
+ * test t_dispatch_buffer.c
  */ 
 void atrshmlog_dispatch_buffer(atrshmlog_tbuff_t* restrict i_atrshmlog_targetbuffer)
 {

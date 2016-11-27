@@ -1,5 +1,9 @@
 -----
 
+doc
+
+-----
+
 test jni
 
 -----
@@ -10,16 +14,7 @@ test perl
 
 test python
 
------
-
-test swig
-
 ----
-
-
-packdistro mit omit
-
------
 
 sql logger
 
@@ -29,7 +24,7 @@ no sql logger
 
 -----
 
-doc
+packdistro mit omit
 
 -----
 

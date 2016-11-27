@@ -17,6 +17,7 @@ t_dispatch_buffer.c
 t_exit_cleanup.c
 t_flush.c
 t_free.c
+t_set_event_locks_max.c
 t_get_acquire_count.c
 t_get_area.c
 t_get_area_count.c

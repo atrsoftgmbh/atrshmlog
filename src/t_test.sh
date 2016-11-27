@@ -76,6 +76,7 @@ tests/t_set_checksum
 tests/t_set_clock_id
 tests/t_set_env_prefix
 tests/t_set_event
+tests/t_set_event_locks_max 42
 tests/t_set_fence_1
 tests/t_set_fence_2
 tests/t_set_fence_3
