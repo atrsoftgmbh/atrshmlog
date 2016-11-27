@@ -14,6 +14,8 @@
  *
  * \return
  * The value 
+ *
+ * test t_get_strategy_process.c
  */
 atrshmlog_ret_t atrshmlog_get_strategy_process(void)
 {

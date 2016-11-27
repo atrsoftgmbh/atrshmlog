@@ -18,6 +18,8 @@
  * It is itself not mt safe.
  * So use a simple program for that
  * see the atrshmlogfinish.c
+ *
+ * test t_cleanup_locks.c
  */
 void atrshmlog_cleanup_locks(volatile const void *i_area)
 {
@@ -43,8 +45,6 @@ void atrshmlog_cleanup_locks(volatile const void *i_area)
   /* From now on the buffer is useless. So we switch to not logging */
   atomic_store(&a->ich_habe_fertig,  1);
 
-  sleep(5); /* We give 5 seconds time for the reader to finish */
-  
   for (int i = 0; i < a->shmcount; i++)
     {
       atomic_store(&b->state, atrshmlog_illegal); /* no leagal state, no op any more */
@@ -67,5 +67,9 @@ void atrshmlog_cleanup_locks(volatile const void *i_area)
     atomic_thread_fence(memory_order_release); 
   
   a->shmsafeguard = 0L;
+
+  a->shmcount = 0;
+
+  a->shmversion = 0;
 }
 

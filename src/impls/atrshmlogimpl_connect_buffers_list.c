@@ -32,6 +32,8 @@
  * \return 
  * \li 0 : ok
  * \li non zero : error
+ *
+ * test t_acquire_buffer.c
  */
 int atrshmlog_il_connect_buffers_list(atrshmlog_tbuff_t* const raw,
 				      const int i_buffer_count,

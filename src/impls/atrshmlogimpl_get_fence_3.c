@@ -11,6 +11,8 @@
  *
  * \return
  * The old flag for fence.
+ *
+ * test t_get_thread_fence_3.c
  */
 atrshmlog_ret_t atrshmlog_get_thread_fence_3(void)
 {

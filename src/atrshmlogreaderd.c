@@ -1379,6 +1379,14 @@ int main(int argc, char*argv[])
     ++wc;
 
   printf("writer data : time %lld  count %ld  per use %lld\n", wt, wc, wt / wc);
+
+  // check the counter for errors
+  int c = atomic_load(&atrshmlog_counter[atrshmlog_counter_fence_alarm_2]);
+
+  if (c != 0)
+    {
+      printf("ALARM: fence checksum error in transfer shm to mem found : %d\n", c);
+    }
   
   return 0;
 }

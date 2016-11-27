@@ -21,6 +21,8 @@
  *  The memory is transfered into the reader process.
  *
  * so the reader then has to handle it.
+ *
+ * test t_read_fetch.c
  */
 atrshmlog_ret_t atrshmlog_read_fetch(volatile const void* i_area,
 				     atrshmlog_int32_t *o_index_buffer,
@@ -154,15 +156,33 @@ atrshmlog_ret_t atrshmlog_read_fetch(volatile const void* i_area,
       start = ATRSHMLOG_GET_TSC_CALL();
 
       char* restrict source = (char*)i_shm + b->info;
-      
-      #if 1
-      (void)memcpy(o_target, source, size );
-      #else
-	      for (int zippo = 0; zippo < size; zippo++)
-		((char*)o_target)[zippo] = source[zippo];
-      
-      #endif
 
+      int old_chksum = b->chksum;
+      
+#if 1
+      (void)memcpy(o_target, source, size );
+#else
+      for (int zippo = 0; zippo < size; zippo++)
+	((char*)o_target)[zippo] = source[zippo];
+      
+#endif
+
+      // we calc the checksum trivial. but this is ok for our needs
+      if (atrshmlog_checksum)
+	{
+	  int chksum = 0;
+	  
+	  for (int k = 0; k < size; k++)
+	    {
+	      chksum += ((char*)o_target)[k];
+	    }
+	  
+	  if (old_chksum != chksum)
+	    {
+	      ATRSHMLOGSTAT(atrshmlog_counter_fence_alarm_2);
+	    }
+	}
+  
       *o_pid = b->pid;
       *o_tid = b->tid;
       *o_inittime = b->inittime;

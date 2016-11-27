@@ -12,6 +12,7 @@
  *
  * \brief we turn the init in advance on
  *
+ * test t_set_advance_off.c
  */
 atrshmlog_ret_t atrshmlog_set_init_buffers_in_advance_off(void)
 {

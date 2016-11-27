@@ -224,6 +224,16 @@ public class ATRSHMLOGTest {
 				 1,
 				 end11,
 				 end12);
+
+	logresult = theLog.write(13,
+				 ATRSHMLOG.EVENT_INTERVAL_IN_TIME_UCS,
+				 1 ,
+				 end7,
+				 end8,
+				 payload3,
+				 3,
+				 4);
+
     }
 }
 

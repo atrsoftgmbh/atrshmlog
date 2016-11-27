@@ -199,9 +199,12 @@
 
     -89 => [ 'atrshmlog_error_write2_13 ' , 'Pthread specific buffer not available. ' ] ,
 
-    -46 => [ 'atrshmlog_error_attach_7 ' , 'Pthread specific buffer not available. ' ] 
+    -46 => [ 'atrshmlog_error_attach_7 ' , 'Pthread specific buffer not available. ' ] ,
 
-    
+    -200 => [ 'atrshmlog_error_get_autoflush_1 ' , 'Pthread specific buffer not available. ' ] , 
+
+    -201 => [ 'atrshmlog_error_set_autoflush_1 ' , 'Pthread specific buffer not available. ' ] 
+
     );
     
 

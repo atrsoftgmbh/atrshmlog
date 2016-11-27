@@ -50,6 +50,8 @@
  * So you can set it somehow and then use it even in the case the thing is
  * a logging shell (to be onest, i could not achive this, i leave it as
  * an option for someone better in configuring the system ) 
+ *
+ * test t_get_env_prefix.c
  */
 const char* atrshmlog_get_env_prefix(void)
 {

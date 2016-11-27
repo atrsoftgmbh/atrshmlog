@@ -797,6 +797,46 @@ static PyAtrshmlog_peek_RETURN PyAtrshmlog_peek PyAtrshmlog_peek_PROTO
   return result;
 }
 
+static PyAtrshmlog_get_slave_tid_RETURN PyAtrshmlog_get_slave_tid PyAtrshmlog_get_slave_tid_PROTO
+{
+  return ATRSHMLOG_GET_SLAVE_TID(tl);
+}
+
+static PyAtrshmlog_turn_slave_off_RETURN PyAtrshmlog_turn_slave_off PyAtrshmlog_turn_slave_off_PROTO
+{
+  ATRSHMLOG_TURN_SLAVE_OFF(tl);
+}
+
+static PyAtrshmlog_set_autoflush_process_RETURN PyAtrshmlog_set_autoflush_process PyAtrshmlog_set_autoflush_process_PROTO
+{
+  return ATRSHMLOG_SET_AUTOFLUSH_PROCESS(flag);
+}
+
+static PyAtrshmlog_get_autoflush_process_RETURN PyAtrshmlog_get_autoflush_process PyAtrshmlog_get_autoflush_process_PROTO
+{
+  return ATRSHMLOG_GET_AUTOFLUSH_PROCESS();
+}
+
+static PyAtrshmlog_set_autoflush_RETURN PyAtrshmlog_set_autoflush PyAtrshmlog_set_autoflush_PROTO
+{
+  return ATRSHMLOG_SET_AUTOFLUSH(flag);
+}
+
+static PyAtrshmlog_get_autoflush_RETURN PyAtrshmlog_get_autoflush PyAtrshmlog_get_autoflush_PROTO
+{
+  return ATRSHMLOG_GET_AUTOFLUSH();
+}
+
+static PyAtrshmlog_set_checksum_RETURN PyAtrshmlog_set_checksum PyAtrshmlog_set_checksum_PROTO
+{
+  return ATRSHMLOG_SET_CHECKSUM(flag);
+}
+
+static PyAtrshmlog_get_checksum_RETURN PyAtrshmlog_get_checksum PyAtrshmlog_get_checksum_PROTO
+{
+  return ATRSHMLOG_GET_CHECKSUM();
+}
+
 /************************************************************/
 
 /*
@@ -3955,8 +3995,167 @@ python_atrshmlog_peek(PyObject *self, PyObject *args)
 }
 
 
+/******************************************************/
+
+/**
+ *  \brief We get the tid of a thread local
+ */
+static PyObject*
+python_atrshmlog_get_slave_tid(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_slave_tid_RETURN result;
+
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_slave_tid : fetch failed (slavelocal)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_get_slave_tid(u.a);
+ 
+  return PyLong_FromUnsignedLongLong(result);
+}
+
 /********************************************************************/
 
+
+/**
+ * \brief We switch the slave off and dispatch its buffers
+ */
+static PyObject*
+python_atrshmlog_turn_slave_off(PyObject *self, PyObject *args)
+{
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "turn_slave_off : fetch failed (slavelocal)");
+      return NULL;
+    }
+
+  PyAtrshmlog_turn_slave_off(u.a);
+ 
+  return Py_None;
+}
+
+/******************************************************/
+
+/**
+ * \brief Set the autoflush for the process
+ */
+static PyObject*
+python_atrshmlog_set_autoflush_process(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_set_autoflush_process_RETURN result;
+
+  int newsize;
+  
+  if (!PyArg_ParseTuple(args, "i", &newsize))
+    {
+      PyErr_SetString(AtrshmlogError, "set_autoflush_process : fetch failed (flag)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_set_autoflush_process(newsize);
+ 
+  return PyLong_FromLong(result);
+}
+
+/********************************************************************/
+
+/**
+ * \brief  Get the autoflush for process
+ */
+static PyObject*
+python_atrshmlog_get_autoflush_process(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_autoflush_process_RETURN result;
+
+  result = PyAtrshmlog_get_autoflush_process();
+ 
+  return PyLong_FromLong(result);
+}
+
+
+/******************************************************/
+
+/**
+ * \brief Set the autoflush
+ */
+static PyObject*
+python_atrshmlog_set_autoflush(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_set_autoflush_RETURN result;
+
+  int newsize;
+  
+  if (!PyArg_ParseTuple(args, "i", &newsize))
+    {
+      PyErr_SetString(AtrshmlogError, "set_autoflush : fetch failed (flag)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_set_autoflush(newsize);
+ 
+  return PyLong_FromLong(result);
+}
+
+/********************************************************************/
+
+/**
+ * \brief  Get the autoflush
+ */
+static PyObject*
+python_atrshmlog_get_autoflush(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_autoflush_RETURN result;
+
+  result = PyAtrshmlog_get_autoflush();
+ 
+  return PyLong_FromLong(result);
+}
+
+/******************************************************/
+
+/**
+ * \brief Set the checksum
+ */
+static PyObject*
+python_atrshmlog_set_checksum(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_set_checksum_RETURN result;
+
+  int newsize;
+  
+  if (!PyArg_ParseTuple(args, "i", &newsize))
+    {
+      PyErr_SetString(AtrshmlogError, "set_checksum : fetch failed (flag)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_set_checksum(newsize);
+ 
+  return PyLong_FromLong(result);
+}
+
+/******************************************************/
+
+/**
+ * \brief  Get the checksum
+ */
+static PyObject*
+python_atrshmlog_get_checksum(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_checksum_RETURN result;
+
+  result = PyAtrshmlog_get_checksum();
+ 
+  return PyLong_FromLong(result);
+}
+
+/******************************************************/
 static PyMethodDef AtrshmlogMethods[] = {
     {"gettime",  python_atrshmlog_gettime, METH_VARARGS,
      "Get a clicktime for an event."},
@@ -4273,6 +4472,30 @@ static PyMethodDef AtrshmlogMethods[] = {
     {"peek",  python_atrshmlog_peek, METH_VARARGS,
      "We get a byte from the area."},
 
+    {"get_slave_tid",  python_atrshmlog_get_slave_tid, METH_VARARGS,
+     "We get a thread id from a slave."},
+
+    {"turn_slave_off",  python_atrshmlog_turn_slave_off, METH_VARARGS,
+     "We turn the slave off."},
+
+    {"set_autoflush_process",  python_atrshmlog_set_autoflush_process, METH_VARARGS,
+     "We set the autoflush flag for the process."},
+
+    {"get_autoflush_process",  python_atrshmlog_get_autoflush_process, METH_VARARGS,
+     "We get the autoflush flag for the process."},
+
+    {"set_autoflush",  python_atrshmlog_set_autoflush, METH_VARARGS,
+     "We set the autoflush flag for the thread."},
+
+    {"get_autoflush",  python_atrshmlog_get_autoflush, METH_VARARGS,
+     "We get the autoflush flag for the thread."},
+
+    {"set_checksum",  python_atrshmlog_set_checksum, METH_VARARGS,
+     "We set the checksum flag for the process."},
+
+    {"get_checksum",  python_atrshmlog_get_checksum, METH_VARARGS,
+     "We get the checksum flag for the process."},
+
 
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
@@ -4387,6 +4610,14 @@ static void init_core(pyatrshmlog_vfctv_t *PyAtrshmlog_API )
   PyAtrshmlog_API[PyAtrshmlog_init_shm_log_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_init_shm_log;
   PyAtrshmlog_API[PyAtrshmlog_poke_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_poke;
   PyAtrshmlog_API[PyAtrshmlog_peek_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_peek;
+  PyAtrshmlog_API[PyAtrshmlog_get_slave_tid_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_slave_tid;
+  PyAtrshmlog_API[PyAtrshmlog_turn_slave_off_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_turn_slave_off;
+  PyAtrshmlog_API[PyAtrshmlog_set_autoflush_process_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_set_autoflush_process;
+  PyAtrshmlog_API[PyAtrshmlog_set_autoflush_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_set_autoflush;
+  PyAtrshmlog_API[PyAtrshmlog_set_checksum_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_set_checksum;
+  PyAtrshmlog_API[PyAtrshmlog_get_checksum_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_checksum;
+  PyAtrshmlog_API[PyAtrshmlog_get_autoflush_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_autoflush;
+  PyAtrshmlog_API[PyAtrshmlog_get_autoflush_process_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_autoflush_process;
 }
 
 #if ATRSHMLOG_PYTHON_VERSION == 3

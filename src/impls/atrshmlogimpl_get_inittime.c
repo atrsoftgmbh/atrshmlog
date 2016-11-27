@@ -12,6 +12,8 @@
  * \n Main code:
  *
  * \brief Get the inittime for the process
+ * 
+ * test t_get_inittime.c
  */
 atrshmlog_internal_time_t atrshmlog_get_inittime(void)
 {

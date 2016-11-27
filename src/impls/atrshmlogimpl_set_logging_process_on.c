@@ -11,6 +11,8 @@
  * \n Main code:
  *
  * \brief Set the logging flag for the process to on
+ *
+ * test t_set_logging_process.c
  */
 atrshmlog_ret_t atrshmlog_set_logging_process_on(void)
 {

@@ -12,6 +12,8 @@
  * \n Main code:
  *
  * \brief We deliver the g_counter data max index
+ *
+ * test NA
  */
 atrshmlog_int32_t atrshmlog_get_statistics_max_index(void)
 {

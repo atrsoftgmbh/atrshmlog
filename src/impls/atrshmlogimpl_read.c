@@ -43,6 +43,8 @@
  * So try to handle the data then as fast as you can.
  * See for a simple reader the
  * atrshmlogreader.c
+ *
+ * test t_read.c
  */
 atrshmlog_ret_t atrshmlog_read(volatile const void* i_area,
 			       const atrshmlog_int32_t i_index_buffer,

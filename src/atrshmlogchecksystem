@@ -1192,7 +1192,7 @@ sub check_c {
 
     my $option = $_[1];
     
-    my $ret = system "$name $option atrshmlogcheckc.c -o atrshmlogcheckc > /dev/null 2>&1 ";
+    my $ret = system "$name $option tests/atrshmlogcheckc.c -o atrshmlogcheckc > /dev/null 2>&1 ";
 
     if ($ret == 0) {
 	if (!open(IN, "atrshmlogcheckc|") ) {
@@ -1223,7 +1223,7 @@ sub check_c {
     }
 
     if ($ret == 256) {
-	$ret = system "$name $option atrshmlogcheckc_nothreads_h.c -o atrshmlogcheckc_nothreads_h > /dev/null 2>&1 ";
+	$ret = system "$name $option tests/atrshmlogcheckc_nothreads_h.c -o atrshmlogcheckc_nothreads_h > /dev/null 2>&1 ";
 
 	if ($ret == 0) {
 	    if (!open(IN, "atrshmlogcheckc_nothreads_h|") ) {

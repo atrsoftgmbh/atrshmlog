@@ -12,6 +12,8 @@
  * \n Main code:
  *
  * \brief  We get the real time 
+ * 
+ * test t_get_realtime.c
  */
 atrshmlog_internal_time_t atrshmlog_get_realtime(void)
 {

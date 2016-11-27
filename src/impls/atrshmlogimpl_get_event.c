@@ -12,6 +12,8 @@
  * \n Main code:
  *
  * \brief Get the event flag state.
+ *
+ * test t_get_event.c
  */
 atrshmlog_event_t atrshmlog_get_event(atrshmlog_int32_t i_index)
 {

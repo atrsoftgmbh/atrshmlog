@@ -1,24 +1,38 @@
 -----
 
+doc
 
-remove reader to readerc and move to unsupported obsolet
+-----
+
+test jni
+
+-----
+
+test perl
+
+-----
+
+test python
 
 ----
-get next slave mess.
-together with remove and change of list
+
+sql logger
+
+------
+
+no sql logger
 
 -----
-attach putenv mess
+
+packdistro mit omit
 
 -----
 
-autoflush
-
------
 adjustment script
 static buffers
 
 ------
+
 install script in bin
 
 ------
@@ -28,47 +42,30 @@ perl and python build system
 ------
 
 c++ module
--------
-packdistro mit omit
 
-------
+-------
 
 dynamic use of flag files in get_env
+
 ------
 
 converter byte order
-------
-
-names pl py tcl etc in the shared libs ?
 
 ------
+
 support programs in target langues
 
 -----
-full test c, jni, perl, python, swig ...
----
 
-jni write from to
-
------
-slave start delivers a thing ...
-
------
 get_statistics via shm or buffer out
 
 ----
+
 writer signals to start stop ....
 
 -----
+
 verify mit logbuffer content
-
------
-
-sql logger
-
-------
-
-no sql logger
 
 ------
 
@@ -80,9 +77,6 @@ no sql logger
 
 ----
 
-* multiple buffer test
-
-----
 
 * alle shm vars via helper procedure wie ich habe fertig ..
 

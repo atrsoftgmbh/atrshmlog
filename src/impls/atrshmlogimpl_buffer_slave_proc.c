@@ -27,6 +27,8 @@
  *
  * \return
  * Depends on the OS.
+ *
+ * test t_buffer_slave_proc.c
  */
 atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
 {
@@ -46,6 +48,7 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
   if (g == NULL)
     {
       conv.ui = atrshmlog_error_buffer_slave_1;
+
       return conv.p;
     }
 
@@ -80,6 +83,7 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
   if (g == NULL)
     {
       conv.ui = atrshmlog_error_buffer_slave_1;
+
       return conv.p;
     }
 
@@ -119,18 +123,30 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
 
 #endif
 
+#if ATRSHMLOG_DEBUG == 1
+  printf("slave start success\n");
+#endif
+  
+  atrshmlog_slave_t* i = (atrshmlog_slave_t*)i_arg;
+  
   // we connect to the slave list
   
-  g->next = (atrshmlog_g_tl_t*)atomic_load_explicit(&atrshmlog_tpslave, memory_order_relaxed);
+  i->next = (atrshmlog_slave_t*)atomic_load_explicit(&atrshmlog_tpslave, memory_order_relaxed);
 
   // Push on stack ...
   while(!atomic_compare_exchange_weak_explicit(&atrshmlog_tpslave,
-					       (intptr_t*)&g->next,
-					       (intptr_t)g,
+					       (intptr_t*)&i->next,
+					       (intptr_t)i,
 					       memory_order_relaxed,
 					       memory_order_relaxed))
     ;
 
+  i->tid = g->atrshmlog_thread_tid;
+
+  i->g = g;
+
+  g->i = i;
+  
   // we are on the list now
   
   atrshmlog_f_list_active_slaves++;
@@ -180,13 +196,10 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
 	  if (atrshmlog_thread_fence_6)
 	    atomic_thread_fence (memory_order_acquire);
 	      
-	  size_t aksize = tbuff->size;
-
-	  if (aksize > 0)
-	    atrshmlog_transfer_mem_to_shm(tbuff, g);
+	  int mret = atrshmlog_transfer_mem_to_shm(tbuff, g);
 
 	  tbuff->size = 0;
-
+	  
 	  if (atrshmlog_thread_fence_7)
 	     atomic_thread_fence (memory_order_release);
 
@@ -203,7 +216,7 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
   ;
 
   // remove from list 
-  atrshmlog_remove_slave_via_local(g);
+  atrshmlog_remove_slave_via_local(i);
   
   // balance the counter
   atrshmlog_f_list_active_slaves--;

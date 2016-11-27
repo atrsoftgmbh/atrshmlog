@@ -234,7 +234,7 @@
 /** 
  * \brief The min id for the get clocktime
  */
-#define ATRSHMLOG_CLOCK_ID_MIN (1)
+#define ATRSHMLOG_CLOCK_ID_MIN (0)
 
 /** 
  * \brief The max id for the get clocktime
@@ -634,12 +634,8 @@ typedef void atrshmlog_thread_ret_t;
 #endif
 
 
-#if ATRSHMLOG_LEVEL > 0
-
 /** File io needed */
 #include <stdio.h>
-
-#endif
 
 /** Time meaturement - this includes structs */
 #include <time.h>
@@ -881,6 +877,10 @@ typedef void atrshmlog_thread_ret_t;
  */
 #define ATRSHMLOG_FENCE_13_SUFFIX "_FENCE_13"
 
+/**
+ * \brief The checksum swith
+ */
+#define ATRSHMLOG_CHECKSUM_SUFFIX "_CHECKSUM"
 
 /**
  * \brief The dispose flag for reuse
@@ -904,18 +904,11 @@ typedef void atrshmlog_thread_ret_t;
 /** 
  * The last define is for testing : 0 off, 1 on
  */
-#if ATRSHMLOG_LEVEL == 0
-#define ATRSHMLOGDEBUG 0
-#endif
-
-#if ATRSHMLOG_LEVEL > 0
 
 /* we can set it to 1 now ... */
 # ifndef ATRSHMLOGDEBUG
 # define ATRSHMLOGDEBUG 0
 # endif
-
-#endif
 
 
 /*********************************************************************/
@@ -1392,6 +1385,11 @@ struct atrshmlog_tbuff_s
   atrshmlog_int32_t id;
 
   /**
+   * We have a checksum in place if we need the thing to make a fence check
+   */
+  int chksum;
+  
+  /**
    * The content size.
    *
    * This is used to decide if the buffer is empty  - is 0 - or not.
@@ -1527,6 +1525,10 @@ typedef struct atrshmlog_tbuff_s atrshmlog_tbuff_t;
 
 /*******************************************************************/
 
+/* we need a forward here */
+
+struct atrshmlog_slave_s;
+
 
 /** 
  * thread locals
@@ -1545,13 +1547,7 @@ typedef struct atrshmlog_tbuff_s atrshmlog_tbuff_t;
  */
 struct atrshmlog_g_tl_s {
 
-  /**
-   * This is normally not used by simple threads, only by the slaves.
-   * So slaves can be iterated and killed by an owner process.
-   * Simply switch the idnotok to 1.
-   */
-  struct atrshmlog_g_tl_s* next;
-
+  struct atrshmlog_slave_s* i;
   /** 
    * This is used as an initialized flag and a not ok flag .
    * For the initialize it must be -1. 
@@ -1586,6 +1582,11 @@ struct atrshmlog_g_tl_s {
    * The strategy for this thread.
    */
   int strategy;
+
+  /**
+   * The autoflush for the thread.
+   */
+  int autoflush;
   
   /** 
    * This is the thread pid on init.
@@ -1623,7 +1624,7 @@ struct atrshmlog_g_tl_s {
    * and so about the one that holds the valid last thread statistics
    */
   int number_dispatched;
-  
+
   /**
    * thread specific statistics are here.
    * so we can colect them later from the buffers in files.
@@ -1711,6 +1712,27 @@ struct atrshmlog_g_tl_s {
 /** the type for the thread locals struct */
 typedef struct atrshmlog_g_tl_s atrshmlog_g_tl_t;
 
+/**
+ * \brief The list of slaves
+ */
+struct atrshmlog_slave_s {
+  /**
+   * The list 
+   */
+  struct atrshmlog_slave_s * next;
+
+  /**
+   * This is the thread tid.
+   */
+  atrshmlog_tid_t tid;
+
+  /**
+   * the thread locals
+   */
+  atrshmlog_g_tl_t* g;
+};
+
+typedef struct atrshmlog_slave_s atrshmlog_slave_t;
 
 /* 
  * the following is a pure result of the breaking of the module into
@@ -1742,6 +1764,8 @@ extern int atrshmlog_slave_to_shm_wait;
 extern int atrshmlog_strategy_wait_wait_time;
 extern int atrshmlog_wait_for_slaves;
 extern int atrshmlog_buffer_strategy;
+extern int atrshmlog_autoflush;
+extern int atrshmlog_checksum;
 extern int atrshmlog_thread_fence_1;
 extern int atrshmlog_thread_fence_2;
 extern int atrshmlog_thread_fence_3;
@@ -1781,7 +1805,7 @@ extern atrshmlog_tbuff_t *atrshmlog_acquire_buffer(const atrshmlog_g_tl_t* restr
 extern int atrshmlog_init_thread_local (atrshmlog_g_tl_t* restrict i_g);
 extern void atrshmlog_init_events(const int i_use_file);
 extern int atrshmlog_transfer_mem_to_shm(const atrshmlog_tbuff_t* restrict i_mem,
-					 const atrshmlog_g_tl_t* restrict i_g)  ;
+					 volatile const atrshmlog_g_tl_t* restrict i_g)  ;
 extern void atrshmlog_init_via_file(const char *i_suffix,
 				    int *v,
 				    int i_min,
@@ -1799,6 +1823,16 @@ extern int atrshmlog_create_mapped_file(int index, int size, int *already);
 extern void * atrshmlog_attach_mapped_file(int index, int size);
 extern void atrshmlog_memset_prealloced(void);
 extern atomic_int atrshmlog_last_mem_to_shm;
+
+
+/** 
+ * \brief The memory check pattern
+ */
+#define ATRSHMLOGSAFEGUARDVALUE (0xFE01FE01L)
+
+
+/************************************************************************/
+/* helper macros*/
 
 /**
  * \brief We add to the statistics counter
@@ -1822,17 +1856,6 @@ extern atomic_int atrshmlog_last_mem_to_shm;
 #define ATRSHMLOGSTATLOCAL(__tl,__e)			\
   (++(__tl->__e))
 
-
-/** 
- * \brief The memory check pattern
- */
-#define ATRSHMLOGSAFEGUARDVALUE (0xFE01FE01L)
-
-
-/************************************************************************/
-/* helper macros*/
-
-#if ATRSHMLOG_LEVEL > 0
 
 /**
  * \brief Create the shm area. 
@@ -1931,8 +1954,6 @@ extern void atrshmlog_cleanup_locks(volatile const void* i_area);
  */
 extern atrshmlog_ret_t atrshmlog_init_shm_log(volatile const void *i_area,
 					      const atrshmlog_int32_t i_count_buffers);
-
-#endif
 
 #endif
 /* end of file */

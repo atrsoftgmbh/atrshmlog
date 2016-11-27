@@ -11,6 +11,8 @@
  *
  * \return
  * The old flag for fence.
+ *
+ * test t_set_fence_5.c
  */
 atrshmlog_ret_t atrshmlog_set_thread_fence_5(atrshmlog_int32_t i_switch)
 {

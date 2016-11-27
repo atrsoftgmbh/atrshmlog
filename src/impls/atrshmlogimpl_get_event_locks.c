@@ -12,6 +12,8 @@
  * \n Main code:
  *
  * \brief We have a limit for the number of event locks
+ *
+ * test t_get_event_locks_max.c
  */
 atrshmlog_ret_t atrshmlog_get_event_locks_max(void)
 {

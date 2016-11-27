@@ -12,6 +12,8 @@
  * \n Main code:
  *
  * \brief The clock id we use to get time.
+ *
+ * test t_get_clock_id.c
  */
 atrshmlog_ret_t atrshmlog_get_clock_id(void)
 {

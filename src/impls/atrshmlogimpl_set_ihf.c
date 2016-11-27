@@ -14,6 +14,8 @@
  * \brief Set the ich habe fertig flag .
  *
  * This is 0 for go on, non 0 for stop.
+ *
+ * test t_set_area_ihf.c
  */
 atrshmlog_ret_t atrshmlog_set_area_ich_habe_fertig(volatile const void* i_area, atrshmlog_int32_t i_flag)
 {

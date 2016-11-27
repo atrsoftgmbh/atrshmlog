@@ -13,6 +13,8 @@
  * \brief Get the major version from shm.
  *
  * This has to be the same as the programs major or we should stop at once
+ *
+ * test t_get_area_version.c
  */
 atrshmlog_ret_t atrshmlog_get_area_version(volatile const void* i_area)
 {

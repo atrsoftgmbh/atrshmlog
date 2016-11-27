@@ -24,6 +24,8 @@
  *
  * \return 
  * void
+ *
+ * test t_attach.c
  */
 void atrshmlog_init_via_file(const char *i_suffix,
 				    int *v,

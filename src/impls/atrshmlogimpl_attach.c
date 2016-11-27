@@ -31,9 +31,17 @@ void atrshmlog_destruct_specific(void* i_data)
 void atrshmlog_putenv(const char* i_suffix, long val)
 {
 #if ATRSHMLOG_PUTENV_IN_ATTACH == 1
-  char b[512];
+  // why ?
+  // why do we leak memory here ?
+  // the answer is : perl
+  // they assume the thing is allocated.
+  // so they simply do a free.
+  // and so we need to alloc the memory ourself.
+  // if you really need the putenv - then you have to pay this price
+  // or the perl layer will not work - at least on my platform.
+  char *b = (char*)calloc(1,512);
 
-  sprintf(b, "%s%s=%ld", atrshmlog_prefix_name_buffer, i_suffix, val);
+  snprintf(b, 512, "%s%s=%ld", atrshmlog_prefix_name_buffer, i_suffix, val);
   
   putenv(b);
 #endif
@@ -122,6 +130,7 @@ static atomic_flag atrshmlog_attach_once_flag = ATOMIC_FLAG_INIT;
  *
  * So check the code to see if a thing can be changed after.
  *
+ * test t_attach.c
  */
 atrshmlog_ret_t atrshmlog_attach(void)
 {
@@ -632,6 +641,13 @@ atrshmlog_ret_t atrshmlog_attach(void)
 	      {
 		ATRSHMLOG_FENCE_13_SUFFIX,
 		&atrshmlog_thread_fence_13,
+		0,
+		1
+	      },
+
+	      {
+		ATRSHMLOG_CHECKSUM_SUFFIX,
+		&atrshmlog_checksum,
 		0,
 		1
 	      },

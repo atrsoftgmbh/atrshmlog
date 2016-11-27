@@ -12,6 +12,8 @@
  *
  * \brief Set the sleep time for a slave in nanos after a 
  * test of the f list was getting empty
+ *
+ * test t_set_slave_wait_nanos.c
  */
 atrshmlog_ret_t atrshmlog_set_f_list_buffer_slave_wait(atrshmlog_int32_t i_wait_nanos)
 {

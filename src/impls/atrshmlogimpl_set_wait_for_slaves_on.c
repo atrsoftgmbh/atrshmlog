@@ -22,6 +22,8 @@
  *
  * Of course there is a problem.
  * If you ever run in a hang of the slave you wait in the exit.
+ *
+ * test t_set_wait_for_slaves.c
  */
 atrshmlog_ret_t atrshmlog_set_wait_for_slaves_on(void)
 {
