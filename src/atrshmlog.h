@@ -127,24 +127,6 @@ bumm bumm bumm bumm error in platform active count
 /*******************************************************/
 
 
-
-/** 
- * \brief We define the level of the module here.
- *
- * - Level 0 is only a client logging module.
- *   We dont use any unnecessary header, too ...
- *   so no printf etc ...
- *   This will crash on build if you want to DEBUG ...
- * - Level 1 is more for a full user.
- *   You can still not use DEBUG here.
- *   But its all here now for the basic stuff.
- * - Level 2
- *   All is in. 
- */
-#ifndef ATRSHMLOG_LEVEL
-#define ATRSHMLOG_LEVEL 2
-#endif
-
 /** 
  * \brief What is our compilers inline attribut 
  */
@@ -519,38 +501,6 @@ bumm bumm bumm bumm error in platform active count
 
 /********************************************************************/
 
-/*
- * Helper for write calls
- */
-
-enum atrshmlog_write_mode {
-/**
- * \brief This is the first constant for the point in time event
- */
-  ATRSHMLOG_POINT_IN_TIME_C = 80,
-
-/**
- * \brief This is the second constant for the point in time event
- */
-  ATRSHMLOG_POINT_IN_TIME_UCS2 =  112,
-
-
-/**
- * \brief This is the first constant for the interval in time event
- */
-  ATRSHMLOG_INTERVAL_IN_TIME_C = 73,
-
-/**
- * \brief This is the second constant for the interval in time event
- */
-  ATRSHMLOG_INTERVAL_IN_TIME_UCS2 = 105
-};
-
-
-/* end of the defines */ 
-
-/**********************************************************************/
-
 /* 
  * We need the 64 bit unsigned type here.
  * So this is the include to deliver it.
@@ -782,6 +732,36 @@ extern "C" {
   
 
   /************************************************************/
+
+  /*
+   * Helper for write calls
+   */
+
+  enum atrshmlog_write_mode {
+    /**
+     * \brief This is the first constant for the point in time event
+     */
+    ATRSHMLOG_POINT_IN_TIME_C = 80,
+
+    /**
+     * \brief This is the second constant for the point in time event
+     */
+    ATRSHMLOG_POINT_IN_TIME_UCS2 =  112,
+
+    
+    /**
+     * \brief This is the first constant for the interval in time event
+     */
+    ATRSHMLOG_INTERVAL_IN_TIME_C = 73,
+
+    /**
+     * \brief This is the second constant for the interval in time event
+     */
+    ATRSHMLOG_INTERVAL_IN_TIME_UCS2 = 105
+  };
+
+
+  /************************************************************************/
 
   /**
    * \brief We define the counter index as an enum.
@@ -1344,7 +1324,7 @@ extern "C" {
     atrshmlog_strategy_last = 5
   };
 
-
+  
   /************************************************************************/
   /* LOGGING macros */
 
@@ -1355,6 +1335,36 @@ extern "C" {
    * so we recommend the use of the macro.
    */
 
+  /************************************************************************/
+  /* burocracy functions */
+
+  /** 
+   * \brief Get the major version.
+   *
+   * \return
+   * The number of the major version of the shmlog.
+   */
+#define ATRSHMLOG_GET_VERSION() atrshmlog_get_version()
+
+  /** 
+   * \brief Get the minor version.
+   *
+   * \return
+   * The number of the minor version of the shmlog.
+   */
+#define ATRSHMLOG_GET_MINOR_VERSION() atrshmlog_get_minor_version()
+
+  /** 
+   * \brief Get the patch version.
+   *
+   * \return
+   * The number of the patch version of the shmlog.
+   */
+#define ATRSHMLOG_GET_PATCH_VERSION() atrshmlog_get_patch_version()
+
+  /************************************************************************/
+  /* write log related functions */
+  
   /** 
    * \brief The check if an event is on and logging is on, too. 
    *
@@ -1373,17 +1383,6 @@ extern "C" {
    */
 #define ATRSHMLOG_EVENTCHECK(__ev)				\
   ((atrshmlog_event_locks[(__ev)]) & atrshmlog_logging_process)
-
-  /** 
-   * \brief We initialize and attach to shm.
-   *
-   * Attach to the shm buffer and initialize internal
-   * with the function
-   *
-   * \return
-   * The return code of the function
-   */
-#define ATRSHMLOG_ATTACH() atrshmlog_attach()
 
   /** 
    * \brief Get the click time into the time variable.
@@ -1541,7 +1540,82 @@ extern "C" {
 		      (__b2),(__sz2)) :  -99				\
     )
 
+  /**
+   *  \brief The autoflush flag
+   *
+   * \return
+   * The flag
+   */
+#define  ATRSHMLOG_GET_AUTOFLUSH_PROCESS() atrshmlog_get_autoflush_process()
+  
+  /**
+   * \brief Set the autoflush for the process
+   *
+   * \param __f
+   * Our new autoflush flag
+   *
+   * \return 
+   * The old flag
+   */
+#define  ATRSHMLOG_SET_AUTOFLUSH_PROCESS(__f)  atrshmlog_set_autoflush_process((__f))
 
+  /**
+   *  \brief The autoflush flag
+   *
+   * \return
+   * The flag
+   */
+#define  ATRSHMLOG_GET_AUTOFLUSH() atrshmlog_get_autoflush()
+
+  /**
+   * \brief Set the autoflush for the thread
+   *
+   * \param __f
+   * Our new autoflush flag
+   *
+   * \return 
+   * The old flag
+   */
+#define  ATRSHMLOG_SET_AUTOFLUSH(__f) atrshmlog_set_autoflush((__f))
+
+
+  /** 
+   * \brief Get the logging status via function.
+   *
+   * \return
+   * Number of the logging status for the process.
+   * - 0 : ok, we are logging
+   * - non zero : we dont log
+   */
+#define ATRSHMLOG_GET_LOGGING()  atrshmlog_get_logging()
+
+  /** 
+   * \brief Set the logging to on.
+   *
+   * \return
+   * The old number of the logging flag.
+   */
+#define ATRSHMLOG_SET_LOGGING_PROCESS_ON()  atrshmlog_set_logging_process_on()
+
+  /** 
+   * \brief Set the logging to off.
+   *
+   * \return
+   * The old number of the logging flag.
+   */
+#define ATRSHMLOG_SET_LOGGING_PROCESS_OFF()  atrshmlog_set_logging_process_off()
+
+  /**
+   * \brief Switch the logging for the process off finally.
+   *
+   * \return
+   * Old flag.
+   */
+#define ATRSHMLOG_SET_LOGGING_PROCESS_OFF_FINAL()  atrshmlog_set_logging_process_off_final()
+
+  /************************************************************************/
+  /* timing functions */
+  
   /**
    * \brief We wait nanoseconds.
    * 
@@ -1553,29 +1627,81 @@ extern "C" {
    */
 #define ATRSHMLOG_SLEEP_NANOS(__n)   atrshmlog_sleep_nanos((__n))
 
-  /**
-   * \brief We deliver the max index of the statistics buffer
+  /** 
+   * \brief Get the real time with clicktime.
    *
-   * \return 
-   * Maximum index of the statistics buffer.
+   * \return
+   * the 64 bit click time 
    */
-#define ATRSHMLOG_GET_STATISTICS_MAX_INDEX() atrshmlog_get_statistics_max_index()
+#define ATRSHMLOG_GET_CLICKTIME() atrshmlog_get_clicktime()
+
+  /** 
+   * \brief Get the clock id used in get time.
+   *
+   * \return
+   * The id of the clock to use in get clock call.
+   */
+#define ATRSHMLOG_GET_CLOCK_ID()  atrshmlog_get_clock_id()
+
+  /** 
+   * \brief Set the clock id in get time.
+   *
+   * \param __i
+   * The id for the get clock call.
+   *
+   * \return
+   * The old id for the get clock call.
+   */
+#define ATRSHMLOG_SET_CLOCK_ID(__i) atrshmlog_set_clock_id((__i))
+  
+  
 
   /**
-   * \brief We deliver copy of the statistics counter.
+   * \brief  We get the real time
    *
-   * Its up to you to have enough space for them.
-   * So use the get max index to do the right allocation.
-   *
-   * \param __o
-   * The start Adress of an int32 array for the counters.
-   *
-   * \return 
-   * void
+   * \return
+   * The real time.
    */
-#define ATRSHMLOG_GET_STATISTICS(__o) atrshmlog_get_statistics((__o))
-   
+#define ATRSHMLOG_GET_REALTIME() atrshmlog_get_realtime()
+
+  /** 
+   * \brief Get the inittime.
+   *
+   * \return
+   * The internal time struct with the inittime of the process.
+   */
+#define ATRSHMLOG_GET_INITTIME()  atrshmlog_get_inittime()
+
+  /** 
+   * \brief Get the click time before inittime.
+   * 
+   * \return
+   * The time for the click before the get clock call to fill inittime.
+   */
+#define ATRSHMLOG_GET_INITTIME_TSC_BEFORE()  atrshmlog_get_inittime_tsc_before()
+
+  /** 
+   * \brief Get the click time after inittime.
+   *
+   * \return
+   * The time for the click after the get clock call to fill inittime.
+   */
+#define ATRSHMLOG_GET_INITTIME_TSC_AFTER()   atrshmlog_get_inittime_tsc_after()
+
+  /************************************************************************/
+  /* initialization and configuration functions */
   
+  /** 
+   * \brief We initialize and attach to shm.
+   *
+   * Attach to the shm buffer and initialize internal
+   * with the function
+   *
+   * \return
+   * The return code of the function
+   */
+#define ATRSHMLOG_ATTACH() atrshmlog_attach()
+
   /** 
    * \brief Set the prefix for use of variables and flagfiles.
    *
@@ -1623,30 +1749,6 @@ extern "C" {
    * Points to the c string.
    */
 #define ATRSHMLOG_GET_ENV_ID_SUFFIX()  atrshmlog_get_env_id_suffix()
-
-  /** 
-   * \brief Get the major version.
-   *
-   * \return
-   * The number of the major version of the shmlog.
-   */
-#define ATRSHMLOG_GET_VERSION() atrshmlog_get_version()
-
-  /** 
-   * \brief Get the minor version.
-   *
-   * \return
-   * The number of the minor version of the shmlog.
-   */
-#define ATRSHMLOG_GET_MINOR_VERSION() atrshmlog_get_minor_version()
-
-  /** 
-   * \brief Get the patch version.
-   *
-   * \return
-   * The number of the patch version of the shmlog.
-   */
-#define ATRSHMLOG_GET_PATCH_VERSION() atrshmlog_get_patch_version()
 
   /** 
    * \brief Get the max of event locks - 1.
@@ -1701,40 +1803,6 @@ extern "C" {
    */
 #define ATRSHMLOG_SET_EVENT_OFF(__i) atrshmlog_set_event_off((__i))
 
-  /** 
-   * \brief Get the logging status via function.
-   *
-   * \return
-   * Number of the logging status for the process.
-   * - 0 : ok, we are logging
-   * - non zero : we dont log
-   */
-#define ATRSHMLOG_GET_LOGGING()  atrshmlog_get_logging()
-
-  /** 
-   * \brief Set the logging to on.
-   *
-   * \return
-   * The old number of the logging flag.
-   */
-#define ATRSHMLOG_SET_LOGGING_PROCESS_ON()  atrshmlog_set_logging_process_on()
-
-  /** 
-   * \brief Set the logging to off.
-   *
-   * \return
-   * The old number of the logging flag.
-   */
-#define ATRSHMLOG_SET_LOGGING_PROCESS_OFF()  atrshmlog_set_logging_process_off()
-
-  /**
-   * \brief Switch the logging for the process off finally.
-   *
-   * \return
-   * Old flag.
-   */
-#define ATRSHMLOG_SET_LOGGING_PROCESS_OFF_FINAL()  atrshmlog_set_logging_process_off_final()
-
   
   /** 
    * \brief Get the shmid code.
@@ -1743,61 +1811,6 @@ extern "C" {
    * Number of the shared memory id.
    */
 #define ATRSHMLOG_GET_SHMID()  atrshmlog_get_shmid()
-
-  /** 
-   * \brief Get the shm area start adress.
-   *
-   * \return
-   * Points to the shared memory area.
-   */
-#define ATRSHMLOG_GET_AREA()  atrshmlog_get_area()
-
-  /** 
-   * \brief Get a shm area flag ich_habe_fertig.
-   *
-   * \param __a
-   * Points to the start of the shared memory area.
-   *
-   * \return
-   * The number of the flag. 
-   */
-#define ATRSHMLOG_GET_AREA_ICH_HABE_FERTIG(__a) atrshmlog_get_area_ich_habe_fertig((__a))
-
-  /** 
-   * \brief Set the shm area flag ich_habe_fertig.
-   *
-   * \param __a
-   * Points to the start of the shared memory area.
-   *
-   * \param __f
-   * The new number for the flag.
-   *
-   * \return
-   * The old number of the flag. 
-   */
-#define ATRSHMLOG_SET_AREA_ICH_HABE_FERTIG(__a,__f) atrshmlog_set_area_ich_habe_fertig((__a),(__f))
-
-  /** 
-   * \brief Get the shm count of buffers.
-   *
-   * \param __a
-   * Points to the start of the shared memory area.
-   *
-   * \return
-   * The number of buffers in the area.
-   */
-#define ATRSHMLOG_GET_AREA_COUNT(__a) atrshmlog_get_area_count((__a))
-
-  /** 
-   * \brief Get the shm version.
-   *
-   * \param __a
-   * Points to the start of the shared memory area.
-   *
-   * \return
-   * The number of the version in the shared memory area.
-   */
-#define ATRSHMLOG_GET_AREA_VERSION(__a) atrshmlog_get_area_version((__a))
 
   /** 
    * \brief Get the maximum size of logbuffer.
@@ -1825,97 +1838,6 @@ extern "C" {
    * The old number of bytes fro log buffers.
    */
 #define ATRSHMLOG_SET_BUFFER_SIZE(__size) atrshmlog_set_buffer_size((__size))
-
-  /** 
-   * \brief Get the number of slave threads running.
-   *
-   * \return
-   * The number of threads running the function for slave proc.
-   */
-#define ATRSHMLOG_GET_F_LIST_BUFFER_SLAVE_COUNT()  atrshmlog_get_f_list_buffer_slave_count()
-
-  /** 
-   * \brief Set the number of slave threads startet.
-   *
-   * \param __count
-   * The new count of slave threads to start.
-   *
-   * \return
-   * The old number of slave threads to start.
-   */
-#define ATRSHMLOG_SET_F_LIST_BUFFER_SLAVE_COUNT(__count) atrshmlog_set_f_list_buffer_slave_count((__count))
-
-  /** 
-   * \brief Get the clock id used in get time.
-   *
-   * \return
-   * The id of the clock to use in get clock call.
-   */
-#define ATRSHMLOG_GET_CLOCK_ID()  atrshmlog_get_clock_id()
-
-  /** 
-   * \brief Set the clock id in get time.
-   *
-   * \param __i
-   * The id for the get clock call.
-   *
-   * \return
-   * The old id for the get clock call.
-   */
-#define ATRSHMLOG_SET_CLOCK_ID(__i) atrshmlog_set_clock_id((__i))
-
-  /** 
-   * \brief Set the slave run flag to off.
-   *
-   * \return
-   * void
-   */
-#define ATRSHMLOG_SET_F_LIST_BUFFER_SLAVE_RUN_OFF()  atrshmlog_set_f_list_buffer_slave_run_off()
-
-
-  /** 
-   * \brief Set the wait for slaves flag to on.
-   *
-   * \return
-   * The old flag.
-   */
-#define ATRSHMLOG_SET_WAIT_FOR_SLAVES_ON()   atrshmlog_set_wait_for_slaves_on()
-
-  /** 
-   * \brief Set the wait for slaves flag to off.
-   *
-   * \return
-   * The old flag.
-   */
-#define ATRSHMLOG_SET_WAIT_FOR_SLAVES_OFF()  atrshmlog_set_wait_for_slaves_off()
-
-  /** 
-   * \brief Get the wait for slaves flag.
-   *
-   * \return
-   * The flag for the wait for slaves.
-   */
-#define ATRSHMLOG_GET_WAIT_FOR_SLAVES()  atrshmlog_get_wait_for_slaves()
-
-  /** 
-   * \brief Get the nanos the slave waits after going to sleep.
-   *
-   * \return
-   * The number of nanos the slave sleeps when nothing has to be done.
-   */
-#define ATRSHMLOG_GET_F_LIST_BUFFER_SLAVE_WAIT() atrshmlog_get_f_list_buffer_slave_wait()
-
-  /** 
-   * \brief Set the nanos the slave waits in sleep.
-   *
-   * \param __nanos
-   * The number of nanos the slave has to sleep when nothing has
-   * to be done.
-   *
-   * \return
-   * The old number of nanos the slave had to wait.
-   */
-#define ATRSHMLOG_SET_F_LIST_BUFFER_SLAVE_WAIT(__nanos) atrshmlog_set_f_list_buffer_slave_wait((__nanos))
 
   /** 
    * \brief Get the number of buffers for the process.
@@ -1946,29 +1868,6 @@ extern "C" {
    */
 #define ATRSHMLOG_SET_PREALLOC_BUFFER_COUNT(__count) atrshmlog_set_prealloc_buffer_count((__count))
 
-  /** 
-   * \brief Get the inittime.
-   *
-   * \return
-   * The internal time struct with the inittime of the process.
-   */
-#define ATRSHMLOG_GET_INITTIME()  atrshmlog_get_inittime()
-
-  /** 
-   * \brief Get the click time before inittime.
-   * 
-   * \return
-   * The time for the click before the get clock call to fill inittime.
-   */
-#define ATRSHMLOG_GET_INITTIME_TSC_BEFORE()  atrshmlog_get_inittime_tsc_before()
-
-  /** 
-   * \brief Get the click time after inittime.
-   *
-   * \return
-   * The time for the click after the get clock call to fill inittime.
-   */
-#define ATRSHMLOG_GET_INITTIME_TSC_AFTER()   atrshmlog_get_inittime_tsc_after()
 
   /**
    * \brief Get the buffer id.
@@ -1977,6 +1876,51 @@ extern "C" {
    * Get the id of the last buffer initialized.
    */
 #define ATRSHMLOG_GET_BUFFER_ID()   atrshmlog_get_buffer_id()
+
+  /**
+   * \brief we get the init in advance flag
+   *
+   * \return
+   * The flag
+   */
+#define ATRSHMLOG_GET_INIT_BUFFERS_IN_ADVANCE() atrshmlog_get_init_buffers_in_advance()
+
+
+  /**
+   * \brief we turn the init in advance on
+   *
+   * \return
+   * The old flag
+   */
+#define ATRSHMLOG_SET_INIT_BUFFERS_IN_ADVANCE_ON() atrshmlog_set_init_buffers_in_advance_on()
+  
+  /**
+   * \brief we turn the init in advance off
+   *
+   * \return
+   * The old flag
+   */
+#define ATRSHMLOG_SET_INIT_BUFFERS_IN_ADVANCE_OFF() atrshmlog_set_init_buffers_in_advance_off()
+
+
+  /************************************************************************/
+  /* thread related functions */
+  
+  /**
+   * \brief We get the thread tid 
+   *
+   * \return 
+   * The thread tid
+   */
+#define ATRSHMLOG_GET_TID()  atrshmlog_get_tid()
+
+  /**
+   * \brief We get the thread locals adress of a thread
+   *
+   * \return
+   * the adress of the thread locals
+   */
+#define ATRSHMLOG_GET_THREAD_LOCALS_ADRESS()  atrshmlog_get_thread_locals_adress()
 
   /** 
    * \brief Stop logging for this thread.
@@ -1993,6 +1937,14 @@ extern "C" {
    * void
    */
 #define ATRSHMLOG_FLUSH()  atrshmlog_flush()
+
+  /** 
+   * \brief We get the strategy for this thread
+   *
+   * \return
+   * The value 
+   */
+#define  ATRSHMLOG_GET_STRATEGY() atrshmlog_get_strategy()
 
   /** 
    * \brief Set the strategy for this thread.
@@ -2013,13 +1965,13 @@ extern "C" {
 #define ATRSHMLOG_SET_STRATEGY(__s)  atrshmlog_set_strategy((__s))
 
   /** 
-   * \brief We get the strategy for this thread
+   * \brief We get the strategy for the process
    *
    * \return
    * The value 
    */
-#define  ATRSHMLOG_GET_STRATEGY() atrshmlog_get_strategy()
-
+#define   ATRSHMLOG_GET_STRATEGY_PROCESS()   atrshmlog_get_strategy_process()
+  
   /** 
    * \brief Set the strategy for the process.
    *
@@ -2037,36 +1989,58 @@ extern "C" {
 #define ATRSHMLOG_SET_STRATEGY_PROCESS(__s)  atrshmlog_set_strategy_process((__s))
 
   /** 
-   * \brief We get the strategy for the process
+   * \brief We get the tid of a thread local
+   *
+   * \param __tl
+   * Pointer to a thread local or NULL
    *
    * \return
-   * The value 
+   * - 0 if pointer is NULL
+   * - tid
    */
-#define   ATRSHMLOG_GET_STRATEGY_PROCESS()   atrshmlog_get_strategy_process()
+#define ATRSHMLOG_GET_THREAD_LOCAL_TID(__tl) atrshmlog_get_thread_local_tid ((__tl))
   
-  /** 
-   * \brief Start a new slave thread.
+  /**
+   * \brief We switch the thread off and dispatch its buffers
    *
-   * \return
-   * The return code of the used function to start the thread.
+   * \param __a
+   * The adress of the thread locals
+   *
+   * \return 
+   * void
    */
-#define ATRSHMLOG_CREATE_SLAVE()  atrshmlog_create_slave()
+#define ATRSHMLOG_TURN_LOGGING_OFF(__tl)  atrshmlog_turn_logging_off((__tl))
 
   /** 
-   * \brief decrement the slave count.
-   * 
-   * we deliver the old one and decrement. till 0.
-   * this is for the case you kill slaves.
-   */
-#define  ATRSHMLOG_DECREMENT_SLAVE_COUNT()  atrshmlog_decrement_slave_count()
-
-  /** 
-   * \brief Get the real time with clicktime.
+   * \brief We make reuse of buffers of a dead thread
+   *
+   * \param __tid
+   * Our tid for the thread
    *
    * \return
-   * the 64 bit click time 
+   * The number of found buffers
    */
-#define ATRSHMLOG_GET_CLICKTIME() atrshmlog_get_clicktime()
+#define  ATRSHMLOG_REUSE_THREAD_BUFFERS(__tid)  atrshmlog_reuse_thread_buffers((__tid))
+
+      
+  /**
+   * \brief Set the checksum flag
+   *
+   * \param __flag
+   * Our new  flag
+   *
+   * \return 
+   * The old flag
+   */
+#define  ATRSHMLOG_SET_CHECKSUM(__flag) atrshmlog_set_checksum((__flag))
+
+  /**
+   *  \brief The checksum flag
+   *
+   * \return
+   * The flag
+   */
+#define  ATRSHMLOG_GET_CHECKSUM()  atrshmlog_get_checksum()
 
   /** 
    * \brief Set the fence 1 flag on.
@@ -2314,154 +2288,71 @@ extern "C" {
    * The old flag for fence.
    */
 #define  ATRSHMLOG_GET_THREAD_FENCE_13()  atrshmlog_get_thread_fence_13()
-  
 
-  /**
-   * \brief  We get the real time
+  /************************************************************************/
+  /* slave related functions */
+
+  /** 
+   * \brief We get the next element on slave list
+   *
+   * If we deliver a 0 we start from top.
+   * 
+   * \param __slave
+   * Pointer to thread local or NULL
    *
    * \return
-   * The real time.
+   * - top if parameter NULL
+   * - next if parameter is thread local of slave
    */
-#define ATRSHMLOG_GET_REALTIME() atrshmlog_get_realtime()
+#define ATRSHMLOG_GET_NEXT_SLAVE_LOCAL(__slave) atrshmlog_get_next_slave_local((__slave))
 
-  /**
-   * \brief We get the thread locals adress of a thread
+  /** 
+   * \brief Get the number of slave threads running.
    *
    * \return
-   * the adress of the thread locals
+   * The number of threads running the function for slave proc.
    */
-#define ATRSHMLOG_GET_THREAD_LOCALS_ADRESS()  atrshmlog_get_thread_locals_adress()
+#define ATRSHMLOG_GET_F_LIST_BUFFER_SLAVE_COUNT()  atrshmlog_get_f_list_buffer_slave_count()
 
-  /**
-   * \brief We get the thread tid 
+  /** 
+   * \brief Set the number of slave threads startet.
    *
-   * \return 
-   * The thread tid
-   */
-#define ATRSHMLOG_GET_TID()  atrshmlog_get_tid()
-
-  /**
-   * \brief We switch the thread off and dispatch its buffers
-   *
-   * \param __a
-   * The adress of the thread locals
-   *
-   * \return 
-   * void
-   */
-#define ATRSHMLOG_TURN_LOGGING_OFF(__a)  atrshmlog_turn_logging_off((__a))
-
-  /**
-   * \brief we turn the init in advance on
+   * \param __count
+   * The new count of slave threads to start.
    *
    * \return
-   * The old flag
+   * The old number of slave threads to start.
    */
-#define ATRSHMLOG_SET_INIT_BUFFERS_IN_ADVANCE_ON() atrshmlog_set_init_buffers_in_advance_on()
-  
-  /**
-   * \brief we turn the init in advance off
+#define ATRSHMLOG_SET_F_LIST_BUFFER_SLAVE_COUNT(__count) atrshmlog_set_f_list_buffer_slave_count((__count))
+
+  /** 
+   * \brief Start a new slave thread.
    *
    * \return
-   * The old flag
+   * The return code of the used function to start the thread.
    */
-#define ATRSHMLOG_SET_INIT_BUFFERS_IN_ADVANCE_OFF() atrshmlog_set_init_buffers_in_advance_off()
+#define ATRSHMLOG_CREATE_SLAVE()  atrshmlog_create_slave()
 
-  /**
-   * \brief we get the init in advance flag
-   *
-   * \return
-   * The flag
+  /** 
+   * \brief decrement the slave count.
+   * 
+   * we deliver the old one and decrement. till 0.
+   * this is for the case you kill slaves.
    */
-#define ATRSHMLOG_GET_INIT_BUFFERS_IN_ADVANCE() atrshmlog_get_init_buffers_in_advance()
+#define  ATRSHMLOG_DECREMENT_SLAVE_COUNT()  atrshmlog_decrement_slave_count()
 
-/** 
- * \brief We get the next element on slave list
- *
- * If we deliver a 0 we start from top.
- * 
- * \param __tl
- * Pointer to thread local or NULL
- *
- * \return
- * - top if parameter NULL
- * - next if parameter is thread local of slave
- */
-#define ATRSHMLOG_GET_NEXT_SLAVE_LOCAL(__tl) atrshmlog_get_next_slave_local((__tl))
-
-/** 
- * \brief We get the tid of a thread local
- *
- * \param __tl
- * Pointer to a thread local or NULL
- *
- * \return
- * - 0 if pointer is NULL
- * - tid
- */
-#define ATRSHMLOG_GET_THREAD_LOCAL_TID(__tl) atrshmlog_get_thread_local_tid ((__tl))
-  
 /** 
  * \brief  We remove the save from the list of slaves
  *
- * \param __tl
+ * \param __slave
  * Pointer to a thread local or NULL
  *
  * \return
  * - 0 is ok
  * - non zero is error
  */
-#define ATRSHMLOG_REMOVE_SLAVE_VIA_LOCAL(__tl) atrshmlog_remove_slave_via_local((__tl))
+#define ATRSHMLOG_REMOVE_SLAVE_VIA_LOCAL(__slave) atrshmlog_remove_slave_via_local((__slave))
   /* from here on we have stuff for higher level of use */
-
-  /** 
-   * \brief We make reuse of buffers of a dead thread
-   *
-   * \param __tid
-   * Our tid for the thread
-   *
-   * \return
-   * The number of found buffers
-   */
-#define  ATRSHMLOG_REUSE_THREAD_BUFFERS(__tid)  atrshmlog_reuse_thread_buffers((__tid))
-
-  /**
-   * \brief Set the autoflush for the process
-   *
-   * \param __f
-   * Our new autoflush flag
-   *
-   * \return 
-   * The old flag
-   */
-#define  ATRSHMLOG_SET_AUTOFLUSH_PROCESS(__f)  atrshmlog_set_autoflush_process((__f))
-
-  /**
-   *  \brief The autoflush flag
-   *
-   * \return
-   * The flag
-   */
-#define  ATRSHMLOG_GET_AUTOFLUSH_PROCESS() atrshmlog_get_autoflush_process()
-  
-  /**
-   * \brief Set the autoflush for the thread
-   *
-   * \param __f
-   * Our new autoflush flag
-   *
-   * \return 
-   * The old flag
-   */
-#define  ATRSHMLOG_SET_AUTOFLUSH(__f) atrshmlog_set_autoflush((__f))
-
-  /**
-   *  \brief The autoflush flag
-   *
-   * \return
-   * The flag
-   */
-#define  ATRSHMLOG_GET_AUTOFLUSH() atrshmlog_get_autoflush()
 
     
   /**
@@ -2487,30 +2378,158 @@ extern "C" {
    */
 #define ATRSHMLOG_GET_SLAVE_TID(__slave)  atrshmlog_get_slave_tid((__slave))
 
-      
-  /**
-   * \brief Set the checksum flag
-   *
-   * \param __flag
-   * Our new  flag
-   *
-   * \return 
-   * The old flag
-   */
-#define  ATRSHMLOG_SET_CHECKSUM(__flag) atrshmlog_set_checksum((__flag))
-
-  /**
-   *  \brief The checksum flag
+  /** 
+   * \brief Set the slave run flag to off.
    *
    * \return
-   * The flag
+   * void
    */
-#define  ATRSHMLOG_GET_CHECKSUM()  atrshmlog_get_checksum()
+#define ATRSHMLOG_SET_F_LIST_BUFFER_SLAVE_RUN_OFF()  atrshmlog_set_f_list_buffer_slave_run_off()
 
+
+  /** 
+   * \brief Set the wait for slaves flag to on.
+   *
+   * \return
+   * The old flag.
+   */
+#define ATRSHMLOG_SET_WAIT_FOR_SLAVES_ON()   atrshmlog_set_wait_for_slaves_on()
+
+  /** 
+   * \brief Set the wait for slaves flag to off.
+   *
+   * \return
+   * The old flag.
+   */
+#define ATRSHMLOG_SET_WAIT_FOR_SLAVES_OFF()  atrshmlog_set_wait_for_slaves_off()
+
+  /** 
+   * \brief Get the wait for slaves flag.
+   *
+   * \return
+   * The flag for the wait for slaves.
+   */
+#define ATRSHMLOG_GET_WAIT_FOR_SLAVES()  atrshmlog_get_wait_for_slaves()
+
+  /** 
+   * \brief Get the nanos the slave waits after going to sleep.
+   *
+   * \return
+   * The number of nanos the slave sleeps when nothing has to be done.
+   */
+#define ATRSHMLOG_GET_F_LIST_BUFFER_SLAVE_WAIT() atrshmlog_get_f_list_buffer_slave_wait()
+
+  /** 
+   * \brief Set the nanos the slave waits in sleep.
+   *
+   * \param __nanos
+   * The number of nanos the slave has to sleep when nothing has
+   * to be done.
+   *
+   * \return
+   * The old number of nanos the slave had to wait.
+   */
+#define ATRSHMLOG_SET_F_LIST_BUFFER_SLAVE_WAIT(__nanos) atrshmlog_set_f_list_buffer_slave_wait((__nanos))
+
+
+  /************************************************************************/
+  /* shared memory area related functions */
   
-#if ATRSHMLOG_LEVEL > 0
+  /** 
+   * \brief Get the shm area start adress.
+   *
+   * \return
+   * Points to the shared memory area.
+   */
+#define ATRSHMLOG_GET_AREA()  atrshmlog_get_area()
+
+  /** 
+   * \brief Get a shm area flag ich_habe_fertig.
+   *
+   * \param __a
+   * Points to the start of the shared memory area.
+   *
+   * \return
+   * The number of the flag. 
+   */
+#define ATRSHMLOG_GET_AREA_ICH_HABE_FERTIG(__a) atrshmlog_get_area_ich_habe_fertig((__a))
+
+  /** 
+   * \brief Set the shm area flag ich_habe_fertig.
+   *
+   * \param __a
+   * Points to the start of the shared memory area.
+   *
+   * \param __f
+   * The new number for the flag.
+   *
+   * \return
+   * The old number of the flag. 
+   */
+#define ATRSHMLOG_SET_AREA_ICH_HABE_FERTIG(__a,__f) atrshmlog_set_area_ich_habe_fertig((__a),(__f))
+
+  /** 
+   * \brief Get the shm count of buffers.
+   *
+   * \param __a
+   * Points to the start of the shared memory area.
+   *
+   * \return
+   * The number of buffers in the area.
+   */
+#define ATRSHMLOG_GET_AREA_COUNT(__a) atrshmlog_get_area_count((__a))
+
+  /** 
+   * \brief Get the shm version.
+   *
+   * \param __a
+   * Points to the start of the shared memory area.
+   *
+   * \return
+   * The number of the version in the shared memory area.
+   */
+#define ATRSHMLOG_GET_AREA_VERSION(__a) atrshmlog_get_area_version((__a))
 
 
+  /** 
+   * \brief Verify the shm struct is ok.
+   *
+   * \return
+   * - zero for ok
+   * - Negative for en big error.
+   * - Positiv for minor errors.
+   */
+#define ATRSHMLOG_VERIFY() atrshmlog_verify()
+
+
+  /************************************************************************/
+  /* statistics functions */
+  
+  /**
+   * \brief We deliver the max index of the statistics buffer
+   *
+   * \return 
+   * Maximum index of the statistics buffer.
+   */
+#define ATRSHMLOG_GET_STATISTICS_MAX_INDEX() atrshmlog_get_statistics_max_index()
+
+  /**
+   * \brief We deliver copy of the statistics counter.
+   *
+   * Its up to you to have enough space for them.
+   * So use the get max index to do the right allocation.
+   *
+   * \param __o
+   * The start Adress of an int32 array for the counters.
+   *
+   * \return 
+   * void
+   */
+#define ATRSHMLOG_GET_STATISTICS(__o) atrshmlog_get_statistics((__o))
+
+  /************************************************************************/
+  /* reader transfer functions */
+  
   /**
    * \brief We read a buffer from shm.
    *
@@ -2868,18 +2887,6 @@ extern "C" {
 		 (__s18) \
     )
 
-
-  /** 
-   * \brief Verify the shm struct is ok.
-   *
-   * \return
-   * - zero for ok
-   * - Negative for en big error.
-   * - Positiv for minor errors.
-   */
-#define ATRSHMLOG_VERIFY() atrshmlog_verify()
-
-#endif
   
   /************************************************************************/
 
@@ -4093,7 +4100,6 @@ extern "C" {
    */
   extern atrshmlog_ret_t atrshmlog_get_checksum(void);
 
-#if ATRSHMLOG_LEVEL > 0
 
   /** 
    * \brief We read a buffer and write it to a local memory area .
@@ -4464,8 +4470,6 @@ extern "C" {
    */
   extern atrshmlog_ret_t atrshmlog_verify(void);
 
-#endif
-
   /**************************************************************/
   // inline code 
 
@@ -4544,7 +4548,7 @@ extern "C" {
 #endif
   // linux x86_64_gnu
   
-  #if ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC == 1 
+#if ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC == 1 
 
   /**
    * We use the modern cpu version of reading the click counter
@@ -4613,7 +4617,7 @@ extern "C" {
 #endif
   // cygwin x86_64_gnu
   
-  #if ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 1 
+#if ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 1 
 
   /**
    * We use the modern cpu version of reading the click counter
@@ -4682,7 +4686,7 @@ extern "C" {
 #endif
   // mingw x86_64_gnu
   
-  #if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1 
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1 
 
   /**
    * We use the modern cpu version of reading the click counter
@@ -4751,7 +4755,7 @@ extern "C" {
 #endif
   // bsd amd64 clang
   
-  #if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1 
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1 
 
   /**
    * We use the modern cpu version of reading the click counter

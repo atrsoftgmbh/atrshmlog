@@ -234,7 +234,7 @@
 /** 
  * \brief The min id for the get clocktime
  */
-#define ATRSHMLOG_CLOCK_ID_MIN (1)
+#define ATRSHMLOG_CLOCK_ID_MIN (0)
 
 /** 
  * \brief The max id for the get clocktime
@@ -634,12 +634,8 @@ typedef void atrshmlog_thread_ret_t;
 #endif
 
 
-#if ATRSHMLOG_LEVEL > 0
-
 /** File io needed */
 #include <stdio.h>
-
-#endif
 
 /** Time meaturement - this includes structs */
 #include <time.h>
@@ -908,18 +904,11 @@ typedef void atrshmlog_thread_ret_t;
 /** 
  * The last define is for testing : 0 off, 1 on
  */
-#if ATRSHMLOG_LEVEL == 0
-#define ATRSHMLOGDEBUG 0
-#endif
-
-#if ATRSHMLOG_LEVEL > 0
 
 /* we can set it to 1 now ... */
 # ifndef ATRSHMLOGDEBUG
 # define ATRSHMLOGDEBUG 0
 # endif
-
-#endif
 
 
 /*********************************************************************/
@@ -1835,6 +1824,16 @@ extern void * atrshmlog_attach_mapped_file(int index, int size);
 extern void atrshmlog_memset_prealloced(void);
 extern atomic_int atrshmlog_last_mem_to_shm;
 
+
+/** 
+ * \brief The memory check pattern
+ */
+#define ATRSHMLOGSAFEGUARDVALUE (0xFE01FE01L)
+
+
+/************************************************************************/
+/* helper macros*/
+
 /**
  * \brief We add to the statistics counter
  *
@@ -1857,17 +1856,6 @@ extern atomic_int atrshmlog_last_mem_to_shm;
 #define ATRSHMLOGSTATLOCAL(__tl,__e)			\
   (++(__tl->__e))
 
-
-/** 
- * \brief The memory check pattern
- */
-#define ATRSHMLOGSAFEGUARDVALUE (0xFE01FE01L)
-
-
-/************************************************************************/
-/* helper macros*/
-
-#if ATRSHMLOG_LEVEL > 0
 
 /**
  * \brief Create the shm area. 
@@ -1966,8 +1954,6 @@ extern void atrshmlog_cleanup_locks(volatile const void* i_area);
  */
 extern atrshmlog_ret_t atrshmlog_init_shm_log(volatile const void *i_area,
 					      const atrshmlog_int32_t i_count_buffers);
-
-#endif
 
 #endif
 /* end of file */

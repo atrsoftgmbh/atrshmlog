@@ -70,7 +70,6 @@ void atrshmlog_init_events(const int i_use_file)
       
   if (i_use_file)
     {
-#if ATRSHMLOG_LEVEL > 0
       
 #if ATRSHMLOG_USE_SAFER_COPY == 1
       strlcpy(buff,atrshmlog_prefix_name_buffer, 255);
@@ -123,8 +122,6 @@ void atrshmlog_init_events(const int i_use_file)
 	  fclose(f);
 	}
 
-#endif
-      
       return;
     }
 
