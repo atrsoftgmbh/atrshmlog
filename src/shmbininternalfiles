@@ -2,8 +2,6 @@ atrshmlogcreate
 atrshmlogdelete
 atrshmlogfinish
 atrshmlogreset
-atrshmlogfork
-atrshmlogforkwrite
 atrshmloginit
 atrshmlogreaderd
 atrshmlogverify

@@ -18,8 +18,6 @@ atrshmlogdefect.c
 atrshmlogdelete.c
 atrshmlogdump.c
 atrshmlogfinish.c
-atrshmlogfork.c
-atrshmlogforkwrite.c
 atrshmloginit.c
 atrshmlog_internal.c
 atrshmlogoff.c
@@ -245,6 +243,8 @@ atrshmlogcheckc_nothreads_h.c
 atrshmlogtee.c
 atrshmlogtest00.c
 atrshmlogtest01.c
+atrshmlogfork.c
+atrshmlogforkwrite.c
 atrshmlogtest02.C
 atrshmlogtest03.C
 

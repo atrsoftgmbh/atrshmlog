@@ -8,8 +8,6 @@ atrshmlogsignalwriter
 atrshmlogcreate
 atrshmlogdelete
 atrshmlogfinish
-atrshmlogfork
-atrshmlogforkwrite
 atrshmloginit
 atrshmlogreaderd
 atrshmlogreset

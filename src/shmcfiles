@@ -5,8 +5,6 @@ atrshmlogdefect.c
 atrshmlogdelete.c
 atrshmlogdump.c
 atrshmlogfinish.c
-atrshmlogfork.c
-atrshmlogforkwrite.c
 atrshmloginit.c
 atrshmlog_internal.c
 atrshmlogoff.c
