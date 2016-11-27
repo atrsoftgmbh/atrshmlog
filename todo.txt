@@ -1,12 +1,21 @@
 -----
 
-full test c, jni, perl, python, swig ...
+test jni
+
+-----
+
+test perl
+
+-----
+
+test python
+
+-----
+
+test swig
 
 ----
 
-* multiple buffer test
-
-------
 
 packdistro mit omit
 

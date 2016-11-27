@@ -16,10 +16,10 @@
  * \brief We are a test tool for fork and write in a fork clone
  */
 
-#include "atrshmlog.h"
+#include "../atrshmlog.h"
 
 
-#include "atrshmlog_internal.h"
+#include "../atrshmlog_internal.h"
 
 #if  ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 1
 
