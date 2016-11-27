@@ -35,9 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   atrshmlog_ret_t ret = atrshmlog_attach();
 
   if (ret != 0)
@@ -48,7 +50,7 @@ int main (int argc, char *argv[])
 
   ATRSHMLOG_WRITE0(0, 'P', 42, 0,0);
   
-  atrshmlog_g_tl_t* g = ATRSHMLOG_GET_THREAD_LOCALS_ADRESS();
+  const volatile atrshmlog_g_tl_t* g = ATRSHMLOG_GET_THREAD_LOCALS_ADRESS();
 
   if (g == NULL)
     {
@@ -69,10 +71,9 @@ int main (int argc, char *argv[])
   PN(tid);
   PN(getpid());
 
-  
   int retre = atrshmlog_reuse_thread_buffers(tid);
 
-  sleep(2);
+  sleep(1);
   
   PN(retre);
   
@@ -104,6 +105,8 @@ int main (int argc, char *argv[])
 	}
     }
   
+  printf("\n");
+
   return 0;
 }
 

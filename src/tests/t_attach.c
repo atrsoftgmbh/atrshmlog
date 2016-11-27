@@ -38,6 +38,9 @@ int main (int argc, char *argv[])
 
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   atrshmlog_ret_t ret = atrshmlog_attach();
 
   if (ret != 0)
@@ -158,10 +161,12 @@ int main (int argc, char *argv[])
   PN(ATRSHMLOG_THREAD_LOCAL);
   PN(ATRSHMLOG_USE_SAFER_COPY);
 
-  sleep(5);
+  sleep(1);
 
   PN(atomic_load(&atrshmlog_f_list_active_slaves));
   PP(atomic_load(&atrshmlog_tpslave));
+
+  printf("\n");
 
   return 0;
 }

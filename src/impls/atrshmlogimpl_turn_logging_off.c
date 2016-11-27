@@ -14,7 +14,9 @@
  *
  * This works for normal threads as expected. 
  * For a slave it switches the flag, and no buffers are 
- * dispateched, they are all NULL ptrs
+ * dispatched, they are all NULL ptrs
+ *
+ * test t_turn_logging_off.c
  */
  void atrshmlog_turn_logging_off(volatile const void* i_thread_locals)
  {

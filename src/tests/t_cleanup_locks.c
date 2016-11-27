@@ -35,9 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   atrshmlog_ret_t ret = atrshmlog_attach();
 
   if (ret != 0)
@@ -46,13 +48,13 @@ int main (int argc, char *argv[])
       exit(1);
     }
 
-  void* p = atrshmlog_get_area();
+  const volatile void* p = atrshmlog_get_area();
 
   if (p != NULL)
     {
       atrshmlog_cleanup_locks(p);
 
-      atrshmlog_area_t *a = p;
+      const volatile atrshmlog_area_t *a = p;
 
       PP(a);
       PN(a->shmid);
@@ -61,7 +63,8 @@ int main (int argc, char *argv[])
       PN(a->shmcount);
     }
   
-  
+  printf("\n");
+
   return 0;
 }
 

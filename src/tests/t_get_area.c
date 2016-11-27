@@ -35,9 +35,10 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
   
   // we start without slaves ...
   atrshmlog_set_f_list_buffer_slave_count(0);
@@ -54,17 +55,14 @@ int main (int argc, char *argv[])
       exit(1);
     }
 
-  
   PN(atrshmlog_f_list_buffer_slave_count);
-
-
-  sleep(5);
-
 
   PP(atrshmlog_base_ptr);
 
   PP(atrshmlog_get_area());
   
+  printf("\n");
+
   return 0;
 }
 

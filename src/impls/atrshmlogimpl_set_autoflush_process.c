@@ -20,7 +20,7 @@ atrshmlog_ret_t atrshmlog_set_autoflush_process(int i_flag)
 
   int old  = atrshmlog_autoflush;
 
-  atrshmlog_autoflush = i_flag ? 1 : 0;
+  atrshmlog_autoflush = i_flag;
 
   return old;
 }

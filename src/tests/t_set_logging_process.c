@@ -35,9 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   atrshmlog_ret_t ret = atrshmlog_attach();
 
   if (ret != 0)
@@ -55,8 +57,9 @@ int main (int argc, char *argv[])
   PN(atrshmlog_set_logging_process_on());
 
   PN(atrshmlog_logging_process);
-
   
+  printf("\n");
+
   return 0;
 }
 

@@ -20,6 +20,8 @@
  * So be sure you do this in thread end.
  *
  * And be sure not to do this before you have to. 
+ *
+ * test t_stop.c
  */
 void atrshmlog_stop(void)
 {
@@ -85,6 +87,8 @@ void atrshmlog_stop(void)
 	    }
 
 	  atrshmlog_dispatch_buffer(t);
+
+	  g->atrshmlog_targetbuffer_arr[i] = 0;
 	}
     }      
 

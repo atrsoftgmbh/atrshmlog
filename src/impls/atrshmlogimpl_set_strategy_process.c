@@ -14,6 +14,8 @@
  *
  * \param i_strategy
  * see enum atrshmlog_strategy
+ *
+ * test t_set_strategy_process.c
  */
 atrshmlog_ret_t atrshmlog_set_strategy_process(const enum atrshmlog_strategy i_strategy)
 {

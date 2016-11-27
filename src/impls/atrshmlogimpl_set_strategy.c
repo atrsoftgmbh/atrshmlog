@@ -18,6 +18,8 @@
  * \return
  * - negativ error
  * - old value
+ *
+ * test t_set_strategy.c
  */
 atrshmlog_ret_t atrshmlog_set_strategy(const enum atrshmlog_strategy i_strategy)
 {

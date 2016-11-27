@@ -35,9 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   if (argc != 3)
     exit(1);
   
@@ -52,12 +54,12 @@ int main (int argc, char *argv[])
       exit(1);
     }
 
-  
   int count = strtol(argv[1], NULL, 10);
   int size = strtol(argv[1], NULL, 10);
 
   PP(atrshmlog_il_get_raw_buffers(count,size));
 
+  printf("\n");
 
   return 0;
 }

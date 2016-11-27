@@ -35,9 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   atrshmlog_attach();
   
   PN(atrshmlog_get_thread_fence_1());
@@ -49,11 +51,9 @@ int main (int argc, char *argv[])
   PN(atrshmlog_set_thread_fence_1(0));
   
   PN(atrshmlog_get_thread_fence_1());
+  
+  printf("\n");
 
-
-  
-  
-  
   return 0;
 }
 

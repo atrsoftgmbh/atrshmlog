@@ -35,10 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
-  
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
 #if ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 1
   
   if(argc != 3)
@@ -56,6 +57,8 @@ int main (int argc, char *argv[])
 
 #endif
   
+  printf("\n");
+
   return 0;
 }
 

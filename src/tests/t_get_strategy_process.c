@@ -35,9 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   if (argc != 2)
     exit(1);
   
@@ -51,12 +53,8 @@ int main (int argc, char *argv[])
       printf("%d\n", ret);
       exit(1);
     }
-
   
   PN(atrshmlog_f_list_buffer_slave_count);
-
-
-  sleep(5);
 
   PN(atrshmlog_buffer_strategy);
 
@@ -68,6 +66,8 @@ int main (int argc, char *argv[])
 
   PN(atrshmlog_get_strategy_process());
   
+  printf("\n");
+
   return 0;
 }
 

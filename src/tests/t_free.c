@@ -35,9 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   // we start without slaves ...
   atrshmlog_set_f_list_buffer_slave_count(0);
   
@@ -49,18 +51,13 @@ int main (int argc, char *argv[])
       exit(1);
     }
 
-  
   PN(atrshmlog_f_list_buffer_slave_count);
-
-
-  sleep(5);
-
 
   int r = ATRSHMLOG_WRITE0(1, 'P', 42, 0, 0);
 
   PN(r);
   
-  atrshmlog_g_tl_t* g = ATRSHMLOG_GET_THREAD_LOCALS_ADRESS();
+  const volatile atrshmlog_g_tl_t* g = ATRSHMLOG_GET_THREAD_LOCALS_ADRESS();
 
   if (g == NULL)
     {
@@ -86,7 +83,6 @@ int main (int argc, char *argv[])
   
   PN(atomic_load(&atrshmlog_counter[atrshmlog_counter_free]));
 
-
   atrshmlog_tbuff_t* t = atomic_load(&atrshmlog_tpa);
 
   PP(t);
@@ -96,6 +92,8 @@ int main (int argc, char *argv[])
   PN(t->size);
   PN(t->chksum);
   PP(t->next_append);
+
+  printf("\n");
 
   return 0;
 }

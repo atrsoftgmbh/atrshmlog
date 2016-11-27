@@ -10,11 +10,13 @@
 /** 
  * \n Main code:
  *
- * \brief We switch the thread off and dispatch its buffers
+ * \brief We switch the thread off 
  *
- * This works for normal threads as expected. 
- * For a slave it switches the flag, and no buffers are 
- * dispateched, they are all NULL ptrs
+ * We set the stop flag and the thread runs next time into this.
+ *
+ * So we not have to do anything else, the thread itself makes the cleanup.
+ *
+ * test t_turn_slave_off.c
  */
  void atrshmlog_turn_slave_off(volatile const void* i_slave)
  {
@@ -26,5 +28,7 @@
    atrshmlog_g_tl_t* g  =  i->g;
 
    g->atrshmlog_idnotok = 1;
+
+   
  }
 

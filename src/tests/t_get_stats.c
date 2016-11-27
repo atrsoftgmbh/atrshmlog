@@ -35,9 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   // we start without slaves ...
   atrshmlog_set_f_list_buffer_slave_count(0);
   
@@ -49,7 +51,6 @@ int main (int argc, char *argv[])
       exit(1);
     }
 
-  
   atrshmlog_int32_t a[200];
 
   atrshmlog_get_statistics(a);
@@ -61,6 +62,8 @@ int main (int argc, char *argv[])
       if (a[i] != cv)
 	printf ("%d : %d : %d : \n", i, a[i], cv);
     }
+
+  printf("\n");
 
   return 0;
 }

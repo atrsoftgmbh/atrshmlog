@@ -11,6 +11,8 @@
  * \n Main code:
  *
  * \brief Set the wait for slaves flag to off
+ *
+ * test t_set_wait_for_slaves.c
  */
 atrshmlog_ret_t atrshmlog_set_wait_for_slaves_off(void)
 {

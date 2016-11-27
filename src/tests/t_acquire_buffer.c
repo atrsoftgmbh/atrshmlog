@@ -38,8 +38,10 @@
  */
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
+  
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
   
   atrshmlog_g_tl_t * g =  (atrshmlog_g_tl_t *)atrshmlog_get_thread_locals_adress();
 
@@ -59,6 +61,8 @@ int main (int argc, char *argv[])
 
       printf("%p %ld %ld\n", t, (long)t->id, (long)t->acquiretime);
     }
+
+  printf("\n");
 
   return 0;
 }

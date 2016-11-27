@@ -1816,7 +1816,7 @@ extern atrshmlog_tbuff_t *atrshmlog_acquire_buffer(const atrshmlog_g_tl_t* restr
 extern int atrshmlog_init_thread_local (atrshmlog_g_tl_t* restrict i_g);
 extern void atrshmlog_init_events(const int i_use_file);
 extern int atrshmlog_transfer_mem_to_shm(const atrshmlog_tbuff_t* restrict i_mem,
-					 const atrshmlog_g_tl_t* restrict i_g)  ;
+					 volatile const atrshmlog_g_tl_t* restrict i_g)  ;
 extern void atrshmlog_init_via_file(const char *i_suffix,
 				    int *v,
 				    int i_min,

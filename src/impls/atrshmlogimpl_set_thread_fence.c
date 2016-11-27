@@ -7,6 +7,8 @@
  */
 /**
  * Helper: set a fence flag on or off 
+ *
+ * test t_set_fence_1.c
  */
 atrshmlog_ret_t atrshmlog_set_thread_fence(int *v,
 					   const atrshmlog_int32_t i_switch)

@@ -35,10 +35,12 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
-  if (argc != 2)
+    for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
+if (argc != 2)
     exit(1);
   
   int use_file = strtol(argv[1], NULL, 10) ? 1 : 0;
@@ -49,6 +51,9 @@ int main (int argc, char *argv[])
     {
       printf("%5d %d\n", i , atrshmlog_event_locks[i]);
     }
+
+  printf("\n");
+
   return 0;
 }
 

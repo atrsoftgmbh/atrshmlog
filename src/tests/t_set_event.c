@@ -35,9 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   atrshmlog_attach();
   
   PN(atrshmlog_get_event(42));
@@ -50,8 +52,8 @@ int main (int argc, char *argv[])
   
   PN(atrshmlog_get_event(42));
   
-  
-  
+  printf("\n");
+
   return 0;
 }
 

@@ -35,9 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   atrshmlog_ret_t ret = atrshmlog_attach();
 
   if (ret != 0)
@@ -51,19 +53,19 @@ int main (int argc, char *argv[])
 
   int target = strtol(argv[1], NULL, 10);
   
-  sleep(5);
+  sleep(1);
 
   PN(atomic_load(&atrshmlog_f_list_active_slaves));
 
   int i = 0;
   
-  void* s = atrshmlog_get_next_slave_local(NULL);
+  const volatile void* s = atrshmlog_get_next_slave_local(NULL);
 
-  void* t = 0;
+  const volatile void* t = 0;
   
   while (s )
     {
-      atrshmlog_slave_t* slave = s;
+      const volatile atrshmlog_slave_t* slave = s;
 
       printf("%d : self %p tid %ld  next %p local %p\n", i, slave, (long)slave->tid, slave->next, slave->g);
 
@@ -87,13 +89,11 @@ int main (int argc, char *argv[])
 	{
 	   int i = 0;
   
-	   void* s = atrshmlog_get_next_slave_local(NULL);
+	   const volatile void* s = atrshmlog_get_next_slave_local(NULL);
 
-	   void* t = 0;
-  
 	   while (s )
 	     {
-	       atrshmlog_slave_t* slave = s;
+	       const volatile atrshmlog_slave_t* slave = s;
 
 	       printf("%d : self %p tid %ld  next %p local %p\n", i, slave, (long)slave->tid, slave->next, slave->g);
 
@@ -103,10 +103,11 @@ int main (int argc, char *argv[])
       
 	       i++;
 	     }
-
 	}
     }
   
+  printf("\n");
+
   return 0;
 }
 

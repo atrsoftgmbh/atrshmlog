@@ -21,6 +21,8 @@
  * Sorry, but this is how c works.
  * If you need fancy info with null you have to put it in the 
  * first payload buffer.
+ *
+ * test t_write2.c
  */
 atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 				 const atrshmlog_int32_t i_eventflag,
@@ -447,14 +449,21 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 
       tbuff->counter_write2_adaptive_very_fast = g->counter_write2_adaptive_very_fast;
 
-      atrshmlog_dispatch_buffer(tbuff);
 
-      // Switch the targetbuffer and try again
-      g->atrshmlog_targetbuffer_index++;
+      if (g->autoflush == 1)
+	{
+	  atrshmlog_dispatch_buffer(tbuff);
 
-      if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
-	g->atrshmlog_targetbuffer_index = 0;
+	  // Switch the targetbuffer and try again
+	  g->atrshmlog_targetbuffer_index++;
 
+	  if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
+	    g->atrshmlog_targetbuffer_index = 0;
+	}
+      else if (g->autoflush == 2)
+	{
+	  int rettm = atrshmlog_transfer_mem_to_shm(tbuff, g);
+	}
     }
   
   return atrshmlog_error_ok;

@@ -91,3 +91,17 @@ t_set_fence_12.c
 t_set_fence_13.c
 t_set_area_ihf.c
 t_set_logging_process.c
+t_set_prealloc_count.c
+t_set_slave_wait_nanos.c
+t_set_strategy.c
+t_set_strategy_process.c
+t_set_wait_for_slaves.c
+t_set_f_list_buffer_slave_run_off.c
+t_sleep_nanos.c
+t_stop.c
+t_transfer_mem_to_shm.c
+t_turn_logging_off.c
+t_turn_slave_off.c
+t_write0.c
+t_write1.c
+t_write2.c

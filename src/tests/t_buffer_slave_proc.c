@@ -35,9 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   atrshmlog_ret_t ret = atrshmlog_attach();
 
   if (ret != 0)
@@ -48,23 +50,20 @@ int main (int argc, char *argv[])
 
   PN(atrshmlog_f_list_buffer_slave_count);
 
-
-  sleep(5);
+  sleep(1);
 
   PN(atomic_load(&atrshmlog_f_list_active_slaves));
   PP(atomic_load(&atrshmlog_tpslave));
 
   system ("pstree");
   
-  sleep(5);
-
   int i = 0;
   
-  void* s = atrshmlog_get_next_slave_local(NULL);
+  const volatile void* s = atrshmlog_get_next_slave_local(NULL);
 
   while (s )
     {
-      atrshmlog_slave_t* slave = s;
+      const volatile atrshmlog_slave_t* slave = s;
 
       printf("%d : self %p tid %ld  next %p local %p\n", i, slave, (long)slave->tid, slave->next, slave->g);
 
@@ -73,6 +72,8 @@ int main (int argc, char *argv[])
       s = atrshmlog_get_next_slave_local(s);
     }
   
+  printf("\n");
+
   return 0;
 }
 

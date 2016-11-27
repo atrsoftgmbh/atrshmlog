@@ -35,9 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   // we start without slaves ...
   atrshmlog_set_f_list_buffer_slave_count(0);
   
@@ -54,7 +56,7 @@ int main (int argc, char *argv[])
 
   int count = strtol(argv[1], NULL, 10);
 
-  atrshmlog_area_t *a =  atrshmlog_get_area();
+  const volatile atrshmlog_area_t *a =  atrshmlog_get_area();
 
   if (a == 0)
     exit(2);
@@ -168,10 +170,10 @@ int main (int argc, char *argv[])
     PN(counter_write2_adaptive);
     PN(counter_write2_adaptive_fast);
     PN(counter_write2_adaptive_very_fast);
-
-
   }
   
+  printf("\n");
+
   return 0;
 }
 

@@ -196,13 +196,10 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
 	  if (atrshmlog_thread_fence_6)
 	    atomic_thread_fence (memory_order_acquire);
 	      
-	  size_t aksize = tbuff->size;
-
-	  if (aksize > 0)
-	    atrshmlog_transfer_mem_to_shm(tbuff, g);
+	  int mret = atrshmlog_transfer_mem_to_shm(tbuff, g);
 
 	  tbuff->size = 0;
-
+	  
 	  if (atrshmlog_thread_fence_7)
 	     atomic_thread_fence (memory_order_release);
 

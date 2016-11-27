@@ -19,6 +19,8 @@
  * programs.
  *
  * A basic version is already in the atrshmlogverify.c
+ *
+ * test NA
  */
 atrshmlog_ret_t atrshmlog_verify(void)
 {

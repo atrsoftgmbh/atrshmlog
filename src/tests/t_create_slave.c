@@ -35,10 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
-  
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   if(argc != 3)
     exit(1);
   
@@ -52,7 +53,6 @@ int main (int argc, char *argv[])
       exit(1);
     }
 
-  
   for (int index = 0; index < limit; index++)
     {
       int sret =  atrshmlog_create_slave();
@@ -60,11 +60,13 @@ int main (int argc, char *argv[])
       printf("%d :%d \n", index, sret);
     }
 
-  sleep(5);
+  sleep(1);
 
   system("pstree");
   system(argv[2]); // ps -elf H on my box ...
   
+  printf("\n");
+
   return 0;
 }
 

@@ -35,9 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   // we start without slaves ...
   atrshmlog_set_f_list_buffer_slave_count(0);
   
@@ -49,7 +51,7 @@ int main (int argc, char *argv[])
       exit(1);
     }
 
-  atrshmlog_area_t *a =  atrshmlog_get_area();
+  const volatile atrshmlog_area_t *a =  atrshmlog_get_area();
 
   if (a == 0)
     exit(2);
@@ -129,46 +131,50 @@ int main (int argc, char *argv[])
 			 &counter_write2_adaptive_very_fast);
   
     PN(ret);
-    PN(count);			  
-    PN(length);			  
-    PN(pid);	    
-    PN(tid);
-    PN(inittime.tv_sec);
-    PN(inittime.tv_nsec);
-    PN(inittimetsc_before);
-    PN(inittimetsc_after);
-    PN(lasttime.tv_sec);
-    PN(lasttime.tv_nsec);
-    
-    PN(lasttimetsc_before);
-    PN(lasttimetsc_after);
-    PN(difftimetransfer);
-    PN(starttransfer);
-    PN(acquiretime);
-    PN(id);
-    PN(number_dispatched);
-    PN(counter_write0);
-    PN(counter_write0_discard);
-    PN(counter_write0_wait);
-    PN(counter_write0_adaptive);
-    PN(counter_write0_adaptive_fast);
-    PN(counter_write0_adaptive_very_fast);
-    PN(counter_write1);
-    PN(counter_write1_discard);
-    PN(counter_write1_wait);
-    PN(counter_write1_adaptive);
-    PN(counter_write1_adaptive_fast);
-    PN(counter_write1_adaptive_very_fast);
-    PN(counter_write2);
-    PN(counter_write2_discard);
-    PN(counter_write2_wait);
-    PN(counter_write2_adaptive);
-    PN(counter_write2_adaptive_fast);
-    PN(counter_write2_adaptive_very_fast);
 
-
+    if (ret == 0 && length > 0)
+      {
+	PN(count);			  
+	PN(length);			  
+	PN(pid);	    
+	PN(tid);
+	PN(inittime.tv_sec);
+	PN(inittime.tv_nsec);
+	PN(inittimetsc_before);
+	PN(inittimetsc_after);
+	PN(lasttime.tv_sec);
+	PN(lasttime.tv_nsec);
+	
+	PN(lasttimetsc_before);
+	PN(lasttimetsc_after);
+	PN(difftimetransfer);
+	PN(starttransfer);
+	PN(acquiretime);
+	PN(id);
+	PN(number_dispatched);
+	PN(counter_write0);
+	PN(counter_write0_discard);
+	PN(counter_write0_wait);
+	PN(counter_write0_adaptive);
+	PN(counter_write0_adaptive_fast);
+	PN(counter_write0_adaptive_very_fast);
+	PN(counter_write1);
+	PN(counter_write1_discard);
+	PN(counter_write1_wait);
+	PN(counter_write1_adaptive);
+	PN(counter_write1_adaptive_fast);
+	PN(counter_write1_adaptive_very_fast);
+	PN(counter_write2);
+	PN(counter_write2_discard);
+	PN(counter_write2_wait);
+	PN(counter_write2_adaptive);
+	PN(counter_write2_adaptive_fast);
+	PN(counter_write2_adaptive_very_fast);
+      }
   }
   
+  printf("\n");
+
   return 0;
 }
 

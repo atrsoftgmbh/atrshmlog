@@ -35,9 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   if (argc != 2)
     exit(1);
   
@@ -52,7 +54,6 @@ int main (int argc, char *argv[])
       exit(1);
     }
 
-  
   PN(atrshmlog_event_locks_max);
 
   PN(atrshmlog_get_event_locks_max());
@@ -63,6 +64,8 @@ int main (int argc, char *argv[])
 
   PN(atrshmlog_get_event_locks_max());
   
+  printf("\n");
+
   return 0;
 }
 

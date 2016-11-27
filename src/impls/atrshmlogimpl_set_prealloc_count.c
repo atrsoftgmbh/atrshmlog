@@ -17,6 +17,8 @@
  * Its better to recomile and use static allocaed buffers.
  * And dont try to handle a leak of buffers because a thread does not
  * stop the logging by raising the count.
+ *
+ * test t_set_prealloc_count.c
  */
 atrshmlog_ret_t atrshmlog_set_prealloc_buffer_count(atrshmlog_int32_t i_count)
 {

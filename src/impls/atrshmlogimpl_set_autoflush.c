@@ -35,7 +35,7 @@ atrshmlog_ret_t atrshmlog_set_autoflush(int i_flag)
   int old = g->autoflush;
 
 
-  g->autoflush = i_flag ? 1 : 0;
+  g->autoflush = i_flag;
 
   return old;
 }

@@ -35,11 +35,15 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   PN(atrshmlog_get_realtime().tv_sec);
   PN(atrshmlog_get_realtime().tv_nsec);
+
+  printf("\n");
 
   return 0;
 }

@@ -35,9 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   PS(atrshmlog_prefix_name_buffer);
   
   atrshmlog_set_env_prefix ("OTTO");
@@ -48,8 +50,8 @@ int main (int argc, char *argv[])
 
   PS(atrshmlog_prefix_name_buffer);
   
-  
-  
+  printf("\n");
+
   return 0;
 }
 

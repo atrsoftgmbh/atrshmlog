@@ -44,6 +44,7 @@
  * make their part so BAD that they insist that you make some 
  * kind of a hybrid of a swiss army nife and a toolbox...
  *
+ * test t_write0.c
  */
 atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 				 const atrshmlog_int32_t i_eventflag,
@@ -407,14 +408,20 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 
       tbuff->counter_write2_adaptive_very_fast = g->counter_write2_adaptive_very_fast;
 
-      atrshmlog_dispatch_buffer(tbuff);
+      if (g->autoflush == 1)
+	{
+	  atrshmlog_dispatch_buffer(tbuff);
 
-      // Switch the targetbuffer and try again
-      g->atrshmlog_targetbuffer_index++;
+	  // Switch the targetbuffer and try again
+	  g->atrshmlog_targetbuffer_index++;
 
-      if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
-	g->atrshmlog_targetbuffer_index = 0;
-
+	  if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
+	    g->atrshmlog_targetbuffer_index = 0;
+	}
+      else if (g->autoflush == 2)
+	{
+	  int rettm = atrshmlog_transfer_mem_to_shm(tbuff, g);
+	}
     }
   
   return atrshmlog_error_ok;

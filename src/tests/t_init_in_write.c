@@ -35,9 +35,11 @@
 
 int main (int argc, char *argv[])
 {
-
   printf("%s\n", argv[0]);
 
+  for (int __i = 1; __i < argc; __i++)
+    printf("arg %d : %s : \n", __i, argv[__i]);
+  
   // we start without slaves ...
   atrshmlog_set_f_list_buffer_slave_count(0);
   
@@ -49,14 +51,12 @@ int main (int argc, char *argv[])
       exit(1);
     }
 
-  
-  atrshmlog_g_tl_t *g = atrshmlog_get_thread_locals_adress();
+  const volatile atrshmlog_g_tl_t *g = atrshmlog_get_thread_locals_adress();
 
   if (!g)
     exit(2);
   
-  
-  int rettl = atrshmlog_init_in_write(g);
+  int rettl = atrshmlog_init_in_write((atrshmlog_g_tl_t *)g);
 
   if (rettl != 0)
     exit(3);
@@ -73,6 +73,8 @@ int main (int argc, char *argv[])
       PP(g->atrshmlog_targetbuffer_arr[i]);
     }
   
+  printf("\n");
+
   return 0;
 }
 
