@@ -15,16 +15,6 @@
 /** \file atrshmlog.c 
  * \brief The implementation of the module
  *
- * We implement The module in one file.
- * This makes thigs simple for source code inclusions and 
- * leaves all open for the user.
- * In a later version we might create multiple files and 
- * add a lib and a shared lib module too.
- *
- * This code needs at least a C11 compiler.
- * With atomics.
- * For posix systems with pthreds.
- * Rest is open as an exercise to the user.
  */
 
 /* our includes are here */
