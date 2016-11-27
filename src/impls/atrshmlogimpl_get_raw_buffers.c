@@ -25,6 +25,8 @@
  *
  * \return
  * The pointer for the first buffer
+ *
+ * test t_get_raw.c
  */
 atrshmlog_tbuff_t* atrshmlog_il_get_raw_buffers(const int i_buffer_count,
 					     const int i_buffer_size)

@@ -13,6 +13,7 @@
  *
  * \brief we get the init in advance flag
  *
+ * test t_get_init_buffers_in_advance.c
  */
 atrshmlog_ret_t atrshmlog_get_init_buffers_in_advance(void)
 {

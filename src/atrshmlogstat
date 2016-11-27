@@ -100,8 +100,11 @@ if ($#ARGV < 0) {
  81 => [ 'atrshmlog_counter_logging_process_off_final ' , ' The number of calls to atrshmlog_set_logging_process_off_final() ' ] ,
  82 => [ 'atrshmlog_counter_turn_logging_off          ' , ' The number of calls to  atrshmlog_turn_logging_off() ' ] ,
  83 => [ 'atrshmlog_counter_init_in_advance_on        ' , ' The number of calls to  atrshmlog_init_buffers_in_advance_on() ' ] ,
- 84 => [ 'atrshmlog_counter_init_in_advance_off       ' , ' The number of calls to  atrshmlog_init_buffers_in_advance_off() ' ] 
-
+ 84 => [ 'atrshmlog_counter_init_in_advance_off       ' , ' The number of calls to  atrshmlog_init_buffers_in_advance_off() ' ] , 
+ 85 => [ 'atrshmlog_counter_reuse_thread_buffers      ' , ' The number of calls to  atrshmlog_reuse_thread_buffers() ' ] ,
+ 86 => [ 'atrshmlog_counter_set_autoflush             ' , ' The number of calls to  atrshmlog_set_autoflush() '] ,
+ 87 => [ 'atrshmlog_counter_fence_alarm_1             ' , ' The number checksum errors in the transfer mem to shm  '] ,
+ 88 => [ 'atrshmlog_counter_fence_alarm_2             ' , ' The number checksum errors in the transfer shm to mem  ']
     );
 
 $infile = shift @ARGV;

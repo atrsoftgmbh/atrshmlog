@@ -14,6 +14,8 @@
  * This is done by  loop because at least on my box
  * I found that longer intervals did not work as expected.
  * So we use a loop for wait of 100000 nanos and then the rest..
+ *
+ * test t_sleep_nanos.c
  */
 void atrshmlog_sleep_nanos(atrshmlog_int32_t i_nanos)
 {

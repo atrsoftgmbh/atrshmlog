@@ -17,7 +17,7 @@ fi
 case $PYTHON_PLATFORM in
     linux)
 	# linux x86_64 gnu
-	CC="gcc -std=gnu11 -DNDEBUG -Wall"
+	CC="gcc -std=gnu11 -DNDEBUG -Wall  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR $ATRSHMLOG_PLATFORM_DEFINE "
 	PICFLAG=-fPIC
 	OPTMODE=-O3
 	SHAREMODE=-shared
@@ -25,7 +25,7 @@ case $PYTHON_PLATFORM in
 
     cygwin)
 	# cygwin x86_64 gnu
-	CC="gcc -std=gnu11 -DNDEBUG -Wall"
+	CC="gcc -std=gnu11 -DNDEBUG -Wall  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR $ATRSHMLOG_PLATFORM_DEFINE "
 	PICFLAG=
 	OPTMODE=-O3
 	SHAREMODE=-shared
@@ -33,7 +33,7 @@ case $PYTHON_PLATFORM in
 
     mingw)
 	# mingw x86_64 gnu via cygwin
-	CC="x86_64-w64-mingw32-gcc -std=gnu11 -DNDEBUG -Wall"
+	CC="x86_64-w64-mingw32-gcc -std=gnu11 -DNDEBUG -Wall  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR $ATRSHMLOG_PLATFORM_DEFINE "
 	PICFLAG=
 	OPTMODE=-O3
 	SHAREMODE=-shared

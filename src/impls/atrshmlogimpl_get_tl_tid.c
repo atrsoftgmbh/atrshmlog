@@ -12,6 +12,7 @@
  *
  * \brief We get the tid of a thread local
  *
+ * test t_get_tid.c
  */
 atrshmlog_tid_t atrshmlog_get_thread_local_tid (volatile const void *i_local)
 {

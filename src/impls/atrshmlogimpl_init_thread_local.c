@@ -18,6 +18,8 @@
  * \return 
  * - 0 : ok
  * - non zero : error
+ *
+ * test t_get_tid.c
  */
 int atrshmlog_init_thread_local (atrshmlog_g_tl_t* restrict i_g)
 {
@@ -27,9 +29,6 @@ int atrshmlog_init_thread_local (atrshmlog_g_tl_t* restrict i_g)
 
       if (atrshmlog_thread_fence_9)
 	atomic_thread_fence(memory_order_acquire); 
-
-      // we are normally not linked
-      i_g->next = 0;
 
       // we clear the pointers
       for (int i = 0; i < ATRSHMLOGTARGETBUFFERMAX; i++)
@@ -55,6 +54,8 @@ int atrshmlog_init_thread_local (atrshmlog_g_tl_t* restrict i_g)
 
 	  i_g->strategy = atrshmlog_buffer_strategy; 
 
+	  i_g->autoflush = atrshmlog_autoflush;
+	  
 	  i_g->number_dispatched = 0;
 
 	  i_g->counter_write0 = 0;

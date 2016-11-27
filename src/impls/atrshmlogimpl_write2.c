@@ -21,6 +21,8 @@
  * Sorry, but this is how c works.
  * If you need fancy info with null you have to put it in the 
  * first payload buffer.
+ *
+ * test t_write2.c
  */
 atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 				 const atrshmlog_int32_t i_eventflag,
@@ -387,6 +389,83 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 
   tbuff->size = akindex;
 
+  if (g->autoflush)
+    {
+      // Checkings: valid buffer 
+      if (tbuff->safeguardfront != ATRSHMLOGSAFEGUARDVALUE) {
+	ATRSHMLOGSTAT(atrshmlog_counter_write_safeguard);
+	
+	return atrshmlog_error_write0_7;
+      }
+      
+      atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
+
+      /* Bad thing. safeguard invalid */
+      if (a_shm->shmsafeguard != ATRSHMLOGSAFEGUARDVALUE) {
+	ATRSHMLOGSTAT(atrshmlog_counter_write_safeguard_shm);
+
+	return atrshmlog_error_write0_8;
+      }
+  
+      /* Can be happen : end of logging anounced by user via flag in shm */
+      if (atomic_load_explicit(&a_shm->ich_habe_fertig, memory_order_acquire) != 0) 
+	return atrshmlog_error_write0_9;
+
+      tbuff->number_dispatched = g->number_dispatched++;
+
+      tbuff->counter_write0 = g->counter_write0;
+
+      tbuff->counter_write0_discard = g->counter_write0_discard;
+
+      tbuff->counter_write0_wait = g->counter_write0_wait;
+
+      tbuff->counter_write0_adaptive = g->counter_write0_adaptive;
+
+      tbuff->counter_write0_adaptive_fast = g->counter_write0_adaptive_fast;
+
+      tbuff->counter_write0_adaptive_very_fast = g->counter_write0_adaptive_very_fast;
+
+      tbuff->counter_write1 = g->counter_write1;
+
+      tbuff->counter_write1_discard = g->counter_write1_discard;
+
+      tbuff->counter_write1_wait = g->counter_write1_wait;
+
+      tbuff->counter_write1_adaptive = g->counter_write1_adaptive;
+
+      tbuff->counter_write1_adaptive_fast = g->counter_write1_adaptive_fast;
+
+      tbuff->counter_write1_adaptive_very_fast = g->counter_write1_adaptive_very_fast;
+
+      tbuff->counter_write2 = g->counter_write2;
+
+      tbuff->counter_write2_discard = g->counter_write2_discard;
+
+      tbuff->counter_write2_wait = g->counter_write2_wait;
+
+      tbuff->counter_write2_adaptive = g->counter_write2_adaptive;
+
+      tbuff->counter_write2_adaptive_fast = g->counter_write2_adaptive_fast;
+
+      tbuff->counter_write2_adaptive_very_fast = g->counter_write2_adaptive_very_fast;
+
+
+      if (g->autoflush == 1)
+	{
+	  atrshmlog_dispatch_buffer(tbuff);
+
+	  // Switch the targetbuffer and try again
+	  g->atrshmlog_targetbuffer_index++;
+
+	  if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
+	    g->atrshmlog_targetbuffer_index = 0;
+	}
+      else if (g->autoflush == 2)
+	{
+	  int rettm = atrshmlog_transfer_mem_to_shm(tbuff, g);
+	}
+    }
+  
   return atrshmlog_error_ok;
   
   /************************/  

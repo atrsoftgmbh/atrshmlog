@@ -29,6 +29,8 @@
  *
  * So be sure to finish only if you have no problems with the 
  * slaves.
+ *
+ * test t_exit_cleanup.c
  */
 void atrshmlog_exit_cleanup (void)
 {
@@ -111,20 +113,19 @@ void atrshmlog_exit_cleanup (void)
       // evtl check for still running threads ...
       // and then after seeing them go down do the thing here
       
-      size_t  aksize = tp->size;
-      
       // We skip broken buffers
       if (tp->safeguardfront != ATRSHMLOGSAFEGUARDVALUE)
 	goto cleanit;
 
-      int dodispatch = (tp->pid == mypid)
-	&& (aksize > 0);
+      int dodispatch = (tp->pid == mypid);
 
+      int mret ;
+      
       if (dodispatch)
-	atrshmlog_transfer_mem_to_shm(tp, g);
+        mret = atrshmlog_transfer_mem_to_shm(tp, g);
 
-      tp->size =  0;
-
+      tp->size = 0;
+      
     cleanit:
       ;
 

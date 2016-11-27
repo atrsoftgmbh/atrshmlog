@@ -16,6 +16,7 @@
  *
  * Normally one buffer should be empty any way...
  *
+ * test t_flush.c
  */
 void atrshmlog_flush(void)
 {
@@ -35,7 +36,7 @@ void atrshmlog_flush(void)
     {
       atrshmlog_tbuff_t* t = g->atrshmlog_targetbuffer_arr[i];
 
-      if(t)
+      if(t && t->size > 0)
 	{
 	  t->number_dispatched = g->number_dispatched++;  // we have a new highest here
  	  

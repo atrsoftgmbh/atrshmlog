@@ -11,6 +11,8 @@
  * \n Main code:
  *
  * \brief Get the shm log buffer count.
+ *
+ * test t_get_area_count.c
  */
 atrshmlog_ret_t atrshmlog_get_area_count(volatile const void* i_area)
 {

@@ -15,6 +15,8 @@
  * \return
  * - negativ for error
  * - The value 
+ *
+ * test t_get_strategy.c
  */
 atrshmlog_ret_t atrshmlog_get_strategy()
 {

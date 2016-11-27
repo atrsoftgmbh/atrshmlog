@@ -40,22 +40,32 @@ volatile atrshmlog_tid_t atrshmlog_f_list_buffer_slave;
  * of threads for the slaves too.
  *
  * So you call this one and a new slave is created.
+ *
+ * test t_create_slave.c
  */
 int atrshmlog_create_slave(void)
 {
   ATRSHMLOGSTAT(atrshmlog_counter_create_slave);
 
+  atrshmlog_slave_t* i = (atrshmlog_slave_t*) calloc(1, sizeof(atrshmlog_slave_t));
+
+  if (i == NULL)
+    return -1;
+  
 #if  ATRSHMLOG_USE_PTHREAD  == 1
   pthread_t p;
   
   int ret = pthread_create(&p,
 		 NULL,
 		 atrshmlog_f_list_buffer_slave_proc,
-		 NULL);
+		 i);
 
   atrshmlog_f_list_buffer_slave = 0;
   
   memcpy((void*)&atrshmlog_f_list_buffer_slave, &p, sizeof(atrshmlog_tid_t) < sizeof(p) ? sizeof(atrshmlog_tid_t) : sizeof(p));
+
+  if (ret != 0)
+    free(i);
   
 #endif
 
@@ -64,12 +74,15 @@ int atrshmlog_create_slave(void)
   
   int ret = thrd_create( &p,
 			 atrshmlog_f_list_buffer_slave_proc,
-			 NULL);
+			 i);
 
   atrshmlog_f_list_buffer_slave = 0;
 
   memcpy((void*)&atrshmlog_f_list_buffer_slave, &p, sizeof(atrshmlog_tid_t) < sizeof(p) ? sizeof(atrshmlog_tid_t) : sizeof(p));
 
+  if (ret != thrd_success)
+    free(i);
+  
 #endif
 
 #if ATRSHMLOG_USE_WINTHREAD == 1
@@ -78,7 +91,7 @@ int atrshmlog_create_slave(void)
   uintptr_t rethandle = _beginthread (
 				      atrshmlog_f_list_buffer_slave_proc,
 				      0, // stacksize by system
-				      NULL // no arguments
+				      i // arguments
 				      );
 
   atrshmlog_f_list_buffer_slave = 0;
@@ -86,11 +99,13 @@ int atrshmlog_create_slave(void)
   if (rethandle == 0)
     {
       ret = -1;
+      free(i);
     }
 
   if (rethandle == -1L)
     {
       ret = -1;
+      free(i);
     }
 
 #endif

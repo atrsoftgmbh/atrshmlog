@@ -34,42 +34,59 @@
  * Adress of the thread local struct.
  *
  * \return 
- * - 0: ok
- * - non zero : error
+ * >= 1000: ok, index of buffer is value - 1000
+ * - negative ... 999 : error
+ *
+ * test t_transfer_mem_to_shm.c
  */
 int atrshmlog_transfer_mem_to_shm(const atrshmlog_tbuff_t* restrict i_mem,
-					 const atrshmlog_g_tl_t* restrict i_g)
+					 volatile const atrshmlog_g_tl_t* restrict i_g)
 {
+  int result = 0;
+  
   atrshmlog_time_t start;
 
   ATRSHMLOGSTAT(atrshmlog_counter_mem_to_shm);
 
   if (atrshmlog_base_ptr == 0)
-    return atrshmlog_error_mem_to_shm_1;
+    {
+      result =  atrshmlog_error_mem_to_shm_1;
+      goto ende;
+    }
 
   if (i_mem == NULL)
-    return atrshmlog_error_mem_to_shm_2;
+    {
+      result =  atrshmlog_error_mem_to_shm_2;
+      goto ende;
+    }
 
   if (i_mem->size == 0)
-    return atrshmlog_error_mem_to_shm_3;
+    {
+      result =  atrshmlog_error_mem_to_shm_3;
+      goto ende;
+    }
 
   if (i_mem->maxsize < i_mem->size)
-    return atrshmlog_error_mem_to_shm_4;
+    {
+      result =  atrshmlog_error_mem_to_shm_4;
+      goto ende;
+    }
 
   if (atrshmlog_logging_process_off_final != 0)
-    return atrshmlog_error_mem_to_shm_8;
+    {
+      result =  atrshmlog_error_mem_to_shm_8;
+      goto ende;
+    }
   
-#if ATRSHMLOGDEBUG == 1
-  printf("mem to %ld %ld %ld\n", (long)i_mem->id, (long)i_size, (long)i_g->atrshmlog_idnotok);
-#endif
   
   /* Those normally never change */
 
   /* Bad thing. Wrong id */
   if (i_g->atrshmlog_idnotok)
     {
-	return atrshmlog_error_mem_to_shm_5;
-    } 
+      result =  atrshmlog_error_mem_to_shm_5;
+      goto ende;
+    }
 
   /* Next. we check for initialized */
   atrshmlog_area_t * a = ATRSHMLOG_GETAREA;
@@ -77,19 +94,33 @@ int atrshmlog_transfer_mem_to_shm(const atrshmlog_tbuff_t* restrict i_mem,
   /* Those can change from run to run */
   /* Bad thing. Safeguard invalid */
   if (a->shmsafeguard != ATRSHMLOGSAFEGUARDVALUE)
-    return atrshmlog_error_mem_to_shm_6;
+    {
+      result =  atrshmlog_error_mem_to_shm_6;
+      goto ende;
+    }
 
   start = ATRSHMLOG_GET_TSC_CALL();
 
   ATRSHMLOGSTAT(atrshmlog_counter_mem_to_shm_doit);
   
-  int chksum = 0;
-
-#if ATRSHMLOGDEBUG == 1
-  for (int k = 0; k < i_size; k++)
+  // we calc the checksum trivial. but this is ok for our needs
+  if (atrshmlog_checksum)
     {
-      chksum += i_mem->b[k];
+      int chksum = 0;
+
+      for (int k = 0; k < i_mem->size; k++)
+	{
+	  chksum += i_mem->b[k];
+	}
+
+      if (i_mem->chksum != chksum)
+	{
+	  ATRSHMLOGSTAT(atrshmlog_counter_fence_alarm_1);
+	}
     }
+  
+#if ATRSHMLOGDEBUG == 1
+  printf("mem to %ld %ld %ld %ld\n", (long)i_mem->id, (long)i_mem->size, (long)chksum, (long)i_g->atrshmlog_idnotok);
 #endif
 
   /* 
@@ -108,10 +139,16 @@ int atrshmlog_transfer_mem_to_shm(const atrshmlog_tbuff_t* restrict i_mem,
 	  ATRSHMLOG_SLEEP_NANOS(atrshmlog_slave_to_shm_wait);
 
 	  if (atomic_load_explicit(&a->ich_habe_fertig, memory_order_relaxed) != 0)
-	    return atrshmlog_error_mem_to_shm_7;
+	    {
+	      result =  atrshmlog_error_mem_to_shm_7;
+	      goto ende;
+	    }
 
 	  if (atrshmlog_logging_process_off_final)
-	    return atrshmlog_error_mem_to_shm_8;
+	    {
+	      result =  atrshmlog_error_mem_to_shm_8;
+	      goto ende;
+	    }
 	  
 	  continue;
 	}
@@ -134,7 +171,7 @@ int atrshmlog_transfer_mem_to_shm(const atrshmlog_tbuff_t* restrict i_mem,
 	  
 	  b->shmsize = i_mem->size;
 
-	  b->chksum = chksum;
+	  b->chksum = i_mem->chksum;
 
 	  b->inittime = atrshmlog_inittime;
 	  b->inittimetsc_before = atrshmlog_inittimetsc_before;
@@ -222,9 +259,16 @@ int atrshmlog_transfer_mem_to_shm(const atrshmlog_tbuff_t* restrict i_mem,
 							memory_order_relaxed))
 	    ;
 	  
-	  return atrshmlog_error_ok;
+	  result = 1000 + available; // >= 0 ...
+	  goto ende;
 	}
     }
   
-  /* NOT REACHED */
+ ende:
+
+  // however we made it to this point : the buffer is no longer to be transfered.
+  ((atrshmlog_tbuff_t*)i_mem)->size = 0;
+
+  return result;
+  
 }

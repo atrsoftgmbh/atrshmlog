@@ -17,6 +17,8 @@
  * This has to be done before we use any env stuff. 
  * 
  * so you have to do this before you attach.
+ *
+ * test t_set_env_prefix.c
  */
 void atrshmlog_set_env_prefix (const char*i_prefix)
 {

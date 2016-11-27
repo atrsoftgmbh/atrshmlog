@@ -21,6 +21,8 @@
  * the memory still into the caches...
  *
  * At least we can try this for small things.
+ *
+ * test t_get_buffer_size.c
  */
 atrshmlog_ret_t atrshmlog_get_buffer_size(void)
 {

@@ -11,6 +11,8 @@
  * \n Main code:
  *
  * \brief Set the logging flag for the process final to on
+ *
+ * test t_exit_cleanup.c
  */
 atrshmlog_ret_t atrshmlog_set_logging_process_off_final(void)
 {

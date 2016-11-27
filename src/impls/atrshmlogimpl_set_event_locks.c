@@ -20,6 +20,8 @@
  *
  * If you dont hit the build in buffer size nothing is done.
  * If you set a bigger size it cannot be reduced after.
+ *
+ * test t_set_event_locks_max.c
  */
 atrshmlog_ret_t atrshmlog_set_event_locks_max(atrshmlog_int32_t i_max)
 {

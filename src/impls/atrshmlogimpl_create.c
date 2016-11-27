@@ -19,6 +19,8 @@
  * to the program for a number.
  *
  * Key is a 32 bit value.
+ *
+ * test t_create.c
  */
 int atrshmlog_create(const atrshmlog_key_t i_key,
 		     const int i_count)

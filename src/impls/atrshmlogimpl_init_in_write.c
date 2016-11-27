@@ -29,6 +29,8 @@ static atomic_flag atrshmlog_init_in_write_once_flag = ATOMIC_FLAG_INIT;
  * \return
  * - 0: ok
  * - non zero : error
+ *
+ * test t_init_in_write.c
  */
 int atrshmlog_init_in_write(atrshmlog_g_tl_t* g)
 {

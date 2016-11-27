@@ -4,6 +4,8 @@
 
 /**
  * \file atrshmlogimpl_create_mapped_file.c
+ *
+ * test t_create_mapped_file.c
  */
 
 #if ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 1

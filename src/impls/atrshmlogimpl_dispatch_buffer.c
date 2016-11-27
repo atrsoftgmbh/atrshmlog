@@ -28,6 +28,8 @@
  *
  * \return 
  * void
+ *
+ * test t_dispatch_buffer.c
  */ 
 void atrshmlog_dispatch_buffer(atrshmlog_tbuff_t* restrict i_atrshmlog_targetbuffer)
 {
@@ -49,6 +51,19 @@ void atrshmlog_dispatch_buffer(atrshmlog_tbuff_t* restrict i_atrshmlog_targetbuf
 
       // Do we really have to do this ? or is it empty ?
       // this is wrong. we never can release a buffer then      if (i_atrshmlog_targetbuffer->size > 0)
+
+      int chksum = 0;
+
+      // we calc the checksum trivial. but this is ok for our needs
+      if (atrshmlog_checksum)
+	{
+	  for (int k = 0; k < i_atrshmlog_targetbuffer->size; k++)
+	    {
+	      chksum += i_atrshmlog_targetbuffer->b[k];
+	    }
+	}
+
+      i_atrshmlog_targetbuffer->chksum = chksum;
 
       // We put the buffer on the f list
       i_atrshmlog_targetbuffer->next_full = (atrshmlog_tbuff_t*)atomic_load_explicit(&atrshmlog_tpf, memory_order_relaxed);

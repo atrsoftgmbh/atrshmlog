@@ -13,6 +13,7 @@
  *
  * \brief We get the thread tid
  *
+ * test t_get_tid.c
  */
  atrshmlog_tid_t atrshmlog_get_tid(void)
  {

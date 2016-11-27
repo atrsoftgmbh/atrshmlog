@@ -22,6 +22,8 @@
  * wish. 
  * 
  * It is NOT working directly after the call is made
+ *
+ * test t_set_f_list_buffer_slave_run_off.c
  */
 void atrshmlog_set_f_list_buffer_slave_run_off(void)
 {

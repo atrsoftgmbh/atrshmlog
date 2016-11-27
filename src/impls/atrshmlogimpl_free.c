@@ -27,6 +27,8 @@
  *
  * \return 
  * void
+ *
+ * test t_free.c
  */
 void atrshmlog_free(atrshmlog_tbuff_t* restrict t)
 {
@@ -38,6 +40,8 @@ void atrshmlog_free(atrshmlog_tbuff_t* restrict t)
   // we make clear this buffer IS initialized and on the linked lists
   // already so we NOT have to relink it and NOT reinit it
   t->dispose = ATRSHMLOG_DISPATCH_REUSE;
+
+  // WARNING: ALL CONTENT IS LOST
   t->size = 0;
   
   // we push it now only on the a list for reuse

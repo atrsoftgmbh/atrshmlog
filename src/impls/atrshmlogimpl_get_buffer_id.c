@@ -14,6 +14,7 @@
  *
  * This should be the same as the acquire count.
  * 
+ * test t_get_buffer_id.c
  */
 atrshmlog_ret_t atrshmlog_get_buffer_id(void)
 {

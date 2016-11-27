@@ -13,6 +13,8 @@
  * \brief We deliver the g_counter data 
  * 
  * We set the now time tsc in 0 low part and 1 high part.
+ *
+ * test t_get_stats.c
  */
 void atrshmlog_get_statistics(atrshmlog_int32_t* o_target)
 {

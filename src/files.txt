@@ -12,33 +12,21 @@ FILES
 atrshmlog.c
 
 # the program code files
-atrshmlogcheckc.c
-atrshmlogcheckc_nothreads_h.c
 atrshmlogconvert.c
 atrshmlogcreate.c
 atrshmlogdefect.c
 atrshmlogdelete.c
 atrshmlogdump.c
 atrshmlogfinish.c
-atrshmlogfork.c
-atrshmlogforkwrite.c
 atrshmloginit.c
 atrshmlog_internal.c
 atrshmlogoff.c
 atrshmlogon.c
-atrshmlogreaderb.c
-atrshmlogreader.c
-atrshmlogreaderc.c
 atrshmlogreaderd.c
 atrshmlogreset.c
 atrshmlogsignalreader.c
 atrshmlogsignalwriter.c
-atrshmlogtee.c
-atrshmlogtest00.c
-atrshmlogtest01.c
 atrshmlogverify.c
-atrshmlogtest02.C
-atrshmlogtest03.C
 
 # the headers
 atrshmlog.h
@@ -76,12 +64,14 @@ atrshmlogimpl_alloc.c
 atrshmlogimpl_attach.c
 atrshmlogimpl_attach_once_flag.c
 atrshmlogimpl_attach_pid_flag.c
+atrshmlogimpl_autoflush_flag.c
 atrshmlogimpl_base_ptr.c
 atrshmlogimpl_buffer_id_flag.c
 atrshmlogimpl_buffer_infosize_flag.c
 atrshmlogimpl_buffer_slave_proc.c
 atrshmlogimpl_cleanup_locks.c
 atrshmlogimpl_clock_id_flag.c
+atrshmlogimpl_checksum_flag.c
 atrshmlogimpl_connect_buffers_list.c
 atrshmlogimpl_create.c
 atrshmlogimpl_create_mapped_file.c
@@ -112,10 +102,13 @@ atrshmlogimpl_get_acquire_count.c
 atrshmlogimpl_get_area.c
 atrshmlogimpl_get_area_count.c
 atrshmlogimpl_get_area_version.c
+atrshmlogimpl_get_autoflush.c
+atrshmlogimpl_get_autoflush_process.c
 atrshmlogimpl_get_buffer_id.c
 atrshmlogimpl_get_buffer_max.c
 atrshmlogimpl_get_buffer_size.c
 atrshmlogimpl_get_clock_id.c
+atrshmlogimpl_get_checksum.c
 atrshmlogimpl_get_env.c
 atrshmlogimpl_get_env_id_suffix.c
 atrshmlogimpl_get_env_prefix.c
@@ -150,6 +143,7 @@ atrshmlogimpl_get_raw_buffers.c
 atrshmlogimpl_get_realtime.c
 atrshmlogimpl_get_shmid.c
 atrshmlogimpl_get_slave_wait.c
+atrshmlogimpl_get_slave_tid.c
 atrshmlogimpl_get_stats.c
 atrshmlogimpl_get_stats_max_index.c
 atrshmlogimpl_get_strategy.c
@@ -184,8 +178,11 @@ atrshmlogimpl_read_fetch.c
 atrshmlogimpl_remove_sl.c
 atrshmlogimpl_set_advance_off.c
 atrshmlogimpl_set_advance_on.c
+atrshmlogimpl_set_autoflush.c
+atrshmlogimpl_set_autoflush_process.c
 atrshmlogimpl_set_buffer_size.c
 atrshmlogimpl_set_clock_id.c
+atrshmlogimpl_set_checksum.c
 atrshmlogimpl_set_env_prefix.c
 atrshmlogimpl_set_event.c
 atrshmlogimpl_set_event_locks.c
@@ -227,7 +224,8 @@ atrshmlogimpl_stop_slaves_flag.c
 atrshmlogimpl_strategy_flag.c
 atrshmlogimpl_transfer_mem_to_shm.c
 atrshmlogimpl_transfer_to_shm_time_flag.c
-atrshmlogimpl_turn_logging.off.c
+atrshmlogimpl_turn_logging_off.c
+atrshmlogimpl_turn_slave_off.c
 atrshmlogimpl_verify.c
 atrshmlogimpl_wait_for_slaves_flag.c
 atrshmlogimpl_write0.c
@@ -237,33 +235,18 @@ atrshmlogimpl_last_mem_to_shm.c
 atrshmlogimpl_reuse_thread_buffers.c
 
 DIRECTORY src alreadythere
-
-# adapted headers and list files
-atrshmlog.h.centos_linux
-atrshmlog.h.cygwin
-atrshmlog.h.debian_linux
-atrshmlog.h.fedora_linux
-atrshmlog.h.freebsd
-atrshmlog.h.mingw
-atrshmlog.h.netbsd
-atrshmlog.h.openbsd
-atrshmlog.h.opensuse_linux
-atrshmlog.h.solaris
-atrshmlog.h.sles_linux
-atrshmlog.h.ubuntu_linux
-atrshmlog_internal.h.centos_linux
-atrshmlog_internal.h.cygwin
-atrshmlog_internal.h.fedora_linux
-atrshmlog_internal.h.debian_linux
-atrshmlog_internal.h.freebsd
-atrshmlog_internal.h.mingw
-atrshmlog_internal.h.netbsd
-atrshmlog_internal.h.openbsd
-atrshmlog_internal.h.opensuse_linux
-atrshmlog_internal.h.solaris
-atrshmlog_internal.h.sles_linux
-atrshmlog_internal.h.ubuntu_linux
 shmCPPfiles.mingw
+
+DIRECTORY src tests
+atrshmlogcheckc.c
+atrshmlogcheckc_nothreads_h.c
+atrshmlogtee.c
+atrshmlogtest00.c
+atrshmlogtest01.c
+atrshmlogfork.c
+atrshmlogforkwrite.c
+atrshmlogtest02.C
+atrshmlogtest03.C
 
 DIRECTORY bin
 # helper scripts

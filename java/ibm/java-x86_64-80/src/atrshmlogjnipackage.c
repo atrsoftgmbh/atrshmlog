@@ -285,6 +285,92 @@ JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlo
   return result;
 }
 
+/**
+ * \brief we write a lenght limited ucs2 string with a start index
+ *
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    write
+ * Signature: (IIIJJLjava/lang/String;II)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_write__IIIJJLjava_lang_String_2II
+ (JNIEnv *i_jnienv, jobject i_myself,
+   jint i_userevent,
+   jint i_eventflag,
+   jint i_userflag,
+   jlong i_starttime,
+   jlong i_endtime,
+   jstring i_payload,
+   jint i_startindex,
+   jint i_payloadlength)
+{
+  jint result;
+
+  jboolean is_copy = JNI_FALSE;
+
+  int length = i_payloadlength;
+
+  static const char* zerozero = "\0\0";
+
+  /* we use a hack here. dont know if the javaish way is this .. */
+  if (i_startindex < 0)
+    {
+      i_startindex = 0;
+    }
+      
+  jsize len = (*i_jnienv)->GetStringLength(i_jnienv, i_payload);
+  
+  const jchar * the_chars = (*i_jnienv)->GetStringCritical(i_jnienv, i_payload, &is_copy);
+
+  const jchar * payload = the_chars;
+
+  if (the_chars == NULL)
+    {
+      jboolean flag = (*i_jnienv)->ExceptionCheck(i_jnienv);
+      if (flag) {
+	(*i_jnienv)->ExceptionClear(i_jnienv);
+      }
+      
+      payload = (const jchar * )zerozero;
+      length = 0;
+      i_startindex = 0;
+    }
+  else
+    {
+      if (len < i_startindex)
+	{
+	   length = 0;
+	   i_startindex = 0;
+	}
+      else if (len < i_startindex + length)
+	{
+	  length = len - i_startindex;
+	}
+    }
+  
+  if (i_eventflag == de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_EVENT_POINT_IN_TIME_C
+      || i_eventflag == de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_EVENT_INTERVAL_IN_TIME_C)
+    { // we have to change. we need the lower case chars here. we insist that its only i and p here after
+      i_eventflag = i_eventflag + 32;
+    }
+  else 
+    { // this is ok
+      ; // nothing to do
+    }
+  
+  result = ATRSHMLOG_WRITE(i_userevent,
+			   (char)i_eventflag,
+			   i_userflag,
+			   i_starttime,
+			   i_endtime,
+			   payload + i_startindex,
+			   (length * 2));
+
+  if (the_chars != NULL)
+    (*i_jnienv)->ReleaseStringCritical(i_jnienv, i_payload, the_chars);
+  
+
+  return result;
+}
 
 /**
  * \brief we write a byte array
@@ -2165,6 +2251,147 @@ JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlo
   jint result;
   
   result = ATRSHMLOG_REUSE_THREAD_BUFFERS(i_tid);
+
+  return result;
+}
+
+/**
+ * \brief Set the autoflush for the process
+ *
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    setAutoflushProcess
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_setAutoflushProcess
+(JNIEnv *i_jnienv, jobject i_myself, jint i_flag)
+{
+  jint result;
+  
+  result = ATRSHMLOG_SET_AUTOFLUSH_PROCESS(i_flag);
+
+  return result;
+}
+
+/**
+ * \brief Get the autoflush for the process
+ *
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getAutoflushProcess
+ * Signature: (V)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getAutoflushProcess
+(JNIEnv *i_jnienv, jobject i_myself)
+{
+  jint result;
+  
+  result = ATRSHMLOG_GET_AUTOFLUSH_PROCESS();
+
+  return result;
+}
+
+/**
+ * \brief Set the autoflush for the thread
+ *
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    setAutoflush
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_setAutoflush
+(JNIEnv *i_jnienv, jobject i_myself, jint i_flag)
+{
+  jint result;
+  
+  result = ATRSHMLOG_SET_AUTOFLUSH(i_flag);
+
+  return result;
+}
+
+/**
+ * \brief Get the autoflush for the thread
+ *
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getAutoflush
+ * Signature: (V)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getAutoflush
+(JNIEnv *i_jnienv, jobject i_myself)
+{
+  jint result;
+  
+  result = ATRSHMLOG_GET_AUTOFLUSH();
+
+  return result;
+}
+
+/**
+ * \brief We switch the thread off 
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    turnSlaveOff
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_turnSlaveOff
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_area)
+{
+  u_t u;
+
+  u.l = i_area;
+
+  ATRSHMLOG_TURN_SLAVE_OFF(u.p);
+
+  return;
+}
+
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getSlaveTid
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getSlaveTid
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_area)
+{
+  jlong result;
+  
+  u_t u;
+
+  u.l = i_area;
+
+  result = ATRSHMLOG_GET_SLAVE_TID(u.p);
+
+  return result;
+}
+
+/**
+ * \brief Set the checksum flag
+ *
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    setChecksum
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_setChecksum
+  (JNIEnv *i_jnienv, jobject i_myself, jint i_flag)
+{
+  jint result;
+  
+  result = ATRSHMLOG_SET_CHECKSUM(i_flag);
+
+  return result;
+}
+
+
+/**
+ * \brief The checksum flag
+ *
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getChecksum
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getChecksum
+  (JNIEnv *i_jnienv, jobject i_myself)
+{
+  jint result;
+
+  result = ATRSHMLOG_GET_CHECKSUM();
 
   return result;
 }
