@@ -52,7 +52,9 @@ shmallfiles
 shmallbinfiles
 shmbinfiles
 shmbininternalfiles
+shmtestcfiles
 files.txt
+t_test.sh
 
 DIRECTORY src impls
 
