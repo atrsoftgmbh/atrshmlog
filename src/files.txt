@@ -69,9 +69,9 @@ atrshmlogimpl_base_ptr.c
 atrshmlogimpl_buffer_id_flag.c
 atrshmlogimpl_buffer_infosize_flag.c
 atrshmlogimpl_buffer_slave_proc.c
+atrshmlogimpl_checksum_flag.c
 atrshmlogimpl_cleanup_locks.c
 atrshmlogimpl_clock_id_flag.c
-atrshmlogimpl_checksum_flag.c
 atrshmlogimpl_connect_buffers_list.c
 atrshmlogimpl_create.c
 atrshmlogimpl_create_mapped_file.c
@@ -107,8 +107,8 @@ atrshmlogimpl_get_autoflush_process.c
 atrshmlogimpl_get_buffer_id.c
 atrshmlogimpl_get_buffer_max.c
 atrshmlogimpl_get_buffer_size.c
-atrshmlogimpl_get_clock_id.c
 atrshmlogimpl_get_checksum.c
+atrshmlogimpl_get_clock_id.c
 atrshmlogimpl_get_env.c
 atrshmlogimpl_get_env_id_suffix.c
 atrshmlogimpl_get_env_prefix.c
@@ -142,8 +142,8 @@ atrshmlogimpl_get_prealloc_count.c
 atrshmlogimpl_get_raw_buffers.c
 atrshmlogimpl_get_realtime.c
 atrshmlogimpl_get_shmid.c
-atrshmlogimpl_get_slave_wait.c
 atrshmlogimpl_get_slave_tid.c
+atrshmlogimpl_get_slave_wait.c
 atrshmlogimpl_get_stats.c
 atrshmlogimpl_get_stats_max_index.c
 atrshmlogimpl_get_strategy.c
@@ -161,14 +161,15 @@ atrshmlogimpl_init_thread_local.c
 atrshmlogimpl_inittimes_flag.c
 atrshmlogimpl_init_via_env.c
 atrshmlogimpl_init_via_file.c
+atrshmlogimpl_last_mem_to_shm.c
 atrshmlogimpl_logging_off_final_flag.c
 atrshmlogimpl_logging_process_flag.c
 atrshmlogimpl_mapped_files_defaults.c
+atrshmlogimpl_non_inline_code_bsd_clang.c
+atrshmlogimpl_non_inline_code_bsd_gcc.c
 atrshmlogimpl_non_inline_code_cygwin.c
 atrshmlogimpl_non_inline_code_linux_gcc.c
 atrshmlogimpl_non_inline_code_mingw.c
-atrshmlogimpl_non_inline_code_bsd_clang.c
-atrshmlogimpl_non_inline_code_bsd_gcc.c
 atrshmlogimpl_non_inline_code_solaris_gcc.c
 atrshmlogimpl_prealloc_buffers.c
 atrshmlogimpl_prealloc_count_flag.c
@@ -176,13 +177,14 @@ atrshmlogimpl_prefix_buffer.c
 atrshmlogimpl_read.c
 atrshmlogimpl_read_fetch.c
 atrshmlogimpl_remove_sl.c
+atrshmlogimpl_reuse_thread_buffers.c
 atrshmlogimpl_set_advance_off.c
 atrshmlogimpl_set_advance_on.c
 atrshmlogimpl_set_autoflush.c
 atrshmlogimpl_set_autoflush_process.c
 atrshmlogimpl_set_buffer_size.c
-atrshmlogimpl_set_clock_id.c
 atrshmlogimpl_set_checksum.c
+atrshmlogimpl_set_clock_id.c
 atrshmlogimpl_set_env_prefix.c
 atrshmlogimpl_set_event.c
 atrshmlogimpl_set_event_locks.c
@@ -231,8 +233,6 @@ atrshmlogimpl_wait_for_slaves_flag.c
 atrshmlogimpl_write0.c
 atrshmlogimpl_write1.c
 atrshmlogimpl_write2.c
-atrshmlogimpl_last_mem_to_shm.c
-atrshmlogimpl_reuse_thread_buffers.c
 
 DIRECTORY src alreadythere
 shmCPPfiles.mingw
