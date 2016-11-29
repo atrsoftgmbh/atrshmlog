@@ -261,26 +261,6 @@
 #define ATRSHMLOGTARGETBUFFERMAX (2)
 
 
-/**
- * \brief This is the first constant for the point in time event
- */
-#define ATRSHMLOGPOINTINTIMEP 'P'
-
-/**
- * \brief This is the second constant for the point in time event
- */
-#define ATRSHMLOGPOINTINTIMEp 'p'
-
-/**
- * \brief This is the first constant for the interval in time event
- */
-#define ATRSHMLOGPOINTINTIMEI 'I'
-
-/**
- * \brief This is the second constant for the interval in time event
- */
-#define ATRSHMLOGPOINTINTIMEi 'i'
-
 /**************************************************************/
 
 /* os specific defines */
@@ -1734,6 +1714,8 @@ struct atrshmlog_slave_s {
 
 typedef struct atrshmlog_slave_s atrshmlog_slave_t;
 
+/*****************************************************************/
+
 /* 
  * the following is a pure result of the breaking of the module into
  * separate implementation files.
@@ -1825,14 +1807,14 @@ extern void atrshmlog_memset_prealloced(void);
 extern atomic_int atrshmlog_last_mem_to_shm;
 
 
+/************************************************************************/
+/* helper macros*/
+
+
 /** 
  * \brief The memory check pattern
  */
 #define ATRSHMLOGSAFEGUARDVALUE (0xFE01FE01L)
-
-
-/************************************************************************/
-/* helper macros*/
 
 /**
  * \brief We add to the statistics counter
