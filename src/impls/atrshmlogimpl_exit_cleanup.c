@@ -52,7 +52,7 @@ void atrshmlog_exit_cleanup (void)
 #endif
   
   // Do we have to initialize ?
-  if (g->atrshmlog_idnotok)
+  if (g->atrshmlog_idnotok == -1)
     {
       atrshmlog_init_thread_local (g);
 
