@@ -16,6 +16,9 @@
  *
  * Normally one buffer should be empty any way...
  *
+ * \return
+ * void
+ *
  * test t_flush.c
  */
 void atrshmlog_flush(void)
