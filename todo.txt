@@ -15,12 +15,18 @@ test perl
 test python
 
 ----
+1 2 0 
+----
 
 sql logger
 
 ------
 
 no sql logger
+
+-----
+
+detach reattach
 
 -----
 

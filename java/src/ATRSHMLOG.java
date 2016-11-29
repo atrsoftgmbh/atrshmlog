@@ -2434,20 +2434,6 @@ public class ATRSHMLOG {
     public native int getInitBuffersInAdvance();
 
     /** 
-     *  We get the next element on slave list
-     *
-     * If we deliver a 0 we start from top.
-     * 
-     * @param i_thread_local
-     * Pointer to thread local or NULL
-     *
-     * @return
-     * - top if parameter NULL
-     * - next if parameter is thread local of slave
-     */
-    public native long getNextSlaveLocal(long i_thread_local);
-
-    /** 
      *  We get the tid of a thread local
      *
      * @param i_thread_local
@@ -2521,6 +2507,20 @@ public class ATRSHMLOG {
      */
     public native int getAutoflush();
 	
+    /** 
+     *  We get the next element on slave list
+     *
+     * If we deliver a 0 we start from top.
+     * 
+     * @param i_thread_local
+     * Pointer to thread local or NULL
+     *
+     * @return
+     * - top if parameter NULL
+     * - next if parameter is thread local of slave
+     */
+    public native long getNextSlaveLocal(long i_thread_local);
+
     /**
      *  We switch the thread off 
      *

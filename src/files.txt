@@ -250,6 +250,7 @@ atrshmlogforkwrite.c
 atrshmlogtest02.C
 atrshmlogtest03.C
 t_acquire_buffer.c
+t_alloc.c
 t_attach.c
 t_attach_mapped_file.c
 t_buffer_slave_proc.c

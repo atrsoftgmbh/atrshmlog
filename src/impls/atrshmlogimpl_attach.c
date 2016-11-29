@@ -69,7 +69,7 @@ void atrshmlog_init(const char *i_suffix,
 }
 
 /**
- * the parameters for inti
+ * the parameters for init
  */
 struct atrshmlog_init_param_s
 {
@@ -776,3 +776,4 @@ atrshmlog_ret_t atrshmlog_attach(void)
   
   return result;
 }
+

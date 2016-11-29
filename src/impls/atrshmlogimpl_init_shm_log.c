@@ -95,7 +95,11 @@ atrshmlog_ret_t atrshmlog_init_shm_log(volatile const void *i_area,
   if (a->shmid == atrshmlog_get_shmid())
     return atrshmlog_error_init_shm_2;
 
-  /* Ok. We are in. The shm seems not to be initialized */
+  if (a->shmsafeguard == ATRSHMLOGSAFEGUARDVALUE)
+    return atrshmlog_error_init_shm_2;
+
+  
+  /* Ok. We are in. The shm seems not to be initialized by us */
 
   // Chunks are after the desciptors
   unsigned int chunks = (char*)&a->logbuffers[i_count_buffers] - (char*)a;
