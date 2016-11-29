@@ -733,6 +733,27 @@ extern "C" {
 
   /************************************************************/
 
+  /**
+   * \brief This is the first constant for the point in time event
+   */
+#define ATRSHMLOGPOINTINTIMEP 'P'
+
+  /**
+   * \brief This is the second constant for the point in time event
+   */
+#define ATRSHMLOGPOINTINTIMEp 'p'
+
+  /**
+   * \brief This is the first constant for the interval in time event
+   */
+#define ATRSHMLOGPOINTINTIMEI 'I'
+
+  /**
+   * \brief This is the second constant for the interval in time event
+   */
+#define ATRSHMLOGPOINTINTIMEi 'i'
+
+
   /*
    * Helper for write calls
    */
@@ -741,23 +762,23 @@ extern "C" {
     /**
      * \brief This is the first constant for the point in time event
      */
-    ATRSHMLOG_POINT_IN_TIME_C = 80,
+    ATRSHMLOG_POINT_IN_TIME_C = ATRSHMLOGPOINTINTIMEP,
 
     /**
      * \brief This is the second constant for the point in time event
      */
-    ATRSHMLOG_POINT_IN_TIME_UCS2 =  112,
+    ATRSHMLOG_POINT_IN_TIME_UCS2 =  ATRSHMLOGPOINTINTIMEp,
 
     
     /**
      * \brief This is the first constant for the interval in time event
      */
-    ATRSHMLOG_INTERVAL_IN_TIME_C = 73,
+    ATRSHMLOG_INTERVAL_IN_TIME_C = ATRSHMLOGPOINTINTIMEI,
 
     /**
      * \brief This is the second constant for the interval in time event
      */
-    ATRSHMLOG_INTERVAL_IN_TIME_UCS2 = 105
+    ATRSHMLOG_INTERVAL_IN_TIME_UCS2 = ATRSHMLOGPOINTINTIMEi
   };
 
 
