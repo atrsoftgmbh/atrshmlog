@@ -282,6 +282,25 @@ If you have not the tid via syscall set  it to 1.
 If you have a fenster;plural system and no compatibility layer you
 should use this tid.
 
+###ATRSHMLOGPOINTINTIMEP
+Normally you dont need to change this.
+If you use an excotic OS with non ASCII then this should be
+the Character with ASCII code 'P' number.
+
+###ATRSHMLOGPOINTINTIMEp
+Normally you dont need to change this.
+the Character with ASCII code 'p' number.
+
+###ATRSHMLOGPOINTINTIMEI
+Normally you dont need to change this.
+If you use an excotic OS with non ASCII then this should be
+the Character with ASCII code 'I' number.
+
+###ATRSHMLOGPOINTINTIMEi
+Normally you dont need to change this.
+the Character with ASCII code 'i' number.
+
+
 And next the atrshmlog_internal.h
 ---------------------------------
 
@@ -426,24 +445,6 @@ have a few threads but transfertimes in shared memory and reader is
 too high. Alternative to making the buffer infosize bigger.
 You should check the doc before you start playing with it.
 
-
-###ATRSHMLOGPOINTINTIMEP
-Normally you dont need to change this.
-If you use an excotic OS with non ASCII then this should be
-the Character with ASCII code 'P' number.
-
-###ATRSHMLOGPOINTINTIMEp
-Normally you dont need to change this.
-the Character with ASCII code 'p' number.
-
-###ATRSHMLOGPOINTINTIMEI
-Normally you dont need to change this.
-If you use an excotic OS with non ASCII then this should be
-the Character with ASCII code 'I' number.
-
-###ATRSHMLOGPOINTINTIMEi
-Normally you dont need to change this.
-the Character with ASCII code 'i' number.
 
 ###ATRSHMLOGCONTROLDATASIZE
 Normally you dont need to change this.

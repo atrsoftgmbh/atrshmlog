@@ -8,7 +8,7 @@
  * \file atrshmlogimpl_read_fetch.c
  */
 
-/* 
+/** 
  * \n Main code:
  *
  * \brief This is the actual reader function now.

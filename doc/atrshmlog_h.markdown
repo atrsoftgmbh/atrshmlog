@@ -81,10 +81,7 @@ platforms of different os and cpu systems.
 
 So you normaly leave this to the C library.
 
-There is one little switch you can use if you think its worth the
-work, its the ATRSHMLOG_LEVEL.
 
-This makes it possible to forget some of the stuff.
 
 
 

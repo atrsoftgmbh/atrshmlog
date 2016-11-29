@@ -319,6 +319,9 @@
 # define   _POSIX_C_SOURCE 199309L
 #endif
 
+/**
+ * The binding of the thread function
+ */
 #define ATRSHMLOGCDECLBINDING /**/
 
 #endif
@@ -382,8 +385,14 @@
 
 typedef key_t atrshmlog_key_t;
 
+/**
+ * We init the static and dyn allocated to make acess cheaper
+ */
 # define ATRSHMLOGINITINADVANCEDEFAULT 0
 
+/**
+ * We rough calc nanos out of clicks
+ */
 #define ATRSHMLOGSCALECLICKTONANO(__click) (((__click) * 5LL ) / 2LL)
 
 #endif

@@ -2417,6 +2417,14 @@ extern "C" {
 
 
   /** 
+   * \brief Get the wait for slaves flag.
+   *
+   * \return
+   * The flag for the wait for slaves.
+   */
+#define ATRSHMLOG_GET_WAIT_FOR_SLAVES()  atrshmlog_get_wait_for_slaves()
+
+  /** 
    * \brief Set the wait for slaves flag to on.
    *
    * \return
@@ -2431,14 +2439,6 @@ extern "C" {
    * The old flag.
    */
 #define ATRSHMLOG_SET_WAIT_FOR_SLAVES_OFF()  atrshmlog_set_wait_for_slaves_off()
-
-  /** 
-   * \brief Get the wait for slaves flag.
-   *
-   * \return
-   * The flag for the wait for slaves.
-   */
-#define ATRSHMLOG_GET_WAIT_FOR_SLAVES()  atrshmlog_get_wait_for_slaves()
 
   /** 
    * \brief Get the nanos the slave waits after going to sleep.
