@@ -402,7 +402,9 @@ bumm bumm bumm bumm error in platform active count
 #endif
 
 
-
+/**
+ * \brief We have a system with thread loacls and the compiler support it
+ */
 #define ATRSHMLOG_THREAD_LOCAL 0
 
 #if  ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
@@ -441,6 +443,8 @@ bumm bumm bumm bumm error in platform active count
 
 
 /**
+ * \brief We have safer string functions
+ *
  * BSD unix like a way of copy for strings that they believe is safer
  * than the old one. 
  * Perhaps we will use it on fenster;plural too.
@@ -1723,6 +1727,15 @@ extern "C" {
    */
 #define ATRSHMLOG_ATTACH() atrshmlog_attach()
 
+
+  /** 
+   * \brief Get the prefix for variables and flagfiles.
+   *
+   * \return 
+   * Points to the used prefix.
+   */
+#define ATRSHMLOG_GET_ENV_PREFIX() atrshmlog_get_env_prefix()
+
   /** 
    * \brief Set the prefix for use of variables and flagfiles.
    *
@@ -1733,14 +1746,6 @@ extern "C" {
    * void
    */
 #define ATRSHMLOG_SET_ENV_PREFIX(__p) atrshmlog_set_env_prefix((__p))
-
-  /** 
-   * \brief Get the prefix for variables and flagfiles.
-   *
-   * \return 
-   * Points to the used prefix.
-   */
-#define ATRSHMLOG_GET_ENV_PREFIX() atrshmlog_get_env_prefix()
 
   /** 
    * \brief Get an variable value with prefix.
@@ -2045,6 +2050,14 @@ extern "C" {
 
       
   /**
+   *  \brief The checksum flag
+   *
+   * \return
+   * The flag
+   */
+#define  ATRSHMLOG_GET_CHECKSUM()  atrshmlog_get_checksum()
+
+  /**
    * \brief Set the checksum flag
    *
    * \param __flag
@@ -2056,13 +2069,13 @@ extern "C" {
 #define  ATRSHMLOG_SET_CHECKSUM(__flag) atrshmlog_set_checksum((__flag))
 
   /**
-   *  \brief The checksum flag
+   * \brief We get a fence on or off flag
    *
    * \return
-   * The flag
+   * The old flag for fence.
    */
-#define  ATRSHMLOG_GET_CHECKSUM()  atrshmlog_get_checksum()
-
+#define  ATRSHMLOG_GET_THREAD_FENCE_1()  atrshmlog_get_thread_fence_1()
+  
   /** 
    * \brief Set the fence 1 flag on.
    *
@@ -2074,13 +2087,14 @@ extern "C" {
    */
 #define ATRSHMLOG_SET_THREAD_FENCE_1(__s) atrshmlog_set_thread_fence_1((__s))
 
+
   /**
    * \brief We get a fence on or off flag
    *
    * \return
    * The old flag for fence.
    */
-#define  ATRSHMLOG_GET_THREAD_FENCE_1()  atrshmlog_get_thread_fence_1()
+#define  ATRSHMLOG_GET_THREAD_FENCE_2()  atrshmlog_get_thread_fence_2()
   
   /**  
    * \brief Set the fence 2 flag on.
@@ -2099,7 +2113,7 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-#define  ATRSHMLOG_GET_THREAD_FENCE_2()  atrshmlog_get_thread_fence_2()
+#define  ATRSHMLOG_GET_THREAD_FENCE_3()  atrshmlog_get_thread_fence_3()
   
   /**  
    * \brief Set the fence 3 flag on.
@@ -2118,7 +2132,7 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-#define  ATRSHMLOG_GET_THREAD_FENCE_3()  atrshmlog_get_thread_fence_3()
+#define  ATRSHMLOG_GET_THREAD_FENCE_4()  atrshmlog_get_thread_fence_4()
   
   /**  
    * \brief Set the fence 4 flag on.
@@ -2137,7 +2151,7 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-#define  ATRSHMLOG_GET_THREAD_FENCE_4()  atrshmlog_get_thread_fence_4()
+#define  ATRSHMLOG_GET_THREAD_FENCE_5()  atrshmlog_get_thread_fence_5()
   
   /**  
    * \brief Set the fence 5 flag on.
@@ -2156,7 +2170,7 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-#define  ATRSHMLOG_GET_THREAD_FENCE_5()  atrshmlog_get_thread_fence_5()
+#define  ATRSHMLOG_GET_THREAD_FENCE_6()  atrshmlog_get_thread_fence_6()
   
   /**
    * \brief Set the fence 6 flag on.
@@ -2168,14 +2182,14 @@ extern "C" {
    * The old flag for fence.
    */
 #define ATRSHMLOG_SET_THREAD_FENCE_6(__s) atrshmlog_set_thread_fence_6((__s))
-
+  
   /**
    * \brief We get a fence on or off flag
    *
    * \return
    * The old flag for fence.
    */
-#define  ATRSHMLOG_GET_THREAD_FENCE_6()  atrshmlog_get_thread_fence_6()
+#define  ATRSHMLOG_GET_THREAD_FENCE_7()  atrshmlog_get_thread_fence_7()
   
   /** 
    * \brief Set the fence 7 flag on.
@@ -2187,14 +2201,14 @@ extern "C" {
    * The old flag for fence.
    */
 #define ATRSHMLOG_SET_THREAD_FENCE_7(__s) atrshmlog_set_thread_fence_7((__s))
-  
+
   /**
    * \brief We get a fence on or off flag
    *
    * \return
    * The old flag for fence.
    */
-#define  ATRSHMLOG_GET_THREAD_FENCE_7()  atrshmlog_get_thread_fence_7()
+#define  ATRSHMLOG_GET_THREAD_FENCE_8()  atrshmlog_get_thread_fence_8()
   
   /** 
    * \brief Set the fence 8 flag on.
@@ -2213,7 +2227,7 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-#define  ATRSHMLOG_GET_THREAD_FENCE_8()  atrshmlog_get_thread_fence_8()
+#define  ATRSHMLOG_GET_THREAD_FENCE_9()  atrshmlog_get_thread_fence_9()
   
   /**
    * \brief Set the fence 9 flag on.
@@ -2226,13 +2240,14 @@ extern "C" {
    */
 #define ATRSHMLOG_SET_THREAD_FENCE_9(__s) atrshmlog_set_thread_fence_9((__s))
   
+  
   /**
    * \brief We get a fence on or off flag
    *
    * \return
    * The old flag for fence.
    */
-#define  ATRSHMLOG_GET_THREAD_FENCE_9()  atrshmlog_get_thread_fence_9()
+#define  ATRSHMLOG_GET_THREAD_FENCE_10()  atrshmlog_get_thread_fence_10()
   
   /**
    * \brief Set the fence 10 flag on.
@@ -2244,14 +2259,14 @@ extern "C" {
    * The old flag for fence.
    */
 #define ATRSHMLOG_SET_THREAD_FENCE_10(__s) atrshmlog_set_thread_fence_10((__s))
-  
+
   /**
    * \brief We get a fence on or off flag
    *
    * \return
    * The old flag for fence.
    */
-#define  ATRSHMLOG_GET_THREAD_FENCE_10()  atrshmlog_get_thread_fence_10()
+#define  ATRSHMLOG_GET_THREAD_FENCE_11()  atrshmlog_get_thread_fence_11()
   
   /** 
    * \brief Set the fence 11 flag on.
@@ -2270,7 +2285,7 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-#define  ATRSHMLOG_GET_THREAD_FENCE_11()  atrshmlog_get_thread_fence_11()
+#define  ATRSHMLOG_GET_THREAD_FENCE_12()  atrshmlog_get_thread_fence_12()
   
   /**
    * \brief Set the fence 12 flag on.
@@ -2283,14 +2298,15 @@ extern "C" {
    */
 #define ATRSHMLOG_SET_THREAD_FENCE_12(__s) atrshmlog_set_thread_fence_12((__s))
   
+  
   /**
    * \brief We get a fence on or off flag
    *
    * \return
    * The old flag for fence.
    */
-#define  ATRSHMLOG_GET_THREAD_FENCE_12()  atrshmlog_get_thread_fence_12()
-  
+#define  ATRSHMLOG_GET_THREAD_FENCE_13()  atrshmlog_get_thread_fence_13()
+
   /**
    * \brief Set the fence 13 flag on.
    *
@@ -2301,14 +2317,6 @@ extern "C" {
    * The old flag for fence.
    */
 #define ATRSHMLOG_SET_THREAD_FENCE_13(__s) atrshmlog_set_thread_fence_13((__s))
-  
-  /**
-   * \brief We get a fence on or off flag
-   *
-   * \return
-   * The old flag for fence.
-   */
-#define  ATRSHMLOG_GET_THREAD_FENCE_13()  atrshmlog_get_thread_fence_13()
 
   /************************************************************************/
   /* slave related functions */
