@@ -595,11 +595,11 @@ typedef void atrshmlog_thread_ret_t;
 #endif
 
 #if ATRSHMLOG_USE_PTHREAD_TID == 1
-#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (pthread_self()))
+#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (atrshmlog_tid_t)(pthread_self()))
 #endif
 
 #if ATRSHMLOG_USE_SYSCALL_TID == 1
-#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (syscall(SYS_gettid)))
+#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (atrshmlog_tid_t)(syscall(SYS_gettid)))
 #endif
 
 #if ATRSHMLOG_USE_WINTHREAD_TID == 1
@@ -611,15 +611,15 @@ typedef void atrshmlog_thread_ret_t;
 #endif
 
 #if ATRSHMLOG_USE_GETTHRID == 1
-#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (getthrid()))
+#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (atrshmlog_tid_t)(getthrid()))
 #endif
 
 #if ATRSHMLOG_USE_LWP_SELF == 1
-#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (_lwp_self()))
+#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (atrshmlog_tid_t)(_lwp_self()))
 #endif
 
 #if ATRSHMLOG_USE_SOLARIS_THR_SELF == 1
-#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (thr_self()))
+#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (atrshmlog_tid_t)(thr_self()))
 #endif
 
 
