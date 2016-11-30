@@ -682,6 +682,7 @@ atrshmlog_ret_t atrshmlog_attach(void)
 			 
 	    };
 
+	  my_clock_id = 1;
 
 	  for (int aindex = 0; aindex < (sizeof(atrshmlog_init_data) / sizeof(atrshmlog_init_data[0])); aindex++)
 	    atrshmlog_init(atrshmlog_init_data[aindex].c,
