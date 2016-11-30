@@ -85,7 +85,7 @@ int main (int argc, char *argv[])
 	  PP(t_ak);
 	}
       
-      atrshmlog_tbuff_t* t = atomic_load(&atrshmlog_tpa);
+      atrshmlog_tbuff_t* t = (atrshmlog_tbuff_t*)atomic_load(&atrshmlog_tpa);
 
       int i = 0;
 
