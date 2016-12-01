@@ -62,8 +62,12 @@ int main (int argc, char *argv[])
 
   sleep(1);
 
+  #if  ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 0
+
   system("pstree");
   system(argv[2]); // ps -elf H on my box ...
+
+  #endif
   
   printf("\n");
 
