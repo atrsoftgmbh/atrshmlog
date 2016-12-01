@@ -49,6 +49,10 @@ public class ATRSHMLOGTestWaitForSlaves {
 	
 	System.out.println("ATRSHMLOGTestWaitForSlaves : " + flag  + " : ");
 
+	// we have to switch off or the slaves will not go down
+	// this hangs on mingw - on the others it semm NOT to hang...
+	// so i wonder if mingw is the only to do it right...
+	theLog.setLoggingProcessOffFinal();
 	
 	System.out.println(" ");
     }
