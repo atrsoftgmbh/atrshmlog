@@ -37,6 +37,8 @@ public class ATRSHMLOGTestCreateSlave {
 
 	int s = theLog.createSlave();
 
+	theLog.sleepNanos(1000000000);
+
 	System.out.println("ATRSHMLOGTestCreateSlave : " + s + " : ");
 
 	akcount = 0;
