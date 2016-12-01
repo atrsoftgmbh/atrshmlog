@@ -55,7 +55,11 @@ int main (int argc, char *argv[])
   PN(atomic_load(&atrshmlog_f_list_active_slaves));
   PP(atomic_load(&atrshmlog_tpslave));
 
+  #if  ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 0
+  
   system ("pstree");
+
+  #endif
   
   int i = 0;
   
