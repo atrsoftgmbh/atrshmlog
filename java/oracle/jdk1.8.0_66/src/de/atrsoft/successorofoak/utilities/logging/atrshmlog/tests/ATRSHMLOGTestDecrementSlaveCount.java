@@ -37,6 +37,8 @@ public class ATRSHMLOGTestDecrementSlaveCount {
 
 	int s = theLog.createSlave();
 
+	theLog.sleepNanos(1000000000);
+
 	System.out.println("ATRSHMLOGTestDecrementSlaveCount : " + s + " : ");
 
 	akcount = 0;
