@@ -40,7 +40,7 @@ int main (int argc, char *argv[])
   for (int __i = 1; __i < argc; __i++)
     printf("arg %d : %s : \n", __i, argv[__i]);
   
-  if(argc != 3)
+  if(argc != 2)
     exit(1);
   
   int limit = strtol(argv[1], NULL, 10);
