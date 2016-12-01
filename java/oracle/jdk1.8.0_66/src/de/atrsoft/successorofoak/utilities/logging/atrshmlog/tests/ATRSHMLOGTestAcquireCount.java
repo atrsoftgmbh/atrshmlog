@@ -23,11 +23,11 @@ public class ATRSHMLOGTestAcquireCount {
 
 	int count = theLog.getAcquireCount();
 	
-	System.out.println("ATRSHMLOGTestBufferSlaveWaitAcquireCount : " + count  + " : ");
+	System.out.println("ATRSHMLOGTestAcquireCount : " + count  + " : ");
 
         count = theLog.getBufferId();
 	
-	System.out.println("ATRSHMLOGTestBufferSlaveWaitAcquireCount : " + count  + " : ");
+	System.out.println("ATRSHMLOGTestAcquireCount : " + count  + " : ");
 
 
 	System.out.println(" ");
