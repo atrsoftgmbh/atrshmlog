@@ -59,7 +59,7 @@ java -Djava.library.path=%LIBDIR% %PKG%.ATRSHMLOGTestAcquireCount
 
 java -Djava.library.path=%LIBDIR% %PKG%.ATRSHMLOGTestPreallocCount
 
-java -Djava.library.path=%LIBDIR% %PKG%.ATRSHMLOGTestGetTime
+java -Djava.library.path=%LIBDIR% %PKG%.ATRSHMLOGTestGetInitTime
 
 java -Djava.library.path=%LIBDIR% %PKG%.ATRSHMLOGTestGetRealtime
 
