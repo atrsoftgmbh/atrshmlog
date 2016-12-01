@@ -17,7 +17,7 @@ fi
 case $JAVA_JNI_PLATFORM in
     linux)
 	# linux x86_64 gnu
-	CC="gcc -std=gnu11"
+	CC="gcc -std=gnu11 -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR $ATRSHMLOG_PLATFORM_DEFINE "
 	PICFLAG=-fPIC
 	OPTMODE=-O3
 	SHAREMODE=-shared
@@ -25,15 +25,15 @@ case $JAVA_JNI_PLATFORM in
 
     cygwin)
 	# cygwin x86_64 gnu
-	CC="gcc -std=gnu11"
-	PICFLAG=-fPIC
+	CC="gcc -std=gnu11 -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR $ATRSHMLOG_PLATFORM_DEFINE "
+	PICFLAG=
 	OPTMODE=-O3
 	SHAREMODE=-shared
 	;;
 
     mingw)
 	# mingw x86_64 gnu via cygwin
-	CC="x86_64-w64-mingw32-gcc -std=gnu11"
+	CC="x86_64-w64-mingw32-gcc -std=gnu11 -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR $ATRSHMLOG_PLATFORM_DEFINE "
 	PICFLAG=
 	OPTMODE=-O3
 	SHAREMODE=-shared
@@ -59,7 +59,7 @@ LIBS=""
 
 while [ "x$1" != "x" ]
 do
-    if [ $1 == "${1%.c}" ]
+    if [ $1 != "${1%.c}" ]
     then
 	# if we are a .c file we are compiled
 	O="$(basename $1 \.c).o"
