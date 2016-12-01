@@ -11,7 +11,7 @@ import de.atrsoft.successorofoak.utilities.logging.atrshmlog.ATRSHMLOG.atrshmlog
 
 import de.atrsoft.successorofoak.utilities.logging.atrshmlog.ATRSHMLOG.atrshmlog_strategy;
 
-public class ATRSHMLOGTestGetTime {
+public class ATRSHMLOGTestGetInitTime {
 
     ///////////////////////////////////////////////////////
     // we start here and execute as a demo
@@ -23,17 +23,17 @@ public class ATRSHMLOGTestGetTime {
 
 	long t = theLog.getInittimeTscBefore();
 	
-	System.out.println("ATRSHMLOGTestGetTime : " + t  + " : ");
+	System.out.println("ATRSHMLOGTestGetInitTime : " + t  + " : ");
 
 	t = theLog.getInittimeTscAfter();
 	
-	System.out.println("ATRSHMLOGTestGetTime : " + t  + " : ");
+	System.out.println("ATRSHMLOGTestGetInitTime : " + t  + " : ");
 
 	long[] l = new long [2];
 
 	int gret = theLog.getInittime(l);
 
-	System.out.println("ATRSHMLOGTestGetTime : " + l[0] + " : " + l[1]  + " : ");
+	System.out.println("ATRSHMLOGTestGetInitTime : " + l[0] + " : " + l[1]  + " : ");
 
 	
 	System.out.println(" ");
