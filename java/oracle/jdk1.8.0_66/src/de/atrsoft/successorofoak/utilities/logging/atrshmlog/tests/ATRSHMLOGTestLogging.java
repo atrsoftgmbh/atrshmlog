@@ -46,12 +46,16 @@ public class ATRSHMLOGTestLogging {
 
 	int old = theLog.setAreaIchHabeFertig(area, 1);
 	
+	System.out.println("ATRSHMLOGTestLogging : " + old + " : ");
+
 	logging = theLog.getLogging();
 
 	System.out.println("ATRSHMLOGTestLogging : " + logging + " : ");
 
 	old = theLog.setAreaIchHabeFertig(area, 0);
 	
+	System.out.println("ATRSHMLOGTestLogging : " + old + " : ");
+
 	logging = theLog.getLogging();
 
 	System.out.println("ATRSHMLOGTestLogging : " + logging + " : ");

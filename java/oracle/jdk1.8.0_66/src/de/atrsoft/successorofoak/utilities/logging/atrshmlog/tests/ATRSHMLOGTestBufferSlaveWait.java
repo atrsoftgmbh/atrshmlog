@@ -27,7 +27,7 @@ public class ATRSHMLOGTestBufferSlaveWait {
 
 	int old  = theLog.setFListBufferSlaveWait(250000);
 
-	System.out.println("ATRSHMLOGTestWaitForSlaves : " + old  + " : ");
+	System.out.println("ATRSHMLOGTestBufferSlaveWait : " + old  + " : ");
 
 	nanos = theLog.getFListBufferSlaveWait();
 	

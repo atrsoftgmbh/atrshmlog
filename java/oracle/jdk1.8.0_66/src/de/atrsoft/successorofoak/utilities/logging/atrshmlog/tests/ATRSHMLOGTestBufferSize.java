@@ -23,35 +23,35 @@ public class ATRSHMLOGTestBufferSize {
 
 	int size = theLog.getBufferMaxSize();
 	
-	System.out.println("ATRSHMLOGTestBufferMaxSize : " + size  + " : ");
+	System.out.println("ATRSHMLOGTestBufferSize : " + size  + " : ");
 
 	int aksize = theLog.getBufferSize();
 	
-	System.out.println("ATRSHMLOGTestBufferMaxSize : " + aksize  + " : ");
+	System.out.println("ATRSHMLOGTestBufferSize : " + aksize  + " : ");
 
 	int oldsize = theLog.setBufferSize(size * 2);
 	
-	System.out.println("ATRSHMLOGTestBufferMaxSize : " + oldsize  + " : ");
+	System.out.println("ATRSHMLOGTestBufferSize : " + oldsize  + " : ");
 
 	aksize = theLog.getBufferSize();
 	
-	System.out.println("ATRSHMLOGTestBufferMaxSize : " + aksize  + " : ");
+	System.out.println("ATRSHMLOGTestBufferSize : " + aksize  + " : ");
 
 	oldsize = theLog.setBufferSize(aksize / 2);
 	
-	System.out.println("ATRSHMLOGTestBufferMaxSize : " + oldsize  + " : ");
+	System.out.println("ATRSHMLOGTestBufferSize : " + oldsize  + " : ");
 
 	aksize = theLog.getBufferSize();
 	
-	System.out.println("ATRSHMLOGTestBufferMaxSize : " + aksize  + " : ");
+	System.out.println("ATRSHMLOGTestBufferSize : " + aksize  + " : ");
 
 	oldsize = theLog.setBufferSize(size);
 	
-	System.out.println("ATRSHMLOGTestBufferMaxSize : " + oldsize  + " : ");
+	System.out.println("ATRSHMLOGTestBufferSize : " + oldsize  + " : ");
 
 	aksize = theLog.getBufferSize();
 	
-	System.out.println("ATRSHMLOGTestBufferMaxSize : " + aksize  + " : ");
+	System.out.println("ATRSHMLOGTestBufferSize : " + aksize  + " : ");
 	
 	System.out.println(" ");
     }
