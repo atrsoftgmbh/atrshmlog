@@ -405,7 +405,7 @@ extern int atratrshmlog_create(int key, int count);
    
 %ignore INT_FAST64_MAX;
 
-%ignore *UINT_FAST8_MAX;
+%ignore UINT_FAST8_MAX;
    
 %ignore UINT_FAST16_MAX;
    

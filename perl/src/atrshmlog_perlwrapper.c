@@ -639,4 +639,5 @@ int atratrshmlog_create(int key, int count)
   return atrshmlog_create(key, count);
 }
 
+/* end of file */
 
