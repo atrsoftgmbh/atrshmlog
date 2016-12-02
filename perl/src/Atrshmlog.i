@@ -562,10 +562,11 @@ extern int atratrshmlog_create(int key, int count);
 %rename(set_checksum) atrshmlog_set_checksum;  
 %rename(set_autoflush) atrshmlog_set_autoflush;  
 %rename(set_autoflush_process) atrshmlog_set_autoflush_process;  
-%rename(EVENT_POINT_IN_TIME_C) ATRSHMLOG_POINT_IN_TIME_C;
-%rename(EVENT_POINT_IN_TIME_UCS2) ATRSHMLOG_POINT_IN_TIME_UCS2;
-%rename(EVENT_INTERVAL_IN_TIME_C) ATRSHMLOG_INTERVAL_IN_TIME_C;
-%rename(EVENT_INTERVAL_IN_TIME_UCS2) ATRSHMLOG_INTERVAL_IN_TIME_UCS2;
+
+%constant int EVENT_POINT_IN_TIME_C = 80;
+%constant int EVENT_POINT_IN_TIME_UCS2 = 112;
+%constant int EVENT_INTERVAL_IN_TIME_C = 73;
+%constant int EVENT_INTERVAL_IN_TIME_UCS2 = 105;
    
 #include "atrshmlog.h"  
 
