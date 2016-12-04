@@ -3211,8 +3211,8 @@ python_atrshmlog_read(PyObject *self, PyObject *args)
     }
   
   PyTuple_SET_ITEM(t, 0, r);
-  PyTuple_SET_ITEM(t, 1, py_length);
-  PyTuple_SET_ITEM(t, 2, b);
+  PyTuple_SET_ITEM(t, 1, b);
+  PyTuple_SET_ITEM(t, 2, py_length);
   PyTuple_SET_ITEM(t, 3, py_pid);
   PyTuple_SET_ITEM(t, 4, py_tid);
   PyTuple_SET_ITEM(t, 5, py_inittime_s);
@@ -3793,8 +3793,8 @@ python_atrshmlog_read_fetch(PyObject *self, PyObject *args)
   
   PyTuple_SET_ITEM(t, 0, r);
   PyTuple_SET_ITEM(t, 1, py_index);
-  PyTuple_SET_ITEM(t, 2, py_length);
-  PyTuple_SET_ITEM(t, 3, b);
+  PyTuple_SET_ITEM(t, 2, b);
+  PyTuple_SET_ITEM(t, 3, py_length);
   PyTuple_SET_ITEM(t, 4, py_pid);
   PyTuple_SET_ITEM(t, 5, py_tid);
   PyTuple_SET_ITEM(t, 6, py_inittime_s);
