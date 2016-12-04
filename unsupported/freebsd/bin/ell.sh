@@ -1,5 +1,8 @@
 #!/usr/local/bin/bash
+#!/bin/bash
+#!/usr/local/bin/bash
 #!/usr/bin/ksh
+#!/bin/ksh
 #
 # $Id:$
 #
@@ -16,9 +19,49 @@ fi
 
 case $ATRSHMLOG_PLATFORM in
     linux)
-	# linux x86_64 gnu
-	CC="gcc -pthread"
-	LIBMODULE=-latrshmlog
+	case $ATRSHMLOG_FLAVOUR in
+	    1) # fedora way
+		# linux x86_64 gnu
+		CC="gcc -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+
+	    2) # centos 7.2 after manual compile of gcc 5.4
+		CC="x86_64-unknown-linux-gnu-gcc-5.4.0 -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+
+	    7) # ubuntu way
+		# linux x86_64 gnu
+		CC="gcc -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+		
+	    8) # opensuse
+		# linux x86_64 gnu
+		CC="gcc-6 -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+		
+	    9) # debian 8.6 
+		# linux x86_64 gnu
+		CC="gcc -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+
+	    10) # sles , gcc 5.4.0 from source
+		# linux x86_64 gnu
+		CC="gcc -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+	    
+	    *)
+		# linux x86_64 gnu
+		CC="gcc -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+	esac
+
 	;;
 
     cygwin)
@@ -34,9 +77,34 @@ case $ATRSHMLOG_PLATFORM in
 	;;
 
     bsd)
-	# 
-	CC="clang "
-	LIBMODULE="-latrshmlog  -lpthread"
+	case $ATRSHMLOG_FLAVOUR in
+	    3)
+		#  freebsd
+		CC="clang "
+		LIBMODULE="-latrshmlog  -lpthread"
+		;;
+	    4)
+		# openbsd
+		CC="clang "
+		LIBMODULE="-latrshmlog -lpthread"
+		;;
+
+	    
+	    5) # netbsd has a gcc 6.2 in /usr/pkg/gcc6/bin
+		CC="gcc -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+
+	    *)
+		CC=cc
+		LIBMODULE=-latrshmlog
+		;;
+	esac
+	;;
+
+    solaris)
+	CC="gcc -pthread"
+	LIBMODULE="-latrshmlog -lthread -lpthread"
 	;;
 
     *)
@@ -59,6 +127,6 @@ P=${1%%.o}
 
 shift
 
-$CC -L. ${P}.o $* $LIBMODULE -o $P
+$CC -L. -L.. ${P}.o $* $LIBMODULE -o $P
 
 # end of file

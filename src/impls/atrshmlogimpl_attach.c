@@ -69,7 +69,7 @@ void atrshmlog_init(const char *i_suffix,
 }
 
 /**
- * the parameters for inti
+ * the parameters for init
  */
 struct atrshmlog_init_param_s
 {
@@ -682,6 +682,7 @@ atrshmlog_ret_t atrshmlog_attach(void)
 			 
 	    };
 
+	  my_clock_id = 1;
 
 	  for (int aindex = 0; aindex < (sizeof(atrshmlog_init_data) / sizeof(atrshmlog_init_data[0])); aindex++)
 	    atrshmlog_init(atrshmlog_init_data[aindex].c,
@@ -776,3 +777,4 @@ atrshmlog_ret_t atrshmlog_attach(void)
   
   return result;
 }
+

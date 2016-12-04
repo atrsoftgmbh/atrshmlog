@@ -261,26 +261,6 @@
 #define ATRSHMLOGTARGETBUFFERMAX (2)
 
 
-/**
- * \brief This is the first constant for the point in time event
- */
-#define ATRSHMLOGPOINTINTIMEP 'P'
-
-/**
- * \brief This is the second constant for the point in time event
- */
-#define ATRSHMLOGPOINTINTIMEp 'p'
-
-/**
- * \brief This is the first constant for the interval in time event
- */
-#define ATRSHMLOGPOINTINTIMEI 'I'
-
-/**
- * \brief This is the second constant for the interval in time event
- */
-#define ATRSHMLOGPOINTINTIMEi 'i'
-
 /**************************************************************/
 
 /* os specific defines */
@@ -339,6 +319,9 @@
 # define   _POSIX_C_SOURCE 199309L
 #endif
 
+/**
+ * The binding of the thread function
+ */
 #define ATRSHMLOGCDECLBINDING /**/
 
 #endif
@@ -402,8 +385,14 @@
 
 typedef key_t atrshmlog_key_t;
 
+/**
+ * We init the static and dyn allocated to make acess cheaper
+ */
 # define ATRSHMLOGINITINADVANCEDEFAULT 0
 
+/**
+ * We rough calc nanos out of clicks
+ */
 #define ATRSHMLOGSCALECLICKTONANO(__click) (((__click) * 5LL ) / 2LL)
 
 #endif
@@ -606,11 +595,11 @@ typedef void atrshmlog_thread_ret_t;
 #endif
 
 #if ATRSHMLOG_USE_PTHREAD_TID == 1
-#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (pthread_self()))
+#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (atrshmlog_tid_t)(pthread_self()))
 #endif
 
 #if ATRSHMLOG_USE_SYSCALL_TID == 1
-#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (syscall(SYS_gettid)))
+#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (atrshmlog_tid_t)(syscall(SYS_gettid)))
 #endif
 
 #if ATRSHMLOG_USE_WINTHREAD_TID == 1
@@ -622,15 +611,15 @@ typedef void atrshmlog_thread_ret_t;
 #endif
 
 #if ATRSHMLOG_USE_GETTHRID == 1
-#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (getthrid()))
+#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (atrshmlog_tid_t)(getthrid()))
 #endif
 
 #if ATRSHMLOG_USE_LWP_SELF == 1
-#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (_lwp_self()))
+#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (atrshmlog_tid_t)(_lwp_self()))
 #endif
 
 #if ATRSHMLOG_USE_SOLARIS_THR_SELF == 1
-#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (thr_self()))
+#define ATRSHMLOG_GETTHREADID(__o) ((__o) = (atrshmlog_tid_t)(thr_self()))
 #endif
 
 
@@ -1734,6 +1723,8 @@ struct atrshmlog_slave_s {
 
 typedef struct atrshmlog_slave_s atrshmlog_slave_t;
 
+/*****************************************************************/
+
 /* 
  * the following is a pure result of the breaking of the module into
  * separate implementation files.
@@ -1825,14 +1816,14 @@ extern void atrshmlog_memset_prealloced(void);
 extern atomic_int atrshmlog_last_mem_to_shm;
 
 
+/************************************************************************/
+/* helper macros*/
+
+
 /** 
  * \brief The memory check pattern
  */
 #define ATRSHMLOGSAFEGUARDVALUE (0xFE01FE01L)
-
-
-/************************************************************************/
-/* helper macros*/
 
 /**
  * \brief We add to the statistics counter

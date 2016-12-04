@@ -1,9 +1,0 @@
-#!/bin/bash
-#!/usr/bin/ksh
-#
-# $Id:$
-#
-# we stop th e reader
-atrshmlogsignalreader 9999 9999
-
-# end of file

@@ -235,6 +235,7 @@ extern atrshmlog_ret_t atrshmlog_poke(volatile const void* area, int index, int 
 
 extern atrshmlog_ret_t atrshmlog_peek(volatile const void* area, int index);
 
+extern int atratrshmlog_create(int key, int count);
 
 %}
 
@@ -404,7 +405,7 @@ extern atrshmlog_ret_t atrshmlog_peek(volatile const void* area, int index);
    
 %ignore INT_FAST64_MAX;
 
-%ignore *UINT_FAST8_MAX;
+%ignore UINT_FAST8_MAX;
    
 %ignore UINT_FAST16_MAX;
    
@@ -540,7 +541,7 @@ extern atrshmlog_ret_t atrshmlog_peek(volatile const void* area, int index);
 %rename(reuse_thread_buffers) atrshmlog_reuse_thread_buffers;
 %rename(verify) atrshmlog_verify;
 %rename(get_clicktime) atrshmlog_get_clicktime;
-%rename(create) atrshmlog_create;
+%rename(create) atratrshmlog_create;
 %rename(delete) atrshmlog_delete;
 %rename(cleanup_locks) atrshmlog_cleanup_locks;
 %rename(init_shm_log) atrshmlog_init_shm_log;
@@ -561,30 +562,15 @@ extern atrshmlog_ret_t atrshmlog_peek(volatile const void* area, int index);
 %rename(set_checksum) atrshmlog_set_checksum;  
 %rename(set_autoflush) atrshmlog_set_autoflush;  
 %rename(set_autoflush_process) atrshmlog_set_autoflush_process;  
-%rename(EVENT_POINT_IN_TIME_C) ATRSHMLOG_POINT_IN_TIME_C;
-%rename(EVENT_POINT_IN_TIME_UCS2) ATRSHMLOG_POINT_IN_TIME_UCS2;
-%rename(EVENT_INTERVAL_IN_TIME_C) ATRSHMLOG_INTERVAL_IN_TIME_C;
-%rename(EVENT_INTERVAL_IN_TIME_UCS2) ATRSHMLOG_INTERVAL_IN_TIME_UCS2;
+
+%constant int EVENT_POINT_IN_TIME_C = 80;
+%constant int EVENT_POINT_IN_TIME_UCS2 = 112;
+%constant int EVENT_INTERVAL_IN_TIME_C = 73;
+%constant int EVENT_INTERVAL_IN_TIME_UCS2 = 105;
    
 #include "atrshmlog.h"  
 
 
-/** 
- * \brief We create the shm  area.
- *
- * \param i_key
- * The shmid of the system.
- *
- * \param i_count
- * The number of buffers for this area.
- *
- * \return
- * - Positive number for the shmid in case of success
- * - negative for error
- */
-extern int atrshmlog_create(const atrshmlog_key_t i_key,
-			    const int i_count);
-				     
 /** 
  * \brief We destroy the shm 
  *
@@ -750,7 +736,7 @@ extern void atratrshmlog_get_statistics(
 				int index,
 				int *OUTPUT,
 				char *read_buffer, 
-				int *OUTPUT_length,		      
+				int *OUTPUT,		      
 				long *OUTPUT,		     
 				long *OUTPUT,			
 				long *OUTPUT,	
@@ -854,5 +840,6 @@ atrshmlog_ret_t atrshmlog_peek(volatile const void* area, int index)
   return result;
 }
 
+extern int atratrshmlog_create(int key, int count);
 
 /* end of file */

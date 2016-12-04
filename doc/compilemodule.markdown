@@ -22,9 +22,9 @@ Change to BASEDIR (the directory that contains the whole thing).
 
 Change to src and check the atrshmlogchecksystem script output.
 
-Then use the proper dot file in BASEDIR like this (example linux) :
+Then use the proper dot file in BASEDIR like this (example fedora linux) :
 
-     $ . dot.platform.sh.linux
+     $ . dot.platform.sh.fedora_linux
 
 
 So you switch then to the src back.

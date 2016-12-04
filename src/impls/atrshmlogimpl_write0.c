@@ -420,6 +420,19 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 	}
       else if (g->autoflush == 2)
 	{
+	  int chksum = 0;
+
+	  // we calc the checksum trivial. but this is ok for our needs
+	  if (atrshmlog_checksum)
+	    {
+	      for (int k = 0; k < tbuff->size; k++)
+		{
+		  chksum += tbuff->b[k];
+		}
+	    }
+
+	  tbuff->chksum = chksum;
+	  
 	  int rettm = atrshmlog_transfer_mem_to_shm(tbuff, g);
 	}
     }

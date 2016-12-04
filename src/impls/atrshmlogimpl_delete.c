@@ -12,6 +12,8 @@
  * \n Main code:
  *
  * \brief We destroy the shm 
+ *
+ * test t_delete.c
  */
 atrshmlog_ret_t atrshmlog_delete(const int i_shmid)
 {

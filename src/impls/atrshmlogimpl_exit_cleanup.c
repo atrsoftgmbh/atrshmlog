@@ -52,8 +52,14 @@ void atrshmlog_exit_cleanup (void)
 #endif
   
   // Do we have to initialize ?
-  if (g->atrshmlog_idnotok)
-    atrshmlog_init_thread_local (g);
+  if (g->atrshmlog_idnotok == -1)
+    {
+      atrshmlog_init_thread_local (g);
+
+      // bad luck. no transfer possible.
+      if(g->atrshmlog_idnotok)
+	return;
+    }
 
   // And now we have to switch the flag for THIS thread to on again.
   // or we never make it if someone made a stop for us.

@@ -5,7 +5,7 @@ You need the files to do something.
 
 So you can get them from github :
 
-     $ git xxxxxxxxxxxx
+     $ git clone https://github.com/atrsoftgmbh/atrshmlog
 
 Or you make a download of the atrsoftgmbh_shmlog_X_X_X.tar.gz 
 from the website

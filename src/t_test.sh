@@ -14,6 +14,7 @@ atrshmlogcreate $1 $2
 atrshmloginit
 
 tests/t_acquire_buffer 1000
+tests/t_alloc 1000
 tests/t_attach
 tests/t_create_mapped_file 1 42
 tests/t_attach_mapped_file 1 42

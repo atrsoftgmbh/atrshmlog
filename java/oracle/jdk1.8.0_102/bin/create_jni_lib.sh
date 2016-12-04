@@ -63,6 +63,8 @@ esac
  
 ./copyjnilib.sh $LIB
 
+./compile_to_class_package_tests.sh
+
 date
 
 # end of file
