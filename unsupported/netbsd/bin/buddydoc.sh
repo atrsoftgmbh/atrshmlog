@@ -55,6 +55,11 @@ case $ATRSHMLOG_PLATFORM in
 	
         ;;
     
+    solaris)
+	# 
+	DOXYGEN=doxygen
+	;;
+
     *)
 
 	echo "no platform found. i gave up."
