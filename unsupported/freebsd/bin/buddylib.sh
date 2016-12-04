@@ -1,5 +1,8 @@
 #!/usr/local/bin/bash
+#!/bin/bash
+#!/usr/local/bin/bash
 #!/usr/bin/ksh
+#!/bin/ksh
 # $Id:$
 #
 # build the lib
@@ -19,6 +22,7 @@ case $ATRSHMLOG_PLATFORM in
 	AR=ar
 	LIB=libatrshmlog.a
 	OBJ="atrshmlog.o $(ls impls/*.o | grep atrshmlogimpl )"
+	REBUILDTABLE="s"
 	;;
 
     cygwin)
@@ -26,6 +30,7 @@ case $ATRSHMLOG_PLATFORM in
 	AR=ar
 	LIB=libatrshmlog.a
 	OBJ="atrshmlog.o $(ls impls/*.o | grep atrshmlogimpl )"
+	REBUILDTABLE="s"
 	;;
 
     mingw)
@@ -33,6 +38,7 @@ case $ATRSHMLOG_PLATFORM in
 	AR="x86_64-w64-mingw32-ar"
 	LIB=libatrshmlog.a
 	OBJ="atrshmlog.o $(ls impls/*.o | grep atrshmlogimpl )"
+	REBUILDTABLE="s"
 	;;
 
 
@@ -41,6 +47,15 @@ case $ATRSHMLOG_PLATFORM in
 	AR=ar
 	LIB=libatrshmlog.a
 	OBJ="atrshmlog.o $(ls impls/*.o | grep atrshmlogimpl )"
+	REBUILDTABLE="s"
+	;;
+
+    solaris)
+	# 
+	AR=ar
+	LIB=libatrshmlog.a
+	OBJ="atrshmlog.o $(ls impls/*.o | grep atrshmlogimpl )"
+	REBUILDTABLE="-r -s"
 	;;
 
     *)
@@ -58,6 +73,6 @@ then
 fi
 
 $AR r $LIB $OBJ
-$AR s $LIB
+$AR $REBUILDTABLE $LIB
 
 # end of file
