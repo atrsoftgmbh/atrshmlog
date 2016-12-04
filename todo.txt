@@ -1,6 +1,3 @@
-test python
-
-----
 1 2 0 
 ----
 
@@ -52,6 +49,9 @@ ruby extension
 
 -----
 
+perl python swig write0 call
+
+-----
 
 adjustment script
 static buffers
