@@ -2,6 +2,7 @@
 #!/bin/bash
 #!/usr/local/bin/bash
 #!/usr/bin/ksh
+#!/bin/ksh
 #
 # $Id:$
 #

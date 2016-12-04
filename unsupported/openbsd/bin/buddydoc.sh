@@ -2,6 +2,7 @@
 #!/bin/bash
 #!/usr/local/bin/bash
 #!/usr/bin/ksh
+#!/bin/ksh
 # $Id:$
 #
 # generate the documentation via doxygen
@@ -34,12 +35,16 @@ case $ATRSHMLOG_PLATFORM in
 
 
     bsd)
-	case $ATRHMLOG_FLAVOUR in
-	    1) # freebsd didn't make it for me. too long timeout
+	case $ATRSHMLOG_FLAVOUR in
+	    3) # freebsd didn't make it for me. too long timeout
 		DOXYGEN=
 	    ;;
 
-	    2) # the openbsd did it
+	    4) # the openbsd did it
+		DOXYGEN=doxygen
+		;;
+
+	    5) # the netbsd did it
 		DOXYGEN=doxygen
 		;;
 
@@ -50,6 +55,11 @@ case $ATRSHMLOG_PLATFORM in
 	
         ;;
     
+    solaris)
+	# 
+	DOXYGEN=doxygen
+	;;
+
     *)
 
 	echo "no platform found. i gave up."
