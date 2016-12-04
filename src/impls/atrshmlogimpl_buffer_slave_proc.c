@@ -129,6 +129,12 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
   
   atrshmlog_slave_t* i = (atrshmlog_slave_t*)i_arg;
   
+  i->tid = g->atrshmlog_thread_tid;
+
+  i->g = g;
+
+  g->i = i;
+
   // we connect to the slave list
   
   i->next = (atrshmlog_slave_t*)atomic_load_explicit(&atrshmlog_tpslave, memory_order_relaxed);
@@ -141,11 +147,6 @@ atrshmlog_thread_ret_t atrshmlog_f_list_buffer_slave_proc(void* i_arg)
 					       memory_order_relaxed))
     ;
 
-  i->tid = g->atrshmlog_thread_tid;
-
-  i->g = g;
-
-  g->i = i;
   
   // we are on the list now
   

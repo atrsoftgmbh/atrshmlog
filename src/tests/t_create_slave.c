@@ -40,7 +40,7 @@ int main (int argc, char *argv[])
   for (int __i = 1; __i < argc; __i++)
     printf("arg %d : %s : \n", __i, argv[__i]);
   
-  if(argc != 3)
+  if(argc != 2)
     exit(1);
   
   int limit = strtol(argv[1], NULL, 10);
@@ -62,8 +62,12 @@ int main (int argc, char *argv[])
 
   sleep(1);
 
+  #if  ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 0
+
   system("pstree");
   system(argv[2]); // ps -elf H on my box ...
+
+  #endif
   
   printf("\n");
 

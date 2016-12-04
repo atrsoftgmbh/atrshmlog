@@ -14,4 +14,8 @@ export PYTHON_VERSION
 PYTHON_PLATFORM=linux
 export PYTHON_PLATFORM
 
+# we set the path to find the module for tests
+PYTHONPATH=.:$(pwd)
+export PYTHONPATH
+
 # end of file

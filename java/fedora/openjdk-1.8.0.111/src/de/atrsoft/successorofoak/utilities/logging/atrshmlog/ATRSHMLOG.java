@@ -81,7 +81,7 @@ public class ATRSHMLOG {
      * 
      * To interpret the content you can use this enum.
      */
-    static enum atrshmlog_counter {
+    public static enum atrshmlog_counter {
 	/**
 	 *   We deliver in the get function the actual click time low part 
 	 */
@@ -544,7 +544,7 @@ public class ATRSHMLOG {
      * do this after a real error is encountered. 
      * Real error is a value thats not 0.
      */
-    static enum atrshmlog_error {
+    public static enum atrshmlog_error {
 	
 	/**
 	 * Operation was successful, no error.
@@ -1054,7 +1054,7 @@ public class ATRSHMLOG {
      *
      * See the doc for info.
      */
-    static enum atrshmlog_strategy {
+    public static enum atrshmlog_strategy {
     
 	/**
 	 * We discard the log 
@@ -2438,14 +2438,14 @@ public class ATRSHMLOG {
      *
      * If we deliver a 0 we start from top.
      * 
-     * @param i_thread_local
-     * Pointer to thread local or NULL
+     * @param i_slave_local
+     * Pointer to slave local or NULL
      *
      * @return
      * - top if parameter NULL
      * - next if parameter is thread local of slave
      */
-    public native long getNextSlaveLocal(long i_thread_local);
+    public native long getNextSlaveLocal(long i_slave_local);
 
     /** 
      *  We get the tid of a thread local
@@ -2462,15 +2462,15 @@ public class ATRSHMLOG {
     /** 
      *  We remove the save from the list of slaves
      *
-     * @param i_thread_local
-     * Pointer to thread local or NULL
+     * @param i_slave_local
+     * Pointer to slave local or NULL
      *
      * @return
      * - 0 ok
      * - 1 list was empty
      * - non zero error
      */
-    public native int removeSlaveViaLocal(long i_thread_local);
+    public native int removeSlaveViaLocal(long i_slave_local);
 	
     /** 
      *  We make reuse of buffers of a dead thread

@@ -83,7 +83,7 @@ int main (int argc, char *argv[])
   
   PN(atomic_load(&atrshmlog_counter[atrshmlog_counter_free]));
 
-  atrshmlog_tbuff_t* t = atomic_load(&atrshmlog_tpa);
+  atrshmlog_tbuff_t* t = (atrshmlog_tbuff_t*)atomic_load(&atrshmlog_tpa);
 
   PP(t);
   PN(t->pid);

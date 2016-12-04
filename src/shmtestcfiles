@@ -4,6 +4,7 @@ atrshmlogtest01.c
 atrshmlogfork.c
 atrshmlogforkwrite.c
 t_acquire_buffer.c
+t_alloc.c
 t_attach.c
 t_buffer_slave_proc.c
 t_cleanup_locks.c

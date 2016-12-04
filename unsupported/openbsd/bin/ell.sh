@@ -2,6 +2,7 @@
 #!/bin/bash
 #!/usr/local/bin/bash
 #!/usr/bin/ksh
+#!/bin/ksh
 #
 # $Id:$
 #
@@ -30,6 +31,30 @@ case $ATRSHMLOG_PLATFORM in
 		LIBMODULE=-latrshmlog
 		;;
 
+	    7) # ubuntu way
+		# linux x86_64 gnu
+		CC="gcc -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+		
+	    8) # opensuse
+		# linux x86_64 gnu
+		CC="gcc-6 -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+		
+	    9) # debian 8.6 
+		# linux x86_64 gnu
+		CC="gcc -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+
+	    10) # sles , gcc 5.4.0 from source
+		# linux x86_64 gnu
+		CC="gcc -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+	    
 	    *)
 		# linux x86_64 gnu
 		CC="gcc -pthread"
@@ -53,23 +78,35 @@ case $ATRSHMLOG_PLATFORM in
 
     bsd)
 	case $ATRSHMLOG_FLAVOUR in
-	    1)
-		# 
+	    3)
+		#  freebsd
 		CC="clang "
 		LIBMODULE="-latrshmlog  -lpthread"
 		;;
-	    2)
-		#
+	    4)
+		# openbsd
 		CC="clang "
 		LIBMODULE="-latrshmlog -lpthread"
 		;;
+
+	    
+	    5) # netbsd has a gcc 6.2 in /usr/pkg/gcc6/bin
+		CC="gcc -pthread"
+		LIBMODULE=-latrshmlog
+		;;
+
 	    *)
 		CC=cc
 		LIBMODULE=-latrshmlog
 		;;
 	esac
 	;;
-    
+
+    solaris)
+	CC="gcc -pthread"
+	LIBMODULE="-latrshmlog -lthread -lpthread"
+	;;
+
     *)
 
 	echo "no platform found. i gave up."
@@ -90,6 +127,6 @@ P=${1%%.o}
 
 shift
 
-$CC -L. ${P}.o $* $LIBMODULE -o $P
+$CC -L. -L.. ${P}.o $* $LIBMODULE -o $P
 
 # end of file

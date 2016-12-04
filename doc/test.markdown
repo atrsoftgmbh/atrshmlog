@@ -525,7 +525,7 @@ This is the simple test program.
 
 You execute it this way
 
-     $ atrshmlogtest01
+     $ tests/atrshmlogtest01
 
 You can give additional parameters.
 
@@ -635,7 +635,7 @@ So this was the test if this works even with the C++ compiler.
 
 The execute is
 
-     $ atrshmlogtest02
+     $ tests/atrshmlogtest02
 
 The output is
 
@@ -675,7 +675,7 @@ The program then makes one thread for the total of loops by parameter one and tw
 
 You can start it like this
 
-     $ atrshmlogtest03 2 1024000 16
+     $ tests/atrshmlogtest03 2 1024000 16
 
 the output is then
 
@@ -841,7 +841,7 @@ to play a small ping pong conversation via shared memory.
 
 You execute the prgram like this
 
-     $ atrshmlogfork 8
+     $ tests/atrshmlogfork 8
 
 The output is
 
@@ -891,7 +891,7 @@ the atexit function.
 
 You execute the program like this
 
-     $ atrshmlogforkwrite 8
+     $ tests/atrshmlogforkwrite 8
 
 The output is same as for atrshmlogfork, only a pstree is used
 while the process is up to show the running threads of the box.
@@ -1213,9 +1213,21 @@ on top of the used buffer list mechanism.
 
 You can ignore it for now.
 
+t_test.sh
+---------
+
+Ok. We have from 1.1.0 on here the module simple tests.
+The drivers are in tests.
+We have nearly 100 % covered with a simple test, only some getters for
+constant data is excluded (I leave this as an exercise to those
+who are so paranoic that they don't trust the compiler ...
+but then - can you trust the testprogram if you don't trust the
+compiler anyway ?!??!)
+
+So you can test ervery one function that its worth here.
 
 
-Summery
+Summary
 -------
 
 You make the module with your settings for the defines and defaults.

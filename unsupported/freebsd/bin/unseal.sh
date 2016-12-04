@@ -1,5 +1,8 @@
 #!/usr/local/bin/bash
+#!/bin/bash
+#!/usr/local/bin/bash
 #!/usr/bin/ksh
+#!/bin/ksh
 #
 # $Id:$
 #
@@ -21,21 +24,21 @@ find . -type f -name 'Doxyfile' -print | xargs -n1 -ifile chmod 644 file
 
 find . -type f -name '*.markdown' -print | xargs -n1 -ifile chmod 644 file
 
-find . -type f -name 'atrshmlog.h.linux' -print | xargs -n1 -ifile chmod 644 file
+find . -type f -name 'atrshmlog.h.*linux' -print | xargs -n1 -ifile chmod 644 file
 
 find . -type f -name 'atrshmlog.h.cygwin' -print | xargs -n1 -ifile chmod 644 file
 
 find . -type f -name 'atrshmlog.h.mingw' -print | xargs -n1 -ifile chmod 644 file
 
-find . -type f -name 'atrshmlog.h.freebsd' -print | xargs -n1 -ifile chmod 644 file
+find . -type f -name 'atrshmlog.h.*bsd' -print | xargs -n1 -ifile chmod 644 file
 
-find . -type f -name 'atrshmlog_internal.h.linux' -print | xargs -n1 -ifile chmod 644 file
+find . -type f -name 'atrshmlog_internal.h.*linux' -print | xargs -n1 -ifile chmod 644 file
 
 find . -type f -name 'atrshmlog_internal.h.cygwin' -print | xargs -n1 -ifile chmod 644 file
 
 find . -type f -name 'atrshmlog_internal.h.mingw' -print | xargs -n1 -ifile chmod 644 file
 
-find . -type f -name 'atrshmlog_internal.h.freebsd' -print | xargs -n1 -ifile chmod 644 file
+find . -type f -name 'atrshmlog_internal.h.*bsd' -print | xargs -n1 -ifile chmod 644 file
 
 find . -type f -name 'atrshmlogcalc' -print | xargs -n1 -ifile chmod 755 file
 find . -type f -name 'atrshmlogcheckcomplete' -print | xargs -n1 -ifile chmod 755 file

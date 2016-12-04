@@ -81,7 +81,7 @@ int main (int argc, char *argv[])
   
   PN(atomic_load(&atrshmlog_counter[atrshmlog_counter_flush]));
 
-  atrshmlog_tbuff_t* t = atomic_load(&atrshmlog_tpf);
+  atrshmlog_tbuff_t* t = (atrshmlog_tbuff_t*)atomic_load(&atrshmlog_tpf);
 
   int i = 0;
 

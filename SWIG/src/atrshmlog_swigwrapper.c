@@ -8,7 +8,7 @@
  * So this is the gettime, read write etc.
  */
 
-#include "atrshmlog.h"
+#include "atrshmlog_internal.h"
 
 #include <string.h>
   
@@ -633,5 +633,13 @@ void atratrshmlog_read_fetch(volatile const void* i_area,
       *o_counter_write2_adaptive_very_fast = counter_write2_adaptive_very_fast;
     }
 }
+
+
+int atratrshmlog_create(int key, int count)
+{
+  return atrshmlog_create(key, count);
+}
+
+/* end of file */
 
 

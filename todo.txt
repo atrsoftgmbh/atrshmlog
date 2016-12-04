@@ -1,20 +1,8 @@
------
 
-doc
-
------
-
-test jni
-
------
-
-test perl
-
------
-
-test python
+ich habe fertig nur noch pause...
 
 ----
+
 
 sql logger
 
@@ -24,7 +12,42 @@ no sql logger
 
 -----
 
+detach reattach
+
+-----
+
 packdistro mit omit
+
+----
+
+tool calc realtime from intitime and lasttime and clicktime ...
+
+-----
+get pid
+
+get wait waittime
+
+get set transfer to shm wait time
+
+get delimiter
+
+get last mem to shm
+
+get tps tpa tpf
+
+event locks und max statistics off by one geradeziehen.
+
+setFListBufferSlaveCount nach attach nachstarten oder stoppen von slaves
+
+reflexion von thread local und slave local
+
+-----
+
+ruby extension
+
+-----
+
+perl python swig write0 call
 
 -----
 
@@ -34,6 +57,10 @@ static buffers
 ------
 
 install script in bin
+
+------
+
+1 3 0
 
 ------
 

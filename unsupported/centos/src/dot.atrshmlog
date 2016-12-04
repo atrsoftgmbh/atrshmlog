@@ -1,6 +1,0 @@
-#shmid is
-ATRSHMLOG_ID="2031621"
-export ATRSHMLOG_ID
-ATRSHMLOG_COUNT=8
-export ATRSHMLOG_COUNT
-# end of file

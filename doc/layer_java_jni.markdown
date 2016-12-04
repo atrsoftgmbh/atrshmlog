@@ -74,7 +74,7 @@ You have several write methods.
 You can give only the basic technical info, or you can give a String,
 or a byte array.
 
-For the String version there are two methods.
+For the String version there are three methods.
 
 The basic write with
 String transfers the String as ucs2 char array to the module write.
@@ -99,6 +99,12 @@ as Ucs2 and so the eventflags can be used as you decide, but only the Ucs
 versions will be delivered to the converter. The C versions are replaced
 by the Ucs versions.
  
+The third write with String uses a start and a limitation for the length - so you can
+write a part of a String thats far to big or even with unknown length
+by supporting
+a limit. If the string is shorter the limit will be ignored, if the
+String is bigger it will be cut of at the limit.
+
 The last write uses a byte array. So you can transfer what you want
 in form of a byte string - only the size has to fit for logging with the
 module. Interpretation is of course than a problem.
@@ -475,14 +481,30 @@ That's the prefered way to finish a slave.
 This is a kind of iterator for the slave list.
 
 You start with 0 and get
-the top of the slave list. The list contains the thread locals for the
+the top of the slave list. The list contains the slave locals for the
 slaves.
 
-You end up when the last slave is used with 0 again - meaening you have done
+You end up when the last slave is used with 0 again - meaning you have done
 a full walk.
 
-The value is the thread local and can be used to identify a thread, to
+The value is the slave local and can be used to identify a slave, to
 turn it off, to get its tid and to remove it from the slave list.
+
+####turnSlaveOff()
+
+You can switch the run flag off for the slave.
+
+####removeSlaveViaLocal()
+
+This removes an entry from the slave list - you need this if you kill a slave
+to maintain the list.
+
+The slave does maintain the list if it is ended by turnSlaveOff. so only if
+you kill you need this.
+
+####getSlaveTid()
+
+Gett the tid of the slave from its local.
 
 ####getThreadLocalTid ()
 
@@ -490,13 +512,6 @@ This delivers the thread id from the thread local structure of the thread.
 
 You can use this to identify the thread with your OS or thread management
 system.
-
-####removeSlaveViaLocal()
-
-This removes an entry from the slave list - you need this if you kill a thread
-to maintain the list.
-
-WARNING: To use it you have to call it BEFORE you kill.
 
 ####setInitBuffersInAdvanceOn()
 
@@ -530,6 +545,30 @@ This delivers the flag value.
 
 This is for killed threads. If you have the tid the module uses you can get
 the  buffers back on the available list for reuse.
+
+####setAutoflushProcess()
+
+This sets the autoflush default for the process.
+
+####getAutoflushProcess()
+
+This gets the autoflush default for the process.
+
+####setAutoflush()
+
+This sets the thread autoflush.
+
+####getAutoflush()
+
+This gets the thread autoflush.
+
+####getChecksum()
+
+Get the checksum flag for the process.
+
+####setChecksum()
+
+Set the checksum flag for the process.
 
 ####verify()
 

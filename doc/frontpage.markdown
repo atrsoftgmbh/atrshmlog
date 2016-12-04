@@ -28,9 +28,6 @@ There is
 - the shared memory initialization tool atrshmloginit.c
 - the shared memory log off switch tool atrshmlogoff.c
 - the shared memory log on  switch tool atrshmlogon.c
-- the standard reader atrshmlogreader.c
-- the buffered reader atrshmlogreaderb.c
-- the threaded reader atrshmlogreaderc.c
 - the threaded list reader atrshmlogreaderd.c
 - the reinitialize tool atrshmlogreset.c
 - the communication tool atrshmlogsignalreader.c
@@ -207,9 +204,10 @@ The documentation is for the short path this web documentation.
 
 For the long path see the doc folder and its files.
 
-The long term documentation is writen with libreoffice.
+The long term documentation is written with libreoffice.
 
-Start with the doc atrshmlog.odt.
+Start with the doc atrshmlog.odt or atrshmlog.pdf.
+
 
 
 

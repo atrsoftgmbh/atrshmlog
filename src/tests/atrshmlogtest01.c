@@ -1132,7 +1132,65 @@ int main (int argc, char*argv[])
 		     "only start",
 		    sizeof("only start") - 1);
 
+    if (argc > 1)
+      {
+	if (strcmp(argv[1], "-auto") == 0)
+	  {
+	    ATRSHMLOG_SET_AUTOFLUSH(1);
 
+	    ATRSHMLOG_WRITE(1003,
+		     'I',
+		     1,
+		     starttime,
+		     0,
+		     "auto 1",
+		    sizeof("auto 1") - 1);
+
+	    ATRSHMLOG_WRITE(1003,
+		     'I',
+		     1,
+		     starttime,
+		     0,
+		     "auto 2",
+		    sizeof("auto 2") - 1);
+
+	    ATRSHMLOG_WRITE(1003,
+		     'I',
+		     1,
+		     starttime,
+		     0,
+		     "auto 3",
+		    sizeof("auto 3") - 1);
+
+	    ATRSHMLOG_SET_AUTOFLUSH(2);
+
+	    ATRSHMLOG_WRITE(1003,
+		     'I',
+		     1,
+		     starttime,
+		     0,
+		     "auto 4",
+		    sizeof("auto 4") - 1);
+
+	    ATRSHMLOG_WRITE(1003,
+		     'I',
+		     1,
+		     starttime,
+		     0,
+		     "auto 5",
+		    sizeof("auto 5") - 1);
+
+	    ATRSHMLOG_WRITE(1003,
+		     'I',
+		     1,
+		     starttime,
+		     0,
+		     "auto 6",
+		    sizeof("auto 6") - 1);
+
+	    
+	  }
+      }
   }
   
   {

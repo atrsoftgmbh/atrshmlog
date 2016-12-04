@@ -41,6 +41,8 @@ static atomic_flag atrshmlog_alloc_init = ATOMIC_FLAG_INIT;
  * \return
  * - 0 : error
  * - non zero : adress of the new buffer for the thread
+ *
+ * test t_alloc.c
  */
 atrshmlog_tbuff_t* atrshmlog_alloc(void)
 {
