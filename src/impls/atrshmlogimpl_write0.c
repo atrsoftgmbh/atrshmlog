@@ -100,6 +100,12 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 
   // Initialized
 
+  atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
+
+  /* Can be happen : end of logging anounced by user via flag in shm */
+  if (atomic_load_explicit(&a_shm->ich_habe_fertig, memory_order_acquire) != 0) 
+    return atrshmlog_error_write0_6;
+  
   // The hidden mechanism to get things minimised
   // in case we are bound to a layer for another language.
   if (i_eventflag == ATRSHMLOGPOINTINTIMEP
@@ -238,8 +244,6 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
       if (atrshmlog_logging_process_off_final)
 	return atrshmlog_error_write0_5;
 
-      atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
-
       /* Can be happen : end of logging anounced by user via flag in shm */
       if (atomic_load_explicit(&a_shm->ich_habe_fertig, memory_order_acquire) != 0) 
 	return atrshmlog_error_write0_6;
@@ -268,8 +272,6 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 	return atrshmlog_error_write0_7;
       }
       
-      atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
-
       /* Bad thing. safeguard invalid */
       if (a_shm->shmsafeguard != ATRSHMLOGSAFEGUARDVALUE) {
 	ATRSHMLOGSTAT(atrshmlog_counter_write_safeguard_shm);
@@ -277,10 +279,6 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 	return atrshmlog_error_write0_8;
       }
   
-      /* Can be happen : end of logging anounced by user via flag in shm */
-      if (atomic_load_explicit(&a_shm->ich_habe_fertig, memory_order_acquire) != 0) 
-	return atrshmlog_error_write0_9;
-
       tbuff->number_dispatched = g->number_dispatched++;
 
       tbuff->counter_write0 = g->counter_write0;
@@ -357,8 +355,6 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 	return atrshmlog_error_write0_7;
       }
       
-      atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
-
       /* Bad thing. safeguard invalid */
       if (a_shm->shmsafeguard != ATRSHMLOGSAFEGUARDVALUE) {
 	ATRSHMLOGSTAT(atrshmlog_counter_write_safeguard_shm);
@@ -366,10 +362,6 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 	return atrshmlog_error_write0_8;
       }
   
-      /* Can be happen : end of logging anounced by user via flag in shm */
-      if (atomic_load_explicit(&a_shm->ich_habe_fertig, memory_order_acquire) != 0) 
-	return atrshmlog_error_write0_9;
-
       tbuff->number_dispatched = g->number_dispatched++;
 
       tbuff->counter_write0 = g->counter_write0;

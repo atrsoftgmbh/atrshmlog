@@ -1,9 +1,4 @@
 
-ich habe fertig nur noch pause...
-
-----
-
-
 sql logger
 
 ------

@@ -1195,6 +1195,8 @@ struct atrshmlog_area_s {
    * \li 0 run, 
    * \li <>0 stop 
    *
+   * we can switch on and off and on again ...
+   *
    * rw
    */
   atomic_int ich_habe_fertig;
