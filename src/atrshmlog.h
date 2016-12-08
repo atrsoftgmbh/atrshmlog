@@ -1727,6 +1727,21 @@ extern "C" {
    */
 #define ATRSHMLOG_ATTACH() atrshmlog_attach()
 
+  /** 
+   * \brief We disconnect to the shm buffer.
+   * 
+   * We do no cleanup.
+   *
+   * So if we attach again at another area
+   * we deliver to that area.
+   *
+   * We do not log after we are detached
+   *
+   * \return
+   * void
+   */
+#define ATRSHMLOG_DETACH() atrshmlog_detach()
+
 
   /** 
    * \brief Get the prefix for variables and flagfiles.
@@ -2937,6 +2952,21 @@ extern "C" {
    * - Positive if we were already connected.
    */
   extern atrshmlog_ret_t atrshmlog_attach(void);
+
+  /** 
+   * \brief We disconnect to the shm buffer.
+   * 
+   * We do no cleanup.
+   *
+   * So if we attach again at another area
+   * we deliver to that area.
+   *
+   * We do not log after we are detached
+   *
+   * \return
+   * void
+   */
+  extern void atrshmlog_detach(void);
 
 
   /**
