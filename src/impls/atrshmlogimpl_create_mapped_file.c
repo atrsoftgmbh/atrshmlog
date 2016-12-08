@@ -134,6 +134,16 @@ void * atrshmlog_attach_mapped_file(int index, int size)
   return p;
 }
 
+int atrshmlog_detach_mapped_file(void* p)
+{
+  int result = UnmapViewOfFile(p);
+
+  if (result != 0)
+    return 0;
+     
+  return -1;
+}
+
 
 #endif
 

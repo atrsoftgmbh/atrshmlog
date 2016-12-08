@@ -978,7 +978,11 @@ extern "C" {
     /**< The number of checksum errors in tranfer mem to shm part 1 */
     atrshmlog_counter_fence_alarm_2             = 88,
     /**< The number of checksum errors in tranfer shm to mem part 2 */
-    atrshmlog_counter_end                       = 88
+    atrshmlog_counter_detach                    = 89,
+    /**< The number of calls to \ref  atrshmlog_detach() */
+    atrshmlog_counter_reattach                  = 90,
+    /**< The number of calls to \ref  atrshmlog_detach() */
+    atrshmlog_counter_end                       = 90
     /**< The highes index in use */
   };
 
@@ -1291,10 +1295,20 @@ extern "C" {
     atrshmlog_error_get_autoflush_1 = -200,
     /**< Pthread specific buffer not available.      */
 
-    atrshmlog_error_set_autoflush_1 = -201
+    atrshmlog_error_set_autoflush_1 = -201,
     /**< Pthread specific buffer not available.      */
 
-    
+    atrshmlog_error_reattach_1 = -210,
+    /**< No reattach possible without a successful attach first.      */
+
+    atrshmlog_error_reattach_2 = -211,
+    /**< Reattach not successful for shm op          */
+
+    atrshmlog_error_reattach_3 = 212,
+    /**< Reattach or attach already done             */
+
+    atrshmlog_error_reattach_4 = -213
+    /**< Parameter array null not allowed            */
   };
   
   /**
@@ -1738,9 +1752,27 @@ extern "C" {
    * We do not log after we are detached
    *
    * \return
-   * void
+   * - Zero ok
+   * - -1 for error
    */
 #define ATRSHMLOG_DETACH() atrshmlog_detach()
+
+  /** 
+   * \brief We reattach to a shm buffer
+   * 
+   * We set the values and do most of the attach
+   *
+   * We can set the values, but we do NOT reinit buffers.
+   * We do NOT restart slaves.
+   * We DO resize the event locks array.
+   *
+
+   * \return
+   * - Zero ok
+   * - negative for error
+   * - positiv for minor problem
+   */
+#define ATRSHMLOG_REATTACH(__p) atrshmlog_reattach((__p))
 
 
   /** 
@@ -2964,9 +2996,86 @@ extern "C" {
    * We do not log after we are detached
    *
    * \return
-   * void
+   * - Zero ok
+   * - -1 for error
    */
-  extern void atrshmlog_detach(void);
+  extern atrshmlog_ret_t atrshmlog_detach(void);
+
+
+  /** 
+   * \brief We reattach to a shm buffer
+   * 
+   * We set the values and do most of the attach
+   *
+   * We can set the values, but we do NOT reinit buffers.
+   * We do NOT restart slaves.
+   * We DO resize the event locks array.
+   *
+   * \param i_params
+   * int array with 56 values.
+   * - 0 : flag for use id
+   * - 1 : new value for id
+   * - 2 : flag for use count
+   * - 3 : new value for count
+   * - 4 : flag for use atrshmlog_init_buffers_in_advance
+   * - 5 : new value for atrshmlog_init_buffers_in_advance
+   * - 6 : flag for use atrshmlog_buffer_strategy
+   * - 7 : new value for atrshmlog_buffer_strategy
+   * - 8 : flag for use atrshmlog_strategy_wait_wait_time
+   * - 9 : new value for atrshmlog_strategy_wait_wait_time
+   * - 10 : flag for use atrshmlog_delimiter
+   * - 11 : new value for atrshmlog_delimiter
+   * - 12 : flag for use atrshmlog_event_locks_max
+   * - 13 : new value for atrshmlog_event_locks_max
+   * - 14 : flag for use atrshmlog_buffer_infosize
+   * - 15 : new value for atrshmlog_buffer_infosize
+   * - 16 : flag for use atrshmlog_prealloc_buffer_count
+   * - 17 : new value for atrshmlog_prealloc_buffer_count
+   * - 18 : flag for use atrshmlog_f_list_buffer_slave_wait
+   * - 19 : new value for atrshmlog_f_list_buffer_slave_wait
+   * - 20 : flag for use atrshmlog_f_list_buffer_slave_count
+   * - 21 : new value for atrshmlog_f_list_buffer_slave_count
+   * - 22 : flag for use atrshmlog_wait_for_slaves
+   * - 23 : new value for atrshmlog_wait_for_slaves
+   * - 24 : flag for use atrshmlog_clock_id
+   * - 25 : new value for atrshmlog_clock_id
+   * - 26 : flag for use atrshmlog_thread_fence_1
+   * - 27 : new value for atrshmlog_thread_fence_1
+   * - 28 : flag for use atrshmlog_thread_fence_2
+   * - 29 : new value for atrshmlog_thread_fence_2
+   * - 30 : flag for use atrshmlog_thread_fence_3
+   * - 31 : new value for atrshmlog_thread_fence_3
+   * - 32 : flag for use atrshmlog_thread_fence_4
+   * - 33 : new value for atrshmlog_thread_fence_4
+   * - 34 : flag for use atrshmlog_thread_fence_5
+   * - 35 : new value for atrshmlog_thread_fence_5
+   * - 36 : flag for use atrshmlog_thread_fence_6
+   * - 37 : new value for atrshmlog_thread_fence_6
+   * - 38 : flag for use atrshmlog_thread_fence_7
+   * - 39 : new value for atrshmlog_thread_fence_7
+   * - 40 : flag for use atrshmlog_thread_fence_8
+   * - 41 : new value for atrshmlog_thread_fence_8
+   * - 42 : flag for use atrshmlog_thread_fence_9
+   * - 43 : new value for atrshmlog_thread_fence_9
+   * - 44 : flag for use atrshmlog_thread_fence_10
+   * - 45 : new value for atrshmlog_thread_fence_10
+   * - 46 : flag for use atrshmlog_thread_fence_11
+   * - 47 : new value for atrshmlog_thread_fence_11
+   * - 48 : flag for use atrshmlog_thread_fence_12
+   * - 49 : new value for atrshmlog_thread_fence_12
+   * - 50 : flag for use atrshmlog_thread_fence_13
+   * - 51 : new value for atrshmlog_thread_fence_13
+   * - 52 : flag for use atrshmlog_checksum
+   * - 53 : new value for atrshmlog_checksum
+   * - 54 : flag for use logging process off
+   * - 55 : new value for logging process off
+   *
+   * \return
+   * - Zero ok
+   * - negative for error
+   * - positiv for minor problem
+   */
+  extern atrshmlog_ret_t atrshmlog_reattach(atrshmlog_int32_t* i_params);
 
 
   /**

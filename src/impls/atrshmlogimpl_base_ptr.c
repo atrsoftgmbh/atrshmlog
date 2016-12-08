@@ -30,3 +30,6 @@
  */
 volatile const void* atrshmlog_base_ptr = 0;
 
+atomic_int atrshmlog_base_ptr_use_flag = ATOMIC_VAR_INIT(0);
+
+

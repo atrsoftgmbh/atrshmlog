@@ -108,7 +108,9 @@ atrshmlog_ret_t atrshmlog_read(volatile const void* i_area,
 
   // this can happen if pthread specific is used
   if (g == NULL)
-    return atrshmlog_error_read_6;
+    {
+      return atrshmlog_error_read_6;
+    }
 
 #endif
   
@@ -130,7 +132,6 @@ atrshmlog_ret_t atrshmlog_read(volatile const void* i_area,
   if (i_shm->shmsafeguard != ATRSHMLOGSAFEGUARDVALUE)
     return atrshmlog_error_read_4;
 
-  
   volatile atrshmlog_buffer_t* restrict b = &(i_shm->logbuffers[i_index_buffer]);
 
   int lock_holds = atrshmlog_full;
@@ -148,7 +149,9 @@ atrshmlog_ret_t atrshmlog_read(volatile const void* i_area,
 					      memory_order_relaxed);
 
   if (atomic_lock_result != 1)
-    return atrshmlog_error_ok; // o_length is 0, so this is an ok case
+    {
+      return atrshmlog_error_ok; // o_length is 0, so this is an ok case
+    }
 
 
   if (atrshmlog_thread_fence_3)

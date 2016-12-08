@@ -37,8 +37,10 @@ int atrshmlog_init_thread_local (atrshmlog_g_tl_t* restrict i_g)
       // we clear the index
       i_g->atrshmlog_targetbuffer_index = 0;
       
-      atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
+      atrshmlog_base_ptr_use_flag++;
       
+      atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
+
       int versionnotok = (atrshmlog_base_ptr == 0) || (a_shm->shmversion != ATRSHMLOGVERSION);
       i_g->atrshmlog_idnotok = versionnotok || (a_shm->shmid != atrshmlog_id) ;
 
@@ -95,6 +97,8 @@ int atrshmlog_init_thread_local (atrshmlog_g_tl_t* restrict i_g)
 	  i_g->counter_write2_adaptive_very_fast = 0;
 
 	}
+
+      atrshmlog_base_ptr_use_flag--;
     }
 
   /* From now on we are the not ok flag - 0 is ok, else is not */

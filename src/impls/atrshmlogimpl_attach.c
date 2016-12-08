@@ -135,6 +135,9 @@ static atomic_flag atrshmlog_attach_once_flag = ATOMIC_FLAG_INIT;
 atrshmlog_ret_t atrshmlog_attach(void)
 {
   ATRSHMLOGSTAT(atrshmlog_counter_attach);
+
+  // are we a reattch after a detach ?
+  int reattach = (atrshmlog_id != 0);
   
   /* We attach the shm buffer. 
    * First we have to check for the env var and then for the
@@ -193,34 +196,38 @@ atrshmlog_ret_t atrshmlog_attach(void)
   // so we need a valid key here.
   // and this is the deal : if you try it without first making the attach
   // then BUMMM
-  
-  int ret = pthread_key_create(&atrshmlog_pthread_key, atrshmlog_destruct_specific);
 
-  ++atrshmlog_key_once; 
-
-  if (ret != 0)
+  if (atrshmlog_key_once == 0)
     {
+      int ret = pthread_key_create(&atrshmlog_pthread_key, atrshmlog_destruct_specific);
 
-      // sorry pal - but we are simply out of options.
+      ++atrshmlog_key_once; 
 
-      // We clear the lock.
-      atomic_flag_clear(&atrshmlog_attach_once_flag);
+      if (ret != 0)
+	{
+	  
+	  // sorry pal - but we are simply out of options.
 
-      return atrshmlog_error_attach_7;
+	  // We clear the lock.
+	  atomic_flag_clear(&atrshmlog_attach_once_flag);
+	  
+	  return atrshmlog_error_attach_7;
+	}
     }
 
   // ok. we have a key. now its up to the user to use the function...
   
 #endif
-  
-  /* Second thing after the init of vars : make timestamp */
-  atrshmlog_inittimetsc_before = atrshmlog_get_clicktime();
+  if (!reattach)
+    {
+      /* Second thing after the init of vars : make timestamp */
+      atrshmlog_inittimetsc_before = atrshmlog_get_clicktime();
+      
+      atrshmlog_inittime = atrshmlog_get_realtime();
 
-  atrshmlog_inittime = atrshmlog_get_realtime();
+      atrshmlog_inittimetsc_after = atrshmlog_get_clicktime();
 
-  atrshmlog_inittimetsc_after = atrshmlog_get_clicktime();
-
-  // we rest the id.
+    }
   
   atrshmlog_id = 0;
     
@@ -693,7 +700,7 @@ atrshmlog_ret_t atrshmlog_attach(void)
 	  
 	  atrshmlog_clock_id = my_clock_id;
 	  
-	  if (atrshmlog_init_buffers_in_advance)
+	  if (reattach == 0 && atrshmlog_init_buffers_in_advance)
 	    atrshmlog_memset_prealloced();
 	      
 	  if (new_max >  ATRSHMLOGEVENTCOUNT
@@ -716,28 +723,32 @@ atrshmlog_ret_t atrshmlog_attach(void)
 		}
 	    }
 	    	      
+	  atrshmlog_init_events(in_env ? 0 : 1); 
+	      
 	  /*
 	   * Now we are done with the env settings.
 	   * So we initialize now the events ( which uses some 
 	   * envs by itself, but should be selfcontained
 	   * be happy if this works )...
 	   */
-	  atrshmlog_init_events(in_env ? 0 : 1); 
-	      
-	  if (atexit (atrshmlog_exit_cleanup) != 0)
-	    result = atrshmlog_error_attach_3;
-
-	  // start buffer slave(s)
-	      
-	  int ret_slave = 0;
-	      
-	  for (int slaves = 0; ret_slave == 0
-		 && slaves < atrshmlog_f_list_buffer_slave_count;
-	       slaves++)
+	  if (reattach == 0)
 	    {
-	      ret_slave = atrshmlog_create_slave();
-	    }
+	      if (atexit (atrshmlog_exit_cleanup) != 0)
+		result = atrshmlog_error_attach_3;
+	  
+	      // start buffer slave(s)
 	      
+	      int ret_slave = 0;
+	      
+	      for (int slaves = 0; ret_slave == 0
+		     && slaves < atrshmlog_f_list_buffer_slave_count;
+		   slaves++)
+		{
+		  ret_slave = atrshmlog_create_slave();
+		}
+
+	    }
+	  
 	  if (onoff == 0)
 	    atrshmlog_set_logging_process_on();
 	  else
@@ -767,6 +778,300 @@ atrshmlog_ret_t atrshmlog_attach(void)
    */
       
   atrshmlog_attach_pid = getpid();
+
+  ++atrshmlog_attach_once;
+
+  // From now on all others see only the initialized module
+  // But we still are in the spinlock....
+  
+  atomic_flag_clear(&atrshmlog_attach_once_flag);
+  
+  return result;
+}
+
+
+#define MMSET(_f,_x,_min,_max,_val) do { if ((_f)) if ((_min) <= (_val) && (_max) >= (_val) ) (_x) = (_val); } while (0);
+
+/**
+ * \n Main code:
+ *
+ * \brief The reattach to shm memory function
+ *
+ * We need a valid attach in advance - and then also
+ * a detach.
+ *
+ * If we detect this we go on.
+ *
+ * We use a int array fro the parameters. 
+ * The array deliver a flag and value pair, so first
+ * is the flag, then the value.
+ * If flag is 0 we don't use the value.
+ * So you can start with new values where you 
+ * want to.
+ * The array has to be set to 0 for all values not used.
+ * The array has so far 56 ints.
+ *
+ * We can set the values, but we do NOT reinit buffers.
+ * We do NOT restart slaves.
+ * We DO resize the event locks array.
+ *
+ *
+ * \return
+ * - Zero : ok
+ * - Negativ error
+ * - positive worked with minor error
+ */
+atrshmlog_ret_t atrshmlog_reattach(atrshmlog_int32_t *i_params)
+{
+  ATRSHMLOGSTAT(atrshmlog_counter_reattach);
+  
+  /* We attach the shm buffer. 
+   * First we have to check for the env var and then for the
+   * extern ptr  that holds the log base.
+   * If the ptr is null we attach.
+   * If the env is null we try the file atrshmlogshmid.txt
+   * If we still have no hit we give up .
+   * If env is ok, but if is 0 we give up.
+   *
+   * If the env is not set we set the ptr to null to prevent 
+   * logging in case we have NOT been a top level process
+   * and the log is already in a predecessor process open.
+   *
+   * Later on we can change this for getting subprocesses
+   * to log too...
+   */
+  long int lshmid = atrshmlog_id;
+
+  // we are a REattach, so an attach had to be there in the first place.
+  if (lshmid == 0)
+    {
+      return atrshmlog_error_reattach_1;
+    }
+  
+  // we lock. this is needed to prevent races...
+  while (atomic_flag_test_and_set(&atrshmlog_attach_once_flag) )
+	;
+
+  // one enters this first - and only one
+  int result = atrshmlog_error_reattach_2;
+
+  /*
+   * This is the first big catch.
+   * We check for already attached.
+   *
+   * This is done simple by using the static here.
+   *
+   * Question: How are we already initialized ?
+   *
+   * Answer:
+   * Hm this is not so simple.
+   * We can be the second call or so ..
+   * Or we are made but there was a fork before and the image 
+   * of the process still has the attach memory.
+   * So we make this from the value of attach once.
+   * 
+   */
+  if (atrshmlog_attach_once != 0)
+    {
+      /*
+       * We clear the lock.
+       */
+      atomic_flag_clear(&atrshmlog_attach_once_flag);
+
+      return atrshmlog_error_reattach_3;
+    }
+
+  if (i_params == NULL)
+    {
+      /*
+       * We clear the lock.
+       */
+      atomic_flag_clear(&atrshmlog_attach_once_flag);
+
+      return atrshmlog_error_reattach_4;
+    }
+
+  // we reset the id.
+  
+  atrshmlog_id = 0;
+    
+  if (i_params[0] == 1)
+    {
+      lshmid = i_params[1];
+    }
+
+  /* Ok. We have it, and we think its ok if its not false info. 
+   * a valid number not 0 is good enough for now
+   */
+  if (lshmid != 0)
+    {
+      /* This is looking good .
+       * We try to attach now.
+       */
+      int shmid = (int)lshmid;
+		
+      void*shmaddr = (void*)0; /* We let decide the os */ 
+		
+# if ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
+
+      int shmflg = 0; 
+		
+      void *shmat_result = shmat(shmid, shmaddr, shmflg);
+
+#endif
+	  
+# if ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC == 1
+
+      int shmflg = 0; 
+		
+      void *shmat_result = shmat(shmid, shmaddr, shmflg);
+
+#endif
+
+# if ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 1
+
+
+      int envsize = 0;
+
+
+      if (i_params[2] == 1)
+	envsize = i_params[3];
+      else
+	{
+	  // then is MUST be set in the env
+	  atrshmlog_init(ATRSHMLOG_BUFFER_COUNT_SUFFIX,
+			 &envsize,
+			 0,
+			 4096,
+			 1);
+
+	}
+      
+      if (envsize < 1)
+	{
+	  envsize = 8;
+	}
+	  
+      const int save = 256 ;
+  
+      size_t wantedsize = sizeof (atrshmlog_area_t) + (envsize - ATRSHMLOGBUFFER_MINCOUNT) * sizeof( atrshmlog_buffer_t) + (envsize * ATRSHMLOGBUFFER_INFOSIZE + save);
+
+      int size = wantedsize;
+	    
+      void *shmat_result = atrshmlog_attach_mapped_file(shmid,size);
+
+#endif
+
+# if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+
+      int shmflg = 0; 
+		
+      void *shmat_result = shmat(shmid, shmaddr, shmflg);
+
+#endif
+
+# if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
+
+      int shmflg = 0; 
+		
+      void *shmat_result = shmat(shmid, shmaddr, shmflg);
+
+#endif
+
+# if ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC == 1
+
+      int shmflg = 0; 
+		
+      void *shmat_result = shmat(shmid, shmaddr, shmflg);
+
+#endif
+	  
+      if (shmat_result != (void*)-1)
+	{
+	  atrshmlog_base_ptr = shmat_result;
+
+	  atrshmlog_id = shmid;
+
+	  result = atrshmlog_error_ok;
+	      
+	  atrshmlog_putenv(ATRSHMLOGENVSUFFIX, lshmid);
+
+	  int onoff = 0;
+	      
+	  int new_max = atrshmlog_event_locks_max;
+
+	  int my_clock_id = atrshmlog_clock_id;
+
+	  MMSET(i_params[4], atrshmlog_init_buffers_in_advance, 0, 1, i_params[5]);
+	  MMSET(i_params[6], atrshmlog_buffer_strategy, atrshmlog_strategy_first, atrshmlog_strategy_last, i_params[7]);
+	  MMSET(i_params[8],atrshmlog_strategy_wait_wait_time, 0, 999999999, i_params[9]);
+	  MMSET(i_params[10], atrshmlog_delimiter, 0, 255, i_params[11]);
+	  MMSET(i_params[12], new_max, 0, ATRSHMLOGEVENTCOUNTMAXLIMIT, i_params[13]);
+	  MMSET(i_params[14], atrshmlog_buffer_infosize, ATRSHMLOGBUFFER_INFOSIZE_MIN, ATRSHMLOGBUFFER_INFOSIZE, i_params[15]);
+	  MMSET(i_params[16], atrshmlog_prealloc_buffer_count, ATRSHMLOG_INIT_PREALLOC_COUNT_MIN, ATRSHMLOG_MAX_PREALLOC_COUNT, i_params[17]);
+	  MMSET(i_params[18], atrshmlog_f_list_buffer_slave_wait, ATRSHMLOG_INIT_BUFFER_SLAVE_WAIT_MIN,	ATRSHMLOG_INIT_BUFFER_SLAVE_WAIT_MAX, i_params[19]);
+	  MMSET(i_params[20], atrshmlog_f_list_buffer_slave_count, ATRSHMLOG_SLAVE_COUNT_MIN, ATRSHMLOG_SLAVE_COUNT_MAX, i_params[21]);
+	  MMSET(i_params[22], atrshmlog_wait_for_slaves, 0, 1, i_params[23]);
+	  MMSET(i_params[24], my_clock_id, ATRSHMLOG_CLOCK_ID_MIN, ATRSHMLOG_CLOCK_ID_MAX, i_params[25]);
+	  MMSET(i_params[26], atrshmlog_thread_fence_1, 0, 1, i_params[27]);
+	  MMSET(i_params[28], atrshmlog_thread_fence_2, 0, 1, i_params[29]);
+	  MMSET(i_params[30], atrshmlog_thread_fence_3, 0, 1, i_params[31]);
+	  MMSET(i_params[32], atrshmlog_thread_fence_4, 0, 1, i_params[33]);
+	  MMSET(i_params[34], atrshmlog_thread_fence_5, 0, 1, i_params[35]);
+	  MMSET(i_params[36], atrshmlog_thread_fence_6, 0, 1, i_params[37]);
+	  MMSET(i_params[38], atrshmlog_thread_fence_7, 0, 1, i_params[39]);
+	  MMSET(i_params[40], atrshmlog_thread_fence_8, 0, 1, i_params[41]);
+	  MMSET(i_params[42], atrshmlog_thread_fence_9, 0, 1, i_params[43]);
+	  MMSET(i_params[44], atrshmlog_thread_fence_10, 0, 1, i_params[45]);
+	  MMSET(i_params[46], atrshmlog_thread_fence_11, 0, 1, i_params[47]);
+	  MMSET(i_params[48], atrshmlog_thread_fence_12, 0, 1, i_params[49]);
+	  MMSET(i_params[50], atrshmlog_thread_fence_13, 0, 1, i_params[51]);
+	  MMSET(i_params[52], atrshmlog_checksum, 0, 1, i_params[53]);
+	  
+	  MMSET(i_params[54], onoff, 0, 1, i_params[55]);
+	  
+	  atrshmlog_clock_id = my_clock_id;
+	  
+	  if (new_max >  ATRSHMLOGEVENTCOUNT
+	      && new_max > atrshmlog_event_locks_max
+	      && new_max <= ATRSHMLOGEVENTCOUNTMAXLIMIT)
+	    {
+	      int oldmax = atrshmlog_event_locks_max;
+      
+	      atrshmlog_event_t * p2 =  (atrshmlog_event_t*)malloc(new_max + 1);
+		      
+	      if (p2)
+		{
+		  memset(p2, 0 , new_max + 1);
+		      
+		  atrshmlog_event_locks = p2;
+			  
+		  atrshmlog_event_locks_max = new_max;
+
+		  atrshmlog_putenv(ATRSHMLOGEVENTCOUNTSUFFIX, new_max);
+
+		  // we have to reinit the thing
+		  // and we use env for this
+		  atrshmlog_init_events(0); 
+		}
+	    }
+
+	  if (onoff == 0)
+	    atrshmlog_set_logging_process_on();
+	  else
+	    atrshmlog_set_logging_process_off();
+	}
+      else
+	{
+	  // no luck. no connect
+	  lshmid = 0;
+	}
+    }
+
+ leave:
+  ;
+  
+  atrshmlog_putenv(ATRSHMLOGENVSUFFIX, lshmid);
 
   ++atrshmlog_attach_once;
 

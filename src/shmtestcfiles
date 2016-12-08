@@ -6,6 +6,8 @@ atrshmlogforkwrite.c
 t_acquire_buffer.c
 t_alloc.c
 t_attach.c
+t_detach.c
+t_reattach.c
 t_buffer_slave_proc.c
 t_cleanup_locks.c
 t_create.c
@@ -14,6 +16,7 @@ t_create_mapped_file.c
 t_attach_mapped_file.c
 t_create_slave.c
 t_decrement_slave_count.c
+t_set_f_list_slave_count.c
 t_dispatch_buffer.c
 t_exit_cleanup.c
 t_flush.c

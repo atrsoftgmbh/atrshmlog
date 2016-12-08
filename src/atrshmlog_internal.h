@@ -1814,9 +1814,10 @@ extern atrshmlog_ret_t atrshmlog_set_thread_fence(int *v,
 						  const atrshmlog_int32_t i_switch)  ;
 extern int atrshmlog_create_mapped_file(int index, int size, int *already);
 extern void * atrshmlog_attach_mapped_file(int index, int size);
+extern int atrshmlog_detach_mapped_file(void* p);
 extern void atrshmlog_memset_prealloced(void);
 extern atomic_int atrshmlog_last_mem_to_shm;
-
+extern atomic_int atrshmlog_base_ptr_use_flag;
 
 /************************************************************************/
 /* helper macros*/

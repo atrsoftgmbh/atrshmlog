@@ -16,10 +16,12 @@ atrshmloginit
 tests/t_acquire_buffer 1000
 tests/t_alloc 1000
 tests/t_attach
+tests/t_detach
 tests/t_create_mapped_file 1 42
 tests/t_attach_mapped_file 1 42
 tests/t_create_slave 4 "ps -elf H"
 tests/t_decrement_slave_count 10 15
+tests/t_set_f_list_slave_count 5 3 4 
 
 tests/t_get_acquire_count 42
 tests/t_get_area
@@ -162,4 +164,9 @@ tests/t_remove_slave_via_local 4
 tests/t_buffer_slave_proc
 
 unset ATRSHMLOG_SLAVE_COUNT
+
+# we have to do the reattach test here
+
+tests/t_reattach 1 $ATRSHMLOG_ID 0 0 1 1 1 4 1 123456 1 47 1 10042 1 256000 1 42 1 234567 1 8 1 1 1 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1  1 1 1 1
+
 

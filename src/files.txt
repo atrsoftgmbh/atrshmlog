@@ -64,6 +64,7 @@ atrshmlogimpl_acquire_count_flag.c
 atrshmlogimpl_active_slaves_flag.c
 atrshmlogimpl_alloc.c
 atrshmlogimpl_attach.c
+atrshmlogimpl_detach.c
 atrshmlogimpl_attach_once_flag.c
 atrshmlogimpl_attach_pid_flag.c
 atrshmlogimpl_autoflush_flag.c
@@ -252,6 +253,8 @@ atrshmlogtest03.C
 t_acquire_buffer.c
 t_alloc.c
 t_attach.c
+t_detach.c
+t_reattach.c
 t_attach_mapped_file.c
 t_buffer_slave_proc.c
 t_cleanup_locks.c
@@ -341,6 +344,7 @@ t_set_fence_7.c
 t_set_fence_8.c
 t_set_fence_9.c
 t_set_f_list_buffer_slave_run_off.c
+t_set_f_list_slave_count.c
 t_set_logging_process.c
 t_set_prealloc_count.c
 t_set_slave_wait_nanos.c

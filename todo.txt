@@ -7,10 +7,6 @@ no sql logger
 
 -----
 
-detach reattach
-
------
-
 packdistro mit omit
 
 ----
@@ -29,10 +25,6 @@ get delimiter
 get last mem to shm
 
 get tps tpa tpf
-
-event locks und max statistics off by one geradeziehen.
-
-setFListBufferSlaveCount nach attach nachstarten oder stoppen von slaves
 
 reflexion von thread local und slave local
 

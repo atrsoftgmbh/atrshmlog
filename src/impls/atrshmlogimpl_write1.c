@@ -107,6 +107,12 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 
   atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
 
+  // can happen - we are detached
+  if (a_shm == 0)
+    {
+      return atrshmlog_error_write1_8;
+    }
+  
   /* Can be happen : end of logging anounced by user via flag in shm */
   if (atomic_load_explicit(&a_shm->ich_habe_fertig, memory_order_acquire) != 0) 
     return atrshmlog_error_write1_8;
@@ -249,6 +255,14 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
       if (atrshmlog_logging_process_off_final)
 	return atrshmlog_error_write1_7;
 
+      atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
+
+      // can happen - we are detached
+      if (a_shm == 0)
+	{
+	  return atrshmlog_error_write1_8;
+	}
+  
       /* Can be happen : end of logging anounced by user via flag in shm */
       if (atomic_load_explicit(&a_shm->ich_habe_fertig, memory_order_acquire) != 0) 
 	return atrshmlog_error_write1_8;
@@ -284,6 +298,14 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 	return atrshmlog_error_write1_10;
       }
 
+      atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
+
+      // can happen - we are detached
+      if (a_shm == 0)
+	{
+	  return atrshmlog_error_write1_8;
+	}
+  
       /* Bad thing. Safeguard invalid */
       if (a_shm->shmsafeguard != ATRSHMLOGSAFEGUARDVALUE) {
 	ATRSHMLOGSTAT(atrshmlog_counter_write_safeguard_shm);
@@ -373,11 +395,19 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 	return atrshmlog_error_write0_7;
       }
       
+      atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
+
+      // can happen - we are detached
+      if (a_shm == 0)
+	{
+	  return atrshmlog_error_write1_8;
+	}
+  
       /* Bad thing. safeguard invalid */
       if (a_shm->shmsafeguard != ATRSHMLOGSAFEGUARDVALUE) {
 	ATRSHMLOGSTAT(atrshmlog_counter_write_safeguard_shm);
 
-	return atrshmlog_error_write0_8;
+	return atrshmlog_error_write1_11;
       }
   
       tbuff->number_dispatched = g->number_dispatched++;
