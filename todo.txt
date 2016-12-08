@@ -14,17 +14,8 @@ packdistro mit omit
 tool calc realtime from intitime and lasttime and clicktime ...
 
 -----
-get pid
 
 get wait waittime
-
-get set transfer to shm wait time
-
-get delimiter
-
-get last mem to shm
-
-get tps tpa tpf
 
 reflexion von thread local und slave local
 

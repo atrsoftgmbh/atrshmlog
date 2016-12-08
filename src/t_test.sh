@@ -134,6 +134,9 @@ tests/t_read_fetch
 tests/t_flush
 tests/t_read_fetch
 
+tests/t_get_last_mem_to_shm
+tests/t_read_fetch
+
 tests/t_write0
 tests/t_read_fetch
 

@@ -22,6 +22,7 @@ t_exit_cleanup.c
 t_flush.c
 t_free.c
 t_slave_to_shm_wait.c
+t_get_last_mem_to_shm.c
 t_set_event_locks_max.c
 t_get_acquire_count.c
 t_get_area.c

@@ -2528,6 +2528,15 @@ extern "C" {
    */
 #define ATRSHMLOG_SET_SLAVE_TO_SHM_WAIT(__wait_nanos) atrshmlog_set_slave_to_shm_wait((__wait_nanos))
 
+
+  /**
+   * \brief Get the time for mem to shm
+   *
+   * \return
+   * The number of nanos 
+   */
+#define ATRSHMLOG_GET_LAST_MEM_TO_SHM() atrshmlog_get_last_mem_to_shm()
+
   /************************************************************************/
   /* shared memory area related functions */
   
@@ -3753,6 +3762,15 @@ extern "C" {
    * The number of nanos the slave sleepswhen shm full
    */
   extern atrshmlog_ret_t atrshmlog_get_slave_to_shm_wait(void);
+
+
+  /**
+   * \brief Get the time for mem to shm
+   *
+   * \return
+   * The number of nanos 
+   */
+  extern atrshmlog_ret_t atrshmlog_get_last_mem_to_shm(void);
 
   /**
    * \brief Set the wait time for the slaves in nanoseconds.
