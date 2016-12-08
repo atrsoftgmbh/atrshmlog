@@ -34,7 +34,7 @@
  * 
  * There is an env for attach to set this.
  *
- * test t_dispatch_buffer.c
+ * test t_set_f_list_slave_count.c
  */
 atrshmlog_ret_t atrshmlog_set_f_list_buffer_slave_count(atrshmlog_int32_t i_count)
 {
