@@ -2508,6 +2508,26 @@ extern "C" {
 #define ATRSHMLOG_SET_F_LIST_BUFFER_SLAVE_WAIT(__nanos) atrshmlog_set_f_list_buffer_slave_wait((__nanos))
 
 
+  /**
+   * \brief Get the wait time in nanoseconds for the slave if shm full.
+   *
+   * \return
+   * The number of nanos the slave sleeps when shm full
+   */
+#define ATRSHMLOG_GET_SLAVE_TO_SHM_WAIT() atrshmlog_get_slave_to_shm_wait()
+
+  /**
+   * \brief Set the wait time for the slaves in nanoseconds.
+   *
+   * \param __wait_nanos
+   * The number of nanos the slave has to sleep when shm full.
+   * to be done.
+   *
+   * \return
+   * The old number of nanos the slave had to wait
+   */
+#define ATRSHMLOG_SET_SLAVE_TO_SHM_WAIT(__wait_nanos) atrshmlog_set_slave_to_shm_wait((__wait_nanos))
+
   /************************************************************************/
   /* shared memory area related functions */
   
@@ -3705,6 +3725,7 @@ extern "C" {
    */
   extern atrshmlog_ret_t atrshmlog_get_wait_for_slaves(void);
 
+
   /**
    * \brief Get the wait time in nanoseconds for the slave .
    *
@@ -3712,6 +3733,26 @@ extern "C" {
    * The number of nanos the slave sleeps when nothing has to be done.
    */
   extern atrshmlog_ret_t atrshmlog_get_f_list_buffer_slave_wait(void);
+
+  /**
+   * \brief Set the wait time for the slaves in nanoseconds.
+   *
+   * \param i_wait_nanos
+   * The number of nanos the slave has to sleep when shm full.
+   * to be done.
+   *
+   * \return
+   * The old number of nanos the slave had to wait
+   */
+  extern atrshmlog_ret_t atrshmlog_set_slave_to_shm_wait(atrshmlog_int32_t i_wait_nanos);
+
+  /**
+   * \brief Get the wait time in nanoseconds for the slave if shm full.
+   *
+   * \return
+   * The number of nanos the slave sleepswhen shm full
+   */
+  extern atrshmlog_ret_t atrshmlog_get_slave_to_shm_wait(void);
 
   /**
    * \brief Set the wait time for the slaves in nanoseconds.

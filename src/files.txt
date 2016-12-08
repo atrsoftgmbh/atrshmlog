@@ -351,6 +351,7 @@ t_set_slave_wait_nanos.c
 t_set_strategy.c
 t_set_strategy_process.c
 t_set_wait_for_slaves.c
+t_slave_to_shm_wait.c
 t_sleep_nanos.c
 t_stop.c
 t_transfer_mem_to_shm.c
