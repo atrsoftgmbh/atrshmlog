@@ -126,7 +126,7 @@ atrshmlog_ret_t atrshmlog_read(volatile const void* i_area,
   if (i_index_buffer < 0)
     return atrshmlog_error_read_2;
   
-  if (g->atrshmlog_shm_count <= i_index_buffer)
+  if (i_shm->shmcount <= i_index_buffer)
     return atrshmlog_error_read_3;
 
   if (i_shm->shmsafeguard != ATRSHMLOGSAFEGUARDVALUE)

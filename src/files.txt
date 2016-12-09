@@ -262,6 +262,7 @@ t_create.c
 t_create_mapped_file.c
 t_create_slave.c
 t_decrement_slave_count.c
+t_reflexion.c
 t_delete.c
 t_dispatch_buffer.c
 t_exit_cleanup.c

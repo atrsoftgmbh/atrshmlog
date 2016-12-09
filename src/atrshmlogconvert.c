@@ -40,23 +40,8 @@
  */
 static int operate(FILE* i_fout,
 		   char * const i_buffer,
-		   int i_buffer_end,
-		   int read_len,
-		   atrshmlog_pid_t pid,
-		   atrshmlog_tid_t tid,
-		   atrshmlog_int32_t buffernumber,
-		   atrshmlog_int32_t filenumber,
-		   atrshmlog_internal_time_t inittime,
-		   atrshmlog_time_t inittsc_before,
-		   atrshmlog_time_t inittsc_after,
-		   atrshmlog_internal_time_t lasttime,
-		   atrshmlog_time_t lasttsc_before,
-		   atrshmlog_time_t lasttsc_after,
-		   atrshmlog_time_t difftimetransfer,
-		   atrshmlog_time_t starttransfer,
-		   atrshmlog_time_t acquiretime,
-		   atrshmlog_int32_t id,
-		   atrshmlog_int32_t number_dispatched);
+		   atrshmlog_io_head_t head,
+		   int sbyteorder);
 
 static void convertucs2(char* nextcontrol,
 			int len,
@@ -134,8 +119,6 @@ int main (int argc, char*argv[])
 
   char *end;
 
-  int total_len = 0;
-
   int payloadlen = 0;
 
   int ret = 0;
@@ -178,80 +161,12 @@ int main (int argc, char*argv[])
       return 1;
     }
 
-  total_len = 0;
-  
   {
-    size_t read_len;
-    size_t result_len;
+    atrshmlog_io_head_t head;
+
+    memset(&head, 0, sizeof(head));
     
-    
-    atrshmlog_int32_t version;
-    
-    atrshmlog_int32_t buffernumber;
-
-    atrshmlog_int32_t tlen;
-
-    atrshmlog_pid_t pid;
-    atrshmlog_tid_t tid; 
-
-    atrshmlog_internal_time_t inittime;
-    
-    atrshmlog_time_t inittsc_before;
-    
-    atrshmlog_time_t inittsc_after;
-	      
-    atrshmlog_internal_time_t lasttime;
-    
-    atrshmlog_time_t lasttsc_before;
-	      
-    atrshmlog_time_t lasttsc_after;
-    
-    atrshmlog_time_t difftimetransfer;
-  
-    atrshmlog_time_t starttransfer;
-  
-    atrshmlog_time_t acquiretime;
-
-    atrshmlog_int32_t id;
-
-    atrshmlog_int32_t number_dispatched;
-    /**
-     * thread specific statistics are here.
-     * so we can colect them later from the buffers in files.
-     *
-     * It was too bad for performance to have them in atomics global.
-     * Too much interaction.
-     * so I have them now local
-     * We only set them in the beginning, never reset them.
-     */
-
-    atrshmlog_int32_t counter_write0;
-    atrshmlog_int32_t counter_write0_discard;
-    atrshmlog_int32_t counter_write0_wait;
-    atrshmlog_int32_t counter_write0_adaptive;
-    atrshmlog_int32_t counter_write0_adaptive_fast;
-    atrshmlog_int32_t counter_write0_adaptive_very_fast;
-    atrshmlog_int32_t counter_write1;
-    atrshmlog_int32_t counter_write1_discard;
-    atrshmlog_int32_t counter_write1_wait;
-    atrshmlog_int32_t counter_write1_adaptive;
-    atrshmlog_int32_t counter_write1_adaptive_fast;
-    atrshmlog_int32_t counter_write1_adaptive_very_fast;
-    atrshmlog_int32_t counter_write2;
-    atrshmlog_int32_t counter_write2_discard;
-    atrshmlog_int32_t counter_write2_wait;
-    atrshmlog_int32_t counter_write2_adaptive;
-    atrshmlog_int32_t counter_write2_adaptive_fast;
-    atrshmlog_int32_t counter_write2_adaptive_very_fast;
-    
-
-    atrshmlog_int32_t filenumber;
-
-    char order[2];
-  
-    char* pos = buffer;
-
-    int r = fread(&order, 1, 2, fin);
+    int r = fread(&head.order, 1, 2, fin);
 
     if (r != 2)
       {
@@ -260,15 +175,35 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&version, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.version, 1, sizeof(atrshmlog_int32_t), fin);
 
-    if (r != sizeof(atrshmlog_int32_t) || version != ATRSHMLOGVERSION)
+    if (r != sizeof(atrshmlog_int32_t))
       {
-	printf("version is %d, not as needed %d.\n", version, ATRSHMLOGVERSION);
+	printf("version is not ok.\n");
+	exit(1);
+      }
+
+    uint16_t order = 1;
+
+    int sbyteorder = (head.order[0] != *(unsigned char*)&order);
+    
+    if (sbyteorder)
+      {
+	head.version = atrshmlog_int32_change_order(head.version);
+      }
+    
+    if (head.version != ATRSHMLOGVERSION)
+      {
+	printf("version is %d, not as needed %d.\n", head.version, ATRSHMLOGVERSION);
 	exit(1);
       }
     
-    r = fread(&tlen, 1, sizeof(atrshmlog_int32_t), fin);
+    if (sbyteorder)
+      {
+	head.version = atrshmlog_int32_change_order(head.version);
+      }
+    
+    r = fread(&head.tlen, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -276,7 +211,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
     
-    r = fread(&pid, 1, sizeof(atrshmlog_pid_t), fin);
+    r = fread(&head.pid, 1, sizeof(atrshmlog_pid_t), fin);
 
     if (r != sizeof(atrshmlog_pid_t))
       {
@@ -284,7 +219,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
     
-    r = fread(&tid, 1, sizeof(atrshmlog_tid_t), fin);
+    r = fread(&head.tid, 1, sizeof(atrshmlog_tid_t), fin);
 
     if (r != sizeof(atrshmlog_tid_t))
       {
@@ -292,14 +227,15 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&buffernumber, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.buffernumber, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
 	printf("buffernumber is not ok.\n");
 	exit(1);
       }
-    r = fread(&filenumber, 1, sizeof(atrshmlog_int32_t), fin);
+    
+    r = fread(&head.filenumber, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -307,7 +243,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&inittime.tv_sec, 1, sizeof(atrshmlog_time_seconds_t), fin);
+    r = fread(&head.inittime.tv_sec, 1, sizeof(atrshmlog_time_seconds_t), fin);
 
     if (r != sizeof(atrshmlog_time_seconds_t))
       {
@@ -315,18 +251,15 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&inittime.tv_nsec, 1, sizeof(atrshmlog_time_nanoseconds_t), fin);
+    r = fread(&head.inittime.tv_nsec, 1, sizeof(atrshmlog_time_nanoseconds_t), fin);
 
     if (r != sizeof(atrshmlog_time_nanoseconds_t))
       {
 	printf("inittime is not ok.\n");
 	exit(1);
       }
-#if 	  ATRSHMLOGDEBUG ==  1
-  printf("%ld %ld\n", (long)inittime.tv_sec, (long)inittime.tv_nsec);
-#endif
 
-  r = fread(&inittsc_before, 1, sizeof(atrshmlog_time_t), fin);
+    r = fread(&head.inittsc_before, 1, sizeof(atrshmlog_time_t), fin);
 
     if (r != sizeof(atrshmlog_time_t))
       {
@@ -334,7 +267,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&inittsc_after, 1, sizeof(atrshmlog_time_t), fin);
+    r = fread(&head.inittsc_after, 1, sizeof(atrshmlog_time_t), fin);
 
     if (r != sizeof(atrshmlog_time_t))
       {
@@ -343,7 +276,7 @@ int main (int argc, char*argv[])
       }
 
 
-    r = fread(&lasttime.tv_sec, 1, sizeof(atrshmlog_time_seconds_t), fin);
+    r = fread(&head.lasttime.tv_sec, 1, sizeof(atrshmlog_time_seconds_t), fin);
 
     if (r != sizeof(atrshmlog_time_seconds_t))
       {
@@ -351,7 +284,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&lasttime.tv_nsec, 1, sizeof(atrshmlog_time_nanoseconds_t), fin);
+    r = fread(&head.lasttime.tv_nsec, 1, sizeof(atrshmlog_time_nanoseconds_t), fin);
 
     if (r != sizeof(atrshmlog_time_nanoseconds_t))
       {
@@ -359,7 +292,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&lasttsc_before, 1, sizeof(atrshmlog_time_t), fin);
+    r = fread(&head.lasttsc_before, 1, sizeof(atrshmlog_time_t), fin);
 
     if (r != sizeof(atrshmlog_time_t))
       {
@@ -367,7 +300,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&lasttsc_after, 1, sizeof(atrshmlog_time_t), fin);
+    r = fread(&head.lasttsc_after, 1, sizeof(atrshmlog_time_t), fin);
 
     if (r != sizeof(atrshmlog_time_t))
       {
@@ -375,7 +308,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&difftimetransfer, 1, sizeof(atrshmlog_time_t), fin);
+    r = fread(&head.difftimetransfer, 1, sizeof(atrshmlog_time_t), fin);
 
     if (r != sizeof(atrshmlog_time_t))
       {
@@ -383,7 +316,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&starttransfer, 1, sizeof(atrshmlog_time_t), fin);
+    r = fread(&head.starttransfer, 1, sizeof(atrshmlog_time_t), fin);
 
     if (r != sizeof(atrshmlog_time_t))
       {
@@ -391,7 +324,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&acquiretime, 1, sizeof(atrshmlog_time_t), fin);
+    r = fread(&head.acquiretime, 1, sizeof(atrshmlog_time_t), fin);
 
     if (r != sizeof(atrshmlog_time_t))
       {
@@ -399,7 +332,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&id, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.id, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -407,7 +340,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&number_dispatched, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.number_dispatched, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -415,7 +348,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write0, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write0, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -423,7 +356,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write0_discard, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write0_discard, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -431,7 +364,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write0_wait, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write0_wait, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -439,7 +372,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write0_adaptive, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write0_adaptive, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -447,7 +380,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write0_adaptive_fast, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write0_adaptive_fast, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -455,7 +388,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write0_adaptive_very_fast, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write0_adaptive_very_fast, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -463,7 +396,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write1, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write1, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -471,7 +404,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write1_discard, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write1_discard, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -479,7 +412,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write1_wait, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write1_wait, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -487,7 +420,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write1_adaptive, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write1_adaptive, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -495,7 +428,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write1_adaptive_fast, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write1_adaptive_fast, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -503,7 +436,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write1_adaptive_very_fast, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write1_adaptive_very_fast, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -511,7 +444,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write2, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write2, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -519,7 +452,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write2_discard, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write2_discard, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -527,7 +460,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write2_wait, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write2_wait, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -535,7 +468,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write2_adaptive, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write2_adaptive, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -543,7 +476,7 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write2_adaptive_fast, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write2_adaptive_fast, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
@@ -551,12 +484,18 @@ int main (int argc, char*argv[])
 	exit(1);
       }
 
-    r = fread(&counter_write2_adaptive_very_fast, 1, sizeof(atrshmlog_int32_t), fin);
+    r = fread(&head.counter_write2_adaptive_very_fast, 1, sizeof(atrshmlog_int32_t), fin);
 
     if (r != sizeof(atrshmlog_int32_t))
       {
 	printf("counter_write2_adaptive_very_fast is not ok.\n");
 	exit(1);
+      }
+
+    // from this on we work in order for the head
+    if (sbyteorder)
+      {
+	atrshmlog_io_head_change_order(&head);
       }
 
     // this is a well known size. see the reader for it
@@ -577,45 +516,36 @@ int main (int argc, char*argv[])
       }
     
     
-    if (tlen <  0 || tlen > ATRSHMLOGBUFFER_INFOSIZE)
+    if (head.tlen <  0 || head.tlen > ATRSHMLOGBUFFER_INFOSIZE)
       {
-	printf("tlen size wrong, is %d, not max %d\n", tlen, ATRSHMLOGBUFFER_INFOSIZE);
+	printf("tlen size wrong, is %d, not max %d\n", head.tlen, ATRSHMLOGBUFFER_INFOSIZE);
 	exit(1);
       }
     
-    read_len = tlen;
-    do
-      {
-      again:
-	result_len = fread(pos, 1, read_len - total_len + 1, fin);
+    char* pos = buffer;
+
+    int total_len = 0;
+
+    size_t read_len;
+    size_t result_len;
     
-	if (result_len < (read_len - total_len))
-	  {
-	    if (errno != EINTR)
-	      {
-		fprintf(stderr, "error in read %d.\n", errno);
-		ret = 3;
-		goto ende;
-	      }
-	    goto again;
-	  }
-	else
-	  {
-	    if (result_len > 0)
-	      {
-		pos += result_len;
-		total_len += result_len;
-	      }
-	  }
-      } while ( result_len > 0);
+    read_len = head.tlen;
+
+    result_len = fread(pos, 1, read_len, fin);
+    
+    if (result_len != read_len)
+      {
+	fprintf(stderr, "error in read %d.\n", errno);
+	ret = 3;
+	goto ende;
+      }
+
+    pos += result_len;
+    total_len += result_len;
     
     fclose(fin);
     
-    if (operate(fout, buffer, total_len, tlen,
-		pid, tid, buffernumber, filenumber,
-		inittime, inittsc_before, inittsc_after, lasttime,
-		lasttsc_before, lasttsc_after, difftimetransfer, starttransfer,
-		acquiretime, id, number_dispatched) != 0)
+    if (operate(fout, buffer, head, sbyteorder) != 0)
       {
 	fprintf(stderr, "error in operate, stop.\n");
 	ret = 2;
@@ -625,24 +555,24 @@ int main (int argc, char*argv[])
     // if we have statistics and we have a stat file
     if(fstat != NULL)
       {
-	fprintf(fstat, "atrshmlogstat 12 %ld\n", (long)counter_write0);
-	fprintf(fstat, "atrshmlogstat 17 %ld\n", (long)counter_write0_discard);
-	fprintf(fstat, "atrshmlogstat 18 %ld\n", (long)counter_write0_wait);
-	fprintf(fstat, "atrshmlogstat 19 %ld\n", (long)counter_write0_adaptive);
-	fprintf(fstat, "atrshmlogstat 20 %ld\n", (long)counter_write0_adaptive_fast);
-	fprintf(fstat, "atrshmlogstat 21 %ld\n", (long)counter_write0_adaptive_very_fast);
-	fprintf(fstat, "atrshmlogstat 24 %ld\n", (long)counter_write1);
-	fprintf(fstat, "atrshmlogstat 29 %ld\n", (long)counter_write1_discard);
-	fprintf(fstat, "atrshmlogstat 30 %ld\n", (long)counter_write1_wait);
-	fprintf(fstat, "atrshmlogstat 31 %ld\n", (long)counter_write1_adaptive);
-	fprintf(fstat, "atrshmlogstat 32 %ld\n", (long)counter_write1_adaptive_fast);
-	fprintf(fstat, "atrshmlogstat 33 %ld\n", (long)counter_write1_adaptive_very_fast);
-	fprintf(fstat, "atrshmlogstat 37 %ld\n", (long)counter_write2);
-	fprintf(fstat, "atrshmlogstat 42 %ld\n", (long)counter_write2_discard);
-	fprintf(fstat, "atrshmlogstat 43 %ld\n", (long)counter_write2_wait);
-	fprintf(fstat, "atrshmlogstat 44 %ld\n", (long)counter_write2_adaptive);
-	fprintf(fstat, "atrshmlogstat 45 %ld\n", (long)counter_write2_adaptive_fast);
-	fprintf(fstat, "atrshmlogstat 46 %ld\n", (long)counter_write2_adaptive_very_fast);
+	fprintf(fstat, "atrshmlogstat 12 %ld\n", (long)head.counter_write0);
+	fprintf(fstat, "atrshmlogstat 17 %ld\n", (long)head.counter_write0_discard);
+	fprintf(fstat, "atrshmlogstat 18 %ld\n", (long)head.counter_write0_wait);
+	fprintf(fstat, "atrshmlogstat 19 %ld\n", (long)head.counter_write0_adaptive);
+	fprintf(fstat, "atrshmlogstat 20 %ld\n", (long)head.counter_write0_adaptive_fast);
+	fprintf(fstat, "atrshmlogstat 21 %ld\n", (long)head.counter_write0_adaptive_very_fast);
+	fprintf(fstat, "atrshmlogstat 24 %ld\n", (long)head.counter_write1);
+	fprintf(fstat, "atrshmlogstat 29 %ld\n", (long)head.counter_write1_discard);
+	fprintf(fstat, "atrshmlogstat 30 %ld\n", (long)head.counter_write1_wait);
+	fprintf(fstat, "atrshmlogstat 31 %ld\n", (long)head.counter_write1_adaptive);
+	fprintf(fstat, "atrshmlogstat 32 %ld\n", (long)head.counter_write1_adaptive_fast);
+	fprintf(fstat, "atrshmlogstat 33 %ld\n", (long)head.counter_write1_adaptive_very_fast);
+	fprintf(fstat, "atrshmlogstat 37 %ld\n", (long)head.counter_write2);
+	fprintf(fstat, "atrshmlogstat 42 %ld\n", (long)head.counter_write2_discard);
+	fprintf(fstat, "atrshmlogstat 43 %ld\n", (long)head.counter_write2_wait);
+	fprintf(fstat, "atrshmlogstat 44 %ld\n", (long)head.counter_write2_adaptive);
+	fprintf(fstat, "atrshmlogstat 45 %ld\n", (long)head.counter_write2_adaptive_fast);
+	fprintf(fstat, "atrshmlogstat 46 %ld\n", (long)head.counter_write2_adaptive_very_fast);
       }
   }
   
@@ -665,6 +595,12 @@ int main (int argc, char*argv[])
 
 /****************************************************/
 
+#if ATRSHMLOG_USE_SAFER_COPY == 1 
+#define MYCAT(_d,_s) 	strlcat((_d), (_s), 256)
+#else
+#define MYCAT(_d,_s) 	strcat((_d), (_s))
+#endif
+
 /** 
  * we convert the content of buffer into output
  * we start with the controldata
@@ -680,75 +616,50 @@ int main (int argc, char*argv[])
  */
 int operate(FILE* i_fout,
 	    char * const i_buffer,
-	    int i_buffer_end,
-	    int i_read_len,
-	    atrshmlog_pid_t i_pid,
-	    atrshmlog_tid_t i_tid,
-	    atrshmlog_int32_t i_buffernumber,
-	    atrshmlog_int32_t i_filenumber,
-	    atrshmlog_internal_time_t i_inittime,
-	    atrshmlog_time_t i_inittsc_before,
-	    atrshmlog_time_t i_inittsc_after,
-	    atrshmlog_internal_time_t i_lasttime,
-	    atrshmlog_time_t i_lasttsc_before,
-	    atrshmlog_time_t i_lasttsc_after,
-	    atrshmlog_time_t i_difftimetransfer,
-	    atrshmlog_time_t i_starttransfer,
-	    atrshmlog_time_t i_acquiretime,
-	    atrshmlog_int32_t i_id,
-	    atrshmlog_int32_t number_dispatched)
+	    atrshmlog_io_head_t head,
+	    int sbyteorder)
+
 {
   int result = -1;
 
-  int akindex = 0;
-
-  int chunkindex = 0;
-
   long tid = 0;
-  memcpy(&tid, &i_tid, sizeof( atrshmlog_tid_t));
+  memcpy(&tid, &head.tid, sizeof( atrshmlog_tid_t) > sizeof(long) ? sizeof(long) : sizeof( atrshmlog_tid_t));
   
-  //  printf("payload is pid %ld tid %lx %d %d\n", (long)i_pid, tid, i_buffer_end, i_read_len);
-
   printf("id %4ld acquiretime %8ld pid %6ld tid %8ld slavetime %9ld readertime %9ld payloadsize %7ld shmbuffer %3d filenumber %7d sequence %d\n",
-	 (long)i_id,
-	 (long)i_acquiretime,
-	 (long)i_pid,
+	 (long)head.id,
+	 (long)head.acquiretime,
+	 (long)head.pid,
 	 tid,
-	 (long)(i_lasttsc_before - i_starttransfer),
-	 (long)i_difftimetransfer,
-	 (long)i_buffer_end,
-	 i_buffernumber,
-	 i_filenumber,
-	 (int)number_dispatched
+	 (long)(head.lasttsc_before - head.starttransfer),
+	 (long)head.difftimetransfer,
+	 (long)head.tlen,
+	 head.buffernumber,
+	 head.filenumber,
+	 (int)head.number_dispatched
 	 );
 
   /* we calc the starttime and endtime in real */
 
-  long long tscstart = i_inittsc_after;
+  long long tscstart = head.inittsc_after;
 
-  tscstart += i_inittsc_before;
+  tscstart += head.inittsc_before;
 
   tscstart /= 2;
 
-  #if 	  ATRSHMLOGDEBUG ==  1
-  printf("start tsc %lld %lld %lld\n", (long long) i_inittsc_after, (long long)i_inittsc_before, tscstart);
-  #endif
-  long long tscend = i_lasttsc_before;
+  long long tscend = head.lasttsc_before;
 
-  tscend += i_lasttsc_after;
+  tscend += head.lasttsc_after;
 
   tscend /= 2;
 
-  #if 	  ATRSHMLOGDEBUG ==  1
-  printf("last tsc %lld %lld %lld\n", (long long) i_lasttsc_after, (long long)i_lasttsc_before, tscend);
-  #endif
   long long tscdiff = tscend - tscstart;
 
-  #if 	  ATRSHMLOGDEBUG ==  1
-  printf("diff tsc %lld \n",  tscdiff);
-  #endif
-  //  printf("Meantimes %lld %lld %lld\n", tscstart, tscend, tscdiff) ; 
+  long double tscstart_d = tscstart;
 
+  long double tscend_d =  tscend;
+
+  long double tscdiff_d = tscdiff;
+  
   /* we can now start to give the realtime a try
    * we assume the tsc is in the middle of the fetch of the real time
    * and so we give all tsc now a new realtime 
@@ -756,404 +667,227 @@ int operate(FILE* i_fout,
 
   /* ok. we have now the tsc. we now need the real */
 
-  long long realstart;
+  long double realstart;
 
-  realstart = i_inittime.tv_sec;
+  realstart = head.inittime.tv_sec;
   
-  #if 	  ATRSHMLOGDEBUG ==  1
-  printf("realstart %lld \n",  realstart);
-  #endif
+  realstart *=  1000000000.0;
 
-  realstart *=  (1000L * 1000L * 1000L);
+  realstart += head.inittime.tv_nsec;
 
-  #if 	  ATRSHMLOGDEBUG ==  1
-  printf("realstart %lld \n",  realstart);
-  #endif
-  realstart += i_inittime.tv_nsec;
+  long double realend;
 
-  #if 	  ATRSHMLOGDEBUG ==  1
-  printf("realstart %lld \n",  realstart);
-  #endif
-  long long realend;
-
-  realend = i_lasttime.tv_sec;
+  realend = head.lasttime.tv_sec;
   
-  #if 	  ATRSHMLOGDEBUG ==  1
-  printf("realend %lld \n",  realend);
-  #endif
+  realend *=  1000000000.0;
 
-  realend *=  (1000L * 1000L * 1000L);
+  realend += head.lasttime.tv_nsec;
 
-  #if 	  ATRSHMLOGDEBUG ==  1
-  printf("realend %lld \n",  realend);
-  #endif
-
-  realend += i_lasttime.tv_nsec;
-
-  #if 	  ATRSHMLOGDEBUG ==  1
-  printf("realend %lld \n",  realend);
-  #endif
-
-  long long realdiff = realend - realstart;
+  long double realdiff = realend - realstart;
   
-  #if 	  ATRSHMLOGDEBUG ==  1
-  printf("realdiff %lld \n",  realdiff);
-  #endif
-  // printf("Realtimes %lld %lld %lld\n", realstart, realend, realdiff);
-
   /* and now we can start with a realtime adder */
   
-  while (akindex < i_read_len)
+
+  int chunkindex = 0;
+
+  atrshmlog_chunk_head_t c;
+  
+  for (int akindex = 0; akindex < head.tlen; akindex += c.totallen)
     {
-      int chunklen;
-      atrshmlog_time_t starttime;
-      atrshmlog_time_t endtime;
-      int event;
-      char eventflag = 0;
-      int ucs2string = 0;
-      int userflag;
-
-      char h[ATRSHMLOGCONTROLDATASIZE];
-      
-      char* dest;
-
-      char* s;
-      
-      /* we move the vals from the actual chunk starting at akindex to
-       * the helper vars 
-       */
-
       chunkindex++;
-      
-      s = i_buffer + akindex;
 
-      memcpy (h, s, ATRSHMLOGCONTROLDATASIZE);
+      atrshmlog_fill_chunk_head (i_buffer + akindex, &c);
 
-
-      s += ATRSHMLOGCONTROLDATASIZE;
-      
-      /* check if this is possible */
-      atrshmlog_int32_t totallen;
-
-      memcpy (&totallen, h + sizeof(atrshmlog_time_t) + sizeof(atrshmlog_time_t) , sizeof(atrshmlog_int32_t));
-      
-      if (totallen < ATRSHMLOGCONTROLDATASIZE)
+      if (sbyteorder)
 	{
-	  fprintf(stderr, "error h.totallen < control in %d : %d.\n", chunkindex, totallen);
+	  atrshmlog_chunk_head_change_order(&c);
+	}
+      
+      if (c.totallen < ATRSHMLOGCONTROLDATASIZE || c.totallen > ATRSHMLOGBUFFER_INFOSIZE)
+	{
+	  fprintf(stderr, "error c.totallen : size :  in %d : %d.\n", chunkindex, c.totallen);
 	  return -1;
 	}
 
+      size_t lcount = c.totallen - ATRSHMLOGCONTROLDATASIZE;
 
-      if (totallen > ATRSHMLOGBUFFER_INFOSIZE)
+      if (lcount > 0)
 	{
-	  fprintf(stderr, "error h.totallen > infosize in %d.\n", chunkindex);
-	  return -1;
+	  memcpy(payloadbuffer, i_buffer + akindex + ATRSHMLOGCONTROLDATASIZE, lcount);
+	}
+    
+      payloadbuffer[lcount] = '\0';
+
+      
+      int ucs2string = 0;
+      
+      if (c.eventflag == ATRSHMLOGPOINTINTIMEp || c.eventflag == ATRSHMLOGPOINTINTIMEi)
+	ucs2string = 1;
+	
+      /* we now calc the real time
+       * (reals - realstart)/  (realend - realstart)  
+       * eq (s - tstart) / (tend - tstart)  
+       * so 
+       * (reals - realstart) = (s - tstart) * (realend - realstart) / (tend - tstart)
+       * so
+       * reals = realstart + ((s - tstart) * (realend - realstart) / (tend - tstart))
+       */
+      long double reals_d =  realstart;
+
+      long double quots_d = c.starttime;
+
+      quots_d -= tscstart_d;
+	
+      quots_d *= realdiff;
+        
+      reals_d += quots_d / tscdiff_d;
+
+      long long reals = reals_d;
+	
+      long double reale_d =  realstart;
+
+      long double quote_d = c.endtime;
+
+      quote_d -= tscstart_d;
+	
+      quote_d *= realdiff;
+        
+      reale_d += quote_d / tscdiff_d;
+
+      long long reale = reale_d;
+	
+      long long reald = reale - reals;
+
+
+      // NOW WE ONLY PRINT AND WRITE OUT.
+      char controlbuffer [ 256 ];
+      char tidstr[40];
+      char bnr[40];
+      char fnr[40];
+      char starttimestr[40];
+      char endtimestr[40];
+      char deltastr[40];
+      char realstarttimestr[40];
+      char realendtimestr[40];
+      char realdeltastr[40];
+      char eventstr[40];
+      char eventflagstr[40];
+      char userstr[40];
+      
+
+      snprintf(tidstr, 40, "%016ld", tid);
+	
+      snprintf(bnr, 40, "%03d", head.buffernumber);
+
+      snprintf(fnr, 40, "%018d", head.filenumber);
+	
+      snprintf(starttimestr, 40, "%018lld", (long long)c.starttime);
+	
+      snprintf(endtimestr, 40, "%018lld", (long long)c.endtime);
+
+      snprintf(deltastr, 40, "%018lld", (long long)(c.endtime - c.starttime));
+
+
+      snprintf(realstarttimestr, 40, "%018lld", reals);
+	
+      snprintf(realendtimestr, 40, "%018lld", reale);
+
+      snprintf(realdeltastr, 40, "%018lld", reald);
+
+	
+      snprintf(controlbuffer, 256,
+	       "%010ld ",
+	       (long)head.pid);
+
+      MYCAT(controlbuffer, tidstr);
+
+      MYCAT(controlbuffer, " ");
+
+      MYCAT(controlbuffer, bnr);
+
+      MYCAT(controlbuffer, " ");
+
+      MYCAT(controlbuffer, fnr);
+
+      MYCAT(controlbuffer, " ");
+
+      MYCAT(controlbuffer, starttimestr);
+
+      MYCAT(controlbuffer , " ");
+
+      MYCAT(controlbuffer, endtimestr);
+
+      MYCAT(controlbuffer , " ");
+
+      MYCAT(controlbuffer, deltastr);
+
+      MYCAT(controlbuffer , " ");
+
+      MYCAT(controlbuffer, realstarttimestr);
+
+      MYCAT(controlbuffer , " ");
+
+      MYCAT(controlbuffer, realendtimestr);
+
+      MYCAT(controlbuffer , " ");
+
+      MYCAT(controlbuffer, realdeltastr);
+
+      MYCAT(controlbuffer , " ");
+
+      snprintf(eventstr, 40, "%010ld ", (long)c.eventnumber);
+
+      MYCAT(controlbuffer, eventstr);
+
+      eventflagstr[0] = c.eventflag;
+      eventflagstr[1] = ' ' ; 
+      eventflagstr[2] = '\0';
+	
+      MYCAT(controlbuffer, eventflagstr);
+
+    
+      snprintf(userstr, 40, "%010ld", (long)c.userflag);
+    
+      MYCAT(controlbuffer, userstr);
+
+	
+      if (ucs2string)
+	{
+	  convertucs2(payloadbuffer, (c.totallen - ATRSHMLOGCONTROLDATASIZE), controlbuffer, i_fout);
+	}
+      else
+	{
+	  char* lastpos = payloadbuffer;
+	  char* nextcontrol = payloadbuffer;
+
+	  /* simple text convert, somehow dirty done */ 
+	  while ( nextcontrol != NULL )
+	    {
+	      nextcontrol = strchr(lastpos, '\n');
+
+	      if (nextcontrol)
+		*nextcontrol = '\0';
+
+		
+	      for (char *k = lastpos; *k; k++)
+		{
+		  if (!isprint(*k))
+		    *k = ' ';
+		  
+		  if (*k == '\t' || *k == '\r')
+		    *k = ' ';
+		    
+		}
+        
+	      fprintf(i_fout, "%s %s\n",
+		      controlbuffer,
+		      lastpos
+		      );
+		
+	      lastpos = nextcontrol + 1;
+	    }
 	}
       
-      {
-	size_t lcount = totallen - ATRSHMLOGCONTROLDATASIZE;
-	void* src = s;
-	void* dest = payloadbuffer;
-
-	if (lcount > 0)
-	  {
-	    memcpy(dest, src, lcount);
-	    /* printf("payload is %d\n", lcount); */
-	  }
-    
-	payloadbuffer[lcount] = '\0';
-	/* printf("pl %s\n", payloadbuffer); */
-      }
-
-      akindex += totallen;
-      
-      {
-	/* calc the output values 
-	 * and write out in file 
-	 */
-	char controlbuffer [ 256 ];
-	char* lastpos;
-	char* nextcontrol;
-	char tidstr[40];
-	char bnr[40];
-	char fnr[40];
-	char starttimestr[40];
-	char endtimestr[40];
-	char deltastr[40];
-	char realstarttimestr[40];
-	char realendtimestr[40];
-	char realdeltastr[40];
-	char eventstr[40];
-	char eventflagstr[40];
-	char userstr[40];
-	
-	snprintf(tidstr, 40, "%016ld", tid);
-
-        snprintf(bnr, 40, "%03d", i_buffernumber);
-
-	snprintf(fnr, 40, "%018d", i_filenumber);
-	
-	atrshmlog_time_t stime;
-
-	memcpy(&stime, h + 0, sizeof(atrshmlog_time_t));
-
-	long long s;
-
-#if 0
-	s = stime.tv_sec;
-	s *= (1000L * 1000L * 1000L);
-	s += stime.tv_nsec;
-#endif
-
-	s = stime;
-
-	/* we now calc the real time
-	 * (reals - realstart)/  (realend - realstart)  
-         * eq (s - tstart) / (tend - tstart)  
-         * so 
-         * (reals - realstart) = (s - tstart) * (realend - realstart) / (tend - tstart)
-         * so
-         * reals = realstart + ((s - tstart) * (realend - realstart) / (tend - tstart))
-         */
-	long double reals_d =  realstart;
-
-	long double quots_d = s;
-
-	quots_d -= tscstart;
-	
-	quots_d *= realdiff;
-        
-	reals_d += quots_d / tscdiff;
-
-	long long reals = reals_d;
-	
-	atrshmlog_time_t etime;
-	memcpy(&etime, h + sizeof(atrshmlog_time_t) , sizeof(atrshmlog_time_t));
-
-	long long e;
-
-#if 0
-	e = etime.tv_sec ;
-	e *= (1000L * 1000L * 1000L);
-	e+= etime.tv_nsec;
-#endif
-	e = etime;
-
-	long double reale_d =  realstart;
-
-	long double quote_d = e;
-
-	quote_d -= tscstart;
-	
-	quote_d *= realdiff;
-        
-	reale_d += quote_d / tscdiff;
-
-	long long reale = reale_d;
-	
-	long long reald = reale - reals;
-
-#if 0
-	if (stime.tv_sec > etime.tv_sec )
-	  printf("time error \n");
-
-	if (stime.tv_nsec >= (1000L * 1000L * 1000L))
-	  printf("nsec too big \n");
-	
-	if (etime.tv_nsec >= (1000L * 1000L * 1000L))
-	  printf("nsec too big \n");
-	#endif
-#if 0
-	sprintf(starttimestr, "%018ld %018ld", (long)stime.tv_sec, (long)stime.tv_nsec );
-	
-	
-	sprintf(endtimestr, "%018ld %018ld", (long)etime.tv_sec, (long)etime.tv_nsec );
-#else
-
-	snprintf(starttimestr, 40, "%018lld", s);
-	
-	snprintf(endtimestr, 40, "%018lld", e);
-
-	snprintf(deltastr, 40, "%018lld", e - s);
-
-
-	snprintf(realstarttimestr, 40, "%018lld", reals);
-	
-	snprintf(realendtimestr, 40, "%018lld", reale);
-
-	snprintf(realdeltastr, 40, "%018lld", reald);
-
-	
-#endif
-	
-	snprintf(controlbuffer, 256,
-		"%010ld ",
-		(long)i_pid);
-
-#if ATRSHMLOG_USE_SAFER_COPY == 1 
-
-	strlcat(controlbuffer, tidstr, 256);
-
-	strlcat(controlbuffer, " ", 256);
-
-	strlcat(controlbuffer, bnr, 256);
-
-	strlcat(controlbuffer, " ", 256);
-
-	strlcat(controlbuffer, fnr, 256);
-
-	strlcat(controlbuffer, " ", 256);
-
-	strlcat(controlbuffer, starttimestr, 256);
-
-	strlcat(controlbuffer , " ", 256);
-
-	strlcat(controlbuffer, endtimestr, 256);
-
-	strlcat(controlbuffer , " ", 256);
-
-	strlcat(controlbuffer, deltastr, 256);
-
-	strlcat(controlbuffer , " ", 256);
-
-	strlcat(controlbuffer, realstarttimestr, 256);
-
-	strlcat(controlbuffer , " ", 256);
-
-	strlcat(controlbuffer, realendtimestr, 256);
-
-	strlcat(controlbuffer , " ", 256);
-
-	strlcat(controlbuffer, realdeltastr, 256);
-
-	strlcat(controlbuffer , " ", 256);
-
-	atrshmlog_int32_t eventnumber;
-
-	memcpy(&eventnumber, h + sizeof(atrshmlog_time_t) + sizeof(atrshmlog_time_t) + sizeof(atrshmlog_int32_t), sizeof(atrshmlog_int32_t));
-    
-	snprintf(eventstr, 40, "%010ld ", (long)eventnumber);
-
-	strlcat(controlbuffer, eventstr, 256);
-	eventflag = *(h + (ATRSHMLOGCONTROLDATASIZE - 1));
-	eventflagstr[0] = eventflag;
-	eventflagstr[1] = ' ' ; 
-	eventflagstr[2] = '\0';
-	
-	strlcat(controlbuffer, eventflagstr, 256);
-
-	if (eventflag == ATRSHMLOGPOINTINTIMEp || eventflag == ATRSHMLOGPOINTINTIMEi)
-	  ucs2string = 1;
-	
-	atrshmlog_int32_t userevent;
-
-	memcpy(&userevent, h + sizeof(atrshmlog_time_t) + sizeof(atrshmlog_time_t) + sizeof(atrshmlog_int32_t) + sizeof(atrshmlog_int32_t), sizeof(atrshmlog_int32_t));
-    
-	snprintf(userstr, 40, "%010ld", (long)userevent);
-    
-	strlcat(controlbuffer, userstr, 256);
-
-#else
-	strcat(controlbuffer, tidstr);
-
-	strcat(controlbuffer, " ");
-
-	strcat(controlbuffer, bnr);
-
-	strcat(controlbuffer, " ");
-
-	strcat(controlbuffer, fnr);
-
-	strcat(controlbuffer, " ");
-
-	strcat(controlbuffer, starttimestr);
-
-	strcat(controlbuffer , " ");
-
-	strcat(controlbuffer, endtimestr);
-
-	strcat(controlbuffer , " ");
-
-	strcat(controlbuffer, deltastr);
-
-	strcat(controlbuffer , " ");
-
-	strcat(controlbuffer, realstarttimestr);
-
-	strcat(controlbuffer , " ");
-
-	strcat(controlbuffer, realendtimestr);
-
-	strcat(controlbuffer , " ");
-
-	strcat(controlbuffer, realdeltastr);
-
-	strcat(controlbuffer , " ");
-
-	atrshmlog_int32_t eventnumber;
-
-	memcpy(&eventnumber, h + sizeof(atrshmlog_time_t) + sizeof(atrshmlog_time_t) + sizeof(atrshmlog_int32_t), sizeof(atrshmlog_int32_t));
-    
-	sprintf(eventstr, "%010ld ", (long)eventnumber);
-
-	strcat(controlbuffer, eventstr);
-	eventflag = *(h + (ATRSHMLOGCONTROLDATASIZE - 1));
-	eventflagstr[0] = eventflag;
-	eventflagstr[1] = ' ' ; 
-	eventflagstr[2] = '\0';
-	
-	strcat(controlbuffer, eventflagstr);
-
-	if (eventflag == ATRSHMLOGPOINTINTIMEp || eventflag == ATRSHMLOGPOINTINTIMEi)
-	  ucs2string = 1;
-	
-	atrshmlog_int32_t userevent;
-
-	memcpy(&userevent, h + sizeof(atrshmlog_time_t) + sizeof(atrshmlog_time_t) + sizeof(atrshmlog_int32_t) + sizeof(atrshmlog_int32_t), sizeof(atrshmlog_int32_t));
-    
-	sprintf(userstr, "%010ld", (long)userevent);
-    
-	strcat(controlbuffer, userstr);
-#endif
-	
-	nextcontrol = payloadbuffer, lastpos = payloadbuffer;
-
-	/* printf(" payoad %s\n", payloadbuffer); */
-
-	if (ucs2string)
-	  {
-	    convertucs2(nextcontrol, (totallen - ATRSHMLOGCONTROLDATASIZE), controlbuffer, i_fout);
-	  }
-	else
-	  {
-	    /* simple text convert, somehow dirty done */ 
-	    while ( nextcontrol != NULL )
-	      {
-		nextcontrol = strchr(lastpos, '\n');
-
-		if (nextcontrol)
-		  *nextcontrol = '\0';
-
-		
-		for (char *k = lastpos; *k; k++)
-		  {
-		    if (!isprint(*k))
-		      *k = ' ';
-		    
-		    if (*k == '\t' || *k == '\r')
-		      *k = ' ';
-		    
-		  }
-        
-		fprintf(i_fout, "%s %s\n",
-			controlbuffer,
-			lastpos
-			);
-		
-		lastpos = nextcontrol + 1;
-	      }
-	  }
-      }
     }
   
   /* ok. we are out normal 
@@ -1166,7 +900,9 @@ int operate(FILE* i_fout,
 
 
 
-
+/**
+ * poor man solution
+ */
 static void convertucs2(char *inputstringbuffer,
 			int lentimes2,
 			const char *prefix,

@@ -22,7 +22,8 @@ tests/t_attach_mapped_file 1 42
 tests/t_create_slave 4 "ps -elf H"
 tests/t_decrement_slave_count 10 15
 tests/t_set_f_list_slave_count 5 3 4 
-
+tests/t_strategy_wait_wait_time
+tests/t_reflexion
 tests/t_get_acquire_count 42
 tests/t_get_area
 tests/t_get_area_count

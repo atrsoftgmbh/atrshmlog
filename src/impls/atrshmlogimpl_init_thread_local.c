@@ -48,8 +48,6 @@ int atrshmlog_init_thread_local (atrshmlog_g_tl_t* restrict i_g)
       // in debugging with the info.
       if ( i_g->atrshmlog_idnotok == 0)
 	{
-	  i_g->atrshmlog_shm_count = a_shm->shmcount;
-
 	  i_g->atrshmlog_thread_pid = getpid();
 
 	  ATRSHMLOG_GETTHREADID(i_g->atrshmlog_thread_tid);

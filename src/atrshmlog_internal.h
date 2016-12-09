@@ -1563,11 +1563,6 @@ struct atrshmlog_g_tl_s {
    */
   int atrshmlog_targetbuffer_index;
   
-  /**
-   * This is the shm count for buffers to be used as mailbox buffers.
-   * This is info from the shm area itself.
-   */
-  int atrshmlog_shm_count;
 
   /**
    * The strategy for this thread.
@@ -1725,6 +1720,242 @@ struct atrshmlog_slave_s {
 
 typedef struct atrshmlog_slave_s atrshmlog_slave_t;
 
+/*******************************************************************/
+
+/**
+ * We are the io header for one buffer for the converter 
+ *
+ * So this the header data in this version.
+ * 
+ * after it there is a filler of 318 byte in this version - then 
+ * the payload starts.
+ *
+ */
+struct atrshmlog_io_head_s {
+  /**
+   * byte order data  : its 0, 1 or 1, 0 ....
+   */
+  unsigned char order[2];
+
+  /**
+   * The version of the system
+   */
+  atrshmlog_int32_t version;
+
+  /**
+   * The total len
+   */
+  atrshmlog_int32_t tlen;
+
+  /**
+   * The pid 
+   */
+  atrshmlog_pid_t pid;
+
+  /**
+   * The tid
+   */
+  atrshmlog_tid_t tid;
+
+  /**
+   * The number of the buffer
+   */
+  atrshmlog_int32_t buffernumber;
+
+  /**
+   * The filenumber from the reader
+   */
+  atrshmlog_int32_t filenumber;
+
+  /**
+   * The process inittime from first attach
+   */
+  atrshmlog_internal_time_t inittime;
+
+  /**
+   * The clicktime before initttime
+   */
+  atrshmlog_time_t inittsc_before;
+
+  /**
+   * The clicktime after initttime
+   */
+  atrshmlog_time_t inittsc_after;
+
+  /**
+   * the lasttime for this buffer in transfer
+   */
+  atrshmlog_internal_time_t lasttime;
+
+  /**
+   * the clicktime before
+   */
+  atrshmlog_time_t lasttsc_before;
+
+  /**
+   * the clicktime after
+   */
+  atrshmlog_time_t lasttsc_after;
+
+  /**
+   * the transfer clicktime difference
+   */
+  atrshmlog_time_t difftimetransfer;
+
+  /**
+   * The starttime for transfer in slave
+   */
+  atrshmlog_time_t starttransfer;
+
+  /**
+   * The buffer acquiretime difference in  thread
+   */
+  atrshmlog_time_t acquiretime;
+
+  /**
+   * the buffer id
+   */
+  atrshmlog_int32_t id;
+
+  /**
+   * the number of dispatch from the thread
+   */
+  atrshmlog_int32_t number_dispatched;
+
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write0;
+  
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write0_discard;
+
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write0_wait;
+
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write0_adaptive;
+
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write0_adaptive_fast;
+
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write0_adaptive_very_fast;
+
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write1;
+
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write1_discard;
+
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write1_wait;
+
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write1_adaptive;
+
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write1_adaptive_fast;
+
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write1_adaptive_very_fast;
+
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write2;
+
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write2_discard;
+
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write2_wait;
+
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write2_adaptive;
+
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write2_adaptive_fast;
+
+  /**
+   * thread statistic data
+   */
+  atrshmlog_int32_t counter_write2_adaptive_very_fast;
+    
+};
+
+typedef struct atrshmlog_io_head_s atrshmlog_io_head_t;
+
+/*****************************************************************/
+
+/**
+ * we are a single write chunk head
+ */
+struct atrshmlog_chunk_head_s {
+  /**
+   * the starttime
+   */
+  atrshmlog_time_t starttime;
+
+  /**
+   * the endtime
+   */
+  atrshmlog_time_t endtime;
+
+  /**
+   * the total len of the chunk
+   */
+  atrshmlog_int32_t totallen;
+
+  /**
+   * the event number
+   */
+  atrshmlog_int32_t eventnumber;
+
+  /**
+   * the userflag 
+   */
+  atrshmlog_int32_t userflag;
+
+  /**
+   * the event flag, kind of the log entry for times and layout of strings
+   * P I p i 
+   */
+  char eventflag;
+};
+
+typedef struct atrshmlog_chunk_head_s atrshmlog_chunk_head_t;
+
 /*****************************************************************/
 
 /* 
@@ -1818,6 +2049,12 @@ extern int atrshmlog_detach_mapped_file(void* p);
 extern void atrshmlog_memset_prealloced(void);
 extern atomic_int atrshmlog_last_mem_to_shm;
 extern atomic_int atrshmlog_base_ptr_use_flag;
+extern void atrshmlog_fill_chunk_head (volatile const void *i_chunk, atrshmlog_chunk_head_t* c);
+extern atrshmlog_int32_t atrshmlog_int32_change_order(atrshmlog_int32_t v);
+extern uint64_t atrshmlog_int64_change_order(uint64_t v);
+extern void atrshmlog_io_head_change_order(atrshmlog_io_head_t* h);
+extern void atrshmlog_chunk_head_change_order(atrshmlog_chunk_head_t* h);
+
 
 /************************************************************************/
 /* helper macros*/
