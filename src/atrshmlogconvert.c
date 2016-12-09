@@ -112,6 +112,8 @@ int main (int argc, char*argv[])
   FILE* fin = NULL;
 
   FILE* fstat = NULL;
+
+  FILE* ftimes = NULL;
   
   // int fin;
   
@@ -125,7 +127,7 @@ int main (int argc, char*argv[])
   
   if (argc < 3)
     {
-      printf("usage: %s infile outfile [statisticsfile]\n", argv[0]);
+      printf("usage: %s infile outfile [statisticsfile] [timesfile]\n", argv[0]);
       printf("parameter count wrong.\n");
       printf("logsystem version is %d.\n", ATRSHMLOGVERSION);
       exit(1);
@@ -141,6 +143,17 @@ int main (int argc, char*argv[])
       if (fstat == NULL)
 	{
 	  fprintf(stderr, "error in open file %s.\n" , argv[3]);
+	  return 1;
+	}
+    }
+  
+  if (argc > 4)
+    {
+      ftimes = fopen(argv[4], "w");
+
+      if (ftimes == NULL)
+	{
+	  fprintf(stderr, "error in open file %s.\n" , argv[4]);
 	  return 1;
 	}
     }
@@ -574,6 +587,28 @@ int main (int argc, char*argv[])
 	fprintf(fstat, "atrshmlogstat 45 %ld\n", (long)head.counter_write2_adaptive_fast);
 	fprintf(fstat, "atrshmlogstat 46 %ld\n", (long)head.counter_write2_adaptive_very_fast);
       }
+
+    if(ftimes != NULL)
+      {
+	fprintf(ftimes,
+		"inittime_seconds : %lld\n"
+		"inittime_nanos   : %lld\n"
+		"inittime_before  : %lld\n"
+		"inittime_after   : %lld\n"
+		"lasttime_seconds : %lld\n"
+		"lasttime_nanos   : %lld\n"
+		"lasttime_before  : %lld\n"
+		"lasttime_after   : %lld\n",
+		(long long)head.inittime.tv_sec,
+		(long long)head.inittime.tv_nsec,
+		(long long)head.inittsc_before,
+		(long long)head.inittsc_after,
+		(long long)head.lasttime.tv_sec,
+		(long long)head.lasttime.tv_nsec,
+		(long long)head.lasttsc_before,
+		(long long)head.lasttsc_after);
+		
+      }
   }
   
  ende:
@@ -588,6 +623,12 @@ int main (int argc, char*argv[])
     {
       fflush(fstat);
       fclose(fstat);
+    }
+  
+  if (ftimes != NULL)
+    {
+      fflush(ftimes);
+      fclose(ftimes);
     }
   
   return ret;

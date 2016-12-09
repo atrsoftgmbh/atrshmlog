@@ -1,5 +1,6 @@
 atrshmlog.c
 atrshmlogconvert.c
+atrshmlogtime.c
 atrshmlogcreate.c
 atrshmlogdefect.c
 atrshmlogdelete.c

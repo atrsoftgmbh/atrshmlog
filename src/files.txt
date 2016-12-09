@@ -13,6 +13,7 @@ atrshmlog.c
 
 # the program code files
 atrshmlogconvert.c
+atrshmlogtime.c
 atrshmlogcreate.c
 atrshmlogdefect.c
 atrshmlogdelete.c
