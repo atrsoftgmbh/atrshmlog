@@ -1,5 +1,8 @@
+writer signals to start stop slaves , detach ....
 
-tool calc realtime from intitime and lasttime and clicktime ...
+------
+
+install script in bin
 
 -----
 
@@ -11,24 +14,11 @@ no sql logger
 
 -----
 
-packdistro mit omit
-
-----
-
 ruby extension
 
 -----
 
 layer perl python swig write0 call
-
------
-
-adjustment script
-static buffers
-
-------
-
-install script in bin
 
 ------
 
@@ -52,9 +42,6 @@ get_statistics via shm or buffer out
 
 ----
 
-writer signals to start stop ....
-
------
 
 verify mit logbuffer content
 

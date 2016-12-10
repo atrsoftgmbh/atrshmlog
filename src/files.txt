@@ -43,6 +43,7 @@ atrshmlogchecksystem
 atrshmlogerror
 atrshmlogstat
 atrshmlogstopreader
+atrshmloggenbuffers
 
 # helper and configurations
 Doxyfile
