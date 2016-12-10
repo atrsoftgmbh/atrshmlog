@@ -499,7 +499,45 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 	  int rettm = atrshmlog_transfer_mem_to_shm(tbuff, g);
 	}
     }
-  
+
+  // we check the shared mem writer 
+  if (a_shm->writerpid == g->atrshmlog_thread_pid)
+    {
+      // we use the lower 16 bit. the upper are bit flag to tell us what to do.
+      // so we have 16 different things to do. and 64k sub values
+      if ((a_shm->writerflag & 0x10000) != 0)
+	{
+	  // ok. we want to change the number of slaves.
+	  // a value is set from the lower 16 bits.
+	  // so be carefull: you can start in theory 64 k slaves ....
+	  int newslaves = (a_shm->writerflag & 0xffff);
+
+	  a_shm->writerflag = 0;
+
+	  a_shm->writerpid = 0;
+	  
+	  int old = atrshmlog_set_f_list_buffer_slave_count(newslaves);
+
+	  return atrshmlog_error_ok;
+	}
+
+      if ((a_shm->writerflag & 0x80000000) != 0)
+	{
+	  // ok. we want to detach this one.
+	  a_shm->writerflag = 0;
+
+	  a_shm->writerpid = 0;
+	  
+	  atrshmlog_detach();
+
+	  return atrshmlog_error_ok;
+	}
+
+      a_shm->writerflag = 0;
+
+      a_shm->writerpid = 0;
+    }
+
   return atrshmlog_error_ok;
   
   /************************/  

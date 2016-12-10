@@ -1,6 +1,3 @@
-writer signals to start stop slaves , detach ....
-
-------
 
 install script in bin
 
