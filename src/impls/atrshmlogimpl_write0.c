@@ -456,12 +456,12 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
     {
       // we use the lower 16 bit. the upper are bit flag to tell us what to do.
       // so we have 16 different things to do. and 64k sub values
-      if ((a_shm->writerflag & 0x10000) != 0)
+      if ((a_shm->writerflag & ATRSHMLOG_WRITER_SLAVE) != 0)
 	{
 	  // ok. we want to change the number of slaves.
 	  // a value is set from the lower 16 bits.
 	  // so be carefull: you can start in theory 64 k slaves ....
-	  int newslaves = (a_shm->writerflag & 0xffff);
+	  int newslaves = (a_shm->writerflag & ATRSHMLOG_WRITER_SUB);
 
 	  a_shm->writerflag = 0;
 
@@ -472,7 +472,7 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 	  return atrshmlog_error_ok;
 	}
 
-      if ((a_shm->writerflag & 0x80000000) != 0)
+      if ((a_shm->writerflag & ATRSHMLOG_WRITER_DETACH) != 0)
 	{
 	  // ok. we want to detach this one.
 	  a_shm->writerflag = 0;

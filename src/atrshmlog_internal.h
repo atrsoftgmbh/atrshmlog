@@ -1236,6 +1236,21 @@ struct atrshmlog_area_s {
 typedef struct atrshmlog_area_s atrshmlog_area_t;
 
 /**
+ * the flag to detach a writer via writer flag
+ */
+#define ATRSHMLOG_WRITER_DETACH (0x80000000)
+
+/**
+ * the flag to change slave count via writer flag
+ */
+#define ATRSHMLOG_WRITER_SLAVE (0x10000)
+
+/**
+ * the sub mask
+ */
+#define ATRSHMLOG_WRITER_SUB (0xffff)
+
+/**
  * \n Main code:
  *
  * \brief The internal logging buffer descriptor struct.
