@@ -89,6 +89,14 @@ then
 	g99.sh $i
     done
 
+    for i in $( cat shmcfiles_postgres | egrep -v '^#' )
+    do
+	$RM -f ${i%%.c}.o
+    
+	echo $i compile
+	g99.sh $i
+    done
+
     #############################
 
     cd impls
@@ -128,6 +136,15 @@ then
 	$RM -f $i
 	echo $i link
 	ell.sh $i 
+    done
+
+    #############################
+
+    for i in $( cat shmbininternalfiles_postgres  | egrep -v '^#' )
+    do
+	$RM -f $i
+	echo $i link
+	ell.sh $i -lpq
     done
 fi
 

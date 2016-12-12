@@ -558,6 +558,19 @@ int main (int argc, char*argv[])
     
     fclose(fin);
     
+    printf("id %4ld acquiretime %8ld pid %6ld tid %8ld slavetime %9ld readertime %9ld payloadsize %7ld shmbuffer %3d filenumber %7d sequence %d\n",
+	 (long)head.id,
+	 (long)head.acquiretime,
+	 (long)head.pid,
+	 (long)head.tid,
+	 (long)(head.lasttsc_before - head.starttransfer),
+	 (long)head.difftimetransfer,
+	 (long)head.tlen,
+	 head.buffernumber,
+	 head.filenumber,
+	 (int)head.number_dispatched
+	 );
+
     if (operate(fout, buffer, head, sbyteorder) != 0)
       {
 	fprintf(stderr, "error in operate, stop.\n");
@@ -662,22 +675,6 @@ int operate(FILE* i_fout,
 
 {
   int result = -1;
-
-  long tid = 0;
-  memcpy(&tid, &head.tid, sizeof( atrshmlog_tid_t) > sizeof(long) ? sizeof(long) : sizeof( atrshmlog_tid_t));
-  
-  printf("id %4ld acquiretime %8ld pid %6ld tid %8ld slavetime %9ld readertime %9ld payloadsize %7ld shmbuffer %3d filenumber %7d sequence %d\n",
-	 (long)head.id,
-	 (long)head.acquiretime,
-	 (long)head.pid,
-	 tid,
-	 (long)(head.lasttsc_before - head.starttransfer),
-	 (long)head.difftimetransfer,
-	 (long)head.tlen,
-	 head.buffernumber,
-	 head.filenumber,
-	 (int)head.number_dispatched
-	 );
 
   /* we calc the starttime and endtime in real */
 
@@ -816,11 +813,11 @@ int operate(FILE* i_fout,
       char userstr[40];
       
 
-      snprintf(tidstr, 40, "%016ld", tid);
+      snprintf(tidstr, 40, "%016ld", (long)head.tid);
 	
-      snprintf(bnr, 40, "%03d", head.buffernumber);
+      snprintf(bnr, 40, "%03d", (int)head.buffernumber);
 
-      snprintf(fnr, 40, "%018d", head.filenumber);
+      snprintf(fnr, 40, "%018d", (int)head.filenumber);
 	
       snprintf(starttimestr, 40, "%018lld", (long long)c.starttime);
 	
@@ -840,6 +837,14 @@ int operate(FILE* i_fout,
 	       "%010ld ",
 	       (long)head.pid);
 
+      snprintf(eventstr, 40, "%010ld ", (long)c.eventnumber);
+
+      snprintf(userstr, 40, "%010ld", (long)c.userflag);
+    
+      eventflagstr[0] = c.eventflag;
+      eventflagstr[1] = ' ' ; 
+      eventflagstr[2] = '\0';
+	
       MYCAT(controlbuffer, tidstr);
 
       MYCAT(controlbuffer, " ");
@@ -876,18 +881,10 @@ int operate(FILE* i_fout,
 
       MYCAT(controlbuffer , " ");
 
-      snprintf(eventstr, 40, "%010ld ", (long)c.eventnumber);
-
       MYCAT(controlbuffer, eventstr);
 
-      eventflagstr[0] = c.eventflag;
-      eventflagstr[1] = ' ' ; 
-      eventflagstr[2] = '\0';
-	
       MYCAT(controlbuffer, eventflagstr);
 
-    
-      snprintf(userstr, 40, "%010ld", (long)c.userflag);
     
       MYCAT(controlbuffer, userstr);
 

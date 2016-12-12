@@ -1948,6 +1948,11 @@ struct atrshmlog_chunk_head_s {
   atrshmlog_time_t endtime;
 
   /**
+   * the deltatime
+   */
+  atrshmlog_time_t deltatime;
+
+  /**
    * the total len of the chunk
    */
   atrshmlog_int32_t totallen;
@@ -1967,6 +1972,27 @@ struct atrshmlog_chunk_head_s {
    * P I p i 
    */
   char eventflag;
+
+  /**
+   * the real time start
+   */
+  uint64_t startreal;
+
+  /**
+   * the real time end
+   */
+  uint64_t endreal;
+
+  /**
+   * the real time end
+   */
+  uint64_t deltareal;
+
+  /**
+   * the chunk payload start
+   */
+  void *payload;
+
 };
 
 typedef struct atrshmlog_chunk_head_s atrshmlog_chunk_head_t;

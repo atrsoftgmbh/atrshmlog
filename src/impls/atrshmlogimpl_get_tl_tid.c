@@ -283,9 +283,13 @@ void atrshmlog_io_head_change_order(atrshmlog_io_head_t* h)
 void atrshmlog_chunk_head_change_order(atrshmlog_chunk_head_t* h)
 {
   h->starttime = atrshmlog_int64_change_order(h->starttime);
-  h->endtime = atrshmlog_int32_change_order(h->endtime);
+  h->endtime = atrshmlog_int64_change_order(h->endtime);
+  h->deltatime = atrshmlog_int64_change_order(h->deltatime);
+  h->startreal = atrshmlog_int64_change_order(h->startreal);
+  h->endreal = atrshmlog_int64_change_order(h->endreal);
+  h->deltareal = atrshmlog_int64_change_order(h->deltareal);
   h->totallen = atrshmlog_int32_change_order(h->totallen);
   h->eventnumber = atrshmlog_int32_change_order(h->eventnumber);
   h->userflag = atrshmlog_int32_change_order(h->userflag);
-  // eventflag is char
+  // eventflag is char, paylaod ist char...
 }
