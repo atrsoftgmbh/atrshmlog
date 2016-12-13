@@ -27,12 +27,14 @@
 # +l : ignore lib
 # +b : ignore link binaries
 # +t : ignore tests
+# +a : ignore database
 
 DODOC=1
 DOC=1
 DOL=1
 DOB=1
 DOTESTS=1
+DOA=1
 
 while [ $# -ne 0 ]
 do
@@ -51,6 +53,10 @@ do
 	    ;;
 	\+b)
 	    DOB=0
+	    shift
+	    ;;
+	\+a)
+	    DOA=0
 	    shift
 	    ;;
 	\+t)
@@ -89,7 +95,11 @@ then
 	g99.sh $i
     done
 
-    for i in $( cat shmcfiles_postgres | egrep -v '^#' )
+    #############################
+
+    cd impls
+
+    for i in atrshmlogimpl*.c
     do
 	$RM -f ${i%%.c}.o
     
@@ -97,11 +107,12 @@ then
 	g99.sh $i
     done
 
-    #############################
+    cd ..
 
-    cd impls
 
-    for i in atrshmlogimpl*.c
+    cd dbs
+
+    for i in atrshmlog*.c
     do
 	$RM -f ${i%%.c}.o
     
@@ -138,14 +149,6 @@ then
 	ell.sh $i 
     done
 
-    #############################
-
-    for i in $( cat shmbininternalfiles_postgres  | egrep -v '^#' )
-    do
-	$RM -f $i
-	echo $i link
-	ell.sh $i -lpq
-    done
 fi
 
 #############################
@@ -171,6 +174,23 @@ then
 	$RM -f ${i%%.C}
 	echo ${i%%.C} build
 	g++14w.sh $i
+    done
+
+    cd ..
+fi
+
+if [ $DOA -eq 1 ]
+then
+
+    #############################
+
+    cd dbs
+    
+    cat ../shmbininternalfiles_postgres  | egrep -v '^#' | while read i rest
+    do
+	$RM -f $i
+	echo $i link
+	ell.sh $i $rest
     done
 
     cd ..

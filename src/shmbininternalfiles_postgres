@@ -1,2 +1,2 @@
-atrshmlogconvert_pg
-atrshmlogreaderd_pg
+atrshmlogconvert_pg atrshmlogconvert_db.o atrshmlogdb_postgres.o -lpq
+atrshmlogreaderd_pg atrshmlogreaderd_db.o atrshmlogdb_postgres.o -lpq
