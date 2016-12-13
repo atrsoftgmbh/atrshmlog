@@ -13,6 +13,7 @@ atrshmlog.c
 
 # the program code files
 atrshmlogconvert.c
+atrshmlogconvert_pg.c
 atrshmlogtime.c
 atrshmlogcreate.c
 atrshmlogdefect.c
@@ -24,6 +25,7 @@ atrshmlog_internal.c
 atrshmlogoff.c
 atrshmlogon.c
 atrshmlogreaderd.c
+atrshmlogreaderd_pg.c
 atrshmlogreset.c
 atrshmlogsignalreader.c
 atrshmlogsignalwriter.c
@@ -55,6 +57,8 @@ shmallbinfiles
 shmbinfiles
 shmbininternalfiles
 shmtestcfiles
+shmbininternalfiles_postgres
+shmcfiles_postgres
 files.txt
 t_test.sh
 

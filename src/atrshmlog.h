@@ -458,6 +458,44 @@ bumm bumm bumm bumm error in platform active count
 # endif
 #endif
 
+/**
+ * \brief We have to know the platforms order of bytes
+ * 
+ * So we have today only the fact that all systems use
+ * the DEC order - which is also intel order - which is not
+ * the network order.
+ * The network order is the IBM order - which was motorola in the old days
+ *
+ * If you are on a platform that make it different 
+ * add your if blblplatform == 1 , undef , define 1 , endif after it.
+ */ 
+
+#define ATRSHMLOG_H_ORDER_IS_N_ORDER 0
+
+#if  ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
+// nothing to change
+#endif
+
+#if  ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC == 1
+// nothing to change
+#endif
+
+#if  ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 1
+// nothing to change
+#endif
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+// nothing to change
+#endif
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
+// nothing to change
+#endif
+
+#if ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC == 1
+// nothing to change
+#endif
+
 // candidates for the platform tsc call function
 // #define ATRSHMLOG_GET_TSC_CALL atrshmlog_get_tsc_par_x86_64_gnu
 // #define ATRSHMLOG_GET_TSC_CALL atrshmlog_get_tsc_fence_x86_64_gnu
