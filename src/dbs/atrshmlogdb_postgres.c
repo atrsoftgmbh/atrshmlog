@@ -112,10 +112,19 @@ int atrshmlog_insert_db_ucs2string(atrshmlog_dbsession_t* i_db,
  */
 int atrshmlog_free_prepared_db(atrshmlog_dbsession_t *i_db);
 
+
+/**
+ * helper : we deliver the flag : need data in network order is 1
+ */
+int atrshmlog_need_data_in_network_order_db(void)
+{
+  // this is 1 for postgresql
+  return 1;
+}
+
 /*
  *--------------------------------------------------------
  */
-
 
 
 /*********************************************************************/

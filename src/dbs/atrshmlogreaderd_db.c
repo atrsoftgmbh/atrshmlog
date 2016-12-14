@@ -138,6 +138,10 @@ extern int atrshmlog_insert_db_ucs2string(atrshmlog_dbsession_t* i_db,
 extern int atrshmlog_free_prepared_db(atrshmlog_dbsession_t *i_db);
 
 
+/**
+ * helper : we deliver the flag : need data in network order is 1
+ */
+extern int atrshmlog_need_data_in_network_order_db(void);
 
 
 /*
@@ -1157,7 +1161,7 @@ int operate(atrshmlog_dbsession_t *i_db,
 
   int tlen = head.tlen;
   
-  if (!horder_is_n_order)
+  if (!horder_is_n_order && atrshmlog_need_data_in_network_order_db())
     {
       atrshmlog_io_head_change_order(&head);
     }
@@ -1259,7 +1263,7 @@ int operate(atrshmlog_dbsession_t *i_db,
       
       if (ucs2string)
 	{
-	  if (!horder_is_n_order)
+	  if (!horder_is_n_order && atrshmlog_need_data_in_network_order_db()) 
 	    {
 	      atrshmlog_chunk_head_change_order(&c);
 	    }
@@ -1280,7 +1284,7 @@ int operate(atrshmlog_dbsession_t *i_db,
 	  char* lastpos = payloadbuffer;
 	  char* nextcontrol = payloadbuffer;
 
-	  if (!horder_is_n_order)
+	  if (!horder_is_n_order && atrshmlog_need_data_in_network_order_db())
 	    {
 	      atrshmlog_chunk_head_change_order(&c);
 	    }
