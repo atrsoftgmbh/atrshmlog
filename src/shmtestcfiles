@@ -115,6 +115,8 @@ t_turn_logging_off.c
 t_turn_slave_off.c
 t_write0.c
 t_write1.c
+t_write_long.c
+t_write_blob.c
 t_write2.c
 t_writer_flag_detach.c
 t_writer_flag_slave.c
