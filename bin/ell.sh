@@ -126,6 +126,6 @@ P=${1%%.o}
 
 shift
 
-$CC -L. -L.. ${P}.o $* $LIBMODULE -o $P
+$CC $LDFLAGS -L. -L.. ${P}.o $* $LIBMODULE -o $P
 
 # end of file

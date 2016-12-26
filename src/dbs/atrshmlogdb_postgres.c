@@ -79,31 +79,31 @@ int atrshmlog_rollback_db(atrshmlog_dbsession_t* i_db);
  * db specific function : get head seq
  */
 int atrshmlog_get_head_seq_db(atrshmlog_dbsession_t* i_db,
-			   uint64_t *o_head_id);
+			      uint64_t *o_head_id);
 
 /**
  * db specific function : insert head
  */
 int atrshmlog_insert_db_head(atrshmlog_dbsession_t* i_db,
 			     uint64_t *io_head_id,
-			  atrshmlog_io_head_t *i_head);
+			     atrshmlog_io_head_t *i_head);
 
 /**
  * db specific function : insert cstring
  */
 int atrshmlog_insert_db_cstring(atrshmlog_dbsession_t* i_db,
-			     uint64_t i_head_id,
-			     atrshmlog_io_head_t *i_head,
-			     atrshmlog_chunk_head_t* i_chunk);
+				uint64_t i_head_id,
+				atrshmlog_io_head_t *i_head,
+				atrshmlog_chunk_head_t* i_chunk);
 
 /**
  * db specific function : insert ucs2 string
  */
 int atrshmlog_insert_db_ucs2string(atrshmlog_dbsession_t* i_db,
-				uint64_t i_head_id,
-				atrshmlog_io_head_t *i_head,
-				atrshmlog_chunk_head_t* i_chunk,
-				int len);
+				   uint64_t i_head_id,
+				   atrshmlog_io_head_t *i_head,
+				   atrshmlog_chunk_head_t* i_chunk,
+				   int len);
 
 
 
@@ -985,7 +985,7 @@ int atrshmlog_insert_db_ucs2string(atrshmlog_dbsession_t* i_db,
 
   if (es != PGRES_COMMAND_OK)
     {
-      printf("insert_db_cstring bad %s\n", PQerrorMessage(i_db->conn));
+      printf("insert_db_ucs2string bad %s\n", PQerrorMessage(i_db->conn));
     }
   
   PQclear(i_db->res);

@@ -200,6 +200,13 @@ then
 	ell.sh $i $rest
     done
 
+    cat ../shmbininternalfiles_oracle  | egrep -v '^#' | while read i rest
+    do
+	$RM -f $i
+	echo $i link
+	ell.sh $i $rest
+    done
+
     cd ..
 fi
 

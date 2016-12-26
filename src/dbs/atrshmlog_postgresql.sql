@@ -2,7 +2,7 @@
 -- postgres schema objects
 -- $Id:$
 --
--- we have a sequece o connect the insert data
+-- we have a sequence for connect the insert data
 -- from a bunch of chunks to the process data
 --
 create sequence atrshmlog_head_seq
@@ -32,24 +32,24 @@ create table atrshmlog_head(head_id bigint not null,  -- the sequence number
        acquiretime bigint not null,
        bid integer not null,
        number_dispatched  integer not null,
-       counter_write0 bigint not null,
-       counter_write0_discard bigint not null,
-       counter_write0_wait bigint not null,
-       counter_write0_adaptive bigint not null,
-       counter_write0_adaptive_fast bigint not null,
-       counter_write0_adaptive_very_fast bigint not null,
-       counter_write1 bigint not null,
-       counter_write1_discard bigint not null,
-       counter_write1_wait bigint not null,
-       counter_write1_adaptive bigint not null,
-       counter_write1_adaptive_fast bigint not null,
-       counter_write1_adaptive_very_fast bigint not null,
-       counter_write2 bigint not null,
-       counter_write2_discard bigint not null,
-       counter_write2_wait bigint not null,
-       counter_write2_adaptive bigint not null,
-       counter_write2_adaptive_fast bigint not null,
-       counter_write2_adaptive_very_fast bigint not null
+       counter_write0 integer not null,
+       counter_write0_discard integer not null,
+       counter_write0_wait integer not null,
+       counter_write0_adaptive integer not null,
+       counter_write0_adaptive_fast integer not null,
+       counter_write0_adaptive_very_fast integer not null,
+       counter_write1 integer not null,
+       counter_write1_discard integer not null,
+       counter_write1_wait integer not null,
+       counter_write1_adaptive integer not null,
+       counter_write1_adaptive_fast integer not null,
+       counter_write1_adaptive_very_fast integer not null,
+       counter_write2 integer not null,
+       counter_write2_discard integer not null,
+       counter_write2_wait integer not null,
+       counter_write2_adaptive integer not null,
+       counter_write2_adaptive_fast integer not null,
+       counter_write2_adaptive_very_fast integer not null
        );
 --
 -- We have an index for id
@@ -97,3 +97,4 @@ create table atrshmlog_log_ucs2(head_id bigint not null, -- link to head
 -- We have a foreign key, so an index is needed here too
 create index atrshmlog_log_ucs2_001_ind on atrshmlog_log_ucs2(head_id);
 --
+-- end of file

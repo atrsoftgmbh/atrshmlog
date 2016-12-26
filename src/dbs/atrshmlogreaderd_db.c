@@ -12,7 +12,7 @@
 *                                                                      *
 ***********************************************************************/
 
-/** \file atrshmlogreaderd_pg.c
+/** \file atrshmlogreaderd_db.c
  * \brief We are the concurrent buffer reader with use of shared 
  * memory lists.
  *
@@ -65,6 +65,8 @@
  *--------------------------------------------------------
  * 
  * db specific part : incudes and definitions in dbsession
+ *
+ * we use a vanilla struct ponter and a functional abstraction
  */
 
 /*
@@ -104,31 +106,31 @@ extern int atrshmlog_rollback_db(atrshmlog_dbsession_t* i_db);
  * db specific function : get head seq
  */
 extern int atrshmlog_get_head_seq_db(atrshmlog_dbsession_t* i_db,
-			   uint64_t *o_head_id);
+				     uint64_t *o_head_id);
 
 /**
  * db specific function : insert head
  */
 extern int atrshmlog_insert_db_head(atrshmlog_dbsession_t* i_db,
-			     uint64_t *io_head_id,
-			  atrshmlog_io_head_t *i_head);
+				    uint64_t *io_head_id,
+				    atrshmlog_io_head_t *i_head);
 
 /**
  * db specific function : insert cstring
  */
 extern int atrshmlog_insert_db_cstring(atrshmlog_dbsession_t* i_db,
-			     uint64_t i_head_id,
-			     atrshmlog_io_head_t *i_head,
-			     atrshmlog_chunk_head_t* i_chunk);
+				       uint64_t i_head_id,
+				       atrshmlog_io_head_t *i_head,
+				       atrshmlog_chunk_head_t* i_chunk);
 
 /**
  * db specific function : insert ucs2 string
  */
 extern int atrshmlog_insert_db_ucs2string(atrshmlog_dbsession_t* i_db,
-				uint64_t i_head_id,
-				atrshmlog_io_head_t *i_head,
-				atrshmlog_chunk_head_t* i_chunk,
-				int len);
+					  uint64_t i_head_id,
+					  atrshmlog_io_head_t *i_head,
+					  atrshmlog_chunk_head_t* i_chunk,
+					  int len);
 
 
 
@@ -146,6 +148,8 @@ extern int atrshmlog_need_data_in_network_order_db(void);
 
 /*
  *--------------------------------------------------------
+ *
+ * end of db parts
  */
 
 /**
@@ -556,73 +560,73 @@ int atrshmlog_write_transfer(atrshmlog_dbsession_t *i_db, mb_t* ob)
 /**
  * we get the buffers in the list
  */
- int init_buffers(int i_count)
- {
-   mb_t * m = malloc(i_count * sizeof(mb_t));
+int init_buffers(int i_count)
+{
+  mb_t * m = malloc(i_count * sizeof(mb_t));
 
-   if (m)
-     {
-       char* buffers = malloc(i_count * MB_INFOSIZE);
-
-       if (buffers)
-	 {
-	   mb_t* mb = m;
+  if (m)
+    {
+      char* buffers = malloc(i_count * MB_INFOSIZE);
+       
+      if (buffers)
+	{
+	  mb_t* mb = m;
 	   
-	   for (int i = 0; i  < i_count; i++, mb++, buffers += MB_INFOSIZE)
-	     {
-	       mb->next = &mb[1]; 
-	       mb->next_append = &mb[1];
-	       mb->next_full = 0;
-	       mb->lcount = 0;
-	       mb->ob = buffers;
-	     }
+	  for (int i = 0; i  < i_count; i++, mb++, buffers += MB_INFOSIZE)
+	    {
+	      mb->next = &mb[1]; 
+	      mb->next_append = &mb[1];
+	      mb->next_full = 0;
+	      mb->lcount = 0;
+	      mb->ob = buffers;
+	    }
 
-	   /* we correct the last buffer */
-	   mb--;
-	   mb->next = 0;
-	   mb->next_append = 0;
-
-	   atomic_store(&tps, (intptr_t)m);
-	   atomic_store(&tpa, (intptr_t)m);
+	  /* we correct the last buffer */
+	  mb--;
+	  mb->next = 0;
+	  mb->next_append = 0;
+	  
+	  atomic_store(&tps, (intptr_t)m);
+	  atomic_store(&tpa, (intptr_t)m);
 	   
-	   return 0;
-	 }
-     }
-
-   return -1;
- }
+	  return 0;
+	}
+    }
+  
+  return -1;
+}
 
 /**
  * we need additional buffers and we deliver them
  */
- int add_buffers(int i_count)
- {
-   mb_t * m = malloc(i_count * sizeof(mb_t));
+int add_buffers(int i_count)
+{
+  mb_t * m = malloc(i_count * sizeof(mb_t));
 
-   if (m)
-     {
-       char* buffers = malloc(i_count * MB_INFOSIZE);
-
-       if (buffers)
-	 {
-	   mb_t* mb = m;
+  if (m)
+    {
+      char* buffers = malloc(i_count * MB_INFOSIZE);
+      
+      if (buffers)
+	{
+	  mb_t* mb = m;
 	   
-	   for (int i = 0; i  < i_count; i++, mb++, buffers += MB_INFOSIZE)
-	     {
-	       mb->next = &mb[1]; 
-	       mb->next_append = &mb[1];
-	       mb->next_full = 0;
-	       mb->lcount = 0;
-	       mb->ob = buffers;
-	     }
+	  for (int i = 0; i  < i_count; i++, mb++, buffers += MB_INFOSIZE)
+	    {
+	      mb->next = &mb[1]; 
+	      mb->next_append = &mb[1];
+	      mb->next_full = 0;
+	      mb->lcount = 0;
+	      mb->ob = buffers;
+	    }
 
-	   /* we correct the last buffer */
-	   mb--;
-	   mb->next = (mb_t*)atomic_load(&tps);
-	   mb->next_append = (mb_t*)atomic_load(&tpa);
+	  /* we correct the last buffer */
+	  mb--;
+	  mb->next = (mb_t*)atomic_load(&tps);
+	  mb->next_append = (mb_t*)atomic_load(&tpa);
 
-	   // push on stack ...
-	   while(!atomic_compare_exchange_weak_explicit(&tps,
+	  // push on stack ...
+	  while(!atomic_compare_exchange_weak_explicit(&tps,
 							(intptr_t*)&mb->next,
 							(intptr_t)m,
 						       memory_order_release,
@@ -630,19 +634,19 @@ int atrshmlog_write_transfer(atrshmlog_dbsession_t *i_db, mb_t* ob)
 	    ;
 
 	   // push on stack ...
-	   while(!atomic_compare_exchange_weak_explicit(&tpa,
+	  while(!atomic_compare_exchange_weak_explicit(&tpa,
 						       (intptr_t*)&mb->next_append,
 						       (intptr_t)m,
 						       memory_order_release,
 						       memory_order_relaxed))
 	    ;
 	   
-	   return 0;
-	 }
-     }
-
-   return -1;
- }
+	  return 0;
+	}
+    }
+  
+  return -1;
+}
 
 
 
@@ -708,7 +712,7 @@ int atrshmlog_db_main(int argc, char*argv[])
 
   if (shmid_ptr == (void*)0)
     {
-  printf("usage: %s \n", argv[0]);
+      printf("usage: %s \n", argv[0]);
       printf("ENVIRONMENT VARIABLE NOT SET !!!\n");
       printf("%s_ID\n",ATRSHMLOG_GET_ENV_PREFIX());
       printf("logsystem version is %d.\n", ATRSHMLOG_GET_VERSION());
@@ -735,133 +739,133 @@ int atrshmlog_db_main(int argc, char*argv[])
   fflush(stdout);
 
   {
-      volatile const void *a = ATRSHMLOG_GET_AREA();
-
-      volatile int version = ATRSHMLOG_GET_AREA_VERSION(a);
-      
-      if (version != ATRSHMLOG_GET_VERSION())
-	{
-	  printf("verion is %d, not as needed %d.\n", version, ATRSHMLOG_GET_VERSION());
-	  exit(1);
-	}
-
+    volatile const void *a = ATRSHMLOG_GET_AREA();
+    
+    volatile int version = ATRSHMLOG_GET_AREA_VERSION(a);
+    
+    if (version != ATRSHMLOG_GET_VERSION())
       {
-	int v_result = ATRSHMLOG_VERIFY();
-
-	if (v_result != 0)
-	  {
-	    printf("verify error %d. errno %d\n",  v_result, errno);
-	    exit(1);
-	  }
-
+	printf("verion is %d, not as needed %d.\n", version, ATRSHMLOG_GET_VERSION());
+	  exit(1);
       }
 
-      /*********************************************************/
-
-      shm_limit = ATRSHMLOG_GET_AREA_COUNT(a);
-
-      const char *p = ATRSHMLOG_GET_ENV("_FETCH_COUNT");
-
-      if (p)
+    {
+      int v_result = ATRSHMLOG_VERIFY();
+      
+      if (v_result != 0)
 	{
-	  long new_val = strtol(p, NULL, 10);
-
-	  if (new_val >= 0)
-	    f_list_buffer_fetch_count = new_val;
+	  printf("verify error %d. errno %d\n",  v_result, errno);
+	  exit(1);
 	}
       
-      p = ATRSHMLOG_GET_ENV("_WRITE_COUNT");
+    }
 
-      if (p)
-	{
-	  long new_val = strtol(p, NULL, 10);
+    /*********************************************************/
+    
+    shm_limit = ATRSHMLOG_GET_AREA_COUNT(a);
 
-	  if (new_val >= 0)
-	    f_list_buffer_write_count = new_val;
-	}
+    const char *p = ATRSHMLOG_GET_ENV("_FETCH_COUNT");
 
-      long advanced = 0;
+    if (p)
+      {
+	long new_val = strtol(p, NULL, 10);
+	
+	if (new_val >= 0)
+	  f_list_buffer_fetch_count = new_val;
+      }
+    
+    p = ATRSHMLOG_GET_ENV("_WRITE_COUNT");
+    
+    if (p)
+      {
+	long new_val = strtol(p, NULL, 10);
+	
+	if (new_val >= 0)
+	  f_list_buffer_write_count = new_val;
+      }
+
+    long advanced = 0;
       
-      p = ATRSHMLOG_GET_ENV("_ALLOC_ADVANCED");
+    p = ATRSHMLOG_GET_ENV("_ALLOC_ADVANCED");
 
-      if (p)
-	{
-	  long new_val = strtol(p, NULL, 10);
-
-	  if (new_val >= 1)
-	     advanced = new_val;
-	}
+    if (p)
+      {
+	long new_val = strtol(p, NULL, 10);
+	
+	if (new_val >= 1)
+	  advanced = new_val;
+      }
       
-      /* ok. we see if we have limits or 0 
-       * if its 0 it means to do the half approch 
-       */
+    /* ok. we see if we have limits or 0 
+     * if its 0 it means to do the half approch 
+     */
 
-      if (f_list_buffer_fetch_count == 0)
-	{
-	  f_list_buffer_fetch_count = shm_limit / 2;
+    if (f_list_buffer_fetch_count == 0)
+      {
+	f_list_buffer_fetch_count = shm_limit / 2;
 
-	  if (f_list_buffer_write_count == 0)
-	    f_list_buffer_write_count = f_list_buffer_fetch_count * 3;
-	}
+	if (f_list_buffer_write_count == 0)
+	  f_list_buffer_write_count = f_list_buffer_fetch_count * 3;
+      }
 
-      printf("count of initial used fetchers is %ld\n", (long)f_list_buffer_fetch_count);
-      /* ok. we check if we have a write count
-       * if not we use 3 times the count for fetchers
-       */
+    printf("count of initial used fetchers is %ld\n", (long)f_list_buffer_fetch_count);
+    /* ok. we check if we have a write count
+     * if not we use 3 times the count for fetchers
+     */
       
 
-      printf("count of initial used writes is %ld\n", (long)f_list_buffer_write_count);
+    printf("count of initial used writes is %ld\n", (long)f_list_buffer_write_count);
 
-      init_buffers(prealloc_buffer_count);
+    init_buffers(prealloc_buffer_count);
 
-      for (int jk = 0; jk < advanced; jk++)
-	add_buffers(prealloc_buffer_count);
+    for (int jk = 0; jk < advanced; jk++)
+      add_buffers(prealloc_buffer_count);
       
-      /* ok. we start the fetcher */
-      int ret_fetch = 0;
-		  
-      for (int slaves = 0;
-	   ret_fetch == 0
-	     && slaves < f_list_buffer_fetch_count;
-	   slaves++)
-	{
-          ret_fetch = create_fetcher();
-        }
-      
+    /* ok. we start the fetcher */
+    int ret_fetch = 0;
+    
+    for (int slaves = 0;
+	 ret_fetch == 0
+	   && slaves < f_list_buffer_fetch_count;
+	 slaves++)
+      {
+	ret_fetch = create_fetcher();
+      }
+    
       /* ok. we start the writer */
-      int ret_write = 0;
+    int ret_write = 0;
       
-      for (int slaves = 0;
-	   ret_write == 0
-	     && slaves < f_list_buffer_write_count;
-	   slaves++)
-	{
-          ret_write = create_writer();
-        }
-      
-      if (reader_ist_fertig(a) == 0)
-	{
-          printf("enter transferloop ... \n");
-          do
-	    {
-	      ATRSHMLOG_SLEEP_NANOS(500000);
-            }
-	  while (reader_ist_fertig(a) == 0);
+    for (int slaves = 0;
+	 ret_write == 0
+	   && slaves < f_list_buffer_write_count;
+	 slaves++)
+      {
+	ret_write = create_writer();
+      }
+    
+    if (reader_ist_fertig(a) == 0)
+      {
+	printf("enter transferloop ... \n");
+	do
+	  {
+	    ATRSHMLOG_SLEEP_NANOS(500000);
+	  }
+	while (reader_ist_fertig(a) == 0);
+	
+	fprintf(stderr, "logging stopped by signal 9999 9999 ...\n");
+	
+      }
 
-	  fprintf(stderr, "logging stopped by signal 9999 9999 ...\n");
-	  
-	}
-
-      /* we start 10 writers. so its possible to start with 0.
-       * we then wait till all buffers are in use ...
-       * or the ihf is triggered.
-       * then we start some and are ready for output...
-       */
-      for (int k = 0; k < 10; k++)
-	create_writer();
-   
+    /* we start 10 writers. so its possible to start with 0.
+     * we then wait till all buffers are in use ...
+     * or the ihf is triggered.
+     * then we start some and are ready for output...
+     */
+    for (int k = 0; k < 10; k++)
+      create_writer();
+    
   }
-
+  
   /* we give the client time to write the final buffers */
   
   sleep(sleep_after_ihf);
@@ -900,6 +904,7 @@ int atrshmlog_db_main(int argc, char*argv[])
  ende:
 
   printf("logging done.\n");
+  
   long long wt  = atomic_load(&writertimes);
   long wc  = atomic_load(&writerops);
 

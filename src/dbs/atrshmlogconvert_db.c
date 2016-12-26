@@ -12,14 +12,16 @@
 *                                                                      *
 ***********************************************************************/
 
-/** \file atrshmlogconvert_pg.c
+/** \file atrshmlogconvert_db.c
  * \brief We convert binary files in this version format.
  *
  * We use the same as convert, but then we do not insert in file.
  * Instead we have a database connect to make and insert there.
  * The thing tries to be independent to the db.
- * So we have a db dependent part - includes, struct
- * and an independent rest
+ * So we have a db dependent part - includes, struct - in a separate file
+ * and an independent rest here
+ * we link this with a very thin main layer to a program with the
+ * target name.
  */
 
 
@@ -34,6 +36,9 @@
  *--------------------------------------------------------
  * 
  * db specific part : incudes and definitions in dbsession
+ *
+ * we use a vanilla pointer of a struct and a procedural 
+ * interface as abstraction
  */
 
 /*
@@ -73,31 +78,31 @@ extern int atrshmlog_rollback_db(atrshmlog_dbsession_t* i_db);
  * db specific function : get head seq
  */
 extern int atrshmlog_get_head_seq_db(atrshmlog_dbsession_t* i_db,
-			   uint64_t *o_head_id);
+				     uint64_t *o_head_id);
 
 /**
  * db specific function : insert head
  */
 extern int atrshmlog_insert_db_head(atrshmlog_dbsession_t* i_db,
-			     uint64_t *io_head_id,
-			  atrshmlog_io_head_t *i_head);
+				    uint64_t *io_head_id,
+				    atrshmlog_io_head_t *i_head);
 
 /**
  * db specific function : insert cstring
  */
 extern int atrshmlog_insert_db_cstring(atrshmlog_dbsession_t* i_db,
-			     uint64_t i_head_id,
-			     atrshmlog_io_head_t *i_head,
-			     atrshmlog_chunk_head_t* i_chunk);
+				       uint64_t i_head_id,
+				       atrshmlog_io_head_t *i_head,
+				       atrshmlog_chunk_head_t* i_chunk);
 
 /**
  * db specific function : insert ucs2 string
  */
 extern int atrshmlog_insert_db_ucs2string(atrshmlog_dbsession_t* i_db,
-				uint64_t i_head_id,
-				atrshmlog_io_head_t *i_head,
-				atrshmlog_chunk_head_t* i_chunk,
-				int len);
+					  uint64_t i_head_id,
+					  atrshmlog_io_head_t *i_head,
+					  atrshmlog_chunk_head_t* i_chunk,
+					  int len);
 
 
 
@@ -132,6 +137,8 @@ static int operate(atrshmlog_dbsession_t *i_db,
  */
 
 /**
+ * \brief This is the main function called from the thin main layer
+ *
  * convert the input fragment file to a new text file
  * we convert first the header
  * then we take the info and gen per piece a line.
@@ -209,7 +216,8 @@ int atrshmlog_db_main (int argc, char*argv[])
 
   dbsession = atrshmlog_create_db();
 
-  printf("after dbsession\n");
+  // printf("after dbsession\n");
+
   if (dbsession == NULL)
     goto ende;
 

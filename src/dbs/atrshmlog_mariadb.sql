@@ -2,6 +2,8 @@
 -- mariadb schema objects
 -- $Id:$
 --
+-- this is the same for mysql
+--
 -- we have no sequence.
 -- so we use instead the autoincerement and last id
 --
@@ -91,3 +93,4 @@ create table atrshmlog_log_ucs2(head_id bigint not null, -- link to head
 -- We have a foreign key, so an index is needed here too
 create index atrshmlog_log_ucs2_001_ind on atrshmlog_log_ucs2(head_id);
 --
+-- end of file

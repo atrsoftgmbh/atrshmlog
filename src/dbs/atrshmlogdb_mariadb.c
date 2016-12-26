@@ -13,7 +13,7 @@
 ***********************************************************************/
 
 /** \file atrshmlogdb_mariadb.c
- * \brief We deliver the database functions for maria db
+ * \brief We deliver the database functions for maria db and mysql db
  *
  */
 
@@ -79,31 +79,31 @@ int atrshmlog_rollback_db(atrshmlog_dbsession_t* i_db);
  * db specific function : get head seq
  */
 int atrshmlog_get_head_seq_db(atrshmlog_dbsession_t* i_db,
-			   uint64_t *o_head_id);
+			      uint64_t *o_head_id);
 
 /**
  * db specific function : insert head
  */
 int atrshmlog_insert_db_head(atrshmlog_dbsession_t* i_db,
 			     uint64_t *io_head_id,
-			  atrshmlog_io_head_t *i_head);
+			     atrshmlog_io_head_t *i_head);
 
 /**
  * db specific function : insert cstring
  */
 int atrshmlog_insert_db_cstring(atrshmlog_dbsession_t* i_db,
-			     uint64_t i_head_id,
-			     atrshmlog_io_head_t *i_head,
-			     atrshmlog_chunk_head_t* i_chunk);
+				uint64_t i_head_id,
+				atrshmlog_io_head_t *i_head,
+				atrshmlog_chunk_head_t* i_chunk);
 
 /**
  * db specific function : insert ucs2 string
  */
 int atrshmlog_insert_db_ucs2string(atrshmlog_dbsession_t* i_db,
-				uint64_t i_head_id,
-				atrshmlog_io_head_t *i_head,
-				atrshmlog_chunk_head_t* i_chunk,
-				int len);
+				   uint64_t i_head_id,
+				   atrshmlog_io_head_t *i_head,
+				   atrshmlog_chunk_head_t* i_chunk,
+				   int len);
 
 
 
@@ -256,80 +256,80 @@ atrshmlog_dbsession_t* atrshmlog_create_db(void)
     }
 
   const char * insert_db_head = "insert into atrshmlog_head("
-		     "version,"
-		     "totallen,"
-		     "pid,"
-		     "tid,"
-		     "bnr,"
-		     "fnr,"
-		     "inittime_sec,"
-		     "inittime_nsec,"
-		     "inittime_before,"
-		     "inittime_after,"
-		     "lasttime_sec,"
-		     "lasttime_nsec,"
-		     "lasttime_before,"
-		     "lasttime_after,"
-		     "difftimetransfer,"
-		     "starttransfer,"
-		     "acquiretime,"
-		     "bid,"
-		     "number_dispatched,"
-		     "counter_write0,"
-		     "counter_write0_discard,"
-		     "counter_write0_wait,"
-		     "counter_write0_adaptive,"
-		     "counter_write0_adaptive_fast,"
-		     "counter_write0_adaptive_very_fast,"
-		     "counter_write1,"
-		     "counter_write1_discard,"
-		     "counter_write1_wait,"
-		     "counter_write1_adaptive,"
-		     "counter_write1_adaptive_fast,"
-		     "counter_write1_adaptive_very_fast,"
-		     "counter_write2,"
-		     "counter_write2_discard,"
-		     "counter_write2_wait,"
-		     "counter_write2_adaptive,"
-		     "counter_write2_adaptive_fast,"
-		     "counter_write2_adaptive_very_fast)"
-                     " values ("
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
-		     "?,"
+    "version,"
+    "totallen,"
+    "pid,"
+    "tid,"
+    "bnr,"
+    "fnr,"
+    "inittime_sec,"
+    "inittime_nsec,"
+    "inittime_before,"
+    "inittime_after,"
+    "lasttime_sec,"
+    "lasttime_nsec,"
+    "lasttime_before,"
+    "lasttime_after,"
+    "difftimetransfer,"
+    "starttransfer,"
+    "acquiretime,"
+    "bid,"
+    "number_dispatched,"
+    "counter_write0,"
+    "counter_write0_discard,"
+    "counter_write0_wait,"
+    "counter_write0_adaptive,"
+    "counter_write0_adaptive_fast,"
+    "counter_write0_adaptive_very_fast,"
+    "counter_write1,"
+    "counter_write1_discard,"
+    "counter_write1_wait,"
+    "counter_write1_adaptive,"
+    "counter_write1_adaptive_fast,"
+    "counter_write1_adaptive_very_fast,"
+    "counter_write2,"
+    "counter_write2_discard,"
+    "counter_write2_wait,"
+    "counter_write2_adaptive,"
+    "counter_write2_adaptive_fast,"
+    "counter_write2_adaptive_very_fast)"
+    " values ("
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
+    "?,"
     "?)";
 
   retdb = mysql_stmt_prepare(r->s[4],  insert_db_head, strlen(insert_db_head));
@@ -874,9 +874,9 @@ int atrshmlog_insert_db_head(atrshmlog_dbsession_t* i_db,
  * db specific funtion : insert_db_cstring
  */
 int atrshmlog_insert_db_cstring(atrshmlog_dbsession_t* i_db,
-			     uint64_t i_head_id,
-			     atrshmlog_io_head_t *i_head,
-			     atrshmlog_chunk_head_t* i_chunk)
+				uint64_t i_head_id,
+				atrshmlog_io_head_t *i_head,
+				atrshmlog_chunk_head_t* i_chunk)
 {
   if (i_db  == NULL)
     return -1;
@@ -986,10 +986,10 @@ int atrshmlog_insert_db_cstring(atrshmlog_dbsession_t* i_db,
  * db specific funtion : insert_db_cstring
  */
 int atrshmlog_insert_db_ucs2string(atrshmlog_dbsession_t* i_db,
-				uint64_t i_head_id,
-				atrshmlog_io_head_t *i_head,
-				atrshmlog_chunk_head_t* i_chunk,
-				int len)
+				   uint64_t i_head_id,
+				   atrshmlog_io_head_t *i_head,
+				   atrshmlog_chunk_head_t* i_chunk,
+				   int len)
 {
   if (i_db  == NULL)
     return -1;
@@ -1061,7 +1061,7 @@ int atrshmlog_insert_db_ucs2string(atrshmlog_dbsession_t* i_db,
   pv[11].buffer_type = MYSQL_TYPE_LONG;
   pv[11].is_unsigned = 0;
 
-  pv[12].buffer = &i_chunk->payload;
+  pv[12].buffer = i_chunk->payload;
   pv[12].buffer_length = len;
   pv[12].buffer_type = MYSQL_TYPE_MEDIUM_BLOB;
   pv[12].is_unsigned = 0;
