@@ -1019,7 +1019,7 @@ extern "C" {
     atrshmlog_counter_detach                    = 89,
     /**< The number of calls to \ref  atrshmlog_detach() */
     atrshmlog_counter_reattach                  = 90,
-    /**< The number of calls to \ref  atrshmlog_detach() */
+    /**< The number of calls to \ref  atrshmlog_reattach() */
     atrshmlog_counter_end                       = 90
     /**< The highes index in use */
   };
