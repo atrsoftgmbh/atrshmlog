@@ -15,6 +15,11 @@
 /** \file atrshmlog.c 
  * \brief The implementation of the module
  *
+ * Today we only hold the thread local and its getter.
+ * In case we do not have thread local we try the thread specific for 
+ * pthread.
+ *
+ * The rest of the module is now in impls.
  */
 
 /* our includes are here */
