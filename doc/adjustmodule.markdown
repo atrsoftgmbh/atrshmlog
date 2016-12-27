@@ -57,21 +57,8 @@ The header atrshmlog.h
 
 Go to the src directory.
 
-If you have a supported platform you will find
-the headers already made in the directory alreadythere
-
-This is the actual list :
-
-     atrshmlog.h.cygwin
-     atrshmlog.h.linux
-     atrshmlog.h.mingw
-     atrshmlog_internal.h.cygwin
-     atrshmlog_internal.h.linux
-     atrshmlog_internal.h.mingw
-     shmCPPfiles.mingw
-
-
-If there is a hit, simply copy the stuff into the src.
+After the check you have a hint for the needed dot file for the
+platform. Or you have no hint at all.
 
 If not fire up your favorite text editor.
 
@@ -83,15 +70,13 @@ Read in till you arrive at the defines.
 
 One of these is yours.
 
-Set it to 1, all others to 0.
+Use the proper dot.platform file to set this to 1.
 
 GOOD.
 
 ###ATRSHMLOG_PLATFORM__os__architecture__subarchitecure__compiler not there ?
 
 BAD.
-
-Set all to 0.
 
 Create a new one.
 
@@ -110,6 +95,10 @@ platform is used - best is
 and start to copy the part of the platform.
 
 Change the define.
+
+Make a copy of the dot.platform file and rename it to the new platform.
+
+If you need add a new flavour.
 
 Good.
 
@@ -537,6 +526,8 @@ For the reader it should also self adjust.
 But i have not tried everything yet.
 
 Check compiler warnings - errors should not exist.
+
+Check the bin files for the platform and flavour things.
 
 Thats so far the thing i know.
 
