@@ -27,14 +27,14 @@
 # +l : ignore lib
 # +b : ignore link binaries
 # +t : ignore tests
-# +a : ignore database
+# -a : do database
 
 DODOC=1
 DOC=1
 DOL=1
 DOB=1
 DOTESTS=1
-DOA=1
+DOA=0
 
 while [ $# -ne 0 ]
 do
@@ -55,8 +55,8 @@ do
 	    DOB=0
 	    shift
 	    ;;
-	\+a)
-	    DOA=0
+	\-a)
+	    DOA=1
 	    shift
 	    ;;
 	\+t)
@@ -109,7 +109,10 @@ then
 
     cd ..
 
+fi
 
+if [ $DOA -eq 1 ]
+then
     cd dbs
 
     for i in atrshmlog*.c
