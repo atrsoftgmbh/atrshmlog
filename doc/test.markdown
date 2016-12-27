@@ -1226,6 +1226,7 @@ compiler anyway ?!??!)
 
 So you can test ervery one function that its worth here.
 
+See tests/t_*.c for the files.
 
 Summary
 -------
