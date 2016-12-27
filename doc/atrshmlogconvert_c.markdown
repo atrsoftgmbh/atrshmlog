@@ -11,6 +11,9 @@ Its name is
 It takes  the binary file from a reader and converts it to a text file.
 Optional you can get the threads statistics in a separate file.
 
+Second option is to get the times from the file to use it with the
+atrshmlogtime tool.
+
 The prototype uses a simple approch.
 
 The given files are the parameters of the program.
