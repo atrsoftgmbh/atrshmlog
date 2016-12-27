@@ -253,6 +253,7 @@ atrshmlogimpl_write2.c
 
 DIRECTORY src alreadythere
 shmCPPfiles.mingw
+shmbininternalfiles_oracle.empty
 
 DIRECTORY src tests
 atrshmlogcheckc.c
