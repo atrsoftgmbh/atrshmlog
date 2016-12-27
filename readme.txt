@@ -4,9 +4,8 @@ The directories are
 - bin
   The binary files that are needed to build the module
   The files in the folder itself are for the linux
-  x86 64 architecture. You find subdirectories for the
-  other architectures and have to replace the files in bin
-  with them.
+  x86 64 architecture and similar systems like BSD
+  and Solaris. 
 
 - doc
   The documentation build for the last version which is
@@ -30,6 +29,10 @@ The directories are
 - SWIG
   The SWIG layer for the module
 
+- unsupported
+  The binaries and the helpers thath have not directly
+  to do with the module.
+  
 To start : take the html documentation index file in your
 browser and start to read it.
 
