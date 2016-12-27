@@ -71,7 +71,7 @@ then
     rm $LIB
 fi
 
-$AR r $LIB $OBJ
+$AR $ARFLAGS r $LIB $OBJ
 $AR $REBUILDTABLE $LIB
 
 # end of file
