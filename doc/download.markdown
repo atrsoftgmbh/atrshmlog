@@ -33,7 +33,7 @@ It contains the bin directory, the doc directory and the src directory.
 Inside these directorys are the files that you can check for with the
 files.txt .
 
-Thre is also a big example with the mksh shell code.
+There is also a big example with the mksh shell code.
 
 And of course the java, perl, python and SWIG layers.
 
