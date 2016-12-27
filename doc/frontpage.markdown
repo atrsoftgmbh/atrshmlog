@@ -16,6 +16,8 @@ There is
 - the internal details include atrshmlog_internal.h
 - the module implementation file atrshmlog.c
 - the files in the impls directory
+- the files in the dbs directory
+- the fiels in the tests directory
 - the details dummy file atrshmlog_internal.c
 - the buffer converter atrshmlogconvert.c
 - the shared memory buffer creater atrshmlogcreate.c
@@ -43,7 +45,7 @@ and several files for the build and documentation process.
 
 See the files.txt file for a detailed list.
 
-There is also a page for every file in this documentation.
+There is also a page for most files in this documentation.
 
 
 How do i use it ?
