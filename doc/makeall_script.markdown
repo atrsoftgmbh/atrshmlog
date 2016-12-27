@@ -22,6 +22,8 @@ with filenames ending in .c is done.
 
 Then the library is created.
 
+The dbs and tests.
+
 Then the lists shmbinfiles and shmbininternalfiles are used.
 The programs in there are linked.
 
@@ -37,6 +39,10 @@ doxygen a +d blocks, for the lib a+l and so on. Check the code to know
 what you can suppress.
 
 You find the used scripts g99.sh, ell.sh, g++14w.sh in the bin directory.
+
+Last is to activate the database parts with a -d - yes, its - and
+not + this time - and you get the converter and reader with support
+for the upload into database.
 
 
 
