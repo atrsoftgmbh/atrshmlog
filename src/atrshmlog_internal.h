@@ -63,7 +63,7 @@
  * Can mean additional functions for fences, sleeps etc.
  * Not meaning a simple bugfix.
  */
-#define ATRSHMLOGMINORVERSION (3)
+#define ATRSHMLOGMINORVERSION (2)
 
 /**
  * \brief Patch level version for handling of errors and changes internal .
