@@ -249,7 +249,8 @@ Ever tried that with DIFFERENT compiler vendors ?
 I believe this will NOT work. But on my box it works, and on my
 big boxes it work too ( small is a P9600 core 2 duo from 2009 with 8 GB
 in my notebook,
-big is dual processor amd with 24 or 32 cores - have both, watercooled
+big is dual processor die amd with 24 or 32 cores total - have both,
+watercooled
 systems with no noise, and plenty GB of ram for my
 Oracle database stuff....). So I do it.
 
