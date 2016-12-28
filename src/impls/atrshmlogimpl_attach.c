@@ -396,7 +396,7 @@ atrshmlog_ret_t atrshmlog_attach(void)
 	  static atrshmlog_init_param_t atrshmlog_init_data[] =
 	    {
 	      /* 
-	       * The adcvance init thing. if we need it we do it here
+	       * The advance init thing. if we need it we do it here
 	       */
 	      {
 		ATRSHMLOGINITINADVANCESUFFIX,
