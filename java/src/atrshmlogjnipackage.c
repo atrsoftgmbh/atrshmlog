@@ -55,6 +55,74 @@ JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlo
 }
 
 /**
+ * \brief we detach
+ *
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    detach
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_detach
+  (JNIEnv *i_jnienv, jobject i_myself)
+{
+  jint result;
+
+  result = ATRSHMLOG_DETACH();
+
+  return result;
+}
+
+
+/**
+ * \brief we reattach
+ *
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    reattach
+ * Signature: ([I)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_reattach
+  (JNIEnv *i_jnienv, jobject i_myself,
+   jintArray i_payload)
+{
+  jint result;
+  
+  jboolean is_copy = JNI_FALSE;
+
+  int needed = 56; // version 1.2.0
+  
+  jsize length = (*i_jnienv)->GetArrayLength(i_jnienv, i_payload);
+  
+  jint* the_bytes = (jint*)(*i_jnienv)->GetPrimitiveArrayCritical(i_jnienv, i_payload, &is_copy);
+
+  int len = length;
+
+  if (the_bytes == NULL) 
+    {
+      jboolean flag = (*i_jnienv)->ExceptionCheck(i_jnienv);
+      if (flag) {
+	(*i_jnienv)->ExceptionClear(i_jnienv);
+      }
+      
+      result = -1;
+      
+    }
+  else if (needed > length)
+    {
+      (*i_jnienv)->ReleasePrimitiveArrayCritical(i_jnienv, i_payload, the_bytes, JNI_ABORT); // no copy back, only free is
+
+      result = -1;
+    }
+  else
+    {
+      result = ATRSHMLOG_REATTACH((atrshmlog_int32_t*)the_bytes);
+
+      (*i_jnienv)->ReleasePrimitiveArrayCritical(i_jnienv, i_payload, the_bytes, JNI_ABORT); // we commit, but no copy back, only free
+
+    }
+  
+  return result;
+}
+
+/**
  * \brief we get the time in clicks
  *
  * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
@@ -1244,6 +1312,51 @@ JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlo
   return result;
 }
 
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getSlaveToShmWait
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getSlaveToShmWait
+  (JNIEnv *i_jnienv, jobject i_myself)
+{
+  jint result;
+
+  result = ATRSHMLOG_GET_SLAVE_TO_SHM_WAIT();
+
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    setSlaveToShmWait
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_setSlaveToShmWait
+  (JNIEnv *i_jnienv, jobject i_myself, jint i_switch)
+{
+  jint result;
+
+  result = ATRSHMLOG_SET_SLAVE_TO_SHM_WAIT(i_switch);
+
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getLastMemToShm
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getLastMemToShm
+  (JNIEnv *i_jnienv, jobject i_myself)
+{
+  jint result;
+
+  result = ATRSHMLOG_GET_LAST_MEM_TO_SHM();
+
+  return result;
+}
+
 
 /**
  * \brief get the number of acquired buffers for the logging
@@ -1500,6 +1613,36 @@ JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlo
   jint result;
 
   result = ATRSHMLOG_GET_STRATEGY_PROCESS();
+
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getStrategyWaitWaitTtime
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getStrategyWaitWaitTtime
+  (JNIEnv *i_jnienv, jobject i_myself)
+{
+  jint result;
+
+  result = ATRSHMLOG_GET_STRATEGY_WAIT_WAIT_TIME();
+
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    setStrategyWaitWaitTime
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_setStrategyWaitWaitTime
+  (JNIEnv *i_jnienv, jobject i_myself, jint i_switch)
+{
+  jint result;
+
+  result = ATRSHMLOG_SET_STRATEGY_WAIT_WAIT_TIME(i_switch);
 
   return result;
 }
@@ -2214,6 +2357,345 @@ JNIEXPORT jlong JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshml
 
   result = ATRSHMLOG_GET_THREAD_LOCAL_TID(u.p);
 
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadLocalPid
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadLocalPid
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals)
+{
+  jlong result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  result = ATRSHMLOG_GET_THREAD_LOCAL_PID(u.p);
+
+  return result;
+}
+
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadLocalIndex
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadLocalIndex
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals)
+{
+  jint result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  result = ATRSHMLOG_GET_THREAD_LOCAL_INDEX(u.p);
+
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadLocalBuffer
+ * Signature: (JI)J
+ */
+JNIEXPORT jlong JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadLocalBuffer
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals, jint i_index)
+{
+  jlong result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  u.p = ATRSHMLOG_GET_THREAD_LOCAL_BUFFER(u.p, i_index);
+
+  result = u.l;
+  
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadBufferNextCleanup
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadBufferNextCleanup
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals)
+{
+  jlong result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  u.p = ATRSHMLOG_GET_THREAD_BUFFER_NEXT_CLEANUP(u.p);
+
+  result = u.l;
+  
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadBufferNextFull
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadBufferNextFull
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals)
+{
+  jlong result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  u.p = ATRSHMLOG_GET_THREAD_BUFFER_NEXT_FULL(u.p);
+
+  result = u.l;
+  
+  return result;
+}
+
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadBufferNextAppend
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadBufferNextAppend
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals)
+{
+  jlong result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  u.p = ATRSHMLOG_GET_THREAD_BUFFER_NEXT_APPEND(u.p);
+
+  result = u.l;
+  
+  return result;
+}
+
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadBufferSafeguard
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadBufferSafeguard
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals)
+{
+  jint result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  result = ATRSHMLOG_GET_THREAD_BUFFER_SAFEGUARD(u.p);
+
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadBufferPid
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadBufferPid
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals)
+{
+  jlong result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  result = ATRSHMLOG_GET_THREAD_BUFFER_PID(u.p);
+
+  return result;
+}
+
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadBufferTid
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadBufferTid
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals)
+{
+  jlong result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  result = ATRSHMLOG_GET_THREAD_BUFFER_TID(u.p);
+
+  return result;
+}
+
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadBufferAcquiretime
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadBufferAcquiretime
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals)
+{
+  jlong result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  result = ATRSHMLOG_GET_THREAD_BUFFER_ACQUIRETIME(u.p);
+
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadBufferId
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadBufferId
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals)
+{
+  jint result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  result = ATRSHMLOG_GET_THREAD_BUFFER_ID(u.p);
+
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadBufferChksum
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadBufferChksum
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals)
+{
+  jint result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  result = ATRSHMLOG_GET_THREAD_BUFFER_CHKSUM(u.p);
+
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadBufferSize
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadBufferSize
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals)
+{
+  jint result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  result = ATRSHMLOG_GET_THREAD_BUFFER_SIZE(u.p);
+
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadBufferMaxsize
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadBufferMaxsize
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals)
+{
+  jint result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  result = ATRSHMLOG_GET_THREAD_BUFFER_MAXSIZE(u.p);
+
+  return result;
+}
+
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadBufferDispose
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadBufferDispose
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals)
+{
+  jint result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  result = ATRSHMLOG_GET_THREAD_BUFFER_DISPOSE(u.p);
+
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadBufferDispatched
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadBufferDispatched
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals)
+{
+  jint result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  result = ATRSHMLOG_GET_THREAD_BUFFER_DISPATCHED(u.p);
+
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadBufferPayload
+ * Signature: (J)J
+ */
+JNIEXPORT jlong JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadBufferPayload
+ (JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals)
+{
+  jlong result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  u.p = ATRSHMLOG_GET_THREAD_BUFFER_PAYLOAD(u.p);
+
+  result = u.l;
+  
   return result;
 }
 
