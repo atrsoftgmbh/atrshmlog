@@ -821,7 +821,7 @@ atrshmlog_ret_t atrshmlog_attach(void)
  * - Negativ error
  * - positive worked with minor error
  */
-atrshmlog_ret_t atrshmlog_reattach(atrshmlog_int32_t *i_params)
+atrshmlog_ret_t atrshmlog_reattach(const atrshmlog_int32_t *i_params)
 {
   ATRSHMLOGSTAT(atrshmlog_counter_reattach);
   
