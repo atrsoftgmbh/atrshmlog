@@ -3767,7 +3767,7 @@ extern "C" {
    * - negative for error
    * - positiv for minor problem
    */
-  extern atrshmlog_ret_t atrshmlog_reattach(atrshmlog_int32_t* i_params);
+  extern atrshmlog_ret_t atrshmlog_reattach(const atrshmlog_int32_t* i_params);
 
 
 
@@ -4583,6 +4583,9 @@ extern "C" {
    *
    * This has to be before we start the threads. 
    * This means you have to do it before attach.
+   *
+   * If we do it after attach or reattach it sets not only the number.
+   * It also starts and stops slaves to adjust to the delivered number.
    *
    * \param i_count
    * The new count of slave threads to start.
