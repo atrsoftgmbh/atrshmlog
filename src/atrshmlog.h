@@ -4044,6 +4044,14 @@ extern "C" {
    */
   extern atrshmlog_ret_t atrshmlog_set_strategy(const enum atrshmlog_strategy i_strategy);
 
+  /** 
+   * \brief We get the strategy for the process
+   *
+   * \return
+   * The value 
+   */
+  extern atrshmlog_ret_t atrshmlog_get_strategy_process(void);
+
   /**
    * \brief Set the strategy for the process
    *
@@ -4059,13 +4067,6 @@ extern "C" {
    */
   extern atrshmlog_ret_t atrshmlog_set_strategy_process(const enum atrshmlog_strategy i_strategy);
 
-  /** 
-   * \brief We get the strategy for the process
-   *
-   * \return
-   * The value 
-   */
-  extern atrshmlog_ret_t atrshmlog_get_strategy_process(void);
   
 
   /**
