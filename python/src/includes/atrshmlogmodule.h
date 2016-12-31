@@ -57,6 +57,8 @@ typedef long pyatrshmlog_int32_t;
 typedef const volatile void* pyatrshmlog_area_t;
 typedef const volatile void* pyatrshmlog_threadlocal_t;
 typedef const volatile void* pyatrshmlog_slavelocal_t;
+typedef const volatile void* pyatrshmlog_buffer_t;
+typedef const volatile void* pyatrshmlog_payload_t;
 
 typedef void (*pyatrshmlog_vfctv_t)(void);
   
@@ -597,9 +599,166 @@ typedef void (*pyatrshmlog_vfctv_t)(void);
 #define PyAtrshmlog_get_autoflush_process_RETURN long 
 #define PyAtrshmlog_get_autoflush_process_PROTO (void) 
 
+#define PyAtrshmlog_detach_NUM 113
+#define PyAtrshmlog_detach_RETURN long
+#define PyAtrshmlog_detach_PROTO (void)
+
+#define PyAtrshmlog_reattach_NUM 114
+#define PyAtrshmlog_reattach_RETURN long
+#define PyAtrshmlog_reattach_PROTO (pyatrshmlog_int32_t flag0, \
+				    pyatrshmlog_int32_t id1, \
+				    pyatrshmlog_int32_t flag2, \
+				    pyatrshmlog_int32_t count3, \
+				    pyatrshmlog_int32_t flag4, \
+				    pyatrshmlog_int32_t iniinadvc5, \
+				    pyatrshmlog_int32_t flag6, \
+				    pyatrshmlog_int32_t bufferstrat7, \
+				    pyatrshmlog_int32_t flag8, \
+				    pyatrshmlog_int32_t wwtime9, \
+				    pyatrshmlog_int32_t flag10, \
+				    pyatrshmlog_int32_t delim11, \
+				    pyatrshmlog_int32_t flag12, \
+				    pyatrshmlog_int32_t evlocks13, \
+				    pyatrshmlog_int32_t flag14, \
+				    pyatrshmlog_int32_t buffinfosz15, \
+				    pyatrshmlog_int32_t flag16, \
+				    pyatrshmlog_int32_t pac17, \
+				    pyatrshmlog_int32_t flag18, \
+				    pyatrshmlog_int32_t slw19, \
+				    pyatrshmlog_int32_t flag20, \
+				    pyatrshmlog_int32_t slc21, \
+				    pyatrshmlog_int32_t flag22, \
+				    pyatrshmlog_int32_t wfs23, \
+				    pyatrshmlog_int32_t flag24, \
+				    pyatrshmlog_int32_t cid25, \
+				    pyatrshmlog_int32_t flag26, \
+				    pyatrshmlog_int32_t f1_27, \
+				    pyatrshmlog_int32_t flag28, \
+				    pyatrshmlog_int32_t f2_29, \
+				    pyatrshmlog_int32_t flag30, \
+				    pyatrshmlog_int32_t f3_31, \
+				    pyatrshmlog_int32_t flag32, \
+				    pyatrshmlog_int32_t f4_33, \
+				    pyatrshmlog_int32_t flag34, \
+				    pyatrshmlog_int32_t f5_35, \
+				    pyatrshmlog_int32_t flag36, \
+				    pyatrshmlog_int32_t f6_37, \
+				    pyatrshmlog_int32_t flag38, \
+				    pyatrshmlog_int32_t f7_39, \
+				    pyatrshmlog_int32_t flag40, \
+				    pyatrshmlog_int32_t f8_41, \
+				    pyatrshmlog_int32_t flag42, \
+				    pyatrshmlog_int32_t f9_43, \
+				    pyatrshmlog_int32_t flag44, \
+				    pyatrshmlog_int32_t f10_45, \
+				    pyatrshmlog_int32_t flag46, \
+				    pyatrshmlog_int32_t f11_47, \
+				    pyatrshmlog_int32_t flag48, \
+				    pyatrshmlog_int32_t f12_49, \
+				    pyatrshmlog_int32_t flag50, \
+				    pyatrshmlog_int32_t f13_51, \
+				    pyatrshmlog_int32_t flag52, \
+				    pyatrshmlog_int32_t chk53, \
+				    pyatrshmlog_int32_t flag54, \
+				    pyatrshmlog_int32_t loff55 \
+				    )
+
+#define PyAtrshmlog_get_strategy_wait_wait_time_NUM 115
+#define PyAtrshmlog_get_strategy_wait_wait_time_RETURN long
+#define PyAtrshmlog_get_strategy_wait_wait_time_PROTO (void)
+
+#define PyAtrshmlog_set_strategy_wait_wait_time_NUM 116
+#define PyAtrshmlog_set_strategy_wait_wait_time_RETURN long
+#define PyAtrshmlog_set_strategy_wait_wait_time_PROTO (pyatrshmlog_int32_t i_wait_nanos)
+
+#define PyAtrshmlog_get_thread_local_tid_NUM 117
+#define PyAtrshmlog_get_thread_local_tid_RETURN long
+#define PyAtrshmlog_get_thread_local_tid_PROTO  (pyatrshmlog_threadlocal_t tl)
+  
+#define PyAtrshmlog_get_thread_local_pid_NUM 118
+#define PyAtrshmlog_get_thread_local_pid_RETURN long
+#define PyAtrshmlog_get_thread_local_pid_PROTO  (pyatrshmlog_threadlocal_t tl)
+  
+#define PyAtrshmlog_get_thread_local_index_NUM 119
+#define PyAtrshmlog_get_thread_local_index_RETURN long
+#define PyAtrshmlog_get_thread_local_index_PROTO  (pyatrshmlog_threadlocal_t tl)
+  
+#define PyAtrshmlog_get_thread_local_buffer_NUM 120
+#define PyAtrshmlog_get_thread_local_buffer_RETURN pyatrshmlog_buffer_t
+#define PyAtrshmlog_get_thread_local_buffer_PROTO  (pyatrshmlog_threadlocal_t tl, pyatrshmlog_int32_t i_index)
+  
+#define PyAtrshmlog_get_thread_buffer_next_cleanup_NUM 121
+#define PyAtrshmlog_get_thread_buffer_next_cleanup_RETURN pyatrshmlog_buffer_t
+#define PyAtrshmlog_get_thread_buffer_next_cleanup_PROTO  (pyatrshmlog_buffer_t tl)
+  
+#define PyAtrshmlog_get_thread_buffer_next_full_NUM 122
+#define PyAtrshmlog_get_thread_buffer_next_full_RETURN pyatrshmlog_buffer_t
+#define PyAtrshmlog_get_thread_buffer_next_full_PROTO  (pyatrshmlog_buffer_t tl)
+  
+#define PyAtrshmlog_get_thread_buffer_next_append_NUM 123
+#define PyAtrshmlog_get_thread_buffer_next_append_RETURN pyatrshmlog_buffer_t
+#define PyAtrshmlog_get_thread_buffer_next_append_PROTO  (pyatrshmlog_buffer_t tl)
+
+#define PyAtrshmlog_get_thread_buffer_safeguard_NUM 124
+#define PyAtrshmlog_get_thread_buffer_safeguard_RETURN long
+#define PyAtrshmlog_get_thread_buffer_safeguard_PROTO  (pyatrshmlog_buffer_t tl)
+  
+#define PyAtrshmlog_get_thread_buffer_pid_NUM 125
+#define PyAtrshmlog_get_thread_buffer_pid_RETURN long
+#define PyAtrshmlog_get_thread_buffer_pid_PROTO  (pyatrshmlog_buffer_t tl)
+  
+#define PyAtrshmlog_get_thread_buffer_tid_NUM 126
+#define PyAtrshmlog_get_thread_buffer_tid_RETURN long
+#define PyAtrshmlog_get_thread_buffer_tid_PROTO  (pyatrshmlog_buffer_t tl)
+  
+#define PyAtrshmlog_get_thread_buffer_acquiretime_NUM 127
+#define PyAtrshmlog_get_thread_buffer_acquiretime_RETURN long
+#define PyAtrshmlog_get_thread_buffer_acquiretime_PROTO  (pyatrshmlog_buffer_t tl)
+  
+#define PyAtrshmlog_get_thread_buffer_id_NUM 128
+#define PyAtrshmlog_get_thread_buffer_id_RETURN long
+#define PyAtrshmlog_get_thread_buffer_id_PROTO  (pyatrshmlog_buffer_t tl)
+  
+#define PyAtrshmlog_get_thread_buffer_chksum_NUM 129
+#define PyAtrshmlog_get_thread_buffer_chksum_RETURN long
+#define PyAtrshmlog_get_thread_buffer_chksum_PROTO  (pyatrshmlog_buffer_t tl)
+  
+#define PyAtrshmlog_get_thread_buffer_size_NUM 130
+#define PyAtrshmlog_get_thread_buffer_size_RETURN long
+#define PyAtrshmlog_get_thread_buffer_size_PROTO  (pyatrshmlog_buffer_t tl)
+  
+#define PyAtrshmlog_get_thread_buffer_maxsize_NUM 131
+#define PyAtrshmlog_get_thread_buffer_maxsize_RETURN long
+#define PyAtrshmlog_get_thread_buffer_maxsize_PROTO  (pyatrshmlog_buffer_t tl)
+  
+#define PyAtrshmlog_get_thread_buffer_dispose_NUM 132
+#define PyAtrshmlog_get_thread_buffer_dispose_RETURN long
+#define PyAtrshmlog_get_thread_buffer_dispose_PROTO  (pyatrshmlog_buffer_t tl)
+  
+#define PyAtrshmlog_get_thread_buffer_dispatched_NUM 133
+#define PyAtrshmlog_get_thread_buffer_dispatched_RETURN long
+#define PyAtrshmlog_get_thread_buffer_dispatched_PROTO  (pyatrshmlog_buffer_t tl)
+  
+#define PyAtrshmlog_get_thread_buffer_payload_NUM 134
+#define PyAtrshmlog_get_thread_buffer_payload_RETURN pyatrshmlog_payload_t
+#define PyAtrshmlog_get_thread_buffer_payload_PROTO  (pyatrshmlog_buffer_t tl)
+  
+#define PyAtrshmlog_get_slave_to_shm_wait_NUM 135
+#define PyAtrshmlog_get_slave_to_shm_wait_RETURN long
+#define PyAtrshmlog_get_slave_to_shm_wait_PROTO (void) 
+  
+#define PyAtrshmlog_get_slave_to_shm_wait_NUM 136
+#define PyAtrshmlog_get_slave_to_shm_wait_RETURN long
+#define PyAtrshmlog_get_slave_to_shm_wait_PROTO (pyatrshmlog_int32_t i_wait_nanos) 
+
+#define PyAtrshmlog_get_last_mem_to_shm_NUM 137
+#define PyAtrshmlog_get_last_mem_to_shm_RETURN long
+#define PyAtrshmlog_get_last_mem_to_shm_PROTO (void) 
+  
+  
 /* Total number of C API pointers */
 
-#define PyAtrshmlog_API_pointers 113
+#define PyAtrshmlog_API_pointers 138
 
 
 
@@ -724,6 +883,31 @@ typedef void (*pyatrshmlog_vfctv_t)(void);
   static PyAtrshmlog_get_slave_tid_RETURN PyAtrshmlog_get_slave_tid PyAtrshmlog_get_slave_tid_PROTO;
   static PyAtrshmlog_set_checksum_RETURN PyAtrshmlog_set_checksum PyAtrshmlog_set_checksum_PROTO;
   static PyAtrshmlog_get_checksum_RETURN PyAtrshmlog_get_checksum PyAtrshmlog_get_checksum_PROTO;
+  static PyAtrshmlog_detach_RETURN PyAtrshmlog_detach PyAtrshmlog_detach_PROTO;
+  static PyAtrshmlog_reattach_RETURN PyAtrshmlog_reattach PyAtrshmlog_reattach_PROTO;
+  static PyAtrshmlog_get_strategy_wait_wait_time_RETURN PyAtrshmlog_get_strategy_wait_wait_time PyAtrshmlog_get_strategy_wait_wait_time_PROTO;
+  static PyAtrshmlog_set_strategy_wait_wait_time_RETURN PyAtrshmlog_set_strategy_wait_wait_time PyAtrshmlog_set_strategy_wait_wait_time_PROTO;
+  static PyAtrshmlog_get_thread_local_tid_RETURN PyAtrshmlog_get_thread_local_tid PyAtrshmlog_get_thread_local_tid_PROTO;
+  static PyAtrshmlog_get_thread_local_pid_RETURN PyAtrshmlog_get_thread_local_pid PyAtrshmlog_get_thread_local_pid_PROTO;
+  static PyAtrshmlog_get_thread_local_index_RETURN PyAtrshmlog_get_thread_local_index PyAtrshmlog_get_thread_local_index_PROTO;
+  static PyAtrshmlog_get_thread_local_buffer_RETURN PyAtrshmlog_get_thread_local_buffer PyAtrshmlog_get_thread_local_buffer_PROTO;
+  static PyAtrshmlog_get_thread_buffer_next_cleanup_RETURN PyAtrshmlog_get_thread_buffer_next_cleanup PyAtrshmlog_get_thread_buffer_next_cleanup_PROTO;
+  static PyAtrshmlog_get_thread_buffer_next_full_RETURN PyAtrshmlog_get_thread_buffer_next_full  PyAtrshmlog_get_thread_buffer_next_full_PROTO ;
+  static PyAtrshmlog_get_thread_buffer_next_append_RETURN PyAtrshmlog_get_thread_buffer_next_append PyAtrshmlog_get_thread_buffer_next_append_PROTO ;
+  static PyAtrshmlog_get_thread_buffer_safeguard_RETURN PyAtrshmlog_get_thread_buffer_safeguard PyAtrshmlog_get_thread_buffer_safeguard_PROTO;
+  static PyAtrshmlog_get_thread_buffer_pid_RETURN PyAtrshmlog_get_thread_buffer_pid PyAtrshmlog_get_thread_buffer_pid_PROTO;
+  static PyAtrshmlog_get_thread_buffer_tid_RETURN PyAtrshmlog_get_thread_buffer_tid PyAtrshmlog_get_thread_buffer_tid_PROTO;
+  static PyAtrshmlog_get_thread_buffer_acquiretime_RETURN PyAtrshmlog_get_thread_buffer_acquiretime PyAtrshmlog_get_thread_buffer_acquiretime_PROTO;
+  static PyAtrshmlog_get_thread_buffer_id_RETURN PyAtrshmlog_get_thread_buffer_id  PyAtrshmlog_get_thread_buffer_id_PROTO ;
+  static PyAtrshmlog_get_thread_buffer_chksum_RETURN PyAtrshmlog_get_thread_buffer_chksum PyAtrshmlog_get_thread_buffer_chksum_PROTO;
+  static PyAtrshmlog_get_thread_buffer_size_RETURN PyAtrshmlog_get_thread_buffer_size PyAtrshmlog_get_thread_buffer_size_PROTO;
+  static PyAtrshmlog_get_thread_buffer_maxsize_RETURN PyAtrshmlog_get_thread_buffer_maxsize PyAtrshmlog_get_thread_buffer_maxsize_PROTO;
+  static PyAtrshmlog_get_thread_buffer_dispose_RETURN PyAtrshmlog_get_thread_buffer_dispose PyAtrshmlog_get_thread_buffer_dispose_PROTO;
+  static PyAtrshmlog_get_thread_buffer_dispatched_RETURN PyAtrshmlog_get_thread_buffer_dispatched PyAtrshmlog_get_thread_buffer_dispatched_PROTO;
+  static PyAtrshmlog_get_thread_buffer_payload_RETURN PyAtrshmlog_get_thread_buffer_payload PyAtrshmlog_get_thread_buffer_payload_PROTO;
+  static PyAtrshmlog_get_slave_to_shm_wait_RETURN PyAtrshmlog_get_slave_to_shm_wait PyAtrshmlog_get_slave_to_shm_wait_PROTO;
+  static PyAtrshmlog_set_slave_to_shm_wait_RETURN PyAtrshmlog_set_slave_to_shm_wait PyAtrshmlog_set_slave_to_shm_wait_PROTO;
+  static PyAtrshmlog_get_last_mem_to_shm_RETURN PyAtrshmlog_get_last_mem_to_shm PyAtrshmlog_get_last_mem_to_shm_PROTO;
   
 #else
   // the usage macros are here
@@ -1070,8 +1254,83 @@ static pyatrshmlog_vfctv_t *PyAtrshmlog_API;
   
 #define PyAtrshmlog_get_checksum \
   (*(PyAtrshmlog_get_checksum_RETURN (*)PyAtrshmlog_get_checksum_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_checksum_NUM])
-  
 
+#define PyAtrshmlog_detach \
+  (*(PyAtrshmlog_detach_RETURN (*)PyAtrshmlog_detach_PROTO) PyAtrshmlog_API[PyAtrshmlog_detach_NUM])
+
+#define PyAtrshmlog_reattach \
+  (*(PyAtrshmlog_reattach_RETURN (*)PyAtrshmlog_reattach_PROTO) PyAtrshmlog_API[PyAtrshmlog_reattach_NUM])
+  
+#define PyAtrshmlog_get_strategy_wait_wait_time \
+  (*(PyAtrshmlog_get_strategy_wait_wait_time_RETURN (*)PyAtrshmlog_get_strategy_wait_wait_time_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_strategy_wait_wait_time_NUM])
+
+#define PyAtrshmlog_set_strategy_wait_wait_time \
+  (*(PyAtrshmlog_set_strategy_wait_wait_time_RETURN (*)PyAtrshmlog_set_strategy_wait_wait_time_PROTO) PyAtrshmlog_API[PyAtrshmlog_set_strategy_wait_wait_time_NUM])
+
+#define PyAtrshmlog_get_thread_local_tid \
+  (*(PyAtrshmlog_get_thread_local_tid_RETURN (*)PyAtrshmlog_get_thread_local_tid_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_local_tid_NUM])
+  
+#define PyAtrshmlog_get_thread_local_pid \
+  (*(PyAtrshmlog_get_thread_local_pid_RETURN (*)PyAtrshmlog_get_thread_local_pid_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_local_pid_NUM])
+  
+#define PyAtrshmlog_get_thread_local_index \
+  (*(PyAtrshmlog_get_thread_local_index_RETURN (*)PyAtrshmlog_get_thread_local_index_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_local_index_NUM])
+  
+#define PyAtrshmlog_get_thread_local_buffer \
+  (*(PyAtrshmlog_get_thread_local_buffer_RETURN (*)PyAtrshmlog_get_thread_local_buffer_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_local_buffer_NUM])
+  
+#define PyAtrshmlog_get_thread_buffer_next_cleanup \
+  (*(PyAtrshmlog_get_thread_buffer_next_cleanup_RETURN (*)PyAtrshmlog_get_thread_buffer_next_cleanup_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_next_cleanup_NUM])
+  
+#define PyAtrshmlog_get_thread_buffer_next_full \
+  (*(PyAtrshmlog_get_thread_buffer_next_full_RETURN (*)PyAtrshmlog_get_thread_buffer_next_full_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_next_full_NUM])
+  
+#define PyAtrshmlog_get_thread_buffer_next_append \
+  (*(PyAtrshmlog_get_thread_buffer_next_append_RETURN (*)PyAtrshmlog_get_thread_buffer_next_append_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_next_append_NUM])
+  
+#define PyAtrshmlog_get_thread_buffer_safeguard \
+  (*(PyAtrshmlog_get_thread_buffer_safeguard_RETURN (*)PyAtrshmlog_get_thread_buffer_safeguard_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_safeguard_NUM])
+  
+#define PyAtrshmlog_get_thread_buffer_pid \
+  (*(PyAtrshmlog_get_thread_buffer_pid_RETURN (*)PyAtrshmlog_get_thread_buffer_pid_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_pid_NUM])
+  
+#define PyAtrshmlog_get_thread_buffer_tid \
+  (*(PyAtrshmlog_get_thread_buffer_tid_RETURN (*)PyAtrshmlog_get_thread_buffer_tid_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_tid_NUM])
+  
+#define PyAtrshmlog_get_thread_buffer_acquiretime \
+  (*(PyAtrshmlog_get_thread_buffer_acquiretime_RETURN (*)PyAtrshmlog_get_thread_buffer_acquiretime_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_acquiretime_NUM])
+  
+#define PyAtrshmlog_get_thread_buffer_id \
+  (*(PyAtrshmlog_get_thread_buffer_id_RETURN (*)PyAtrshmlog_get_thread_buffer_id_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_id_NUM])
+  
+#define PyAtrshmlog_get_thread_buffer_chksum \
+  (*(PyAtrshmlog_get_thread_buffer_chksum_RETURN (*)PyAtrshmlog_get_thread_buffer_chksum_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_chksum_NUM])
+  
+#define PyAtrshmlog_get_thread_buffer_size \
+  (*(PyAtrshmlog_get_thread_buffer_size_RETURN (*)PyAtrshmlog_get_thread_buffer_size_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_size_NUM])
+  
+#define PyAtrshmlog_get_thread_buffer_maxsize \
+  (*(PyAtrshmlog_get_thread_buffer_maxsize_RETURN (*)PyAtrshmlog_get_thread_buffer_maxsize_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_maxsize_NUM])
+  
+#define PyAtrshmlog_get_thread_buffer_dispose \
+  (*(PyAtrshmlog_get_thread_buffer_dispose_RETURN (*)PyAtrshmlog_get_thread_buffer_dispose_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_dispose_NUM])
+  
+#define PyAtrshmlog_get_thread_buffer_dispatched \
+  (*(PyAtrshmlog_get_thread_buffer_dispatched_RETURN (*)PyAtrshmlog_get_thread_buffer_dispatched_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_dispatched_NUM])
+  
+#define PyAtrshmlog_get_thread_buffer_payload \
+  (*(PyAtrshmlog_get_thread_buffer_payload_RETURN (*)PyAtrshmlog_get_thread_buffer_payload_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_payload_NUM])
+
+#define PyAtrshmlog_get_slave_to_shm_wait \
+  (*(PyAtrshmlog_get_slave_to_shm_wait_RETURN (*)PyAtrshmlog_get_slave_to_shm_wait_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_slave_to_shm_wait_NUM])
+
+#define PyAtrshmlog_set_slave_to_shm_wait \
+  (*(PyAtrshmlog_set_slave_to_shm_wait_RETURN (*)PyAtrshmlog_set_slave_to_shm_wait_PROTO) PyAtrshmlog_API[PyAtrshmlog_set_slave_to_shm_wait_NUM])
+
+#define PyAtrshmlog_get_last_mem_to_shm \
+  (*(PyAtrshmlog_get_last_mem_to_shm_RETURN (*)PyAtrshmlog_get_last_mem_to_shm_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_last_mem_to_shm_NUM])
+
+  
   /* Return -1 on error, 0 on success.
    * PyCapsule_Import will set an exception if there's an error.
    */
