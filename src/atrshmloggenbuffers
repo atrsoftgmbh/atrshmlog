@@ -206,6 +206,23 @@ print OUT '};
 atomic_intptr_t atrshmlog_tps = ATOMIC_VAR_INIT((intptr_t)atrshmlog_buffers_prealloced);
 
 
+/**
+ * \n Main code:
+ *
+ * \brief We get the buffer cleanup anchor
+ *
+ * \return
+ * Pointer to buffer
+ */
+volatile const void *atrshmlog_get_buffer_cleanup_anchor (void)
+{
+  volatile const void *result;
+
+  result = (volatile const void *)atomic_load(&atrshmlog_tps);
+
+  return result;
+}
+
 /********************************************************************/
 
 /**
@@ -236,6 +253,26 @@ atomic_intptr_t atrshmlog_tps = ATOMIC_VAR_INIT((intptr_t)atrshmlog_buffers_prea
  */
 atomic_intptr_t atrshmlog_tpa = ATOMIC_VAR_INIT((intptr_t)atrshmlog_buffers_prealloced);
 
+/**
+ * \n Main code:
+ *
+ * \brief We get the buffer append anchor
+ *
+ * \return
+ * Pointer to buffer
+ */
+volatile const void *atrshmlog_get_buffer_append_anchor (void)
+{
+  volatile const void *result;
+
+  result = (volatile const void *)atomic_load(&atrshmlog_tpa);
+
+  return result;
+}
+
+/*
+ * preset in systems that need it the buffers with memset
+ */
 void atrshmlog_memset_prealloced(void)
 {
   memset(atrshmlog_buffers_prealloced_chunks, 0, ATRSHMLOGBUFFER_PREALLOCED_COUNT * ATRSHMLOGBUFFER_INFOSIZE);
