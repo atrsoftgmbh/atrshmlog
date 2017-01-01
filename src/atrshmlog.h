@@ -2169,164 +2169,6 @@ extern "C" {
    */
 #define ATRSHMLOG_GET_THREAD_LOCAL_BUFFER(__thread_local,__index) atrshmlog_get_thread_local_buffer ((__thread_local),(__index))
 
-  
-  /** 
-   * \brief We get the buffers next cleanup pointer
-   *
-   * \param __buffer
-   * Pointer to buffer
-   *
-   * \return
-   * Pointer to buffer
-   */
-#define ATRSHMLOG_GET_THREAD_BUFFER_NEXT_CLEANUP(__buffer)  atrshmlog_get_thread_buffer_next_cleanup ((__buffer))
-  
-  /** 
-   * \brief We get the buffers next full pointer
-   *
-   * \param __buffer
-   * Pointer to buffer
-   *
-   * \return
-   * Pointer to buffer
-   */
-#define ATRSHMLOG_GET_THREAD_BUFFER_NEXT_FULL(__buffer)  atrshmlog_get_thread_buffer_next_full ((__buffer))
-
-  
-  /** 
-   * \brief We get the buffers next append pointer
-   *
-   * \param __buffer
-   * Pointer to buffer
-   *
-   * \return
-   * Pointer to buffer
-   */
-#define ATRSHMLOG_GET_THREAD_BUFFER_NEXT_APPEND(__buffer)  atrshmlog_get_thread_buffer_next_append ((__buffer))
-
-  /** 
-   * \brief We get the buffers safeguard
-   *
-   * \param __buffer
-   * Pointer to buffer
-   *
-   * \return
-   * safeguard
-   */
-#define ATRSHMLOG_GET_THREAD_BUFFER_SAFEGUARD(__buffer)  atrshmlog_get_thread_buffer_safeguard ((__buffer))
-  
-  /** 
-   * \brief We get the buffers pid
-   *
-   * \param __buffer
-   * Pointer to buffer
-   *
-   * \return
-   * pid
-   */
-#define ATRSHMLOG_GET_THREAD_BUFFER_PID(__buffer)  atrshmlog_get_thread_buffer_pid ((__buffer))
-  
-  /** 
-   * \brief We get the buffers tid
-   *
-   * \param __buffer
-   * Pointer to buffer
-   *
-   * \return
-   * tid
-   */
-#define ATRSHMLOG_GET_THREAD_BUFFER_TID(__buffer)  atrshmlog_get_thread_buffer_tid ((__buffer))
-  
-  /** 
-   * \brief We get the buffers acquiretime
-   *
-   * \param __buffer
-   * Pointer to buffer
-   *
-   * \return
-   * acquiretime
-   */
-#define ATRSHMLOG_GET_THREAD_BUFFER_ACQUIRETIME(__buffer)  atrshmlog_get_thread_buffer_acquiretime ((__buffer))
-  
-  /** 
-   * \brief We get the buffers id
-   *
-   * \param i_buffer
-   * Pointer to buffer
-   *
-   * \return
-   * id
-   */
-#define ATRSHMLOG_GET_THREAD_BUFFER_ID(__buffer)  atrshmlog_get_thread_buffer_id ((__buffer))
-
-  
-  /** 
-   * \brief We get the buffers chksum
-   *
-   * \param __buffer
-   * Pointer to buffer
-   *
-   * \return
-   * id
-   */
-#define ATRSHMLOG_GET_THREAD_BUFFER_CHKSUM(__buffer)  atrshmlog_get_thread_buffer_chksum ((__buffer))
-  
-  /** 
-   * \brief We get the buffers size
-   *
-   * \param __buffer
-   * Pointer to buffer
-   *
-   * \return
-   * size
-   */
-#define ATRSHMLOG_GET_THREAD_BUFFER_SIZE(__buffer)  atrshmlog_get_thread_buffer_size ((__buffer))
-  
-  
-  /** 
-   * \brief We get the buffers maxsize
-   *
-   * \param i_buffer
-   * Pointer to buffer
-   *
-   * \return
-   * maxsize
-   */
-#define ATRSHMLOG_GET_THREAD_BUFFER_MAXSIZE(__buffer)  atrshmlog_get_thread_buffer_maxsize ((__buffer))
-  
-  /** 
-   * \brief We get the buffers dispose flag
-   *
-   * \param i_buffer
-   * Pointer to buffer
-   *
-   * \return
-   * dispose
-   */
-#define ATRSHMLOG_GET_THREAD_BUFFER_DISPOSE(__buffer)  atrshmlog_get_thread_buffer_dispose ((__buffer))
-  
-  /** 
-   * \brief We get the buffers dispatched flag
-   *
-   * \param __buffer
-   * Pointer to buffer
-   *
-   * \return
-   * dispatched
-   */
-#define ATRSHMLOG_GET_THREAD_BUFFER_DISPATCHED(__buffer)  atrshmlog_get_thread_buffer_dispatched ((__buffer))
-  
-  /** 
-   * \brief We get the buffers payload adress
-   *
-   * \param __buffer
-   * Pointer to buffer
-   *
-   * \return
-   * Pointer to payload
-   */
-#define ATRSHMLOG_GET_THREAD_BUFFER_PAYLOAD(__buffer)  atrshmlog_get_thread_buffer_payload ((__buffer))
-  
   /**
    * \brief We switch the thread off and dispatch its buffers
    *
@@ -2349,25 +2191,6 @@ extern "C" {
    */
 #define ATRSHMLOG_REUSE_THREAD_BUFFERS(__tid)  atrshmlog_reuse_thread_buffers((__tid))
 
-      
-  /**
-   *  \brief The checksum flag
-   *
-   * \return
-   * The flag
-   */
-#define ATRSHMLOG_GET_CHECKSUM()  atrshmlog_get_checksum()
-
-  /**
-   * \brief Set the checksum flag
-   *
-   * \param __flag
-   * Our new  flag
-   *
-   * \return 
-   * The old flag
-   */
-#define ATRSHMLOG_SET_CHECKSUM(__flag) atrshmlog_set_checksum((__flag))
 
   /**
    * \brief We get a fence on or off flag
@@ -2618,6 +2441,213 @@ extern "C" {
    * The old flag for fence.
    */
 #define ATRSHMLOG_SET_THREAD_FENCE_13(__s) atrshmlog_set_thread_fence_13((__s))
+
+  /****************************************************/
+  /* buffer related functions */
+  
+  /** 
+   * \brief We get the buffers next cleanup pointer
+   *
+   * \param __buffer
+   * Pointer to buffer
+   *
+   * \return
+   * Pointer to buffer
+   */
+#define ATRSHMLOG_GET_THREAD_BUFFER_NEXT_CLEANUP(__buffer)  atrshmlog_get_thread_buffer_next_cleanup ((__buffer))
+  
+  /** 
+   * \brief We get the buffers next full pointer
+   *
+   * \param __buffer
+   * Pointer to buffer
+   *
+   * \return
+   * Pointer to buffer
+   */
+#define ATRSHMLOG_GET_THREAD_BUFFER_NEXT_FULL(__buffer)  atrshmlog_get_thread_buffer_next_full ((__buffer))
+
+  
+  /** 
+   * \brief We get the buffers next append pointer
+   *
+   * \param __buffer
+   * Pointer to buffer
+   *
+   * \return
+   * Pointer to buffer
+   */
+#define ATRSHMLOG_GET_THREAD_BUFFER_NEXT_APPEND(__buffer)  atrshmlog_get_thread_buffer_next_append ((__buffer))
+
+  /** 
+   * \brief We get the buffers safeguard
+   *
+   * \param __buffer
+   * Pointer to buffer
+   *
+   * \return
+   * safeguard
+   */
+#define ATRSHMLOG_GET_THREAD_BUFFER_SAFEGUARD(__buffer)  atrshmlog_get_thread_buffer_safeguard ((__buffer))
+  
+  /** 
+   * \brief We get the buffers pid
+   *
+   * \param __buffer
+   * Pointer to buffer
+   *
+   * \return
+   * pid
+   */
+#define ATRSHMLOG_GET_THREAD_BUFFER_PID(__buffer)  atrshmlog_get_thread_buffer_pid ((__buffer))
+  
+  /** 
+   * \brief We get the buffers tid
+   *
+   * \param __buffer
+   * Pointer to buffer
+   *
+   * \return
+   * tid
+   */
+#define ATRSHMLOG_GET_THREAD_BUFFER_TID(__buffer)  atrshmlog_get_thread_buffer_tid ((__buffer))
+  
+  /** 
+   * \brief We get the buffers acquiretime
+   *
+   * \param __buffer
+   * Pointer to buffer
+   *
+   * \return
+   * acquiretime
+   */
+#define ATRSHMLOG_GET_THREAD_BUFFER_ACQUIRETIME(__buffer)  atrshmlog_get_thread_buffer_acquiretime ((__buffer))
+  
+  /** 
+   * \brief We get the buffers id
+   *
+   * \param i_buffer
+   * Pointer to buffer
+   *
+   * \return
+   * id
+   */
+#define ATRSHMLOG_GET_THREAD_BUFFER_ID(__buffer)  atrshmlog_get_thread_buffer_id ((__buffer))
+
+  
+  /** 
+   * \brief We get the buffers chksum
+   *
+   * \param __buffer
+   * Pointer to buffer
+   *
+   * \return
+   * id
+   */
+#define ATRSHMLOG_GET_THREAD_BUFFER_CHKSUM(__buffer)  atrshmlog_get_thread_buffer_chksum ((__buffer))
+  
+  /** 
+   * \brief We get the buffers size
+   *
+   * \param __buffer
+   * Pointer to buffer
+   *
+   * \return
+   * size
+   */
+#define ATRSHMLOG_GET_THREAD_BUFFER_SIZE(__buffer)  atrshmlog_get_thread_buffer_size ((__buffer))
+  
+  
+  /** 
+   * \brief We get the buffers maxsize
+   *
+   * \param i_buffer
+   * Pointer to buffer
+   *
+   * \return
+   * maxsize
+   */
+#define ATRSHMLOG_GET_THREAD_BUFFER_MAXSIZE(__buffer)  atrshmlog_get_thread_buffer_maxsize ((__buffer))
+  
+  /** 
+   * \brief We get the buffers dispose flag
+   *
+   * \param i_buffer
+   * Pointer to buffer
+   *
+   * \return
+   * dispose
+   */
+#define ATRSHMLOG_GET_THREAD_BUFFER_DISPOSE(__buffer)  atrshmlog_get_thread_buffer_dispose ((__buffer))
+  
+  /** 
+   * \brief We get the buffers dispatched flag
+   *
+   * \param __buffer
+   * Pointer to buffer
+   *
+   * \return
+   * dispatched
+   */
+#define ATRSHMLOG_GET_THREAD_BUFFER_DISPATCHED(__buffer)  atrshmlog_get_thread_buffer_dispatched ((__buffer))
+  
+  /** 
+   * \brief We get the buffers payload adress
+   *
+   * \param __buffer
+   * Pointer to buffer
+   *
+   * \return
+   * Pointer to payload
+   */
+#define ATRSHMLOG_GET_THREAD_BUFFER_PAYLOAD(__buffer)  atrshmlog_get_thread_buffer_payload ((__buffer))
+
+  
+      
+  /**
+   *  \brief The checksum flag
+   *
+   * \return
+   * The flag
+   */
+#define ATRSHMLOG_GET_CHECKSUM()  atrshmlog_get_checksum()
+
+  /**
+   * \brief Set the checksum flag
+   *
+   * \param __flag
+   * Our new  flag
+   *
+   * \return 
+   * The old flag
+   */
+#define ATRSHMLOG_SET_CHECKSUM(__flag) atrshmlog_set_checksum((__flag))
+
+  /** 
+   * \brief We get the buffer cleanup anchor
+   *
+   * \return
+   * Pointer to buffer
+   */
+#define ATRSHMLOG_GET_BUFFER_CLEANUP_ANCHOR() atrshmlog_get_buffer_cleanup_anchor ()
+
+  /** 
+   * \brief We get the buffer full anchor
+   *
+   * \return
+   * Pointer to buffer
+   */
+#define ATRSHMLOG_GET_BUFFER_FULL_ANCHOR() atrshmlog_get_buffer_full_anchor ()
+
+
+  /** 
+   * \brief We get the buffer append anchor
+   *
+   * \return
+   * Pointer to buffer
+   */
+#define ATRSHMLOG_GET_BUFFER_APPEND_ANCHOR() atrshmlog_get_buffer_append_anchor ()
+
 
   /************************************************************************/
   /* slave related functions */
@@ -4138,162 +4168,7 @@ extern "C" {
    */
   extern volatile const void *atrshmlog_get_thread_local_buffer (volatile const void *i_thread_local, atrshmlog_int32_t i_index);
 
-  
-  /** 
-   * \brief We get the buffers next cleanup pointer
-   *
-   * \param i_buffer
-   * Pointer to buffer
-   *
-   * \return
-   * Pointer to buffer
-   */
-  extern volatile const void *atrshmlog_get_thread_buffer_next_cleanup (volatile const void *i_buffer);
-  
-  /** 
-   * \brief We get the buffers next full pointer
-   *
-   * \param i_buffer
-   * Pointer to buffer
-   *
-   * \return
-   * Pointer to buffer
-   */
-  extern volatile const void *atrshmlog_get_thread_buffer_next_full (volatile const void *i_buffer);
-  
-  /** 
-   * \brief We get the buffers next append pointer
-   *
-   * \param i_buffer
-   * Pointer to buffer
-   *
-   * \return
-   * Pointer to buffer
-   */
-  extern volatile const void *atrshmlog_get_thread_buffer_next_append (volatile const void *i_buffer);
-  
-  
-  /** 
-   * \brief We get the buffers safeguard
-   *
-   * \param i_buffer
-   * Pointer to buffer
-   *
-   * \return
-   * safeguard
-   */
-  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_safeguard (volatile const void *i_buffer);
-  
-  /** 
-   * \brief We get the buffers pid
-   *
-   * \param i_buffer
-   * Pointer to buffer
-   *
-   * \return
-   * pid
-   */
-  extern atrshmlog_pid_t atrshmlog_get_thread_buffer_pid (volatile const void *i_buffer);
-  
-  /** 
-   * \brief We get the buffers tid
-   *
-   * \param i_buffer
-   * Pointer to buffer
-   *
-   * \return
-   * tid
-   */
-  extern atrshmlog_tid_t atrshmlog_get_thread_buffer_tid (volatile const void *i_buffer);
-  
-  /** 
-   * \brief We get the buffers acquiretime
-   *
-   * \param i_buffer
-   * Pointer to buffer
-   *
-   * \return
-   * acquiretime
-   */
-  extern atrshmlog_time_t atrshmlog_get_thread_buffer_acquiretime (volatile const void *i_buffer);
-  
-  /** 
-   * \brief We get the buffers id
-   *
-   * \param i_buffer
-   * Pointer to buffer
-   *
-   * \return
-   * id
-   */
-  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_id (volatile const void *i_buffer);
-  
-  /** 
-   * \brief We get the buffers chksum
-   *
-   * \param i_buffer
-   * Pointer to buffer
-   *
-   * \return
-   * id
-   */
-  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_chksum (volatile const void *i_buffer);
-  
-  /** 
-   * \brief We get the buffers size
-   *
-   * \param i_buffer
-   * Pointer to buffer
-   *
-   * \return
-   * size
-   */
-  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_size (volatile const void *i_buffer);
-  
-  /** 
-   * \brief We get the buffers maxsize
-   *
-   * \param i_buffer
-   * Pointer to buffer
-   *
-   * \return
-   * maxsize
-   */
-  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_maxsize (volatile const void *i_buffer);
-  
-  /** 
-   * \brief We get the buffers dispose flag
-   *
-   * \param i_buffer
-   * Pointer to buffer
-   *
-   * \return
-   * dispose
-   */
-  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_dispose (volatile const void *i_buffer);
-  
-  /** 
-   * \brief We get the buffers dispatched flag
-   *
-   * \param i_buffer
-   * Pointer to buffer
-   *
-   * \return
-   * dispatched
-   */
-  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_dispatched (volatile const void *i_buffer);
-  
-  /** 
-   * \brief We get the buffers payload adress
-   *
-   * \param i_buffer
-   * Pointer to buffer
-   *
-   * \return
-   * Pointer to payload
-   */
-  extern volatile const void *atrshmlog_get_thread_buffer_payload (volatile const void *i_buffer);
-  
+
   /**
    * \brief We switch the thread off and dispatch its buffers
    *
@@ -4315,25 +4190,6 @@ extern "C" {
    * The number of found buffers
    */
   extern atrshmlog_ret_t atrshmlog_reuse_thread_buffers(atrshmlog_tid_t i_tid);
-
-  /**
-   *  \brief The checksum flag
-   *
-   * \return
-   * The flag
-   */
-  extern atrshmlog_ret_t atrshmlog_get_checksum(void);
-    
-  /**
-   * \brief Set the checksum flag
-   *
-   * \param i_flag
-   * Our new  flag
-   *
-   * \return 
-   * The old flag
-   */
-  extern atrshmlog_ret_t atrshmlog_set_checksum(int i_flag);
 
   
   /**
@@ -4554,6 +4410,210 @@ extern "C" {
    */
   extern atrshmlog_ret_t atrshmlog_set_thread_fence_13(atrshmlog_int32_t i_switch);
 
+  /**********************************************/
+
+  /* buffer related functions */
+  
+  /** 
+   * \brief We get the buffers next cleanup pointer
+   *
+   * \param i_buffer
+   * Pointer to buffer
+   *
+   * \return
+   * Pointer to buffer
+   */
+  extern volatile const void *atrshmlog_get_thread_buffer_next_cleanup (volatile const void *i_buffer);
+  
+  /** 
+   * \brief We get the buffers next full pointer
+   *
+   * \param i_buffer
+   * Pointer to buffer
+   *
+   * \return
+   * Pointer to buffer
+   */
+  extern volatile const void *atrshmlog_get_thread_buffer_next_full (volatile const void *i_buffer);
+  
+  /** 
+   * \brief We get the buffers next append pointer
+   *
+   * \param i_buffer
+   * Pointer to buffer
+   *
+   * \return
+   * Pointer to buffer
+   */
+  extern volatile const void *atrshmlog_get_thread_buffer_next_append (volatile const void *i_buffer);
+  
+  
+  /** 
+   * \brief We get the buffers safeguard
+   *
+   * \param i_buffer
+   * Pointer to buffer
+   *
+   * \return
+   * safeguard
+   */
+  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_safeguard (volatile const void *i_buffer);
+  
+  /** 
+   * \brief We get the buffers pid
+   *
+   * \param i_buffer
+   * Pointer to buffer
+   *
+   * \return
+   * pid
+   */
+  extern atrshmlog_pid_t atrshmlog_get_thread_buffer_pid (volatile const void *i_buffer);
+  
+  /** 
+   * \brief We get the buffers tid
+   *
+   * \param i_buffer
+   * Pointer to buffer
+   *
+   * \return
+   * tid
+   */
+  extern atrshmlog_tid_t atrshmlog_get_thread_buffer_tid (volatile const void *i_buffer);
+  
+  /** 
+   * \brief We get the buffers acquiretime
+   *
+   * \param i_buffer
+   * Pointer to buffer
+   *
+   * \return
+   * acquiretime
+   */
+  extern atrshmlog_time_t atrshmlog_get_thread_buffer_acquiretime (volatile const void *i_buffer);
+  
+  /** 
+   * \brief We get the buffers id
+   *
+   * \param i_buffer
+   * Pointer to buffer
+   *
+   * \return
+   * id
+   */
+  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_id (volatile const void *i_buffer);
+  
+  /** 
+   * \brief We get the buffers chksum
+   *
+   * \param i_buffer
+   * Pointer to buffer
+   *
+   * \return
+   * id
+   */
+  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_chksum (volatile const void *i_buffer);
+  
+  /** 
+   * \brief We get the buffers size
+   *
+   * \param i_buffer
+   * Pointer to buffer
+   *
+   * \return
+   * size
+   */
+  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_size (volatile const void *i_buffer);
+  
+  /** 
+   * \brief We get the buffers maxsize
+   *
+   * \param i_buffer
+   * Pointer to buffer
+   *
+   * \return
+   * maxsize
+   */
+  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_maxsize (volatile const void *i_buffer);
+  
+  /** 
+   * \brief We get the buffers dispose flag
+   *
+   * \param i_buffer
+   * Pointer to buffer
+   *
+   * \return
+   * dispose
+   */
+  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_dispose (volatile const void *i_buffer);
+  
+  /** 
+   * \brief We get the buffers dispatched flag
+   *
+   * \param i_buffer
+   * Pointer to buffer
+   *
+   * \return
+   * dispatched
+   */
+  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_dispatched (volatile const void *i_buffer);
+  
+  /** 
+   * \brief We get the buffers payload adress
+   *
+   * \param i_buffer
+   * Pointer to buffer
+   *
+   * \return
+   * Pointer to payload
+   */
+  extern volatile const void *atrshmlog_get_thread_buffer_payload (volatile const void *i_buffer);
+  
+  /**
+   *  \brief The checksum flag
+   *
+   * \return
+   * The flag
+   */
+  extern atrshmlog_ret_t atrshmlog_get_checksum(void);
+    
+  /**
+   * \brief Set the checksum flag
+   *
+   * \param i_flag
+   * Our new  flag
+   *
+   * \return 
+   * The old flag
+   */
+  extern atrshmlog_ret_t atrshmlog_set_checksum(int i_flag);
+
+  /** 
+   * \brief We get the buffer cleanup anchor
+   *
+   * \return
+   * Pointer to buffer
+   */
+  extern volatile const void *atrshmlog_get_buffer_cleanup_anchor (void);
+
+  /** 
+   * \brief We get the buffer full anchor
+   *
+   * \return
+   * Pointer to buffer
+   */
+  extern volatile const void *atrshmlog_get_buffer_full_anchor (void);
+
+  /** 
+   * \brief We get the buffer append anchor
+   *
+   * \return
+   * Pointer to buffer
+   */
+  extern volatile const void *atrshmlog_get_buffer_append_anchor (void);
+
+  /**********************************************/
+  
   /* slave related functions */
 
   /** 
