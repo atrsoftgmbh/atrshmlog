@@ -221,6 +221,8 @@ atomic_intptr_t atrshmlog_tps = ATOMIC_VAR_INIT((intptr_t)atrshmlog_buffers_prea
  *
  * \return
  * Pointer to buffer
+ *
+ * test t_reflexion
  */
 volatile const void *atrshmlog_get_buffer_cleanup_anchor (void)
 {
@@ -268,6 +270,8 @@ atomic_intptr_t atrshmlog_tpa = ATOMIC_VAR_INIT((intptr_t)atrshmlog_buffers_prea
  *
  * \return
  * Pointer to buffer
+ *
+ * test t_reflexion
  */
 volatile const void *atrshmlog_get_buffer_append_anchor (void)
 {
