@@ -2942,6 +2942,30 @@ public class ATRSHMLOG {
     public native int getChecksum();
 
     /** 
+     * We get the buffer cleanup anchor
+     *
+     * @return
+     * Pointer to buffer
+     */
+    public native long getBufferCleanupAnchor();
+
+    /** 
+     * We get the buffer full anchor
+     *
+     * @return
+     * Pointer to buffer
+     */
+    public native long getBufferFullAnchor();
+
+    /** 
+     * We get the buffer append anchor
+     *
+     * @return
+     * Pointer to buffer
+     */
+    public native long getBufferAppendAnchor();
+
+    /** 
      * We verify the buffer is inited and structural ok .
      *
      * @return

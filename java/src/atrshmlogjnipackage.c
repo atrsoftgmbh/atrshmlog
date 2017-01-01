@@ -2878,6 +2878,64 @@ JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlo
   return result;
 }
 
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getBufferCleanupAnchor
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getBufferCleanupAnchor
+  (JNIEnv *i_jnienv, jobject i_myself)
+{
+  jlong result;
+
+  u_t u;
+
+  u.p = ATRSHMLOG_GET_BUFFER_CLEANUP_ANCHOR();
+
+  result = u.l;
+  
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getBufferFullAnchor
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getBufferFullAnchor
+  (JNIEnv *i_jnienv, jobject i_myself)
+{
+  jlong result;
+
+  u_t u;
+
+  u.p = ATRSHMLOG_GET_BUFFER_FULL_ANCHOR();
+
+  result = u.l;
+  
+  return result;
+}
+
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getBufferAppendAnchor
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getBufferAppendAnchor
+  (JNIEnv *i_jnienv, jobject i_myself)
+{
+  jlong result;
+
+  u_t u;
+
+  u.p = ATRSHMLOG_GET_BUFFER_APPEND_ANCHOR();
+
+  result = u.l;
+  
+  return result;
+}
+
 
 /**
  * \brief verify the shared memory is intact
