@@ -117,7 +117,7 @@ makelist(pyatrshmlog_int32_t *array, size_t size)
  *
  * The static implementation of the funcionality.
  *
- * This is a thin layer around the C module functios.
+ * This is a thin layer around the C module functions.
  * Only some small adjustments. They are here mainly
  * for the use in other modules via C API capsule.
  * And to change some internal types to the types used in the 
@@ -837,12 +837,152 @@ static PyAtrshmlog_get_checksum_RETURN PyAtrshmlog_get_checksum PyAtrshmlog_get_
   return ATRSHMLOG_GET_CHECKSUM();
 }
 
+static PyAtrshmlog_detach_RETURN PyAtrshmlog_detach PyAtrshmlog_detach_PROTO
+{
+  return ATRSHMLOG_DETACH();
+}
+
+static PyAtrshmlog_reattach_RETURN PyAtrshmlog_reattach PyAtrshmlog_reattach_PROTO
+{
+  atrshmlog_int32_t pi[100];
+  
+  for (int i = 0; i < 56; i++)
+    pi[i] = parms[i];
+  
+  return ATRSHMLOG_REATTACH(pi);
+}
+
+static PyAtrshmlog_get_strategy_wait_wait_time_RETURN PyAtrshmlog_get_strategy_wait_wait_time PyAtrshmlog_get_strategy_wait_wait_time_PROTO
+{
+  return ATRSHMLOG_GET_STRATEGY_WAIT_WAIT_TIME();
+}
+
+static PyAtrshmlog_set_strategy_wait_wait_time_RETURN PyAtrshmlog_set_strategy_wait_wait_time PyAtrshmlog_set_strategy_wait_wait_time_PROTO
+{
+  return ATRSHMLOG_SET_STRATEGY_WAIT_WAIT_TIME(i_wait_nanos);
+}
+
+static PyAtrshmlog_get_thread_local_pid_RETURN PyAtrshmlog_get_thread_local_pid PyAtrshmlog_get_thread_local_pid_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_LOCAL_PID(tl);
+}
+
+static PyAtrshmlog_get_thread_local_index_RETURN PyAtrshmlog_get_thread_local_index PyAtrshmlog_get_thread_local_index_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_LOCAL_INDEX(tl);
+}
+
+static PyAtrshmlog_get_thread_local_buffer_RETURN PyAtrshmlog_get_thread_local_buffer PyAtrshmlog_get_thread_local_buffer_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_LOCAL_BUFFER(tl,i_index);
+}
+
+static PyAtrshmlog_get_thread_buffer_next_cleanup_RETURN PyAtrshmlog_get_thread_buffer_next_cleanup PyAtrshmlog_get_thread_buffer_next_cleanup_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_BUFFER_NEXT_CLEANUP(tl);
+}
+
+static PyAtrshmlog_get_thread_buffer_next_full_RETURN PyAtrshmlog_get_thread_buffer_next_full PyAtrshmlog_get_thread_buffer_next_full_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_BUFFER_NEXT_FULL(tl);
+}
+
+static PyAtrshmlog_get_thread_buffer_next_append_RETURN PyAtrshmlog_get_thread_buffer_next_append PyAtrshmlog_get_thread_buffer_next_append_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_BUFFER_NEXT_APPEND(tl);
+}
+
+static PyAtrshmlog_get_thread_buffer_safeguard_RETURN PyAtrshmlog_get_thread_buffer_safeguard PyAtrshmlog_get_thread_buffer_safeguard_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_BUFFER_SAFEGUARD(tl);
+}
+
+static PyAtrshmlog_get_thread_buffer_pid_RETURN PyAtrshmlog_get_thread_buffer_pid PyAtrshmlog_get_thread_buffer_pid_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_BUFFER_PID(tl);
+}
+
+static PyAtrshmlog_get_thread_buffer_tid_RETURN PyAtrshmlog_get_thread_buffer_tid PyAtrshmlog_get_thread_buffer_tid_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_BUFFER_TID(tl);
+}
+
+static PyAtrshmlog_get_thread_buffer_acquiretime_RETURN PyAtrshmlog_get_thread_buffer_acquiretime PyAtrshmlog_get_thread_buffer_acquiretime_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_BUFFER_ACQUIRETIME(tl);
+}
+
+static PyAtrshmlog_get_thread_buffer_id_RETURN PyAtrshmlog_get_thread_buffer_id PyAtrshmlog_get_thread_buffer_id_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_BUFFER_ID(tl);
+}
+
+static PyAtrshmlog_get_thread_buffer_chksum_RETURN PyAtrshmlog_get_thread_buffer_chksum PyAtrshmlog_get_thread_buffer_chksum_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_BUFFER_CHKSUM(tl);
+}
+
+static PyAtrshmlog_get_thread_buffer_size_RETURN PyAtrshmlog_get_thread_buffer_size PyAtrshmlog_get_thread_buffer_size_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_BUFFER_SIZE(tl);
+}
+
+static PyAtrshmlog_get_thread_buffer_maxsize_RETURN PyAtrshmlog_get_thread_buffer_maxsize PyAtrshmlog_get_thread_buffer_maxsize_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_BUFFER_MAXSIZE(tl);
+}
+
+static PyAtrshmlog_get_thread_buffer_dispose_RETURN PyAtrshmlog_get_thread_buffer_dispose PyAtrshmlog_get_thread_buffer_dispose_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_BUFFER_DISPOSE(tl);
+}
+
+static PyAtrshmlog_get_thread_buffer_dispatched_RETURN PyAtrshmlog_get_thread_buffer_dispatched PyAtrshmlog_get_thread_buffer_dispatched_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_BUFFER_DISPATCHED(tl);
+}
+
+static PyAtrshmlog_get_thread_buffer_payload_RETURN PyAtrshmlog_get_thread_buffer_payload PyAtrshmlog_get_thread_buffer_payload_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_BUFFER_PAYLOAD(tl);
+}
+
+static PyAtrshmlog_get_slave_to_shm_wait_RETURN PyAtrshmlog_get_slave_to_shm_wait PyAtrshmlog_get_slave_to_shm_wait_PROTO
+{
+  return ATRSHMLOG_GET_SLAVE_TO_SHM_WAIT();
+}
+
+static PyAtrshmlog_set_slave_to_shm_wait_RETURN PyAtrshmlog_set_slave_to_shm_wait PyAtrshmlog_set_slave_to_shm_wait_PROTO
+{
+  return ATRSHMLOG_SET_SLAVE_TO_SHM_WAIT(i_wait_nanos);
+}
+
+static PyAtrshmlog_get_last_mem_to_shm_RETURN PyAtrshmlog_get_last_mem_to_shm PyAtrshmlog_get_last_mem_to_shm_PROTO
+{
+  return ATRSHMLOG_GET_LAST_MEM_TO_SHM();
+}
+
+static PyAtrshmlog_get_buffer_cleanup_anchor_RETURN PyAtrshmlog_get_buffer_cleanup_anchor PyAtrshmlog_get_buffer_cleanup_anchor_PROTO
+{
+  return ATRSHMLOG_GET_BUFFER_CLEANUP_ANCHOR();
+}
+
+static PyAtrshmlog_get_buffer_full_anchor_RETURN PyAtrshmlog_get_buffer_full_anchor PyAtrshmlog_get_buffer_full_anchor_PROTO
+{
+  return ATRSHMLOG_GET_BUFFER_FULL_ANCHOR();
+}
+
+static PyAtrshmlog_get_buffer_append_anchor_RETURN PyAtrshmlog_get_buffer_append_anchor PyAtrshmlog_get_buffer_append_anchor_PROTO
+{
+  return ATRSHMLOG_GET_BUFFER_APPEND_ANCHOR();
+}
+
 /************************************************************/
 
 /*
  * The interface to the python interpreter.
  *
- * We use the core functions here so we get teh same from
+ * We use the core functions here so we get the same from
  * the interpreter and from a C API capsule call.
  */
 
@@ -4156,12 +4296,721 @@ python_atrshmlog_get_checksum(PyObject *self, PyObject *args)
 }
 
 /******************************************************/
+
+/**
+ * \brief We detach to the shared memory.
+ */
+static PyObject*
+python_atrshmlog_detach (PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_detach_RETURN result ;
+
+  result = PyAtrshmlog_detach();
+
+  return PyLong_FromLong(result);
+}
+
+/******************************************************/
+
+/**
+ * \brief We reattach to the shared memory.
+ */
+static PyObject*
+python_atrshmlog_reattach (PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_reattach_RETURN result ;
+
+  int p[100];
+  
+  if (!PyArg_ParseTuple(args, "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii",
+			&p[0],
+			&p[1],
+			&p[2],
+			&p[3],
+			&p[4],
+			&p[5],
+			&p[6],
+			&p[7],
+			&p[8],
+			&p[9],
+			&p[10],
+			&p[11],
+			&p[12],
+			&p[13],
+			&p[14],
+			&p[15],
+			&p[16],
+			&p[17],
+			&p[18],
+			&p[19],
+			&p[20],
+			&p[21],
+			&p[22],
+			&p[23],
+			&p[24],
+			&p[25],
+			&p[26],
+			&p[27],
+			&p[28],
+			&p[29],
+			&p[30],
+			&p[31],
+			&p[32],
+			&p[33],
+			&p[34],
+			&p[35],
+			&p[36],
+			&p[37],
+			&p[38],
+			&p[39],
+			&p[40],
+			&p[41],
+			&p[42],
+			&p[43],
+			&p[44],
+			&p[45],
+			&p[46],
+			&p[47],
+			&p[48],
+			&p[49],
+			&p[50],
+			&p[51],
+			&p[52],
+			&p[53],
+			&p[54],
+			&p[55]))
+    {
+      PyErr_SetString(AtrshmlogError, "reattach : fetch failed ("
+		      "flag0,"
+		      "id1," 
+		      "flag2," 
+		      "count3," 
+		      "flag4," 
+		      "iniinadvc5," 
+		      "flag6," 
+		      "bufferstrat7," 
+		      "flag8," 
+		      "wwtime9," 
+		      "flag10," 
+		      "delim11," 
+		      "flag12," 
+		      "evlocks13," 
+		      "flag14," 
+		      "buffinfosz15," 
+		      "flag16," 
+		      "pac17," 
+		      "flag18," 
+		      "slw19," 
+		      "flag20," 
+		      "slc21," 
+		      "flag22," 
+		      "wfs23," 
+		      "flag24," 
+		      "cid25," 
+		      "flag26," 
+		      "f1_27," 
+		      "flag28," 
+		      "f2_29," 
+		      "flag30," 
+		      "f3_31," 
+		      "flag32," 
+		      "f4_33," 
+		      "flag34," 
+		      "f5_35," 
+		      "flag36," 
+		      "f6_37," 
+		      "flag38," 
+		      "f7_39," 
+		      "flag40," 
+		      "f8_41," 
+		      "flag42," 
+		      "f9_43," 
+		      "flag44," 
+		      "f10_45," 
+		      "flag46," 
+		      "f11_47," 
+		      "flag48," 
+		      "f12_49," 
+		      "flag50," 
+		      "f13_51," 
+		      "flag52," 
+		      "chk53," 
+		      "flag54," 
+		      "loff55"
+		      ")");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_reattach(p);
+
+  return PyLong_FromLong(result);
+}
+
+/******************************************************/
+
+/**
+ * \brief We get the wait time
+ */
+static PyObject*
+python_atrshmlog_get_strategy_wait_wait_time (PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_strategy_wait_wait_time_RETURN result ;
+
+  result = PyAtrshmlog_get_strategy_wait_wait_time();
+
+  return PyLong_FromLong(result);
+}
+
+/******************************************************/
+
+/**
+ * \brief Set the wait
+ */
+static PyObject*
+python_atrshmlog_set_strategy_wait_wait_time(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_set_strategy_wait_wait_time_RETURN result;
+
+  int newsize;
+  
+  if (!PyArg_ParseTuple(args, "i", &newsize))
+    {
+      PyErr_SetString(AtrshmlogError, "set_strategy_wait_wait_time : fetch failed (nanos)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_set_strategy_wait_wait_time(newsize);
+ 
+  return PyLong_FromLong(result);
+}
+
+
+/******************************************************/
+
+
+/**
+ * \brief get the pid
+ */
+static PyObject*
+python_atrshmlog_get_thread_local_pid(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_thread_local_pid_RETURN result;
+  
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_local_pid : fetch failed (threadlocal)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_get_thread_local_pid(u.a);
+ 
+  return PyLong_FromUnsignedLongLong(result);
+}
+
+/******************************************************/
+
+
+/**
+ * \brief get the index
+ */
+static PyObject*
+python_atrshmlog_get_thread_local_index(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_thread_local_index_RETURN result;
+  
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_local_index : fetch failed (threadlocal)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_get_thread_local_index(u.a);
+ 
+  return PyLong_FromLong(result);
+}
+
+/*************************************************/
+
+/**
+ * \brief get the buffer
+ */
+static PyObject*
+python_atrshmlog_get_thread_local_buffer(PyObject *self, PyObject *args)
+{
+  u_t u;
+
+  int ind;
+  
+  if (!PyArg_ParseTuple(args, "Ki", &u.p, &ind))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_local_buffer : fetch failed (threadlocal)");
+      return NULL;
+    }
+
+  u.a = PyAtrshmlog_get_thread_local_buffer(u.a, ind);
+
+  return PyLong_FromUnsignedLongLong(u.p);
+}
+
+/*************************************************/
+
+
+/**
+ * \brief get the next cleanup
+ */
+static PyObject*
+python_atrshmlog_get_thread_buffer_next_cleanup(PyObject *self, PyObject *args)
+{
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_buffer_next_cleanup : fetch failed (threadbuffer)");
+      return NULL;
+    }
+
+  u.a = PyAtrshmlog_get_thread_buffer_next_cleanup(u.a);
+
+  return PyLong_FromUnsignedLongLong(u.p);
+}
+
+/*************************************************/
+
+
+
+/**
+ * \brief get the next full
+ */
+static PyObject*
+python_atrshmlog_get_thread_buffer_next_full(PyObject *self, PyObject *args)
+{
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_buffer_next_full : fetch failed (threadbuffer)");
+      return NULL;
+    }
+
+  u.a = PyAtrshmlog_get_thread_buffer_next_full(u.a);
+
+  return PyLong_FromUnsignedLongLong(u.p);
+}
+
+/*************************************************/
+
+
+
+/**
+ * \brief get the next append
+ */
+static PyObject*
+python_atrshmlog_get_thread_buffer_next_append(PyObject *self, PyObject *args)
+{
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_buffer_next_append : fetch failed (threadbuffer)");
+      return NULL;
+    }
+
+  u.a = PyAtrshmlog_get_thread_buffer_next_append(u.a);
+
+  return PyLong_FromUnsignedLongLong(u.p);
+}
+
+/*************************************************/
+
+
+
+/**
+ * \brief get the safeguard
+ */
+static PyObject*
+python_atrshmlog_get_thread_buffer_safeguard(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_thread_buffer_safeguard_RETURN result;
+  
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_buffer_safeguard : fetch failed (threadbuffer)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_get_thread_buffer_safeguard(u.a);
+ 
+  return PyLong_FromLong(result);
+}
+
+/*************************************************/
+
+
+
+/**
+ * \brief get the pid
+ */
+static PyObject*
+python_atrshmlog_get_thread_buffer_pid(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_thread_buffer_pid_RETURN result;
+  
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_buffer_pid : fetch failed (threadbuffer)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_get_thread_buffer_pid(u.a);
+ 
+  return PyLong_FromUnsignedLongLong(result);
+}
+
+/*************************************************/
+
+
+
+/**
+ * \brief get the tid
+ */
+static PyObject*
+python_atrshmlog_get_thread_buffer_tid(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_thread_buffer_tid_RETURN result;
+  
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_buffer_tid : fetch failed (threadbuffer)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_get_thread_buffer_tid(u.a);
+ 
+  return PyLong_FromUnsignedLongLong(result);
+}
+
+/*************************************************/
+
+
+
+/**
+ * \brief get the acquiretime
+ */
+static PyObject*
+python_atrshmlog_get_thread_buffer_acquiretime(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_thread_buffer_acquiretime_RETURN result;
+  
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_buffer_acquiretime : fetch failed (threadbuffer)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_get_thread_buffer_acquiretime(u.a);
+ 
+  return PyLong_FromUnsignedLongLong(result);
+}
+
+/*************************************************/
+
+
+
+/**
+ * \brief get the id
+ */
+static PyObject*
+python_atrshmlog_get_thread_buffer_id(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_thread_buffer_id_RETURN result;
+  
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_buffer_id : fetch failed (threadbuffer)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_get_thread_buffer_id(u.a);
+ 
+  return PyLong_FromLong(result);
+}
+
+/*************************************************/
+
+
+
+/**
+ * \brief get the chksum
+ */
+static PyObject*
+python_atrshmlog_get_thread_buffer_chksum(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_thread_buffer_chksum_RETURN result;
+  
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_buffer_chksum : fetch failed (threadbuffer)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_get_thread_buffer_chksum(u.a);
+ 
+  return PyLong_FromLong(result);
+}
+
+/*************************************************/
+
+
+
+/**
+ * \brief get the size
+ */
+static PyObject*
+python_atrshmlog_get_thread_buffer_size(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_thread_buffer_size_RETURN result;
+  
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_buffer_size : fetch failed (threadbuffer)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_get_thread_buffer_size(u.a);
+ 
+  return PyLong_FromLong(result);
+}
+
+/*************************************************/
+
+
+
+/**
+ * \brief get the maxsize
+ */
+static PyObject*
+python_atrshmlog_get_thread_buffer_maxsize(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_thread_buffer_maxsize_RETURN result;
+  
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_buffer_maxsize : fetch failed (threadbuffer)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_get_thread_buffer_maxsize(u.a);
+ 
+  return PyLong_FromLong(result);
+}
+
+/*************************************************/
+
+
+
+/**
+ * \brief get the dispose
+ */
+static PyObject*
+python_atrshmlog_get_thread_buffer_dispose(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_thread_buffer_dispose_RETURN result;
+  
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_buffer_dispose : fetch failed (threadbuffer)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_get_thread_buffer_dispose(u.a);
+ 
+  return PyLong_FromLong(result);
+}
+
+/*************************************************/
+
+
+
+/**
+ * \brief get the dispatched
+ */
+static PyObject*
+python_atrshmlog_get_thread_buffer_dispatched(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_thread_buffer_dispatched_RETURN result;
+  
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_buffer_dispatched : fetch failed (threadbuffer)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_get_thread_buffer_dispatched(u.a);
+ 
+  return PyLong_FromLong(result);
+}
+
+/*************************************************/
+
+
+/**
+ * \brief get the paylaod
+ */
+static PyObject*
+python_atrshmlog_get_thread_buffer_payload(PyObject *self, PyObject *args)
+{
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_buffer_payload : fetch failed (threadbuffer)");
+      return NULL;
+    }
+
+  u.a = PyAtrshmlog_get_thread_buffer_payload(u.a);
+
+  return PyLong_FromUnsignedLongLong(u.p);
+}
+
+/*************************************************/
+
+/**
+ * \brief Set the shm wait
+ */
+static PyObject*
+python_atrshmlog_set_slave_to_shm_wait(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_set_slave_to_shm_wait_RETURN result;
+
+  int newsize;
+  
+  if (!PyArg_ParseTuple(args, "i", &newsize))
+    {
+      PyErr_SetString(AtrshmlogError, "set_slave_to_shm_wait : fetch failed (nanos)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_set_slave_to_shm_wait(newsize);
+ 
+  return PyLong_FromLong(result);
+}
+
+/******************************************************/
+
+
+
+/**
+ * \brief We get the wait time
+ */
+static PyObject*
+python_atrshmlog_get_slave_to_shm_wait (PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_slave_to_shm_wait_RETURN result ;
+
+  result = PyAtrshmlog_get_slave_to_shm_wait();
+
+  return PyLong_FromLong(result);
+}
+
+/******************************************************/
+
+
+
+/**
+ * \brief We get the wait time
+ */
+static PyObject*
+python_atrshmlog_get_last_mem_to_shm (PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_last_mem_to_shm_RETURN result ;
+
+  result = PyAtrshmlog_get_last_mem_to_shm();
+
+  return PyLong_FromLong(result);
+}
+
+/******************************************************/
+
+
+/**
+ * \brief Get the cleanup anchor
+ *
+ */
+static PyObject*
+python_atrshmlog_get_buffer_cleanup_anchor(PyObject *self, PyObject *args)
+{
+  u_t result;
+
+  result.a = PyAtrshmlog_get_buffer_cleanup_anchor();
+
+  return PyLong_FromUnsignedLongLong(result.p);
+}
+
+/******************************************************/
+
+/**
+ * \brief Get the full anchor
+ *
+ */
+static PyObject*
+python_atrshmlog_get_buffer_full_anchor(PyObject *self, PyObject *args)
+{
+  u_t result;
+
+  result.a = PyAtrshmlog_get_buffer_full_anchor();
+
+  return PyLong_FromUnsignedLongLong(result.p);
+}
+
+/******************************************************/
+
+/**
+ * \brief Get the append anchor
+ *
+ */
+static PyObject*
+python_atrshmlog_get_buffer_append_anchor(PyObject *self, PyObject *args)
+{
+  u_t result;
+
+  result.a = PyAtrshmlog_get_buffer_append_anchor();
+
+  return PyLong_FromUnsignedLongLong(result.p);
+}
+
+/******************************************************/
+
+
 static PyMethodDef AtrshmlogMethods[] = {
     {"gettime",  python_atrshmlog_gettime, METH_VARARGS,
      "Get a clicktime for an event."},
 
     {"write",  python_atrshmlog_write, METH_VARARGS,
-     "Write a short log."},
+     "Write a log."},
     
     {"write0",  python_atrshmlog_write0, METH_VARARGS,
      "Write a short log."},
@@ -4496,6 +5345,87 @@ static PyMethodDef AtrshmlogMethods[] = {
     {"get_checksum",  python_atrshmlog_get_checksum, METH_VARARGS,
      "We get the checksum flag for the process."},
 
+    {"detach",  python_atrshmlog_detach, METH_VARARGS,
+     "We detach from the area and stop logging."},
+
+    {"reattach",  python_atrshmlog_reattach, METH_VARARGS,
+     "We reattach to an area after a detach."},
+
+    {"get_strategy_wait_wait_time",  python_atrshmlog_get_strategy_wait_wait_time, METH_VARARGS,
+     "We get for the wait strategy the wait time."},
+
+    {"set_strategy_wait_wait_time",  python_atrshmlog_set_strategy_wait_wait_time, METH_VARARGS,
+     "We set for the wait strategy the wait time."},
+
+    {"get_thread_local_pid",  python_atrshmlog_get_thread_local_pid, METH_VARARGS,
+     "We get the pid from a thread local."},
+
+    {"get_thread_local_index",  python_atrshmlog_get_thread_local_index, METH_VARARGS,
+     "We get the actual buffers index from a thread local."},
+
+    {"get_thread_local_buffer",  python_atrshmlog_get_thread_local_buffer, METH_VARARGS,
+     "We get the buffer adress from a thread local."},
+
+    {"get_thread_buffer_next_cleanup",  python_atrshmlog_get_thread_buffer_next_cleanup, METH_VARARGS,
+     "We get the next buffer on cleanup list for a buffer."},
+
+    {"get_thread_buffer_next_full",  python_atrshmlog_get_thread_buffer_next_full, METH_VARARGS,
+     "We get the next buffer on full list for a buffer."},
+
+    {"get_thread_buffer_next_append",  python_atrshmlog_get_thread_buffer_next_append, METH_VARARGS,
+     "We get the next buffer on append list for a buffer."},
+
+    {"get_thread_buffer_safeguard",  python_atrshmlog_get_thread_buffer_safeguard, METH_VARARGS,
+     "We get the safeguard for a buffer."},
+
+    {"get_thread_buffer_pid",  python_atrshmlog_get_thread_buffer_pid, METH_VARARGS,
+     "We get the pid for a buffer."},
+
+    {"get_thread_buffer_tid",  python_atrshmlog_get_thread_buffer_tid, METH_VARARGS,
+     "We get the tid for a buffer."},
+
+    {"get_thread_buffer_acquiretime",  python_atrshmlog_get_thread_buffer_acquiretime, METH_VARARGS,
+     "We get the acquiretime for a buffer."},
+
+    {"get_thread_buffer_id",  python_atrshmlog_get_thread_buffer_id, METH_VARARGS,
+     "We get the id for a buffer."},
+
+    {"get_thread_buffer_chksum",  python_atrshmlog_get_thread_buffer_chksum, METH_VARARGS,
+     "We get the chksum for a buffer."},
+
+    {"get_thread_buffer_size",  python_atrshmlog_get_thread_buffer_size, METH_VARARGS,
+     "We get the actual size for a buffer."},
+
+    {"get_thread_buffer_maxsize",  python_atrshmlog_get_thread_buffer_maxsize, METH_VARARGS,
+     "We get the maximum size for a buffer."},
+
+    {"get_thread_buffer_dispose",  python_atrshmlog_get_thread_buffer_dispose, METH_VARARGS,
+     "We get the dispose flag for a buffer."},
+
+    {"get_thread_buffer_dispatched",  python_atrshmlog_get_thread_buffer_dispatched, METH_VARARGS,
+     "We get the dispatched flag for a buffer."},
+
+    {"get_thread_buffer_payload",  python_atrshmlog_get_thread_buffer_payload, METH_VARARGS,
+     "We get the payload adress for a buffer."},
+
+    {"get_slave_to_shm_wait",  python_atrshmlog_get_slave_to_shm_wait, METH_VARARGS,
+     "We get the wait time for slave to shm."},
+
+    {"set_slave_to_shm_wait",  python_atrshmlog_set_slave_to_shm_wait, METH_VARARGS,
+     "We set the wait time for slave to shm."},
+
+    {"get_last_mem_to_shm",  python_atrshmlog_get_last_mem_to_shm, METH_VARARGS,
+     "We get last time for a slave to shm."},
+
+    {"get_buffer_cleanup_anchor",  python_atrshmlog_get_buffer_cleanup_anchor, METH_VARARGS,
+     "We get the anchor of the cleanup list."},
+
+    {"get_buffer_full_anchor",  python_atrshmlog_get_buffer_full_anchor, METH_VARARGS,
+     "We get the anchor of the full list."},
+
+    {"get_buffer_append_anchor",  python_atrshmlog_get_buffer_append_anchor, METH_VARARGS,
+     "We get the anchor of the append list."},
+
 
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
@@ -4618,6 +5548,34 @@ static void init_core(pyatrshmlog_vfctv_t *PyAtrshmlog_API )
   PyAtrshmlog_API[PyAtrshmlog_get_checksum_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_checksum;
   PyAtrshmlog_API[PyAtrshmlog_get_autoflush_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_autoflush;
   PyAtrshmlog_API[PyAtrshmlog_get_autoflush_process_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_autoflush_process;
+  PyAtrshmlog_API[PyAtrshmlog_detach_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_detach;
+  PyAtrshmlog_API[PyAtrshmlog_reattach_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_reattach;
+  PyAtrshmlog_API[PyAtrshmlog_get_strategy_wait_wait_time_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_strategy_wait_wait_time;
+  PyAtrshmlog_API[PyAtrshmlog_set_strategy_wait_wait_time_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_set_strategy_wait_wait_time;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_local_tid_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_local_tid;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_local_pid_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_local_pid;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_local_index_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_local_index;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_local_buffer_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_local_buffer;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_next_cleanup_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_buffer_next_cleanup;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_next_full_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_buffer_next_full;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_next_append_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_buffer_next_append;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_safeguard_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_buffer_safeguard;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_pid_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_buffer_pid;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_tid_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_buffer_tid;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_acquiretime_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_buffer_acquiretime;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_id_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_buffer_id;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_chksum_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_buffer_chksum;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_size_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_buffer_size;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_maxsize_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_buffer_maxsize;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_dispose_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_buffer_dispose;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_dispatched_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_buffer_dispatched;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_payload_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_buffer_payload;
+  PyAtrshmlog_API[PyAtrshmlog_get_slave_to_shm_wait_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_slave_to_shm_wait;
+  PyAtrshmlog_API[PyAtrshmlog_set_slave_to_shm_wait_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_set_slave_to_shm_wait;
+  PyAtrshmlog_API[PyAtrshmlog_get_last_mem_to_shm_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_last_mem_to_shm;
+  PyAtrshmlog_API[PyAtrshmlog_get_buffer_cleanup_anchor_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_buffer_cleanup_anchor;
+  PyAtrshmlog_API[PyAtrshmlog_get_buffer_full_anchor_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_buffer_full_anchor;
+  PyAtrshmlog_API[PyAtrshmlog_get_buffer_append_anchor_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_buffer_append_anchor;
 }
 
 #if ATRSHMLOG_PYTHON_VERSION == 3
