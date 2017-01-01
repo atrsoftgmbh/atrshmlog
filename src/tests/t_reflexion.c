@@ -39,6 +39,7 @@ int main (int argc, char *argv[])
 
   for (int __i = 1; __i < argc; __i++)
     printf("arg %d : %s : \n", __i, argv[__i]);
+
   
   atrshmlog_ret_t ret = atrshmlog_attach();
 
@@ -97,6 +98,14 @@ int main (int argc, char *argv[])
 	  PP(atrshmlog_get_thread_buffer_payload(b));
 	}
     }
+  
+  printf("\n");
+
+  PP(atrshmlog_get_buffer_cleanup_anchor());
+
+  PP(atrshmlog_get_buffer_full_anchor());
+  
+  PP(atrshmlog_get_buffer_append_anchor());
   
   printf("\n");
 
