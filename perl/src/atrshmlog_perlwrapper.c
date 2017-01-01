@@ -639,5 +639,125 @@ int atratrshmlog_create(int key, int count)
   return atrshmlog_create(key, count);
 }
 
+atrshmlog_ret_t atratrshmlog_reattach(int flag0,
+		       int id1,  
+		       int flag2,  
+		       int count3,  
+		       int flag4,  
+		       int iniinadvc5,  
+		       int flag6,  
+		       int bufferstrat7,  
+		       int flag8,  
+		       int wwtime9,  
+		       int flag10,  
+		       int delim11,  
+		       int flag12,  
+		       int evlocks13,  
+		       int flag14,  
+		       int buffinfosz15,  
+		       int flag16,  
+		       int pac17,  
+		       int flag18,  
+		       int slw19,  
+		       int flag20,  
+		       int slc21,  
+		       int flag22,  
+		       int wfs23,  
+		       int flag24,  
+		       int cid25,  
+		       int flag26,  
+		       int f1_27,  
+		       int flag28,  
+		       int f2_29,  
+		       int flag30,  
+		       int f3_31,  
+		       int flag32,  
+		       int f4_33,  
+		       int flag34,  
+		       int f5_35,  
+		       int flag36,  
+		       int f6_37,  
+		       int flag38,  
+		       int f7_39,  
+		       int flag40,  
+		       int f8_41,  
+		       int flag42,  
+		       int f9_43,  
+		       int flag44,  
+		       int f10_45,  
+		       int flag46,  
+		       int f11_47,  
+		       int flag48,  
+		       int f12_49,  
+		       int flag50,  
+		       int f13_51,  
+		       int flag52,  
+		       int chk53,  
+		       int flag54,  
+		       int loff55 
+		       )
+{
+  atrshmlog_int32_t pi[100];
+
+  pi[0] =  flag0;
+  pi[1] =  id1;
+  pi[2] =  flag2;
+  pi[3] =  count3;
+  pi[4] =  flag4;
+  pi[5] =  iniinadvc5;
+  pi[6] =  flag6;
+  pi[7] =  bufferstrat7;
+  pi[8] =  flag8;
+  pi[9] =  wwtime9;
+  pi[10] =  flag10;
+  pi[11] =  delim11;
+  pi[12] =  flag12;
+  pi[13] =  evlocks13;
+  pi[14] =  flag14;
+  pi[15] =  buffinfosz15;
+  pi[16] =  flag16;
+  pi[17] =  pac17;
+  pi[18] =  flag18;
+  pi[19] =  slw19;
+  pi[20] =  flag20;
+  pi[21] =  slc21;
+  pi[22] =  flag22;
+  pi[23] =  wfs23;
+  pi[24] =  flag24;
+  pi[25] =  cid25;
+  pi[26] =  flag26;
+  pi[27] =  f1_27;
+  pi[28] =  flag28;
+  pi[29] =  f2_29;
+  pi[30] =  flag30;
+  pi[31] =  f3_31;
+  pi[32] =  flag32;
+  pi[33] =  f4_33;
+  pi[34] =  flag34;
+  pi[35] =  f5_35;
+  pi[36] =  flag36;
+  pi[37] =  f6_37;
+  pi[38] =  flag38;
+  pi[39] =  f7_39;
+  pi[40] =  flag40;
+  pi[41] =  f8_41;
+  pi[42] =  flag42;
+  pi[43] =  f9_43;
+  pi[44] =  flag44;
+  pi[45] =  f10_45;
+  pi[46] =  flag46;
+  pi[47] =  f11_47;
+  pi[48] =  flag48;
+  pi[49] =  f12_49;
+  pi[50] =  flag50;
+  pi[51] =  f13_51;
+  pi[52] =  flag52;
+  pi[53] =  chk53;
+  pi[54] =  flag54;
+  pi[55] =  loff55;
+
+  return ATRSHMLOG_REATTACH(pi);
+}
+
 /* end of file */
 
