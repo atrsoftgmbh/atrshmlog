@@ -19,4 +19,37 @@ export RUBY_PLATFORM
 RUBYPATH=.:$(pwd)
 export RUBYPATH
 
+
+######################################################################
+
+if [ -z $RUBY_PLATFORM ]
+then
+    echo "please set the environment with dot.ruby.sh "
+    exit 1
+fi
+
+case $RUBY_PLATFORM in
+    linux)
+	# linux x86_64 gnu
+	CC="gcc -std=gnu11 -DNDEBUG -Wall  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR $ATRSHMLOG_PLATFORM_DEFINE -O3 -fPIC"
+	;;
+
+    cygwin)
+	# cygwin x86_64 gnu
+	CC="gcc -std=gnu11 -DNDEBUG -Wall  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR $ATRSHMLOG_PLATFORM_DEFINE -O3 "
+	;;
+
+    mingw)
+	# mingw x86_64 gnu via cygwin
+	CC="x86_64-w64-mingw32-gcc -std=gnu11 -DNDEBUG -Wall  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR $ATRSHMLOG_PLATFORM_DEFINE -O3 "
+	;;
+
+    *)
+	echo "dont know your platform here"
+	exit 1
+	;;
+esac
+
+export CC
+
 # end of file
