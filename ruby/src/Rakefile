@@ -1,11 +1,11 @@
 require 'rake/clean'
 
-EXT_CONF = 'ext/extconf.rb'
-MAKEFILE = 'ext/Makefile'
-MODULE = 'ext/Atrshmlog.so'
-SRC = Dir.glob('ext/*.c')
+EXT_CONF = 'ext/atrshmlog/extconf.rb'
+MAKEFILE = 'ext/atrshmlog/Makefile'
+MODULE = 'ext/atrshmlog/atrshmlog.so'
+SRC = Dir.glob('ext/atrshmlog/*.c')
 SRC << MAKEFILE
-CLEAN.include [ 'ext/*.o', 'ext/depend', MODULE ]
+CLEAN.include [ 'ext/atrshmlog/*.o', 'ext/atrshmlog/depend', MODULE ]
 CLOBBER.include [ 'config.save', 'ext/mkmf.log', 'ext/extconf.h',
                       MAKEFILE ]
 
