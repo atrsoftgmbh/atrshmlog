@@ -10,11 +10,11 @@ set attach_return  [ atrshmlog::attach ]
 
 puts "Attach was $attach_return "
 
-set t1 [ atrshmlog::gettime 1 ]
+set t1 [ atrshmlog::gettime ]
 
 puts "time 1 is $t1 "
 
-set t2 [ atrshmlog::gettime 1 ]
+set t2 [ atrshmlog::gettime ]
 
 puts "time 2 is $t2 "
 
