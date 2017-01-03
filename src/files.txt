@@ -457,6 +457,7 @@ implementlogging.markdown
 layer_java_jni.markdown 
 layer_python.markdown 
 layer_perl.markdown 
+layer_ruby.markdown 
 layer_swig.markdown 
 makeall_script.markdown 
 shmallfiles_script.markdown 
@@ -1026,6 +1027,90 @@ t_version.pl
 t_wait_for_slaves.pl
 t_write_binary.pl
 t_write.pl
+
+DIRECTORY ruby
+readme.txt
+
+DIRECTORY ruby bin
+dot.ruby.sh
+getfrommain.sh
+
+DIRECTORY ruby doc
+readme.txt
+
+DIRECTORY ruby src
+atrshmlog.gemspec
+COPYING
+dot.ruby.sh
+NEWS
+Rakefile
+README.rdoc
+
+DIRECTORY ruby src bin
+dummy.txt
+
+# nothing so far, only copy
+
+DIRECTORY ruby src doc
+dummy.txt
+
+# nothing so far, only copy
+
+DIRECTORY ruby src lib
+dummy.txt
+
+# nothing so far, only copy
+
+DIRECTORY ruby src ext atrshmlog
+atrshmlogruby.c
+extconf.rb
+
+
+DIRECTORY ruby src test
+t_acquire_count.rb
+t_area.rb
+t_attach.rb
+t_autoflush.rb
+t_buffer_max_size.rb
+t_buffer_size.rb
+t_buffer_slave_wait.rb
+t_checksum.rb
+t_cleanup_locks.rb
+t_clicktime.rb
+t_clock_id.rb
+t_create.rb
+t_create_slave.rb
+t_decrement_slave_count.rb
+t_delete.rb
+t_env_prefix.rb
+t_event_locks_max.rb
+t_event.rb
+t_fence.rb
+t_flush.rb
+t_get_env.rb
+t_get_inittime.rb
+t_get_realtime.rb
+t_gettime.rb
+t_init_in_advance.rb
+t_init_shm_log.rb
+t_logging.rb
+t_next_slave.rb
+t_prealloc_count.rb
+t_read_fetch.rb
+t_read.rb
+t_reuse_buffer.rb
+t_shmid.rb
+t_slave_count.rb
+t_slave_run_off.rb
+t_sleep_nanos.rb
+t_statistics.rb
+t_stop.rb
+t_strategy.rb
+t_thread_local.rb
+t_verify.rb
+t_version.rb
+t_wait_for_slaves.rb
+t_write.rb
 
 
 DIRECTORY SWIG
