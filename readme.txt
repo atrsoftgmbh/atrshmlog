@@ -26,6 +26,9 @@ The directories are
 - perl
   The perl layer for the module
 
+- ruby
+  The ruby layer for the module
+  
 - SWIG
   The SWIG layer for the module
 
