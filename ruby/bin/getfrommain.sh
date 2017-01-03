@@ -36,9 +36,9 @@ case $ATRSHMLOG_PLATFORM in
 esac
 
 
-cp ../src/atrshmlog.h src/ext/atrshmlog/atrshmlog.h
-cp ../src/atrshmlog_internal.h src/ext/atrshmlog/atrshmlog_internal.h
-cp ../src/$LIB src/ext/atrshmlog/$LIB
+cp ../src/atrshmlog.h atrshmlog/ext/atrshmlog/atrshmlog.h
+cp ../src/atrshmlog_internal.h atrshmlog/ext/atrshmlog/atrshmlog_internal.h
+cp ../src/$LIB atrshmlog/ext/atrshmlog/$LIB
 
 
 # end of file
