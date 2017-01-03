@@ -19,6 +19,9 @@ export RUBY_PLATFORM
 RUBYPATH=.:$(pwd)
 export RUBYPATH
 
+# we have here the module for test
+RUBYLIB=$(pwd)/ext/atrshmlog:$HOME/lib/ruby
+export RUBYLIB
 
 ######################################################################
 

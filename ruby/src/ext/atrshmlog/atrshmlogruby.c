@@ -873,14 +873,17 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
   char buff[1024];
 
   int len = RSTRING_LEN(suffix);
-  
+
   memcpy(buff, RSTRING_PTR(suffix), len);
 
   buff[len] = 0;
   
   const char* result =  ATRSHMLOG_GET_ENV(buff);
 
-  return rb_str_new2(result);
+  if (result)
+    return rb_str_new2(result);
+
+  return rb_str_new2("");
 }
 
 
