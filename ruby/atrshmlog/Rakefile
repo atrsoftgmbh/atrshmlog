@@ -1,5 +1,7 @@
 require 'rake/clean'
 
+require 'rake/testtask'
+
 EXT_CONF = 'ext/atrshmlog/extconf.rb'
 MAKEFILE = 'ext/atrshmlog/Makefile'
 MODULE = 'ext/atrshmlog/atrshmlog.so'
@@ -28,4 +30,18 @@ file MODULE => SRC do |t|
 end
 
 desc "Build the native library"
-task :build => MODULE3
+task :build => MODULE
+
+# require "rake/extensiontask"
+
+#Rake::ExtensionTask.new "atrshmlog" do |ext|
+#  ext.lib_dir = "lib/atrshmlog"
+#end
+
+# testing framework 
+Rake::TestTask.new do |t|
+  t.libs << 'test'
+end
+
+desc "Run tests"
+# task :default => :test
