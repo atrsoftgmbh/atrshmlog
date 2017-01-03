@@ -13,11 +13,9 @@
 #include <string.h>
   
 
-atrshmlog_time_t atrshmlog_gettime(atrshmlog_int32_t event)
+atrshmlog_time_t atrshmlog_gettime()
 {
-  atrshmlog_time_t result;
-
-  ATRSHMLOG_GETTIME(event,result);
+  atrshmlog_time_t result = ATRSHMLOG_GET_TSC_CALL();
 
   return result;
 }

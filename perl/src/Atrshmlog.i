@@ -29,7 +29,7 @@
    */
 
 
-extern atrshmlog_time_t atrshmlog_gettime(atrshmlog_int32_t event);
+extern atrshmlog_time_t atrshmlog_gettime();
 
 extern atrshmlog_ret_t atrshmlog_write_binary(const atrshmlog_int32_t i_eventnumber,
      const atrshmlog_int32_t i_eventflag,
@@ -692,7 +692,7 @@ extern atrshmlog_ret_t atrshmlog_init_shm_log(volatile const void *i_area,
 					      const atrshmlog_int32_t i_count_buffers);
 
 
-extern atrshmlog_time_t atrshmlog_gettime(atrshmlog_int32_t event);
+extern atrshmlog_time_t atrshmlog_gettime();
 
 extern atrshmlog_ret_t atrshmlog_write_binary(const atrshmlog_int32_t i_eventnumber,
      const atrshmlog_int32_t i_eventflag,
