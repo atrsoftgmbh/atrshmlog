@@ -82,7 +82,7 @@ atrshmlog_attach(). Simply use it and check its returncode.
 
 Its the same functionality like the C function, but it uses the
 value in its return code. We assume its a 64 bit click time, so
-the return value is a long. We use also the event in here.
+the return value is a long. 
 
 ####write0()
 
