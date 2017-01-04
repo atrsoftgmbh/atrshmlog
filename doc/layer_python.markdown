@@ -395,7 +395,7 @@ Be sure to know the consequences if you kill slaves. Read the doc.
 
 This sets the flag to honor the fence.
 
-Se the doc for thread fence use.
+See the doc for thread fence use.
 
 ####get_thread_fence1() to get_thread_fence13()
 
@@ -573,7 +573,7 @@ To get the log you will need the reader.
 
 To convert it to a text file you will need the convert.
 
-So we make a small test run here to se how its done.
+So we make a small test run here to see how its done.
 
 ###create the buffer
 
@@ -674,6 +674,19 @@ the content of this file.
 Compile the python library.
 
      $  create_python_lib.sh
+
+
+Tests
+-----
+
+There are module tests in the tests directory.
+The tests can be used to check for things and also to see how its done.
+
+The thing has a t_test.sh driver to run full test.
+
+This is more a test to see that the call comes through from python to
+the C function. It is not a test of the function itself, thats already done in
+the C module.
 
 Summary
 -------

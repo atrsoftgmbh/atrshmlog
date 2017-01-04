@@ -1788,20 +1788,46 @@ _Thread_local static char *read_buffer = 0;
 
   if (ret < 0)
     {
-      VALUE retarr = rb_ary_new2(1);
+      VALUE retarr = rb_ary_new2(3);
+      
       rb_ary_store(retarr, 0, INT2NUM(ret));
+
+      VALUE s = rb_str_new("", 0);
+  
+      rb_ary_store(retarr, 1, s);
+      rb_ary_store(retarr, 2, INT2NUM(length));
 
       return retarr;
     }
 
-  if( ret > 0)
+  if (ret > 0)
     {
-      VALUE retarr = rb_ary_new2(1);
+      VALUE retarr = rb_ary_new2(3);
+      
       rb_ary_store(retarr, 0, INT2NUM(ret));
+
+      VALUE s = rb_str_new("", 0);
+  
+      rb_ary_store(retarr, 1, s);
+      rb_ary_store(retarr, 2, INT2NUM(length));
 
       return retarr;
     }
 
+  if (length == 0)
+    {
+      VALUE retarr = rb_ary_new2(3);
+      
+      rb_ary_store(retarr, 0, INT2NUM(ret));
+
+      VALUE s = rb_str_new("", 0);
+  
+      rb_ary_store(retarr, 1, s);
+      rb_ary_store(retarr, 2, INT2NUM(length));
+
+      return retarr;
+    }
+    
   // ok. we have data
   VALUE retarr = rb_ary_new2( 36 );
   
@@ -1936,30 +1962,37 @@ _Thread_local static char *read_buffer = 0;
 
   if (ret < 0)
     {
-      VALUE retarr = rb_ary_new2(1);
+      VALUE retarr = rb_ary_new2(4);
       rb_ary_store(retarr, 0, INT2NUM(ret));
 
+      rb_ary_store(retarr, 1, INT2NUM(index));
+
+      VALUE s = rb_str_new("", 0);
+  
+      rb_ary_store(retarr, 2, s);
+
+      rb_ary_store(retarr, 3, INT2NUM(length));
+      
       return retarr;
     }
 
   if( ret > 0)
     {
-      VALUE retarr = rb_ary_new2(2);
+      VALUE retarr = rb_ary_new2(4);
       rb_ary_store(retarr, 0, INT2NUM(ret));
 
-      rb_ary_store(retarr, 1, INT2NUM(length));
+      rb_ary_store(retarr, 1, INT2NUM(index));
 
-      return retarr;
-    }
-
-  if (length < 1)
-    {
-      VALUE retarr = rb_ary_new2(2);
-      rb_ary_store(retarr, 0, INT2NUM(ret));
-      rb_ary_store(retarr, 1, INT2NUM(length));
-      return retarr;
-    }
+      VALUE s = rb_str_new("", 0);
   
+      rb_ary_store(retarr, 2, s);
+
+      rb_ary_store(retarr, 3, INT2NUM(length));
+      
+      return retarr;
+    }
+
+
   // ok. we have data
   VALUE retarr = rb_ary_new2( 37 );
   

@@ -3025,35 +3025,78 @@ python_atrshmlog_read(PyObject *self, PyObject *args)
       if (r == NULL)
 	return NULL;
       
-      t = PyTuple_New(1);
+      t = PyTuple_New(3);
 
       if (t == NULL)
 	return NULL;
       
       PyTuple_SET_ITEM(t,0,r);
+
+
+      PyObject * b = PyByteArray_FromStringAndSize("", 0);
+
+
+      PyTuple_SET_ITEM(t, 1, b);
+      
+      py_length = PyLong_FromLong(0);
+
+      PyTuple_SET_ITEM(t, 2, py_length);
 
       return t;
     }
 
-  if (o_length == 0)
+  if (result > 0)
     {
       // return -1; we construct a tuple and give it back.
       r = PyLong_FromLong(result);
+
       if (r == NULL)
 	return NULL;
       
-      py_length = PyLong_FromLong(0);
-
-      if(py_length  == NULL)
-	return NULL;
-      
-      t = PyTuple_New(2);
+      t = PyTuple_New(3);
 
       if (t == NULL)
 	return NULL;
       
       PyTuple_SET_ITEM(t,0,r);
-      PyTuple_SET_ITEM(t,1,py_length);
+
+
+      PyObject * b = PyByteArray_FromStringAndSize("", 0);
+
+
+      PyTuple_SET_ITEM(t, 1, b);
+      
+      py_length = PyLong_FromLong(0);
+
+      PyTuple_SET_ITEM(t, 2, py_length);
+
+      return t;
+    }
+    
+  if (o_length == 0)
+    {
+      // return 0; we construct a tuple and give it back.
+      r = PyLong_FromLong(result);
+
+      if (r == NULL)
+	return NULL;
+      
+      t = PyTuple_New(3);
+
+      if (t == NULL)
+	return NULL;
+      
+      PyTuple_SET_ITEM(t,0,r);
+
+
+      PyObject * b = PyByteArray_FromStringAndSize("", 0);
+
+
+      PyTuple_SET_ITEM(t, 1, b);
+      
+      py_length = PyLong_FromLong(0);
+
+      PyTuple_SET_ITEM(t, 2, py_length);
 
       return t;
     }
@@ -3573,12 +3616,30 @@ python_atrshmlog_read_fetch(PyObject *self, PyObject *args)
       if (r == NULL)
 	return NULL;
       
-      t = PyTuple_New(1);
+      t = PyTuple_New(4);
 
       if (t == NULL)
 	return NULL;
       
       PyTuple_SET_ITEM(t,0,r);
+
+      py_index = PyLong_FromLong(index);
+
+      PyTuple_SET_ITEM(t, 1, py_index);
+
+      PyObject * b = PyByteArray_FromStringAndSize("", 0);
+
+      if (b == NULL)
+	{
+	  PyErr_SetString(AtrshmlogError, "read_fetch : create of buffer failed.");
+	  return NULL;
+	}
+
+      PyTuple_SET_ITEM(t, 2, b);
+      
+      py_length = PyLong_FromLong(0);
+
+      PyTuple_SET_ITEM(t, 3, py_length);
 
       return t;
     }
@@ -3587,49 +3648,39 @@ python_atrshmlog_read_fetch(PyObject *self, PyObject *args)
   if (result > 0)
     {
       // return -1; we construct a tuple and give it back.
-      r = PyLong_FromLong(1);
+      r = PyLong_FromLong(result);
 
       if (r == NULL)
 	return NULL;
       
-      py_length = PyLong_FromLong(0);
-
-      if (py_length == NULL)
-	return NULL;
-
-      t = PyTuple_New(2);
+      t = PyTuple_New(4);
 
       if (t == NULL)
 	return NULL;
       
       PyTuple_SET_ITEM(t,0,r);
-      PyTuple_SET_ITEM(t,1,py_length);
 
-      return t;
-    }
+      py_index = PyLong_FromLong(index);
 
-  if (o_length == 0)
-    {
-      r = PyLong_FromLong(1);
+      PyTuple_SET_ITEM(t, 1, py_index);
 
-      if (r == NULL)
-	return NULL;
+      PyObject * b = PyByteArray_FromStringAndSize("", 0);
+      
+      if (b == NULL)
+	{
+	  PyErr_SetString(AtrshmlogError, "read_fetch : create of buffer failed.");
+	  return NULL;
+	}
+
+      PyTuple_SET_ITEM(t, 2, b);
       
       py_length = PyLong_FromLong(0);
 
-      if (py_length == NULL)
-	return NULL;
-
-      t = PyTuple_New(2);
-
-      if (t == NULL)
-	return NULL;
-      
-      PyTuple_SET_ITEM(t,0,r);
-      PyTuple_SET_ITEM(t,1,py_length);
+      PyTuple_SET_ITEM(t, 3, py_length);
 
       return t;
     }
+
 
   r = PyLong_FromLong(0);
 
