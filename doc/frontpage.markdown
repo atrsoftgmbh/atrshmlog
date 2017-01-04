@@ -136,23 +136,23 @@ And of course the universal hello world.
 
 ###Implement your logging in different language
 You get support for the following languages
-- Java
+- Java\n
   There is a Java jni solution to use the module.
   [See for details the java module page.](\ref language_layer_java_jni)
   
-- Python
+- Python\n
   There is a python module solution.
   [See for details the python module page.](\ref language_layer_python)
   
-- Perl
+- Perl\n
   There is a perl module solution.
   [See for details the perl module page.](\ref language_layer_perl)
 
-- Ruby
+- Ruby\n
   There is a ruby module solution.
   [See for details the ruby module page.](\ref language_layer_ruby)
 
-- SWIG
+- SWIG\n
   There is a SWIG solution.
   The examples work with tcl.
   [See for details the SWIG module page.](\ref language_layer_swig)
