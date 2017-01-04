@@ -623,7 +623,7 @@ typedef void atrshmlog_thread_ret_t;
 #endif
 
 
-/** File io needed */
+/** File io needed from 1.1.0 on */
 #include <stdio.h>
 
 /** Time meaturement - this includes structs */
@@ -640,9 +640,6 @@ typedef void atrshmlog_thread_ret_t;
 
 /** Standard c stuff for alloc */  
 #include <stdlib.h>
-
-/** Standard types */
-#include <stdint.h>
 
 /** 
  * atomics

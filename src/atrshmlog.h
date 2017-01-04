@@ -469,7 +469,6 @@ bumm bumm bumm bumm error in platform active count
  * If you are on a platform that make it different 
  * add your if blblplatform == 1 , undef , define 1 , endif after it.
  */ 
-
 #define ATRSHMLOG_H_ORDER_IS_N_ORDER 0
 
 #if  ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
