@@ -24,7 +24,7 @@
 
 /*********************************************/
 
-/* a helper to convert safer */
+/* a helper to convert safer number to pointer and back */
 union u_s
 {
   const volatile void *p;
@@ -55,22 +55,22 @@ static VALUE atrshmlogruby_attach(VALUE obj);
 static VALUE atrshmlogruby_gettime(VALUE obj);
 
 static VALUE atrshmlogruby_write0(VALUE obj,
-			 VALUE eventnumber,
-			 VALUE eventflag,
-			 VALUE userflag,
-			 VALUE starttime,
-			 VALUE endtime);
+				  VALUE eventnumber,
+				  VALUE eventflag,
+				  VALUE userflag,
+				  VALUE starttime,
+				  VALUE endtime);
 
 static VALUE atrshmlogruby_write(VALUE obj,
-			VALUE eventnumber,
-			VALUE eventflag,
-			VALUE userflag,
-			VALUE starttime,
-			VALUE endtime,
-			VALUE payload);
+				 VALUE eventnumber,
+				 VALUE eventflag,
+				 VALUE userflag,
+				 VALUE starttime,
+				 VALUE endtime,
+				 VALUE payload);
 
 static VALUE atrshmlogruby_sleep_nanos(VALUE obj,
-			      VALUE nanos);
+				       VALUE nanos);
 
 static VALUE atrshmlogruby_get_statistics_max_index(VALUE obj);
 
@@ -826,27 +826,30 @@ VALUE atrshmlogruby_get_statistics_max_index(VALUE obj)
 
 VALUE atrshmlogruby_get_statistics(VALUE obj)
 {
-  atrshmlog_int32_t s[100];
+  atrshmlog_int32_t s[100]; // TODO : check its big enough ... 1.2.0 ok
 
   ATRSHMLOG_GET_STATISTICS(s);
 
-  int size = atrshmlog_counter_end + 1;
+  int size = ATRSHMLOG_GET_STATISTICS_MAX_INDEX() + 1;
   
   VALUE ret = rb_ary_new2(size);
 
-  for (int i = 0; i <= atrshmlog_counter_end; i++)
+  for (int i = 0; i < size; i++)
     rb_ary_store(ret, i , INT2NUM((int)s[i]));
   
   return ret;
 }
 
 
- VALUE atrshmlogruby_set_env_prefix(VALUE obj,
-				 VALUE prefix)
+VALUE atrshmlogruby_set_env_prefix(VALUE obj,
+				   VALUE prefix)
 {
-  char buff[1024];
+  char buff[1024]; // big enough .... 
 
   int len = RSTRING_LEN(prefix);
+
+  if (len > 256)
+    len = 256;
   
   memcpy(buff, RSTRING_PTR(prefix), len);
 
@@ -860,7 +863,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_env_prefix(VALUE obj)
+VALUE atrshmlogruby_get_env_prefix(VALUE obj)
 {
   const char* result = ATRSHMLOG_GET_ENV_PREFIX();
 
@@ -868,13 +871,16 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_env(VALUE obj,
-			  VALUE suffix)
+VALUE atrshmlogruby_get_env(VALUE obj,
+			    VALUE suffix)
 {
-  char buff[1024];
+  char buff[1024]; // big enough
 
   int len = RSTRING_LEN(suffix);
 
+  if (len > 256)
+    len = 256;
+  
   memcpy(buff, RSTRING_PTR(suffix), len);
 
   buff[len] = 0;
@@ -888,7 +894,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_env_shmid(VALUE obj)
+VALUE atrshmlogruby_get_env_shmid(VALUE obj)
 {
   const char* result = ATRSHMLOG_GET_ENV_SHMID();
 
@@ -896,7 +902,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_env_id_suffix(VALUE obj)
+VALUE atrshmlogruby_get_env_id_suffix(VALUE obj)
 {
   const char* result = ATRSHMLOG_GET_ENV_ID_SUFFIX();
 
@@ -904,7 +910,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_version(VALUE obj)
+VALUE atrshmlogruby_get_version(VALUE obj)
 {
   int result = ATRSHMLOG_GET_VERSION();
 
@@ -912,7 +918,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_minor_version(VALUE obj)
+VALUE atrshmlogruby_get_minor_version(VALUE obj)
 {
   int result = ATRSHMLOG_GET_MINOR_VERSION();
 
@@ -920,7 +926,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_patch_version(VALUE obj)
+VALUE atrshmlogruby_get_patch_version(VALUE obj)
 {
   int result = ATRSHMLOG_GET_PATCH_VERSION();
 
@@ -928,7 +934,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_get_event_locks_max (VALUE obj)
+VALUE atrshmlogruby_get_event_locks_max (VALUE obj)
 {
   int result = ATRSHMLOG_GET_EVENT_LOCKS_MAX();
 
@@ -936,8 +942,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_set_event_locks_max (VALUE obj,
-				       VALUE newmax)
+VALUE atrshmlogruby_set_event_locks_max (VALUE obj,
+					 VALUE newmax)
 {
   int n = NUM2INT(newmax);
   
@@ -947,8 +953,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_event (VALUE obj,
-			     VALUE event)
+VALUE atrshmlogruby_get_event (VALUE obj,
+			       VALUE event)
 {
   int e = NUM2INT(event);
   
@@ -958,8 +964,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_set_event_on (VALUE obj,
-				VALUE event)
+VALUE atrshmlogruby_set_event_on (VALUE obj,
+				  VALUE event)
 {
   int e = NUM2INT(event);
   
@@ -969,8 +975,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_set_event_off (VALUE obj,
-				 VALUE event)
+VALUE atrshmlogruby_set_event_off (VALUE obj,
+				   VALUE event)
 {
   int e = NUM2INT(event);
   
@@ -980,7 +986,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_logging (VALUE obj)
+VALUE atrshmlogruby_get_logging (VALUE obj)
 {
   int result = ATRSHMLOG_GET_LOGGING();
 
@@ -988,7 +994,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_set_logging_process_on (VALUE obj)
+VALUE atrshmlogruby_set_logging_process_on (VALUE obj)
 {
   int result = ATRSHMLOG_SET_LOGGING_PROCESS_ON();
 
@@ -996,7 +1002,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_set_logging_process_off (VALUE obj)
+VALUE atrshmlogruby_set_logging_process_off (VALUE obj)
 {
   int result = ATRSHMLOG_SET_LOGGING_PROCESS_OFF();
 
@@ -1004,7 +1010,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_set_logging_process_off_final (VALUE obj)
+VALUE atrshmlogruby_set_logging_process_off_final (VALUE obj)
 {
   int result = ATRSHMLOG_SET_LOGGING_PROCESS_OFF_FINAL();
 
@@ -1012,7 +1018,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_shmid (VALUE obj)
+VALUE atrshmlogruby_get_shmid (VALUE obj)
 {
   int result = ATRSHMLOG_GET_SHMID();
 
@@ -1020,7 +1026,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_area (VALUE obj)
+VALUE atrshmlogruby_get_area (VALUE obj)
 {
   u_t u;
 
@@ -1030,8 +1036,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_area_ich_habe_fertig (VALUE obj,
-					    VALUE area)
+VALUE atrshmlogruby_get_area_ich_habe_fertig (VALUE obj,
+					      VALUE area)
 {
   u_t u;
 
@@ -1043,9 +1049,9 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_set_area_ich_habe_fertig (VALUE obj,
-					    VALUE area,
-					    VALUE flag)
+VALUE atrshmlogruby_set_area_ich_habe_fertig (VALUE obj,
+					      VALUE area,
+					      VALUE flag)
 {
   u_t u;
 
@@ -1059,8 +1065,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_area_count (VALUE obj,
-				  VALUE area)
+VALUE atrshmlogruby_get_area_count (VALUE obj,
+				    VALUE area)
 {
   u_t u;
 
@@ -1072,8 +1078,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_area_version (VALUE obj,
-				    VALUE area)
+VALUE atrshmlogruby_get_area_version (VALUE obj,
+				      VALUE area)
 {
   u_t u;
 
@@ -1085,7 +1091,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_buffer_max_size (VALUE obj)
+VALUE atrshmlogruby_get_buffer_max_size (VALUE obj)
 {
   int result = ATRSHMLOG_GET_BUFFER_MAX_SIZE();
 
@@ -1093,7 +1099,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_buffer_size (VALUE obj)
+VALUE atrshmlogruby_get_buffer_size (VALUE obj)
 {
   int result = ATRSHMLOG_GET_BUFFER_SIZE();
 
@@ -1101,8 +1107,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_set_buffer_size (VALUE obj,
-				   VALUE size)
+VALUE atrshmlogruby_set_buffer_size (VALUE obj,
+				     VALUE size)
 {
   int s = NUM2INT(size);
   
@@ -1112,7 +1118,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_f_list_buffer_slave_count (VALUE obj)
+VALUE atrshmlogruby_get_f_list_buffer_slave_count (VALUE obj)
 {
   int result = ATRSHMLOG_GET_F_LIST_BUFFER_SLAVE_COUNT();
 
@@ -1120,8 +1126,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_set_f_list_buffer_slave_count (VALUE obj,
-						 VALUE count)
+VALUE atrshmlogruby_set_f_list_buffer_slave_count (VALUE obj,
+						   VALUE count)
 {
   int c = NUM2INT(count);
   
@@ -1131,7 +1137,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_get_clock_id (VALUE obj)
+VALUE atrshmlogruby_get_clock_id (VALUE obj)
 {
   int result = ATRSHMLOG_GET_CLOCK_ID();
 
@@ -1139,8 +1145,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_set_clock_id (VALUE obj,
-				VALUE id)
+VALUE atrshmlogruby_set_clock_id (VALUE obj,
+				  VALUE id)
 {
   int i = NUM2INT(id);
   
@@ -1150,7 +1156,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_set_f_list_buffer_slave_run_off (VALUE obj)
+VALUE atrshmlogruby_set_f_list_buffer_slave_run_off (VALUE obj)
 {
   ATRSHMLOG_SET_F_LIST_BUFFER_SLAVE_RUN_OFF();
 
@@ -1160,7 +1166,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_set_wait_for_slaves_on (VALUE obj)
+VALUE atrshmlogruby_set_wait_for_slaves_on (VALUE obj)
 {
   int result = ATRSHMLOG_SET_WAIT_FOR_SLAVES_ON();
 
@@ -1168,7 +1174,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_set_wait_for_slaves_off (VALUE obj)
+VALUE atrshmlogruby_set_wait_for_slaves_off (VALUE obj)
 {
   int result = ATRSHMLOG_SET_WAIT_FOR_SLAVES_OFF();
 
@@ -1176,7 +1182,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_wait_for_slaves (VALUE obj)
+VALUE atrshmlogruby_get_wait_for_slaves (VALUE obj)
 {
   int result = ATRSHMLOG_GET_WAIT_FOR_SLAVES();
 
@@ -1184,7 +1190,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_f_list_buffer_slave_wait (VALUE obj)
+VALUE atrshmlogruby_get_f_list_buffer_slave_wait (VALUE obj)
 {
   int result = ATRSHMLOG_GET_F_LIST_BUFFER_SLAVE_WAIT();
 
@@ -1192,8 +1198,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_set_f_list_buffer_slave_wait (VALUE obj,
-						VALUE nanos)
+VALUE atrshmlogruby_set_f_list_buffer_slave_wait (VALUE obj,
+						  VALUE nanos)
 {
   int n = NUM2INT(nanos);
   
@@ -1203,7 +1209,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_acquire_count (VALUE obj)
+VALUE atrshmlogruby_get_acquire_count (VALUE obj)
 {
   int result = ATRSHMLOG_GET_ACQUIRE_COUNT();
 
@@ -1211,7 +1217,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_prealloc_buffer_count (VALUE obj)
+VALUE atrshmlogruby_get_prealloc_buffer_count (VALUE obj)
 {
   int result = ATRSHMLOG_GET_PREALLOC_BUFFER_COUNT();
 
@@ -1219,8 +1225,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_set_prealloc_buffer_count (VALUE obj,
-					     VALUE count)
+VALUE atrshmlogruby_set_prealloc_buffer_count (VALUE obj,
+					       VALUE count)
 {
   int c = NUM2INT(count);
   
@@ -1230,7 +1236,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_inittime (VALUE obj)
+VALUE atrshmlogruby_get_inittime (VALUE obj)
 {
   atrshmlog_internal_time_t t = ATRSHMLOG_GET_INITTIME();
 
@@ -1245,7 +1251,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_inittime_tsc_before (VALUE obj)
+VALUE atrshmlogruby_get_inittime_tsc_before (VALUE obj)
 {
   unsigned long  result = ATRSHMLOG_GET_INITTIME_TSC_BEFORE();
 
@@ -1253,7 +1259,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_inittime_tsc_after (VALUE obj)
+VALUE atrshmlogruby_get_inittime_tsc_after (VALUE obj)
 {
   unsigned long  result = ATRSHMLOG_GET_INITTIME_TSC_AFTER();
 
@@ -1261,7 +1267,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_get_buffer_id (VALUE obj)
+VALUE atrshmlogruby_get_buffer_id (VALUE obj)
 {
   int result = ATRSHMLOG_GET_BUFFER_ID();
 
@@ -1269,7 +1275,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_stop (VALUE obj)
+VALUE atrshmlogruby_stop (VALUE obj)
 {
   ATRSHMLOG_STOP();
   
@@ -1279,7 +1285,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_flush (VALUE obj)
+VALUE atrshmlogruby_flush (VALUE obj)
 {
   ATRSHMLOG_FLUSH();
   
@@ -1290,8 +1296,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 
 
 				
- VALUE atrshmlogruby_set_strategy (VALUE obj,
-				VALUE strategy)
+VALUE atrshmlogruby_set_strategy (VALUE obj,
+				  VALUE strategy)
 {
   int s = NUM2INT(strategy);
   
@@ -1301,7 +1307,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_get_strategy (VALUE obj)
+VALUE atrshmlogruby_get_strategy (VALUE obj)
 {
   int result =  ATRSHMLOG_GET_STRATEGY();
 
@@ -1309,8 +1315,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_set_strategy_process (VALUE obj,
-					VALUE strategy)
+VALUE atrshmlogruby_set_strategy_process (VALUE obj,
+					  VALUE strategy)
 {
   int s = NUM2INT(strategy);
   
@@ -1320,7 +1326,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_get_strategy_process (VALUE obj)
+VALUE atrshmlogruby_get_strategy_process (VALUE obj)
 {
   int result = ATRSHMLOG_GET_STRATEGY_PROCESS();
 
@@ -1328,7 +1334,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_create_slave (VALUE obj)
+VALUE atrshmlogruby_create_slave (VALUE obj)
 {
   int result = ATRSHMLOG_CREATE_SLAVE();
 
@@ -1336,7 +1342,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_decrement_slave_count (VALUE obj)
+VALUE atrshmlogruby_decrement_slave_count (VALUE obj)
 {
   int result = ATRSHMLOG_DECREMENT_SLAVE_COUNT();
 
@@ -1344,7 +1350,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_get_clicktime (VALUE obj)
+VALUE atrshmlogruby_get_clicktime (VALUE obj)
 {
   unsigned long result = ATRSHMLOG_GET_CLICKTIME();
 
@@ -1353,8 +1359,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 
 				
 
- VALUE atrshmlogruby_set_thread_fence_1 (VALUE obj,
-				      VALUE flag)
+VALUE atrshmlogruby_set_thread_fence_1 (VALUE obj,
+					VALUE flag)
 {
   int f = NUM2INT(flag);
   
@@ -1363,8 +1369,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_set_thread_fence_2 (VALUE obj,
-				      VALUE flag)
+VALUE atrshmlogruby_set_thread_fence_2 (VALUE obj,
+					VALUE flag)
 {
   int f = NUM2INT(flag);
   
@@ -1373,8 +1379,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_set_thread_fence_3 (VALUE obj,
-				      VALUE flag)
+VALUE atrshmlogruby_set_thread_fence_3 (VALUE obj,
+					VALUE flag)
 {
   int f = NUM2INT(flag);
   
@@ -1383,8 +1389,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_set_thread_fence_4 (VALUE obj,
-				      VALUE flag)
+VALUE atrshmlogruby_set_thread_fence_4 (VALUE obj,
+					VALUE flag)
 {
   int f = NUM2INT(flag);
   
@@ -1393,8 +1399,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_set_thread_fence_5 (VALUE obj,
-				      VALUE flag)
+VALUE atrshmlogruby_set_thread_fence_5 (VALUE obj,
+					VALUE flag)
 {
   int f = NUM2INT(flag);
   
@@ -1403,8 +1409,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_set_thread_fence_6 (VALUE obj,
-				      VALUE flag)
+VALUE atrshmlogruby_set_thread_fence_6 (VALUE obj,
+					VALUE flag)
 {
   int f = NUM2INT(flag);
   
@@ -1413,8 +1419,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_set_thread_fence_7 (VALUE obj,
-				      VALUE flag)
+VALUE atrshmlogruby_set_thread_fence_7 (VALUE obj,
+					VALUE flag)
 {
   int f = NUM2INT(flag);
   
@@ -1423,8 +1429,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_set_thread_fence_8 (VALUE obj,
-				      VALUE flag)
+VALUE atrshmlogruby_set_thread_fence_8 (VALUE obj,
+					VALUE flag)
 {
   int f = NUM2INT(flag);
   
@@ -1433,8 +1439,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_set_thread_fence_9 (VALUE obj,
-				      VALUE flag)
+VALUE atrshmlogruby_set_thread_fence_9 (VALUE obj,
+					VALUE flag)
 {
   int f = NUM2INT(flag);
   
@@ -1443,8 +1449,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_set_thread_fence_10 (VALUE obj,
-				      VALUE flag)
+VALUE atrshmlogruby_set_thread_fence_10 (VALUE obj,
+					 VALUE flag)
 {
   int f = NUM2INT(flag);
   
@@ -1453,8 +1459,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_set_thread_fence_11 (VALUE obj,
-				      VALUE flag)
+VALUE atrshmlogruby_set_thread_fence_11 (VALUE obj,
+					 VALUE flag)
 {
   int f = NUM2INT(flag);
   
@@ -1463,8 +1469,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_set_thread_fence_12 (VALUE obj,
-				      VALUE flag)
+VALUE atrshmlogruby_set_thread_fence_12 (VALUE obj,
+					 VALUE flag)
 {
   int f = NUM2INT(flag);
   
@@ -1473,8 +1479,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_set_thread_fence_13 (VALUE obj,
-				      VALUE flag)
+VALUE atrshmlogruby_set_thread_fence_13 (VALUE obj,
+					 VALUE flag)
 {
   int f = NUM2INT(flag);
   
@@ -1484,7 +1490,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_get_thread_fence_1 (VALUE obj)
+VALUE atrshmlogruby_get_thread_fence_1 (VALUE obj)
 {
   int result  = ATRSHMLOG_GET_THREAD_FENCE_1();
 
@@ -1492,84 +1498,84 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_get_thread_fence_2 (VALUE obj)
+VALUE atrshmlogruby_get_thread_fence_2 (VALUE obj)
 {
   int result  = ATRSHMLOG_GET_THREAD_FENCE_2();
 
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_get_thread_fence_3 (VALUE obj)
+VALUE atrshmlogruby_get_thread_fence_3 (VALUE obj)
 {
   int result  = ATRSHMLOG_GET_THREAD_FENCE_3();
 
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_get_thread_fence_4 (VALUE obj)
+VALUE atrshmlogruby_get_thread_fence_4 (VALUE obj)
 {
   int result  = ATRSHMLOG_GET_THREAD_FENCE_4();
 
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_get_thread_fence_5 (VALUE obj)
+VALUE atrshmlogruby_get_thread_fence_5 (VALUE obj)
 {
   int result  = ATRSHMLOG_GET_THREAD_FENCE_5();
 
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_get_thread_fence_6 (VALUE obj)
+VALUE atrshmlogruby_get_thread_fence_6 (VALUE obj)
 {
   int result  = ATRSHMLOG_GET_THREAD_FENCE_6();
 
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_get_thread_fence_7 (VALUE obj)
+VALUE atrshmlogruby_get_thread_fence_7 (VALUE obj)
 {
   int result  = ATRSHMLOG_GET_THREAD_FENCE_7();
 
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_get_thread_fence_8 (VALUE obj)
+VALUE atrshmlogruby_get_thread_fence_8 (VALUE obj)
 {
   int result  = ATRSHMLOG_GET_THREAD_FENCE_8();
 
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_get_thread_fence_9 (VALUE obj)
+VALUE atrshmlogruby_get_thread_fence_9 (VALUE obj)
 {
   int result  = ATRSHMLOG_GET_THREAD_FENCE_9();
 
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_get_thread_fence_10 (VALUE obj)
+VALUE atrshmlogruby_get_thread_fence_10 (VALUE obj)
 {
   int result  = ATRSHMLOG_GET_THREAD_FENCE_10();
 
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_get_thread_fence_11 (VALUE obj)
+VALUE atrshmlogruby_get_thread_fence_11 (VALUE obj)
 {
   int result  = ATRSHMLOG_GET_THREAD_FENCE_11();
 
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_get_thread_fence_12 (VALUE obj)
+VALUE atrshmlogruby_get_thread_fence_12 (VALUE obj)
 {
   int result  = ATRSHMLOG_GET_THREAD_FENCE_12();
 
   return INT2NUM(result);
 }
 
- VALUE atrshmlogruby_get_thread_fence_13 (VALUE obj)
+VALUE atrshmlogruby_get_thread_fence_13 (VALUE obj)
 {
   int result  = ATRSHMLOG_GET_THREAD_FENCE_13();
 
@@ -1577,7 +1583,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_get_realtime (VALUE obj)
+VALUE atrshmlogruby_get_realtime (VALUE obj)
 {
   atrshmlog_internal_time_t t = ATRSHMLOG_GET_REALTIME();
 
@@ -1592,7 +1598,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_get_thread_locals_adress (VALUE obj)
+VALUE atrshmlogruby_get_thread_locals_adress (VALUE obj)
 {
   u_t u;
 
@@ -1602,7 +1608,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_get_tid (VALUE obj)
+VALUE atrshmlogruby_get_tid (VALUE obj)
 {
   unsigned long result = ATRSHMLOG_GET_TID();
 
@@ -1610,8 +1616,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_turn_logging_off (VALUE obj,
-				    VALUE tl)
+VALUE atrshmlogruby_turn_logging_off (VALUE obj,
+				      VALUE tl)
 {
   u_t u;
 
@@ -1625,7 +1631,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_set_init_buffers_in_advance_on (VALUE obj)
+VALUE atrshmlogruby_set_init_buffers_in_advance_on (VALUE obj)
 {
   int result = ATRSHMLOG_SET_INIT_BUFFERS_IN_ADVANCE_ON();
 
@@ -1633,7 +1639,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_set_init_buffers_in_advance_off (VALUE obj)
+VALUE atrshmlogruby_set_init_buffers_in_advance_off (VALUE obj)
 {
   int result = ATRSHMLOG_SET_INIT_BUFFERS_IN_ADVANCE_OFF();
 
@@ -1641,7 +1647,7 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_get_init_buffers_in_advance (VALUE obj)
+VALUE atrshmlogruby_get_init_buffers_in_advance (VALUE obj)
 {
   int result = ATRSHMLOG_GET_INIT_BUFFERS_IN_ADVANCE();
 
@@ -1650,8 +1656,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 
 				
 
- VALUE atrshmlogruby_get_next_slave_local (VALUE obj,
-					VALUE sl)
+VALUE atrshmlogruby_get_next_slave_local (VALUE obj,
+					  VALUE sl)
 {
   u_t u;
 
@@ -1663,8 +1669,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_get_thread_local_tid (VALUE obj,
-					VALUE tl)
+VALUE atrshmlogruby_get_thread_local_tid (VALUE obj,
+					  VALUE tl)
 {
   u_t u;
 
@@ -1676,8 +1682,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 
- VALUE atrshmlogruby_remove_slave_via_local (VALUE obj,
-					  VALUE sl)
+VALUE atrshmlogruby_remove_slave_via_local (VALUE obj,
+					    VALUE sl)
 {
   u_t u;
 
@@ -1689,8 +1695,8 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 }
 
 				
- VALUE atrshmlogruby_reuse_thread_buffers (VALUE obj,
-					VALUE tid)
+VALUE atrshmlogruby_reuse_thread_buffers (VALUE obj,
+					  VALUE tid)
 {
   unsigned long t = NUM2ULONG(tid);
   
@@ -1702,9 +1708,9 @@ VALUE atrshmlogruby_get_statistics(VALUE obj)
 _Thread_local static char *read_buffer = 0; 
 
 				
- VALUE atrshmlogruby_read (VALUE obj,
-			VALUE area,
-			VALUE index)
+VALUE atrshmlogruby_read (VALUE obj,
+			  VALUE area,
+			  VALUE index)
 {
   atrshmlog_ret_t ret;
   atrshmlog_int32_t length;			  
@@ -1876,8 +1882,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_read_fetch (VALUE obj,
-			      VALUE area)
+VALUE atrshmlogruby_read_fetch (VALUE obj,
+				VALUE area)
 {
   atrshmlog_ret_t ret;
   atrshmlog_int32_t index;			  
@@ -1924,40 +1930,40 @@ _Thread_local static char *read_buffer = 0;
   length = 0;
   
   ret = ATRSHMLOG_READ_FETCH(u.p,
-		       &index,
-		       read_buffer,
-		       &length,
-		       &pid,
-		       &tid,
-		       &inittime,
-		       &inittimetsc_before,
-		       &inittimetsc_after,
-		       &lasttime,
-		       &lasttimetsc_before,
-		       &lasttimetsc_after,
-		       &difftimetransfer,
-		       &starttransfer,
-		       &acquiretime,
-		       &id,
-		       &number_dispatched,
-		       &counter_write0,
-		       &counter_write0_discard,
-		       &counter_write0_wait,
-		       &counter_write0_adaptive,
-		       &counter_write0_adaptive_fast,
-		       &counter_write0_adaptive_very_fast,
-		       &counter_write1,
-		       &counter_write1_discard,
-		       &counter_write1_wait,
-		       &counter_write1_adaptive,
-		       &counter_write1_adaptive_fast,
-		       &counter_write1_adaptive_very_fast,
-		       &counter_write2,
-		       &counter_write2_discard,
-		       &counter_write2_wait,
-		       &counter_write2_adaptive,
-		       &counter_write2_adaptive_fast,
-		       &counter_write2_adaptive_very_fast);
+			     &index,
+			     read_buffer,
+			     &length,
+			     &pid,
+			     &tid,
+			     &inittime,
+			     &inittimetsc_before,
+			     &inittimetsc_after,
+			     &lasttime,
+			     &lasttimetsc_before,
+			     &lasttimetsc_after,
+			     &difftimetransfer,
+			     &starttransfer,
+			     &acquiretime,
+			     &id,
+			     &number_dispatched,
+			     &counter_write0,
+			     &counter_write0_discard,
+			     &counter_write0_wait,
+			     &counter_write0_adaptive,
+			     &counter_write0_adaptive_fast,
+			     &counter_write0_adaptive_very_fast,
+			     &counter_write1,
+			     &counter_write1_discard,
+			     &counter_write1_wait,
+			     &counter_write1_adaptive,
+			     &counter_write1_adaptive_fast,
+			     &counter_write1_adaptive_very_fast,
+			     &counter_write2,
+			     &counter_write2_discard,
+			     &counter_write2_wait,
+			     &counter_write2_adaptive,
+			     &counter_write2_adaptive_fast,
+			     &counter_write2_adaptive_very_fast);
   
 
   if (ret < 0)
@@ -2043,7 +2049,7 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_verify (VALUE obj)
+VALUE atrshmlogruby_verify (VALUE obj)
 {
   int result = ATRSHMLOG_VERIFY();
 
@@ -2051,9 +2057,9 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_create (VALUE obj,
-			  VALUE ipckey,
-			  VALUE count)
+VALUE atrshmlogruby_create (VALUE obj,
+			    VALUE ipckey,
+			    VALUE count)
 {
   int i = NUM2INT(ipckey);
   int c = NUM2INT(count);
@@ -2064,8 +2070,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_delete (VALUE obj,
-			  VALUE id)
+VALUE atrshmlogruby_delete (VALUE obj,
+			    VALUE id)
 {
   int i = NUM2INT(id);
   
@@ -2075,8 +2081,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_cleanup_locks (VALUE obj,
-				 VALUE area)
+VALUE atrshmlogruby_cleanup_locks (VALUE obj,
+				   VALUE area)
 {
   u_t u;
 
@@ -2090,9 +2096,9 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_init_shm_log (VALUE obj,
-				VALUE area,
-				VALUE count)
+VALUE atrshmlogruby_init_shm_log (VALUE obj,
+				  VALUE area,
+				  VALUE count)
 {
   u_t u;
 
@@ -2107,10 +2113,10 @@ _Thread_local static char *read_buffer = 0;
 
 				
 
- VALUE atrshmlogruby_poke (VALUE obj,
-			VALUE area,
-			VALUE index,
-			VALUE val)
+VALUE atrshmlogruby_poke (VALUE obj,
+			  VALUE area,
+			  VALUE index,
+			  VALUE val)
 {
   u_t u;
 
@@ -2132,9 +2138,9 @@ _Thread_local static char *read_buffer = 0;
 }
 
 
- VALUE atrshmlogruby_peek (VALUE obj,
-			VALUE area,
-			VALUE index)
+VALUE atrshmlogruby_peek (VALUE obj,
+			  VALUE area,
+			  VALUE index)
 {
   u_t u;
 
@@ -2152,8 +2158,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_get_slave_tid (VALUE obj,
-				 VALUE sl)
+VALUE atrshmlogruby_get_slave_tid (VALUE obj,
+				   VALUE sl)
 {
   u_t u;
 
@@ -2166,8 +2172,8 @@ _Thread_local static char *read_buffer = 0;
 
 
 				
- VALUE atrshmlogruby_turn_slave_off (VALUE obj,
-				  VALUE sl)
+VALUE atrshmlogruby_turn_slave_off (VALUE obj,
+				    VALUE sl)
 {
   u_t u;
 
@@ -2181,8 +2187,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_set_autoflush_process (VALUE obj,
-					 VALUE flag)
+VALUE atrshmlogruby_set_autoflush_process (VALUE obj,
+					   VALUE flag)
 {
   int f = NUM2INT(flag);
   
@@ -2192,7 +2198,7 @@ _Thread_local static char *read_buffer = 0;
 }
 
 
- VALUE atrshmlogruby_get_autoflush_process (VALUE obj)
+VALUE atrshmlogruby_get_autoflush_process (VALUE obj)
 {
   int result = ATRSHMLOG_GET_AUTOFLUSH_PROCESS();
 
@@ -2200,8 +2206,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_set_autoflush (VALUE obj,
-				 VALUE flag)
+VALUE atrshmlogruby_set_autoflush (VALUE obj,
+				   VALUE flag)
 {
   int f = NUM2INT(flag);
   
@@ -2211,7 +2217,7 @@ _Thread_local static char *read_buffer = 0;
 }
 
 
- VALUE atrshmlogruby_get_autoflush (VALUE obj)
+VALUE atrshmlogruby_get_autoflush (VALUE obj)
 {
   int result = ATRSHMLOG_GET_AUTOFLUSH();
 
@@ -2219,8 +2225,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_set_checksum (VALUE obj,
-				VALUE flag)
+VALUE atrshmlogruby_set_checksum (VALUE obj,
+				  VALUE flag)
 {
   int f = NUM2INT(flag);
   
@@ -2230,7 +2236,7 @@ _Thread_local static char *read_buffer = 0;
 }
 
 
- VALUE atrshmlogruby_get_checksum (VALUE obj)
+VALUE atrshmlogruby_get_checksum (VALUE obj)
 {
   int result = ATRSHMLOG_GET_CHECKSUM();
 
@@ -2238,7 +2244,7 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_detach (VALUE obj)
+VALUE atrshmlogruby_detach (VALUE obj)
 {
   int result = ATRSHMLOG_DETACH();
 
@@ -2246,13 +2252,16 @@ _Thread_local static char *read_buffer = 0;
 }
 
 
- VALUE atrshmlogruby_reattach (VALUE obj,
-			       VALUE args)
+VALUE atrshmlogruby_reattach (VALUE obj,
+			      VALUE args)
 {
-  atrshmlog_int32_t pi[100];
+  atrshmlog_int32_t pi[100]; // big enough
 
   int len = RARRAY_LEN(args);
 
+  if (len > 100)
+    len = 100;
+  
   int i;
   
   for (i = 0; i < len; i++)
@@ -2268,7 +2277,7 @@ _Thread_local static char *read_buffer = 0;
 }
 
 
- VALUE atrshmlogruby_get_strategy_wait_wait_time (VALUE obj)
+VALUE atrshmlogruby_get_strategy_wait_wait_time (VALUE obj)
 {
   int result = ATRSHMLOG_GET_STRATEGY_WAIT_WAIT_TIME();
 
@@ -2276,8 +2285,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 
- VALUE atrshmlogruby_set_strategy_wait_wait_time (VALUE obj,
-					       VALUE nanos)
+VALUE atrshmlogruby_set_strategy_wait_wait_time (VALUE obj,
+						 VALUE nanos)
 {
   int n = NUM2INT(nanos);
   
@@ -2287,8 +2296,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_get_thread_local_pid (VALUE obj,
-					VALUE tl)
+VALUE atrshmlogruby_get_thread_local_pid (VALUE obj,
+					  VALUE tl)
 {
   u_t u;
   
@@ -2300,8 +2309,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_get_thread_local_index (VALUE obj,
-					  VALUE tl)
+VALUE atrshmlogruby_get_thread_local_index (VALUE obj,
+					    VALUE tl)
 {
   u_t u;
   
@@ -2313,9 +2322,9 @@ _Thread_local static char *read_buffer = 0;
 }
 
 
- VALUE atrshmlogruby_get_thread_local_buffer (VALUE obj,
-					   VALUE tl,
-					   VALUE index)
+VALUE atrshmlogruby_get_thread_local_buffer (VALUE obj,
+					     VALUE tl,
+					     VALUE index)
 {
   u_t u;
   
@@ -2330,8 +2339,8 @@ _Thread_local static char *read_buffer = 0;
 
 				
 				
- VALUE atrshmlogruby_get_thread_buffer_next_cleanup (VALUE obj,
-						  VALUE buf)
+VALUE atrshmlogruby_get_thread_buffer_next_cleanup (VALUE obj,
+						    VALUE buf)
 {
   u_t u;
   
@@ -2343,8 +2352,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_get_thread_buffer_next_full (VALUE obj,
-						  VALUE buf)
+VALUE atrshmlogruby_get_thread_buffer_next_full (VALUE obj,
+						 VALUE buf)
 {
   u_t u;
   
@@ -2356,8 +2365,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 
- VALUE atrshmlogruby_get_thread_buffer_next_append (VALUE obj,
-						  VALUE buf)
+VALUE atrshmlogruby_get_thread_buffer_next_append (VALUE obj,
+						   VALUE buf)
 {
   u_t u;
   
@@ -2370,8 +2379,8 @@ _Thread_local static char *read_buffer = 0;
 
 				
 
- VALUE atrshmlogruby_get_thread_buffer_safeguard (VALUE obj,
-					       VALUE buf)
+VALUE atrshmlogruby_get_thread_buffer_safeguard (VALUE obj,
+						 VALUE buf)
 {
   u_t u;
   
@@ -2384,8 +2393,8 @@ _Thread_local static char *read_buffer = 0;
 
 				
 				
- VALUE atrshmlogruby_get_thread_buffer_pid (VALUE obj,
-					 VALUE buf)
+VALUE atrshmlogruby_get_thread_buffer_pid (VALUE obj,
+					   VALUE buf)
 {
   u_t u;
   
@@ -2397,8 +2406,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 
- VALUE atrshmlogruby_get_thread_buffer_tid (VALUE obj,
-					 VALUE buf)
+VALUE atrshmlogruby_get_thread_buffer_tid (VALUE obj,
+					   VALUE buf)
 {
   u_t u;
   
@@ -2410,8 +2419,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_get_thread_buffer_acquiretime (VALUE obj,
-						 VALUE buf)
+VALUE atrshmlogruby_get_thread_buffer_acquiretime (VALUE obj,
+						   VALUE buf)
 {
   u_t u;
   
@@ -2423,8 +2432,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 
- VALUE atrshmlogruby_get_thread_buffer_id (VALUE obj,
-					VALUE buf)
+VALUE atrshmlogruby_get_thread_buffer_id (VALUE obj,
+					  VALUE buf)
 {
   u_t u;
   
@@ -2436,8 +2445,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_get_thread_buffer_chksum (VALUE obj,
-					    VALUE buf)
+VALUE atrshmlogruby_get_thread_buffer_chksum (VALUE obj,
+					      VALUE buf)
 {
   u_t u;
   
@@ -2449,8 +2458,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 
- VALUE atrshmlogruby_get_thread_buffer_size (VALUE obj,
-					  VALUE buf)
+VALUE atrshmlogruby_get_thread_buffer_size (VALUE obj,
+					    VALUE buf)
 {
   u_t u;
   
@@ -2462,8 +2471,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_get_thread_buffer_maxsize (VALUE obj,
-					     VALUE buf)
+VALUE atrshmlogruby_get_thread_buffer_maxsize (VALUE obj,
+					       VALUE buf)
 {
   u_t u;
   
@@ -2475,8 +2484,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_get_thread_buffer_dispose (VALUE obj,
-					     VALUE buf)
+VALUE atrshmlogruby_get_thread_buffer_dispose (VALUE obj,
+					       VALUE buf)
 {
   u_t u;
   
@@ -2488,8 +2497,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 
- VALUE atrshmlogruby_get_thread_buffer_dispatched (VALUE obj,
-						VALUE buf)
+VALUE atrshmlogruby_get_thread_buffer_dispatched (VALUE obj,
+						  VALUE buf)
 {
   u_t u;
   
@@ -2501,8 +2510,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 
- VALUE atrshmlogruby_get_thread_buffer_payload (VALUE obj,
-					     VALUE buf)
+VALUE atrshmlogruby_get_thread_buffer_payload (VALUE obj,
+					       VALUE buf)
 {
   u_t u;
   
@@ -2514,7 +2523,7 @@ _Thread_local static char *read_buffer = 0;
 }
 
 
- VALUE atrshmlogruby_get_slave_to_shm_wait (VALUE obj)
+VALUE atrshmlogruby_get_slave_to_shm_wait (VALUE obj)
 {
   int result = ATRSHMLOG_GET_SLAVE_TO_SHM_WAIT();
 
@@ -2522,8 +2531,8 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_set_slave_to_shm_wait (VALUE obj,
-					 VALUE nanos)
+VALUE atrshmlogruby_set_slave_to_shm_wait (VALUE obj,
+					   VALUE nanos)
 {
   int n = NUM2INT(nanos);
   
@@ -2533,7 +2542,7 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_get_last_mem_to_shm (VALUE obj)
+VALUE atrshmlogruby_get_last_mem_to_shm (VALUE obj)
 				
 {
   int result = ATRSHMLOG_GET_LAST_MEM_TO_SHM();
@@ -2542,7 +2551,7 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_get_buffer_cleanup_anchor (VALUE obj)
+VALUE atrshmlogruby_get_buffer_cleanup_anchor (VALUE obj)
 {
   u_t u;
   
@@ -2552,7 +2561,7 @@ _Thread_local static char *read_buffer = 0;
 }
 
 				
- VALUE atrshmlogruby_get_buffer_full_anchor (VALUE obj)
+VALUE atrshmlogruby_get_buffer_full_anchor (VALUE obj)
 {
   u_t u;
   
@@ -2562,7 +2571,7 @@ _Thread_local static char *read_buffer = 0;
 }
 
 
- VALUE atrshmlogruby_get_buffer_append_anchor (VALUE obj)
+VALUE atrshmlogruby_get_buffer_append_anchor (VALUE obj)
 {
   u_t u;
   
