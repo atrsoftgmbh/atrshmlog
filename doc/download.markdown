@@ -35,7 +35,7 @@ files.txt .
 
 There is also a big example with the mksh shell code.
 
-And of course the java, perl, python and SWIG layers.
+And of course the java jni, perl, python, ruby and SWIG layers.
 
 Last thing you have to do is unseal it - meaning you have to make files writeable.
 
