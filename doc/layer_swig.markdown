@@ -738,6 +738,20 @@ Compile the swig library with the target language at least.
 
      $  create_swig_lib.sh -tcl
 
+
+Tests
+-----
+
+There are no tests here. Tests depend on the target language.
+See the perl layer for tests in perl, python the python layer
+and ruby the ruby layer.
+If you need tests check those and adapt them.
+Its nearly the same in all layers: do the loading, make the module or
+object thing and then use it with the function.
+The rest is use of loops, of if, of file.
+So you have to adapt the parts, but for the layer it should
+translate one to one.
+
 Summary
 -------
 
