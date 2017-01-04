@@ -480,6 +480,10 @@ For the last element the number is ATRSHMLOGBUFFER_PREALLOCED_COUNT - 1
 and the macro is ATRSHMLOGBUFFERS_PRE_LAST().
 This is a must - not a nice - or you will have funny nights with debugging
 strange behavior.
+To make things easy there is now a helper to make a proposal file
+form the actual setting in the internal header.
+If you are ok with the proposal you simply copy it to the original file.
+The script is atrshmloggenbuffers.
 
 ###atrshmlog_buffer_strategy
 Be sure you know what you do. You can set another strategy here.
