@@ -152,7 +152,7 @@ You get support for the following languages
   There is a ruby module solution.
   [See for details the ruby module page.](\ref language_layer_ruby)
 
- - SWIG
+- SWIG
   There is a SWIG solution.
   The examples work with tcl.
   [See for details the SWIG module page.](\ref language_layer_swig)
