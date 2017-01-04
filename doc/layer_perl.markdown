@@ -720,6 +720,20 @@ Compile the perl library.
 
      $  create_perl_lib.sh
 
+Tests
+-----
+
+There is a module test now. Its in the tests directory. And a driver
+t_test.sh for a full test.
+
+The tests cover the way from perl through the bridge to the C function,
+not the function itself.
+The C function is already tested in the C module tests.
+
+So if you need examples you can get them there.
+
+And run a full test if you switch to a platform i didnt use.
+
 Summary
 -------
 
