@@ -1038,7 +1038,7 @@ getfrommain.sh
 DIRECTORY ruby doc
 readme.txt
 
-DIRECTORY ruby src
+DIRECTORY ruby atrshmlog
 atrshmlog.gemspec
 COPYING
 dot.ruby.sh
@@ -1046,27 +1046,27 @@ NEWS
 Rakefile
 README.rdoc
 
-DIRECTORY ruby src bin
+DIRECTORY ruby atrshmlog bin
 dummy.txt
 
 # nothing so far, only copy
 
-DIRECTORY ruby src doc
+DIRECTORY ruby atrshmlog doc
 dummy.txt
 
 # nothing so far, only copy
 
-DIRECTORY ruby src lib
+DIRECTORY ruby atrshmlog lib
 dummy.txt
 
 # nothing so far, only copy
 
-DIRECTORY ruby src ext atrshmlog
+DIRECTORY ruby atrshmlog ext atrshmlog
 atrshmlogruby.c
 extconf.rb
 
 
-DIRECTORY ruby src test
+DIRECTORY ruby atrshmlog test
 t_acquire_count.rb
 t_area.rb
 t_attach.rb
