@@ -1224,7 +1224,7 @@ who are so paranoic that they don't trust the compiler ...
 but then - can you trust the testprogram if you don't trust the
 compiler anyway ?!??!)
 
-So you can test ervery one function that its worth here.
+So you can test every one function that its worth here.
 
 See tests/t_*.c for the files.
 
