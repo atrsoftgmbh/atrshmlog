@@ -1,7 +1,9 @@
 PROCESS : The check for completeness.    {#process_checkforcompleteness}
 ===============================
 
-This is done by the script atrshmlogcheckcomplete.
+This is done by the script \n
+
+     atrshmlogcheckcomplete.
 
 You have to change to the BASEDIR/src directory.
 
