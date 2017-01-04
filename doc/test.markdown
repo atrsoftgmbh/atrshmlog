@@ -1258,6 +1258,6 @@ If you get any strange behaviour you should switch the optimization
 in the build to debugging mode, switch the inline of code off and
 start to inspect if you need it with your best friend, the debugger.
 
-Making a version with ATRSHMLOGDEBUG set t 1 is an alternative,
+Making a version with ATRSHMLOGDEBUG set to 1 is an alternative,
 check then for the additional output.
 
