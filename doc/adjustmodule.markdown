@@ -322,9 +322,18 @@ See the doc for this.
 If you need more buffers than the default for your system you
 should set this to a higher value.
 
-Then adjust also the buffers in atrshmlog.c
+Then adjust also the buffers.
 
 If you have no use for this many buffers you can reduce it.
+
+To adjust means also to change the code in impls for the static allocated
+buffers.
+
+To do this you use the script\n
+atrshmloggenbuffers\n
+which generates a proper proposal file for your change.
+You have to copy the proposal to the real file if you think its ok.
+
 
 ###ATRSHMLOGBUFFER_MINCOUNT
 
