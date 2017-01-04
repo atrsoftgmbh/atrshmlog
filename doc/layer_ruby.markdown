@@ -653,7 +653,7 @@ Copy the  c library and the two headers to the src directory.
 
 Switch to your ruby location.
 
-     $ cd src
+     $ cd atrshmlog # naming according to gem example not src
      
 Set the needed ruby home with the
 
@@ -662,9 +662,18 @@ Set the needed ruby home with the
 
 If you use a different ruby version you have at least to adjust
 the content of this file.
+
 Also the C compiler headers have to be in here - or use /usr/include
 
-Set the ext for make.
+There is support for rake - see the Rakefile : \n
+
+     $ rake build
+
+
+If you dont want to use rake its manual this way.
+
+Change to the ext and then atrshmlog. Run the extconf.rb for generating
+the make file.
 
      $ cd ext/atrshmlog
      $ ruby extconf.rb
@@ -672,6 +681,19 @@ Set the ext for make.
 Compile the ruby library.
 
      $  make
+
+
+Tests
+-----
+
+There is a module test in test.
+
+Simply execute the test files.
+
+They cover the way from ruby to the C function. The function itself is tested
+in the C module, so no checks here.
+
+If you need example code then this is for you the place.
 
 Summary
 -------
