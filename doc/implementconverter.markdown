@@ -201,14 +201,14 @@ for the tools to use the text files.
 Output changes
 --------------
 
-For the output There is also the database thing.
+For the output there is also the database thing.
 
-The converter then does not use a file for output, it uses a datbase.
+The converter then does not use a file for output, it uses a database.
 The interface is made in functions and a vanilla pointer type for the
 context info the thing needs. So you can also put anything you want as
 a backend under that converter.
 Together with different types of conversions this make it possible to
-make outputs to diferent systems and even to different types of targets.
+make outputs to different systems and even to different types of targets.
 In theory you can also implement a multi db approach here.
 
 There is also a reader with an integrated convert so you can do the
