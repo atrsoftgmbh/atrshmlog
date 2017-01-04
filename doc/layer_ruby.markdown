@@ -14,6 +14,12 @@ The bridge code contains all stuff of the module that can be useful
 in a client application. For some functions it didn't worked, and so some
 helper functions were needed. They are implemented in this file.
 
+Note:\n
+Because I didnt wanted to make objects explicit or classes I use
+the singleton functions here. If you think this is wrong or should
+be changed sent me a post card and i will do it - best with a small
+example how to do it.
+
 ###Loading the library
 
 You use it as always by
