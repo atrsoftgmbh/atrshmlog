@@ -15,7 +15,7 @@ Then start the script.
 
 If you cannot start the script check for perl.
 
-If you have perl start it with
+If you have perl, then start it with
 
     perl  atrshmlogcheckcomplete
 
