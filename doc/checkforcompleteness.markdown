@@ -3,7 +3,7 @@ PROCESS : The check for completeness.    {#process_checkforcompleteness}
 
 This is done by the script \n
 
-     atrshmlogcheckcomplete.
+_atrshmlogcheckcomplete_ .
 
 You have to change to the BASEDIR/src directory.
 
