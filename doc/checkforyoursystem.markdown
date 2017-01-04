@@ -1,13 +1,17 @@
 PROCESS : The check for your system.      {#process_checkforyoursystem}
 =========================
 
-The check for your system can be made by atrshmlogchecksystem.
+The check for your system can be made by \n
+
+_atrshmlogchecksystem_ .
 
 You have to go to the src directory.
 
 Get a shell. 
 
 Start the script.
+
+     $ atrshmlogchecksystem
 
 If it does not start check for perl.
 
@@ -52,7 +56,7 @@ You need this to do the adjustments in the header files.
 Please check the header atrshmlog.h and atrshmlog_internal.h.
 
 At last it writes out the define it finds for a supported
-platform. so you can then use simply thath platform define in
+platform. so you can then use simply that platform define in
 the C code.
 
 If it has no define its still worth to check for a system nearby.
