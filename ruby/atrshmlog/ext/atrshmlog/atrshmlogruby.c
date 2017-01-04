@@ -1894,6 +1894,8 @@ _Thread_local static char *read_buffer = 0;
   
   if (read_buffer == 0)
     read_buffer = malloc(1000000);
+
+  length = 0;
   
   ret = ATRSHMLOG_READ_FETCH(u.p,
 		       &index,
@@ -1942,19 +1944,19 @@ _Thread_local static char *read_buffer = 0;
 
   if( ret > 0)
     {
-      VALUE retarr = rb_ary_new2(1);
+      VALUE retarr = rb_ary_new2(2);
       rb_ary_store(retarr, 0, INT2NUM(ret));
+
+      rb_ary_store(retarr, 1, INT2NUM(length));
 
       return retarr;
     }
 
   if (length < 1)
     {
-      VALUE retarr = rb_ary_new2(4);
+      VALUE retarr = rb_ary_new2(2);
       rb_ary_store(retarr, 0, INT2NUM(ret));
-      rb_ary_store(retarr, 1, INT2NUM(index));
-      rb_ary_store(retarr, 2, INT2NUM(0));
-      rb_ary_store(retarr, 3, INT2NUM(length));
+      rb_ary_store(retarr, 1, INT2NUM(length));
       return retarr;
     }
   
