@@ -524,7 +524,7 @@ If your int is bigger than 64 bit you can try to change this.
 
 ###ATRSHMLOG_INLINE_TSC_CODE
 From here on you have to add new code if your platform
-differs from the alredy implemented.
+differs from the already implemented.
 
 The rest.
 ---------
