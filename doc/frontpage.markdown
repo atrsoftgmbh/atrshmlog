@@ -140,14 +140,14 @@ You get support for the following languages
   There is a Java jni solution to use the module.
   [See for details the java module page.](\ref language_layer_java_jni)
   
-- Python\n
-  There is a python module solution.
-  [See for details the python module page.](\ref language_layer_python)
-  
 - Perl\n
   There is a perl module solution.
   [See for details the perl module page.](\ref language_layer_perl)
 
+- Python\n
+  There is a python module solution.
+  [See for details the python module page.](\ref language_layer_python)
+  
 - Ruby\n
   There is a ruby module solution.
   [See for details the ruby module page.](\ref language_layer_ruby)
