@@ -162,6 +162,8 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 
   int strategy_count = 0;
   
+  int null_buffers = 0;
+  
   // We use some goto jumping here, so this is a first target
  testagain_dispatched:
 
@@ -169,108 +171,118 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
     
   register atrshmlog_tbuff_t* tbuff = g->atrshmlog_targetbuffer_arr[g->atrshmlog_targetbuffer_index];
 
-  if (atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) != 0)
+  if (tbuff == NULL || atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) != 0)
     {
       g->atrshmlog_targetbuffer_index++;
 
       if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
 	g->atrshmlog_targetbuffer_index = 0;
 
+      if (tbuff == NULL)
+	++null_buffers;
 
       ++strategy_count;
 
       if ((strategy_count % ATRSHMLOGTARGETBUFFERMAX) == 0)
-	switch (g->strategy)
-	  {
-	  case atrshmlog_strategy_discard :
-	    {
-	      ATRSHMLOGSTATLOCAL(g,counter_write2_discard);
-	      
-	    // we discard
+	{
+	  // no buffer available ...
+	  if (null_buffers >= ATRSHMLOGTARGETBUFFERMAX)
 	    return atrshmlog_error_write2_6;
-	    }
+
+	  null_buffers = 0;
+	  
+	  switch (g->strategy)
+	    {
+	    case atrshmlog_strategy_discard :
+	      {
+		ATRSHMLOGSTATLOCAL(g,counter_write2_discard);
+	      
+		// we discard
+		return atrshmlog_error_write2_6;
+	      }
 	    
-	  case atrshmlog_strategy_spin_loop:
-	    // we spin loop
-	    break;
+	    case atrshmlog_strategy_spin_loop:
+	      // we spin loop
+	      break;
 
-	  case atrshmlog_strategy_wait:
-	    {
-	      ATRSHMLOGSTATLOCAL(g,counter_write2_wait);
+	    case atrshmlog_strategy_wait:
+	      {
+		ATRSHMLOGSTATLOCAL(g,counter_write2_wait);
 
-	      // we wait fix time
-	      ATRSHMLOG_SLEEP_NANOS(atrshmlog_strategy_wait_wait_time);
-	    }
-	    break;
+		// we wait fix time
+		ATRSHMLOG_SLEEP_NANOS(atrshmlog_strategy_wait_wait_time);
+	      }
+	      break;
 
-	  case atrshmlog_strategy_adaptive:
-	    {
-	      ATRSHMLOGSTATLOCAL(g,counter_write2_adaptive);
+	    case atrshmlog_strategy_adaptive:
+	      {
+		ATRSHMLOGSTATLOCAL(g,counter_write2_adaptive);
 
-	      int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
-	      t = ATRSHMLOGSCALECLICKTONANO(t);
+		int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
+		t = ATRSHMLOGSCALECLICKTONANO(t);
 
-	      t /=  ATRSHMLOGTARGETBUFFERMAX;
+		t /=  ATRSHMLOGTARGETBUFFERMAX;
 
 #if 0
-	      printf("adapotive %ld\n", (long)t);
+		printf("adapotive %ld\n", (long)t);
 #endif
 	      
-	      if (t > 999999999)
-		t = 999999999;
+		if (t > 999999999)
+		  t = 999999999;
 	      
-	      // adaptive : take the last transfer time and divide it
-	      ATRSHMLOG_SLEEP_NANOS(t);
-	    }
-	    break;
+		// adaptive : take the last transfer time and divide it
+		ATRSHMLOG_SLEEP_NANOS(t);
+	      }
+	      break;
 	    
-	  case atrshmlog_strategy_adaptive_fast:
-	    {
-	      ATRSHMLOGSTATLOCAL(g,counter_write2_adaptive_fast);
+	    case atrshmlog_strategy_adaptive_fast:
+	      {
+		ATRSHMLOGSTATLOCAL(g,counter_write2_adaptive_fast);
 
-	      int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
-	      t = ATRSHMLOGSCALECLICKTONANO(t);
+		int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
+		t = ATRSHMLOGSCALECLICKTONANO(t);
 
-	      t /=  ATRSHMLOGTARGETBUFFERMAX * 2;
+		t /=  ATRSHMLOGTARGETBUFFERMAX * 2;
 
 #if 0
-	      printf("adapotive %ld\n", (long)t);
+		printf("adapotive %ld\n", (long)t);
 #endif
 	      
-	      if (t > 999999999)
-		t = 999999999;
+		if (t > 999999999)
+		  t = 999999999;
 	      
-	      // adaptive fast : take the last transfer time and divide it 2
-	      ATRSHMLOG_SLEEP_NANOS(t);
-	    }
-	    break;
+		// adaptive fast : take the last transfer time and divide it 2
+		ATRSHMLOG_SLEEP_NANOS(t);
+	      }
+	      break;
 
-	  case atrshmlog_strategy_adaptive_very_fast:
-	    {
-	      ATRSHMLOGSTATLOCAL(g,counter_write2_adaptive_very_fast);
+	    case atrshmlog_strategy_adaptive_very_fast:
+	      {
+		ATRSHMLOGSTATLOCAL(g,counter_write2_adaptive_very_fast);
 
-	      // adaptive very fast : take the last transfer time and divide it 10
-	      int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
-	      t = ATRSHMLOGSCALECLICKTONANO(t);
+		// adaptive very fast : take the last transfer time and divide it 10
+		int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
+		t = ATRSHMLOGSCALECLICKTONANO(t);
 
-	      t /=  ATRSHMLOGTARGETBUFFERMAX * 10;
+		t /=  ATRSHMLOGTARGETBUFFERMAX * 10;
 
 #if 0
-	      printf("adapotive %ld\n", (long)t);
+		printf("adapotive %ld\n", (long)t);
 #endif
 	      
-	      if (t > 999999999)
-		t = 999999999;
+		if (t > 999999999)
+		  t = 999999999;
 	      
-	      // adaptive fast : take the last transfer time and divide it 2
-	      ATRSHMLOG_SLEEP_NANOS(t);
-	    }
-	    break;
+		// adaptive fast : take the last transfer time and divide it 2
+		ATRSHMLOG_SLEEP_NANOS(t);
+	      }
+	      break;
 	    
-	  default:
-	    // we spin loop
-	    break;
-	  }
+	    default:
+	      // we spin loop
+	      break;
+	    }
+	}
       
       if (atrshmlog_logging_process_off_final)
 	return atrshmlog_error_write2_7;
