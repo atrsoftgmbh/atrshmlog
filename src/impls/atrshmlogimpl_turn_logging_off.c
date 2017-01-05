@@ -83,9 +83,8 @@
 	       t->counter_write2_adaptive_very_fast = g->counter_write2_adaptive_very_fast;
 
 	       atrshmlog_dispatch_buffer(t);
+	       g->atrshmlog_targetbuffer_arr[i] = 0;
 	     }
-	   
-	   g->atrshmlog_targetbuffer_arr[i] = 0;
 	 }
      }      
  }
