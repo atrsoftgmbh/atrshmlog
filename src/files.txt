@@ -382,17 +382,24 @@ t_writer_flag_detach.c
 t_writer_flag_slave.c
 
 DIRECTORY src dbs
+atrshmlogconvert_cass.c
 atrshmlogconvert_db.c
 atrshmlogconvert_my.c
 atrshmlogconvert_ora.c
 atrshmlogconvert_pg.c
+atrshmlogdb_cassandra.c
 atrshmlogdb_mariadb.c
 atrshmlogdb_oracle.c
 atrshmlogdb_postgres.c
+atrshmlogreaderd_cass.c
 atrshmlogreaderd_db.c
 atrshmlogreaderd_my.c
 atrshmlogreaderd_ora.c
 atrshmlogreaderd_pg.c
+atrshmlog_cassandra.cql
+atrshmlog_mariadb.sql
+atrshmlog_oracle.sql
+atrshmlog_postgresql.sql
 
 DIRECTORY bin
 # helper scripts
