@@ -898,7 +898,10 @@ VALUE atrshmlogruby_get_env_shmid(VALUE obj)
 {
   const char* result = ATRSHMLOG_GET_ENV_SHMID();
 
-  return rb_str_new2(result);
+  if (result)
+    return rb_str_new2(result);
+
+  return rb_str_new2("");
 }
 
 
