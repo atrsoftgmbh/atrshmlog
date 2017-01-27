@@ -773,5 +773,25 @@ atrshmlog_ret_t atratrshmlog_reattach(int flag0,
   return ATRSHMLOG_REATTACH(pi);
 }
 
+const char* atratrshmlog_get_env(const char* i_suffix)
+{
+  const char* p = atrshmlog_get_env(i_suffix);
+
+  if (p != NULL)
+    return p;
+
+  return "";
+}
+
+const char* atratrshmlog_get_env_shmid(void)
+{
+  const char* p = atrshmlog_get_env_shmid();
+
+  if (p != NULL)
+    return p;
+
+  return "";
+}
+
 /* end of file */
 
