@@ -684,9 +684,12 @@ JNIEXPORT jstring JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrsh
   }
   
   const char* p = ATRSHMLOG_GET_ENV(payload);
-  
-  result = (*i_jnienv)->NewStringUTF(i_jnienv, p);
 
+  if (p != NULL)
+    result = (*i_jnienv)->NewStringUTF(i_jnienv, p);
+  else
+    result = (*i_jnienv)->NewStringUTF(i_jnienv, "");
+    
   /* we do not handle the exception. this must be done in java code
    */
 
