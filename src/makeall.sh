@@ -188,27 +188,46 @@ then
     #############################
 
     cd dbs
+
+    if [ -r ../shmbininternalfiles_postgres ]
+    then
+	cat ../shmbininternalfiles_postgres  | egrep -v '^#' | while read i rest
+	do
+	    $RM -f $i
+	    echo $i link
+	    ell.sh $i $rest
+	done
+    fi
+
+    if [ -r ../shmbininternalfiles_mariadb ]
+    then
+	cat ../shmbininternalfiles_mariadb  | egrep -v '^#' | while read i rest
+	do
+	    $RM -f $i
+	    echo $i link
+	    ell.sh $i $rest
+	done
+    fi
     
-    cat ../shmbininternalfiles_postgres  | egrep -v '^#' | while read i rest
-    do
-	$RM -f $i
-	echo $i link
-	ell.sh $i $rest
-    done
-
-    cat ../shmbininternalfiles_mariadb  | egrep -v '^#' | while read i rest
-    do
-	$RM -f $i
-	echo $i link
-	ell.sh $i $rest
-    done
-
-    cat ../shmbininternalfiles_oracle  | egrep -v '^#' | while read i rest
-    do
-	$RM -f $i
-	echo $i link
-	ell.sh $i $rest
-    done
+    if [ -r ../shmbininternalfiles_cassandra ]
+    then
+	cat ../shmbininternalfiles_cassandra  | egrep -v '^#' | while read i rest
+	do
+	    $RM -f $i
+	    echo $i link
+	    ell.sh $i $rest
+	done
+    fi
+    
+    if [ -r ../shmbininternalfiles_oracle ]
+    then
+	cat ../shmbininternalfiles_oracle  | egrep -v '^#' | while read i rest
+	do
+	    $RM -f $i
+	    echo $i link
+	    ell.sh $i $rest
+	done
+    fi
 
     cd ..
 fi

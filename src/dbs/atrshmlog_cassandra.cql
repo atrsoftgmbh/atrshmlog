@@ -3,20 +3,17 @@
 --
 CREATE KEYSPACE atrshmlog_ks
 WITH replication = { 'class' :'SimpleStrategy',
-      'replication_factor' : 2 };
+      'replication_factor' : 1 };
 --
 USE atrshmlog_ks;
 --
 CREATE TABLE theSeq (
     self INT PRIMARY KEY,
-    head_id counter
+    head_id BIGINT
 )
 ;
-UPDATE theSeq
-SET
-    head_id = head_id + 1;
-where
-    self = 1
+INSERT INTO theSeq (self, head_id)
+values(1,1)
 ;
 --
 CREATE TABLE atrshmlog_head(
