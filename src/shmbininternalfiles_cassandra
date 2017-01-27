@@ -1,0 +1,2 @@
+atrshmlogconvert_cass atrshmlogconvert_db.o atrshmlogdb_cassandra.o -L/usr/local/lib64 -lcassandra -lpthread 
+atrshmlogreaderd_cass atrshmlogconvert_db.o atrshmlogdb_cassandra.o -L/usr/local/lib64 -lcassandra -lpthread 
