@@ -269,6 +269,12 @@ extern void atratrshmlog_read_fetch(volatile const void* area,
 		       int loff55 
 					     );
 
+ 
+ extern const char* atratrshmlog_get_env(const char* i_suffix);
+
+ extern const char* atratrshmlog_get_env_shmid(void);
+ 
+
 %}
 
    /* we need output here at least.
@@ -296,6 +302,8 @@ extern void atratrshmlog_read_fetch(volatile const void* area,
 %ignore atrshmlog_read;        
 %ignore atrshmlog_read_fetch;  
 %ignore atrshmlog_reattach;   
+%ignore atrshmlog_get_env;
+%ignore atrshmlog_get_env_shmid;
 
 // a dirty ignore for stdint included
 %ignore _STDINT_H;
@@ -479,8 +487,8 @@ extern void atratrshmlog_read_fetch(volatile const void* area,
 %rename(sleep_nanos) atrshmlog_sleep_nanos;
 %rename(set_env_prefix) atrshmlog_set_env_prefix;
 %rename(get_env_prefix) atrshmlog_get_env_prefix;
-%rename(get_env) atrshmlog_get_env;
-%rename(get_env_shmid) atrshmlog_get_env_shmid;
+%rename(get_env) atratrshmlog_get_env;
+%rename(get_env_shmid) atratrshmlog_get_env_shmid;
 %rename(get_env_id_suffix) atrshmlog_get_env_id_suffix;
 %rename(get_version) atrshmlog_get_version;
 %rename(get_minor_version) atrshmlog_get_minor_version;
