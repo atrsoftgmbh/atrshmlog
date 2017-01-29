@@ -2,7 +2,7 @@ The ATRSHMLOG module.
 
 The directories are
 - bin
-  The binary files that are needed to build the module
+  The files that are needed to build the module
   The files in the folder itself are for the linux
   x86 64 architecture and similar systems like BSD
   and Solaris. 
@@ -43,3 +43,44 @@ For the impatient : change to src and run makeall,
 then to the other things as you like - i cannot help
 you anyway, so do as you please.....
 
+---
+
+This module is a high performance logging solution.
+
+It uses the tick counter of the CPU, so taking a timestamp is done in
+nanosecs compared to the ususal things of your OS that takes several
+hundrets...
+
+The log is done in alternating or ring buffer usage way, so you
+are not slowed down if a buffer is full.
+
+Normal payloads given (10 to 80 bytes ) you get a log in less
+than 70 nanosecs done on a notebook....
+
+The transfer is done by shared memory and a slave process that can
+write to the filesystem. Alternatives are processes that write
+to a database.
+
+Supported databases are MariaDB, PostgreSQL, Oracle, Cassandra.
+
+You can also use a filestore first and then transfer to database,
+without the need of an intermediate text file.
+
+The logging itself needs a supporting thread at least - for very small
+payloads you can circument use of a thread at all and you can
+use alternative a process end cleanup transfer.
+
+The log also supports a direct to shared memory logging for
+post mortem logging.
+
+The log is highly configurabel for the strategies if the buffers
+are exhausted, and it is highly adjustable to diffrent machine
+architecture needs for synchronizatio of threads.
+
+The logging itself is done on per thread base, so no contention between
+logging threads.
+
+There are layers to make use of the log from perl, python, ruby, SWIG
+capable languages and via JNI java.
+
+The log is documented by HTML and by a full fledge Text documentation.
