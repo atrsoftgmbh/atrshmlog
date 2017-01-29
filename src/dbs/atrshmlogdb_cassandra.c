@@ -157,9 +157,6 @@ atrshmlog_dbsession_t* atrshmlog_create_db(void)
   if (r == NULL)
     return r;
 
-  // printf("create_db 1 alloc\n");
-
-  
   // we have ram ...
 
   r->status  = 0; // no init so far.
@@ -193,8 +190,6 @@ atrshmlog_dbsession_t* atrshmlog_create_db(void)
   // printf("create_db alloc %s\n", val[6]);
   // printf("create_db alloc %s\n", val[7]);
   
-  // printf("create_db 2 alloc\n");
-  
   // we get the low level handle
   r->cluster = cass_cluster_new();
 
@@ -226,7 +221,6 @@ atrshmlog_dbsession_t* atrshmlog_create_db(void)
   r->s[7] = 0;
   r->s[8] = 0;
   
-  // printf("create_db 3 alloc\n");
 
   CassError rc = cass_cluster_set_contact_points(r->cluster, r->values[0]);
 
@@ -242,7 +236,7 @@ atrshmlog_dbsession_t* atrshmlog_create_db(void)
   unsigned int port = (unsigned int)strtol(r->values[1], NULL, 10);
 
   rc = cass_cluster_set_port(r->cluster, port);
-  // printf("create_db 4 alloc\n");
+
 
   if (rc != 0)
     {
@@ -259,7 +253,7 @@ atrshmlog_dbsession_t* atrshmlog_create_db(void)
   // now we connect and switch to the keyspace 
   r->connect_future = cass_session_connect_keyspace(r->session, r->cluster, r->values[2]);
 
-  // printf("create_db 5 alloc\n");
+
   rc = cass_future_error_code(r->connect_future);
   
   if (rc != 0)
@@ -359,7 +353,7 @@ atrshmlog_dbsession_t* atrshmlog_create_db(void)
   CassFuture* prepare_future
     = cass_session_prepare(r->session,
 			   insert_db_head);
-printf("create_db 6 alloc\n");
+
   /* Wait for the statement to prepare and get the result */
   rc = cass_future_error_code(prepare_future);
 
@@ -416,7 +410,7 @@ printf("create_db 6 alloc\n");
   prepare_future
     = cass_session_prepare(r->session,
 			   insert_db_cstring);
-printf("create_db 7 alloc\n");
+
   /* Wait for the statement to prepare and get the result */
   rc = cass_future_error_code(prepare_future);
 
@@ -472,7 +466,7 @@ printf("create_db 7 alloc\n");
   prepare_future
     = cass_session_prepare(r->session,
 			   insert_db_ucs2string);
-printf("create_db 8 alloc\n");
+
   /* Wait for the statement to prepare and get the result */
   rc = cass_future_error_code(prepare_future);
 
@@ -501,7 +495,7 @@ printf("create_db 8 alloc\n");
   prepare_future
     = cass_session_prepare(r->session,
 			   select_last_id);
-printf("create_db 9 alloc\n");
+
   /* Wait for the statement to prepare and get the result */
   rc = cass_future_error_code(prepare_future);
 
