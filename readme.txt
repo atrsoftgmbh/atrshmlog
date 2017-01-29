@@ -67,20 +67,21 @@ You can also use a filestore first and then transfer to database,
 without the need of an intermediate text file.
 
 The logging itself needs a supporting thread at least - for very small
-payloads you can circument use of a thread at all and you can
-use alternative a process end cleanup transfer.
+payloads you can circumvent the use of a thread at all and you can
+use alternative a process end cleanup transfer without a thread at all.
 
 The log also supports a direct to shared memory logging for
 post mortem logging.
 
-The log is highly configurabel for the strategies if the buffers
-are exhausted, and it is highly adjustable to diffrent machine
-architecture needs for synchronizatio of threads.
+The log is highly configurable for the strategies if the buffers
+are exhausted, and it is highly adjustable to different machine
+architecture needs for synchronization of threads.
 
 The logging itself is done on per thread base, so no contention between
 logging threads.
 
 There are layers to make use of the log from perl, python, ruby, SWIG
-capable languages and via JNI java.
+capable languages and via JNI from java.
 
 The log is documented by HTML and by a full fledge Text documentation.
+
