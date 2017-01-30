@@ -7,7 +7,7 @@ extension_name = 'atrshmlog'
 
 # checks go here ....
 
-find_library('atrshmlog', 'atrshmlog_attach')
+find_library('atrshmlogc', 'atrshmlog_attach')
 
 # checks done. we create the things we need
 create_header
