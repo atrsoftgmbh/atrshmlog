@@ -48,8 +48,8 @@ you anyway, so do as you please.....
 This module is a high performance logging solution.
 
 It uses the tick counter of the CPU, so taking a timestamp is done in
-nanosecs compared to the ususal things of your OS that takes several
-hundrets...
+nanosecs compared to the usual things of your OS that takes several
+hundrets of them...
 
 The log is done in alternating or ring buffer usage way, so you
 are not slowed down if a buffer is full.
@@ -61,7 +61,7 @@ The transfer is done by shared memory and a slave process that can
 write to the filesystem. Alternatives are processes that write
 to a database.
 
-Supported databases are MariaDB, PostgreSQL, Oracle, Cassandra.
+Supported databases are Mysql/MariaDB, PostgreSQL, Oracle, Cassandra.
 
 You can also use a filestore first and then transfer to database,
 without the need of an intermediate text file.
@@ -75,13 +75,16 @@ post mortem logging.
 
 The log is highly configurable for the strategies if the buffers
 are exhausted, and it is highly adjustable to different machine
-architecture needs for synchronization of threads.
+architecture needs for synchronization of threads via memory barriers.
 
 The logging itself is done on per thread base, so no contention between
 logging threads.
 
+The log uses nolock structures based on atomics only.
+
 There are layers to make use of the log from perl, python, ruby, SWIG
 capable languages and via JNI from java.
 
-The log is documented by HTML and by a full fledge Text documentation.
+The log is documented by HTML and by a full fledge text documentation (440 pages in english).
 
+have fun.
