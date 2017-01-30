@@ -24,14 +24,14 @@ case $ATRSHMLOG_PLATFORM in
 		CPP="g++ -std=c++14 -pthread -Wall -Weffc++ -fdump-tree-original  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR $ATRSHMLOG_PLATFORM_DEFINE "
 		PICFLAG=-fPIC
 		OPTMODE=-O3
-		LIBMODULE=-latrshmlog
+		LIBMODULE=-latrshmlogc
 		;;
 
 	    2) # centos 7.2 with a somewhat outdated g++
 		CPP="g++ -std=gnu++1y -pthread -Wall -Weffc++ -fdump-tree-original $ATRSHMLOG_PLATFORM_DEFINE "
 		PICFLAG=-fPIC
 		OPTMODE=-O3
-		LIBMODULE=-latrshmlog
+		LIBMODULE=-latrshmlogc
 		;;
 
 	    7) # ubuntu way
@@ -39,7 +39,7 @@ case $ATRSHMLOG_PLATFORM in
 		CPP="g++ -std=c++14 -pthread -Wall -Weffc++ -fdump-tree-original  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR $ATRSHMLOG_PLATFORM_DEFINE "
 		PICFLAG=-fPIC
 		OPTMODE=-O3
-		LIBMODULE=-latrshmlog
+		LIBMODULE=-latrshmlogc
 		;;
 
 	    8) # opensuse
@@ -47,7 +47,7 @@ case $ATRSHMLOG_PLATFORM in
 		CPP="g++-6 -std=c++14 -pthread -Wall -Weffc++ -fdump-tree-original  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR $ATRSHMLOG_PLATFORM_DEFINE "
 		PICFLAG=-fPIC
 		OPTMODE=-O3
-		LIBMODULE=-latrshmlog
+		LIBMODULE=-latrshmlogc
 		;;
 
 	    9) # debian 8.6
@@ -55,7 +55,7 @@ case $ATRSHMLOG_PLATFORM in
 		CPP="g++ -std=c++14 -pthread -Wall -Weffc++ -fdump-tree-original  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR $ATRSHMLOG_PLATFORM_DEFINE "
 		PICFLAG=-fPIC
 		OPTMODE=-O3
-		LIBMODULE=-latrshmlog
+		LIBMODULE=-latrshmlogc
 		;;
 
 	    10) # sles, gcc 5.4.0 from source
@@ -63,7 +63,7 @@ case $ATRSHMLOG_PLATFORM in
 		CPP="g++ -std=c++14 -pthread -Wall -Weffc++ -fdump-tree-original  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR $ATRSHMLOG_PLATFORM_DEFINE "
 		PICFLAG=-fPIC
 		OPTMODE=-O3
-		LIBMODULE=-latrshmlog
+		LIBMODULE=-latrshmlogc
 		;;
 	    
 	    *)
@@ -71,7 +71,7 @@ case $ATRSHMLOG_PLATFORM in
 		CPP="g++ -std=c++14 -pthread -Wall -Weffc++ -fdump-tree-original  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR $ATRSHMLOG_PLATFORM_DEFINE "
 		PICFLAG=-fPIC
 		OPTMODE=-O3
-		LIBMODULE=-latrshmlog
+		LIBMODULE=-latrshmlogc
 		;;
 	esac
 
@@ -82,7 +82,7 @@ case $ATRSHMLOG_PLATFORM in
 	CPP="g++ -std=c++14 -pthread -Wall -Weffc++ -fdump-tree-original $ATRSHMLOG_PLATFORM_DEFINE "
 	PICFLAG=
 	OPTMODE=-O3
-	LIBMODULE=-latrshmlog
+	LIBMODULE=-latrshmlogc
 	;;
 
     mingw)
@@ -90,7 +90,7 @@ case $ATRSHMLOG_PLATFORM in
 	CPP="x86_64-w64-mingw32-g++ -std=c++14 -pthread -Wall -Weffc++ -fdump-tree-original $ATRSHMLOG_PLATFORM_DEFINE "
 	PICFLAG= 
 	OPTMODE=-O3
-	LIBMODULE=-latrshmlog
+	LIBMODULE=-latrshmlogc
 	;;
 
     bsd)
@@ -100,28 +100,28 @@ case $ATRSHMLOG_PLATFORM in
 		CPP="clang++ -std=c++14  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR  $ATRSHMLOG_PLATFORM_DEFINE "
 		PICFLAG=
 		OPTMODE=-O3
-		LIBMODULE="-latrshmlog  -lpthread"
+		LIBMODULE="-latrshmlogc  -lpthread"
 		;;
 
 	    4)
 		CPP="clang++ -std=c++14  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR  $ATRSHMLOG_PLATFORM_DEFINE "
 		PICFLAG=
 		OPTMODE=-O3
-		LIBMODULE="-latrshmlog -lpthread"
+		LIBMODULE="-latrshmlogc -lpthread"
 		;;
 
 	    5)
 		CPP="g++ -std=gnu++14  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR $ATRSHMLOG_PLATFORM_DEFINE "
 		PICFLAG=-fPIC
 		OPTMODE=-O3
-		LIBMODULE="-latrshmlog -lpthread"
+		LIBMODULE="-latrshmlogc -lpthread"
 		;;
 	    
 	    *)
 		CPP="CC "
 		PICFLAG=
 		OPTMODE=-O3
-		LIBMODULE="-latrshmlog "
+		LIBMODULE="-latrshmlogc "
 		;;
 
 	esac
@@ -132,7 +132,7 @@ case $ATRSHMLOG_PLATFORM in
 	CPP="g++ -std=gnu++14  -DATRSHMLOG_FLAVOUR=$ATRSHMLOG_FLAVOUR $ATRSHMLOG_PLATFORM_DEFINE "
 	PICFLAG=-fPIC
 	OPTMODE=-O3
-	LIBMODULE="-latrshmlog -lthread -lpthread"
+	LIBMODULE="-latrshmlogc -lthread -lpthread"
 	;;
 
     *)
