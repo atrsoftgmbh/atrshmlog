@@ -49,8 +49,12 @@ atrshmloggenbuffers
 dot.mariadb.sh
 dot.oracle.sh
 dot.postgres.sh
+dot.cassandra.sh
+
 Doxyfile
+
 makeall.sh
+
 shmcfiles
 shmCPPfiles
 shmallfiles
@@ -61,7 +65,10 @@ shmtestcfiles
 shmbininternalfiles_mariadb
 shmbininternalfiles_oracle
 shmbininternalfiles_postgres
+shmbininternalfiles_cassandra
+
 files.txt
+
 t_test.sh
 t_test.cmd
 
@@ -396,6 +403,7 @@ atrshmlogreaderd_db.c
 atrshmlogreaderd_my.c
 atrshmlogreaderd_ora.c
 atrshmlogreaderd_pg.c
+
 atrshmlog_cassandra.cql
 atrshmlog_mariadb.sql
 atrshmlog_oracle.sql
