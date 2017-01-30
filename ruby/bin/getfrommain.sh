@@ -15,17 +15,17 @@ fi
 case $ATRSHMLOG_PLATFORM in
     linux)
 	# linux x86_64 gnu
-	LIB=libatrshmlog.a
+	LIB=libatrshmlogc.a
 	;;
 
     cygwin)
 	# cygwin x86_64 gnu
-	LIB=libatrshmlog.a
+	LIB=libatrshmlogc.a
 	;;
 
     mingw)
 	# mingw x86_64 gnu via cygwin
-	LIB=libatrshmlog.a
+	LIB=libatrshmlogc.a
 	;;
 
     *)
