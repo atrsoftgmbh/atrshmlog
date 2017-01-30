@@ -1,28 +1,12 @@
-
-ruby extension
-
------
-
-doc
-
-------
-
-no sql logger
-
------
-
-binaries compiler platforms
-
------
-
-install script in bin
-
 ------
 
 1 3 0
 
 ------
 
+SPEED SPEED SPEED ....
+
+------
 arm
 
 ------
@@ -74,9 +58,6 @@ get_statistics via shm or buffer out
 verify mit logbuffer content
 
 ------
-layer perl python swig write0 call
-
------
 
 doc
 

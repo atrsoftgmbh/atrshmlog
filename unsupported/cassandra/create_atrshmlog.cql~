@@ -1,6 +1,0 @@
---
--- $Id:$
---
--- create teh role atrshmlog with login and as superuser for this tests
-CREATE ROLE atrshmlog WITH PASSWORD 'atrshmlog4711'
-    AND LOGIN = true;
