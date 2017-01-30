@@ -9,7 +9,7 @@ $Id:$
 FILES
 
 # main module code reminder
-atrshmlog.c
+atrshmlogc.c
 
 # the program code files
 atrshmlogconvert.c
