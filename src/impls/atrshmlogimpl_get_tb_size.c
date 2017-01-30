@@ -4,7 +4,7 @@
 /***************************************************************/
 
 /**
- * \file atrshmlogimpl_get_tl_tid.c
+ * \file atrshmlogimpl_get_tb_size.c
  */
 
 /** 
@@ -14,12 +14,11 @@
  *
  * test t_get_tid.c
  */
-atrshmlog_tid_t atrshmlog_get_thread_local_tid (volatile const void *i_local)
+atrshmlog_ret_t atrshmlog_get_thread_buffer_size (volatile const void *i_buffer)
 {
-  atrshmlog_g_tl_t *g = (atrshmlog_g_tl_t*) i_local;
-
-  if (g == NULL)
+  atrshmlog_tbuff_t* b = ( atrshmlog_tbuff_t* ) i_buffer;
+  if (b == NULL)
     return 0;
 
-  return g->atrshmlog_thread_tid;
+  return b->size;
 }
