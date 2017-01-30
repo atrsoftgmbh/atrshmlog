@@ -19,7 +19,7 @@ case $ATRSHMLOG_PLATFORM in
     linux)
 	# linux x86_64 gnu
 	AR=ar
-	LIB=libatrshmlog.a
+	LIB=libatrshmlogc.a
 	OBJ="atrshmlogc.o $(ls impls/*.o | grep atrshmlogimpl )"
 	REBUILDTABLE="s"
 	;;
@@ -27,7 +27,7 @@ case $ATRSHMLOG_PLATFORM in
     cygwin)
 	# cygwin x86_64 gnu
 	AR=ar
-	LIB=libatrshmlog.a
+	LIB=libatrshmlogc.a
 	OBJ="atrshmlogc.o $(ls impls/*.o | grep atrshmlogimpl )"
 	REBUILDTABLE="s"
 	;;
@@ -35,7 +35,7 @@ case $ATRSHMLOG_PLATFORM in
     mingw)
 	# mingw x86_64 gnu via cygwin
 	AR="x86_64-w64-mingw32-ar"
-	LIB=libatrshmlog.a
+	LIB=libatrshmlogc.a
 	OBJ="atrshmlogc.o $(ls impls/*.o | grep atrshmlogimpl )"
 	REBUILDTABLE="s"
 	;;
@@ -44,7 +44,7 @@ case $ATRSHMLOG_PLATFORM in
     bsd)
 	# 
 	AR=ar
-	LIB=libatrshmlog.a
+	LIB=libatrshmlogc.a
 	OBJ="atrshmlogc.o $(ls impls/*.o | grep atrshmlogimpl )"
 	REBUILDTABLE="s"
 	;;
@@ -52,7 +52,7 @@ case $ATRSHMLOG_PLATFORM in
     solaris)
 	# 
 	AR=ar
-	LIB=libatrshmlog.a
+	LIB=libatrshmlogc.a
 	OBJ="atrshmlogc.o $(ls impls/*.o | grep atrshmlogimpl )"
 	REBUILDTABLE="-r -s"
 	;;
