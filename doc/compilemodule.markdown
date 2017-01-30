@@ -183,7 +183,7 @@ For the headers its
 
 For the library it like this
 
-     $ cp libatrshmlog.a /usr/local/lib
+     $ cp libatrshmlogc.a /usr/local/lib
 
 
 For the documentation you have to copy the subdirectories.
