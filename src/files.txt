@@ -9,7 +9,7 @@ $Id:$
 FILES
 
 # main module code reminder
-atrshmlog.c
+atrshmlogc.c
 
 # the program code files
 atrshmlogconvert.c
@@ -26,6 +26,7 @@ atrshmlogreaderd.c
 atrshmlogreset.c
 atrshmlogsignalreader.c
 atrshmlogsignalwriter.c
+atrshmlogtime.c
 atrshmlogverify.c
 
 # the headers
@@ -42,10 +43,18 @@ atrshmlogchecksystem
 atrshmlogerror
 atrshmlogstat
 atrshmlogstopreader
+atrshmloggenbuffers
 
 # helper and configurations
+dot.mariadb.sh
+dot.oracle.sh
+dot.postgres.sh
+dot.cassandra.sh
+
 Doxyfile
+
 makeall.sh
+
 shmcfiles
 shmCPPfiles
 shmallfiles
@@ -53,8 +62,15 @@ shmallbinfiles
 shmbinfiles
 shmbininternalfiles
 shmtestcfiles
+shmbininternalfiles_mariadb
+shmbininternalfiles_oracle
+shmbininternalfiles_postgres
+shmbininternalfiles_cassandra
+
 files.txt
+
 t_test.sh
+t_test.cmd
 
 DIRECTORY src impls
 
@@ -71,6 +87,7 @@ atrshmlogimpl_base_ptr.c
 atrshmlogimpl_buffer_id_flag.c
 atrshmlogimpl_buffer_infosize_flag.c
 atrshmlogimpl_buffer_slave_proc.c
+atrshmlogimpl_change_order.c
 atrshmlogimpl_checksum_flag.c
 atrshmlogimpl_cleanup_locks.c
 atrshmlogimpl_clock_id_flag.c
@@ -81,6 +98,7 @@ atrshmlogimpl_create_slave.c
 atrshmlogimpl_decrement_slave_count.c
 atrshmlogimpl_delete.c
 atrshmlogimpl_delimiter_flag.c
+atrshmlogimpl_detach.c
 atrshmlogimpl_dispatch_buffer.c
 atrshmlogimpl_event_locks_buffer.c
 atrshmlogimpl_exit_cleanup.c
@@ -97,6 +115,7 @@ atrshmlogimpl_fence6_flag.c
 atrshmlogimpl_fence7_flag.c
 atrshmlogimpl_fence8_flag.c
 atrshmlogimpl_fence9_flag.c
+atrshmlogimpl_fill_chunk_head.c
 atrshmlogimpl_flush.c
 atrshmlogimpl_free.c
 atrshmlogimpl_full_list.c
@@ -136,6 +155,7 @@ atrshmlogimpl_get_init_buffers_in_advance.c
 atrshmlogimpl_get_inittime.c
 atrshmlogimpl_get_inittime_tsc_after.c
 atrshmlogimpl_get_inittime_tsc_before.c
+atrshmlogimpl_get_last_mem_to_shm.c
 atrshmlogimpl_get_logging.c
 atrshmlogimpl_get_minor.c
 atrshmlogimpl_get_next_sl.c
@@ -145,13 +165,32 @@ atrshmlogimpl_get_raw_buffers.c
 atrshmlogimpl_get_realtime.c
 atrshmlogimpl_get_shmid.c
 atrshmlogimpl_get_slave_tid.c
+atrshmlogimpl_get_slave_to_shm_wait.c
 atrshmlogimpl_get_slave_wait.c
 atrshmlogimpl_get_stats.c
 atrshmlogimpl_get_stats_max_index.c
 atrshmlogimpl_get_strategy.c
 atrshmlogimpl_get_strategy_process.c
+atrshmlogimpl_get_strategy_wait_wait_time.c
 atrshmlogimpl_get_tid.c
+atrshmlogimpl_get_tb_acquiretime.c
+atrshmlogimpl_get_tb_chksum.c
+atrshmlogimpl_get_tb_dispatched.c
+atrshmlogimpl_get_tb_dispose.c
+atrshmlogimpl_get_tb_id.c
+atrshmlogimpl_get_tb_maxsize.c
+atrshmlogimpl_get_tb_next_append.c
+atrshmlogimpl_get_tb_next_cleanup.c
+atrshmlogimpl_get_tb_next_full.c
+atrshmlogimpl_get_tb_payload.c
+atrshmlogimpl_get_tb_pid.c
+atrshmlogimpl_get_tb_safeguard.c
+atrshmlogimpl_get_tb_size.c
+atrshmlogimpl_get_tb_tid.c
 atrshmlogimpl_get_tl_tid.c
+atrshmlogimpl_get_tl_pid.c
+atrshmlogimpl_get_tl_index.c
+atrshmlogimpl_get_tl_buffer.c
 atrshmlogimpl_get_version.c
 atrshmlogimpl_get_wait_for_slaves.c
 atrshmlogimpl_id_flag.c
@@ -209,9 +248,11 @@ atrshmlogimpl_set_ihf.c
 atrshmlogimpl_set_logging_process_off.c
 atrshmlogimpl_set_logging_process_on.c
 atrshmlogimpl_set_prealloc_count.c
+atrshmlogimpl_set_slave_to_shm_wait.c
 atrshmlogimpl_set_slave_wait_nanos.c
 atrshmlogimpl_set_strategy.c
 atrshmlogimpl_set_strategy_process.c
+atrshmlogimpl_set_strategy_wait_wait_time.c
 atrshmlogimpl_set_thread_fence.c
 atrshmlogimpl_set_wait_for_slaves_off.c
 atrshmlogimpl_set_wait_for_slaves_on.c
@@ -238,17 +279,16 @@ atrshmlogimpl_write2.c
 
 DIRECTORY src alreadythere
 shmCPPfiles.mingw
+shmbininternalfiles_oracle.empty
 
 DIRECTORY src tests
 atrshmlogcheckc.c
 atrshmlogcheckc_nothreads_h.c
+atrshmlogfork.c
+atrshmlogforkwrite.c
 atrshmlogtee.c
 atrshmlogtest00.c
 atrshmlogtest01.c
-atrshmlogfork.c
-atrshmlogforkwrite.c
-atrshmlogtest02.C
-atrshmlogtest03.C
 t_acquire_buffer.c
 t_alloc.c
 t_attach.c
@@ -260,6 +300,7 @@ t_create_mapped_file.c
 t_create_slave.c
 t_decrement_slave_count.c
 t_delete.c
+t_detach.c
 t_dispatch_buffer.c
 t_exit_cleanup.c
 t_flush.c
@@ -286,6 +327,7 @@ t_get_init_buffers_in_advance.c
 t_get_inittime.c
 t_get_inittime_tsc_after.c
 t_get_inittime_tsc_before.c
+t_get_last_mem_to_shm.c
 t_get_logging.c
 t_get_prealloc_count.c
 t_get_raw.c
@@ -314,6 +356,8 @@ t_init_in_write.c
 t_init_shm_log.c
 t_read.c
 t_read_fetch.c
+t_reattach.c
+t_reflexion.c
 t_remove_slave_via_local.c
 t_reuse_thread_buffers.c
 t_set_advance_off.c
@@ -341,20 +385,48 @@ t_set_fence_7.c
 t_set_fence_8.c
 t_set_fence_9.c
 t_set_f_list_buffer_slave_run_off.c
+t_set_f_list_slave_count.c
 t_set_logging_process.c
 t_set_prealloc_count.c
 t_set_slave_wait_nanos.c
 t_set_strategy.c
 t_set_strategy_process.c
 t_set_wait_for_slaves.c
+t_slave_to_shm_wait.c
 t_sleep_nanos.c
 t_stop.c
+t_strategy_wait_wait_time.c
 t_transfer_mem_to_shm.c
 t_turn_logging_off.c
 t_turn_slave_off.c
 t_write0.c
 t_write1.c
 t_write2.c
+t_write_blob.c
+t_write_long.c
+t_writer_flag_detach.c
+t_writer_flag_slave.c
+
+DIRECTORY src dbs
+atrshmlogconvert_cass.c
+atrshmlogconvert_db.c
+atrshmlogconvert_my.c
+atrshmlogconvert_ora.c
+atrshmlogconvert_pg.c
+atrshmlogdb_cassandra.c
+atrshmlogdb_mariadb.c
+atrshmlogdb_oracle.c
+atrshmlogdb_postgres.c
+atrshmlogreaderd_cass.c
+atrshmlogreaderd_db.c
+atrshmlogreaderd_my.c
+atrshmlogreaderd_ora.c
+atrshmlogreaderd_pg.c
+
+atrshmlog_cassandra.cql
+atrshmlog_mariadb.sql
+atrshmlog_oracle.sql
+atrshmlog_postgresql.sql
 
 DIRECTORY bin
 # helper scripts
@@ -419,6 +491,7 @@ implementlogging.markdown
 layer_java_jni.markdown 
 layer_python.markdown 
 layer_perl.markdown 
+layer_ruby.markdown 
 layer_swig.markdown 
 makeall_script.markdown 
 shmallfiles_script.markdown 
@@ -479,6 +552,7 @@ wrong_create_header_package_version.sh
 DIRECTORY java oracle jdk1.8.0_66 src
 atrshmlogjnipackage.c
 compile_jni_stub.sh
+compile_to_class_package_tests.sh
 compile_to_class_package_version.sh
 compile_to_class.sh
 copyjnilib.sh
@@ -493,6 +567,7 @@ hellojnitestpackage01.c
 start_hello.sh
 start_package_hello.sh
 start_package_log.sh
+start_package_test.sh
 wrong_create_header_package_version.sh
 
 DIRECTORY java oracle jdk1.8.0_66 src includes
@@ -504,6 +579,58 @@ HelloJNI.java
 DIRECTORY java oracle jdk1.8.0_66 src de atrsoft successorofoak utilities logging atrshmlog
 ATRSHMLOG.java
 ATRSHMLOGTest.java
+
+DIRECTORY java oracle jdk1.8.0_66 src de atrsoft successorofoak utilities logging atrshmlog tests
+ATRSHMLOGTestAcquireCount.java
+ATRSHMLOGTestArea.java
+ATRSHMLOGTestAttach.java
+ATRSHMLOGTestAutoflush.java
+ATRSHMLOGTestBufferMaxSize.java
+ATRSHMLOGTestBufferSize.java
+ATRSHMLOGTestBufferSlaveWait.java
+ATRSHMLOGTestChecksum.java
+ATRSHMLOGTestCleanupLocks.java
+ATRSHMLOGTestClicktime.java
+ATRSHMLOGTestClockId.java
+ATRSHMLOGTestCreate.java
+ATRSHMLOGTestCreateSlave.java
+ATRSHMLOGTestDecrementSlaveCount.java
+ATRSHMLOGTestDelete.java
+ATRSHMLOGTestEnvPrefix.java
+ATRSHMLOGTestEvent.java
+ATRSHMLOGTestEventLocksMax.java
+ATRSHMLOGTestFence.java
+ATRSHMLOGTestFlush.java
+ATRSHMLOGTestGetEnv.java
+ATRSHMLOGTestGetInitTime.java
+ATRSHMLOGTestGetRealtime.java
+ATRSHMLOGTestGettime.java
+ATRSHMLOGTestInitInAdvance.java
+ATRSHMLOGTestInitShmLog.java
+ATRSHMLOGTestLogging.java
+ATRSHMLOGTestNextSlave.java
+ATRSHMLOGTestPreallocCount.java
+ATRSHMLOGTestReadFetch.java
+ATRSHMLOGTestRead.java
+ATRSHMLOGTestReuseBuffer.java
+ATRSHMLOGTestSgettime.java
+ATRSHMLOGTestShmid.java
+ATRSHMLOGTestSlaveCount.java
+ATRSHMLOGTestSlaveRunOff.java
+ATRSHMLOGTestSleepNanos.java
+ATRSHMLOGTestStatistics.java
+ATRSHMLOGTestStop.java
+ATRSHMLOGTestStrategy.java
+ATRSHMLOGTestThreadLocal.java
+ATRSHMLOGTestVerify.java
+ATRSHMLOGTestVersion.java
+ATRSHMLOGTestWaitForSlaves.java
+ATRSHMLOGTestWriteBytes.java
+ATRSHMLOGTestWrite.java
+ATRSHMLOGTestWriteString2.java
+ATRSHMLOGTestWriteString3.java
+ATRSHMLOGTestWriteString.java
+
 
 DIRECTORY java oracle jdk1.8.0_102 bin
 compile_jni_stub.sh
@@ -518,6 +645,7 @@ start_package_log.sh
 DIRECTORY java oracle jdk1.8.0_102 src
 atrshmlogjnipackage.c
 compile_jni_stub.sh
+compile_to_class_package_tests.sh
 compile_to_class_package_version.sh
 copyjnilib.sh
 create_header_package_version.sh
@@ -525,6 +653,8 @@ create_jni_lib.sh
 dot.java.sh
 start_package_log.cmd
 start_package_log.sh
+start_package_test.cmd
+start_package_test.sh
 wrong_create_header_package_version.sh
 
 DIRECTORY java oracle jdk1.8.0_102 src includes
@@ -532,6 +662,57 @@ DIRECTORY java oracle jdk1.8.0_102 src includes
 DIRECTORY java oracle jdk1.8.0_102 src de atrsoft successorofoak utilities logging atrshmlog
 ATRSHMLOG.java
 ATRSHMLOGTest.java
+
+DIRECTORY java oracle jdk1.8.0_102 src de atrsoft successorofoak utilities logging atrshmlog tests
+ATRSHMLOGTestAcquireCount.java
+ATRSHMLOGTestArea.java
+ATRSHMLOGTestAttach.java
+ATRSHMLOGTestAutoflush.java
+ATRSHMLOGTestBufferMaxSize.java
+ATRSHMLOGTestBufferSize.java
+ATRSHMLOGTestBufferSlaveWait.java
+ATRSHMLOGTestChecksum.java
+ATRSHMLOGTestCleanupLocks.java
+ATRSHMLOGTestClicktime.java
+ATRSHMLOGTestClockId.java
+ATRSHMLOGTestCreate.java
+ATRSHMLOGTestCreateSlave.java
+ATRSHMLOGTestDecrementSlaveCount.java
+ATRSHMLOGTestDelete.java
+ATRSHMLOGTestEnvPrefix.java
+ATRSHMLOGTestEvent.java
+ATRSHMLOGTestEventLocksMax.java
+ATRSHMLOGTestFence.java
+ATRSHMLOGTestFlush.java
+ATRSHMLOGTestGetEnv.java
+ATRSHMLOGTestGetInitTime.java
+ATRSHMLOGTestGetRealtime.java
+ATRSHMLOGTestGettime.java
+ATRSHMLOGTestInitInAdvance.java
+ATRSHMLOGTestInitShmLog.java
+ATRSHMLOGTestLogging.java
+ATRSHMLOGTestNextSlave.java
+ATRSHMLOGTestPreallocCount.java
+ATRSHMLOGTestReadFetch.java
+ATRSHMLOGTestRead.java
+ATRSHMLOGTestReuseBuffer.java
+ATRSHMLOGTestSgettime.java
+ATRSHMLOGTestShmid.java
+ATRSHMLOGTestSlaveCount.java
+ATRSHMLOGTestSlaveRunOff.java
+ATRSHMLOGTestSleepNanos.java
+ATRSHMLOGTestStatistics.java
+ATRSHMLOGTestStop.java
+ATRSHMLOGTestStrategy.java
+ATRSHMLOGTestThreadLocal.java
+ATRSHMLOGTestVerify.java
+ATRSHMLOGTestVersion.java
+ATRSHMLOGTestWaitForSlaves.java
+ATRSHMLOGTestWriteBytes.java
+ATRSHMLOGTestWrite.java
+ATRSHMLOGTestWriteString2.java
+ATRSHMLOGTestWriteString3.java
+ATRSHMLOGTestWriteString.java
 
 DIRECTORY java fedora
 readme.txt
@@ -553,6 +734,7 @@ wrong_create_header_package_version.sh
 DIRECTORY java  fedora openjdk-1.8.0.111 src
 atrshmlogjnipackage.c
 compile_jni_stub.sh
+compile_to_class_package_tests.sh
 compile_to_class_package_version.sh
 compile_to_class.sh
 copyjnilib.sh
@@ -567,6 +749,7 @@ hellojnitestpackage01.c
 start_hello.sh
 start_package_hello.sh
 start_package_log.sh
+start_package_test.sh
 wrong_create_header_package_version.sh
 
 DIRECTORY java  fedora openjdk-1.8.0.111 src includes
@@ -578,6 +761,57 @@ HelloJNI.java
 DIRECTORY java  fedora openjdk-1.8.0.111 src de atrsoft successorofoak utilities logging atrshmlog
 ATRSHMLOG.java
 ATRSHMLOGTest.java
+
+DIRECTORY java fedora openjdk-1.8.0.111 src de atrsoft successorofoak utilities logging atrshmlog tests
+ATRSHMLOGTestAcquireCount.java
+ATRSHMLOGTestArea.java
+ATRSHMLOGTestAttach.java
+ATRSHMLOGTestAutoflush.java
+ATRSHMLOGTestBufferMaxSize.java
+ATRSHMLOGTestBufferSize.java
+ATRSHMLOGTestBufferSlaveWait.java
+ATRSHMLOGTestChecksum.java
+ATRSHMLOGTestCleanupLocks.java
+ATRSHMLOGTestClicktime.java
+ATRSHMLOGTestClockId.java
+ATRSHMLOGTestCreate.java
+ATRSHMLOGTestCreateSlave.java
+ATRSHMLOGTestDecrementSlaveCount.java
+ATRSHMLOGTestDelete.java
+ATRSHMLOGTestEnvPrefix.java
+ATRSHMLOGTestEvent.java
+ATRSHMLOGTestEventLocksMax.java
+ATRSHMLOGTestFence.java
+ATRSHMLOGTestFlush.java
+ATRSHMLOGTestGetEnv.java
+ATRSHMLOGTestGetInitTime.java
+ATRSHMLOGTestGetRealtime.java
+ATRSHMLOGTestGettime.java
+ATRSHMLOGTestInitInAdvance.java
+ATRSHMLOGTestInitShmLog.java
+ATRSHMLOGTestLogging.java
+ATRSHMLOGTestNextSlave.java
+ATRSHMLOGTestPreallocCount.java
+ATRSHMLOGTestReadFetch.java
+ATRSHMLOGTestRead.java
+ATRSHMLOGTestReuseBuffer.java
+ATRSHMLOGTestSgettime.java
+ATRSHMLOGTestShmid.java
+ATRSHMLOGTestSlaveCount.java
+ATRSHMLOGTestSlaveRunOff.java
+ATRSHMLOGTestSleepNanos.java
+ATRSHMLOGTestStatistics.java
+ATRSHMLOGTestStop.java
+ATRSHMLOGTestStrategy.java
+ATRSHMLOGTestThreadLocal.java
+ATRSHMLOGTestVerify.java
+ATRSHMLOGTestVersion.java
+ATRSHMLOGTestWaitForSlaves.java
+ATRSHMLOGTestWriteBytes.java
+ATRSHMLOGTestWrite.java
+ATRSHMLOGTestWriteString2.java
+ATRSHMLOGTestWriteString3.java
+ATRSHMLOGTestWriteString.java
 
 DIRECTORY java ibm
 readme.txt
@@ -599,6 +833,7 @@ wrong_create_header_package_version.sh
 DIRECTORY java  ibm java-x86_64-80 src
 atrshmlogjnipackage.c
 compile_jni_stub.sh
+compile_to_class_package_tests.sh
 compile_to_class_package_version.sh
 compile_to_class.sh
 copyjnilib.sh
@@ -613,6 +848,7 @@ hellojnitestpackage01.c
 start_hello.sh
 start_package_hello.sh
 start_package_log.sh
+start_package_test.sh
 wrong_create_header_package_version.sh
 
 DIRECTORY java  ibm java-x86_64-80 src includes
@@ -624,6 +860,57 @@ HelloJNI.java
 DIRECTORY java ibm java-x86_64-80 src de atrsoft successorofoak utilities logging atrshmlog
 ATRSHMLOG.java
 ATRSHMLOGTest.java
+
+DIRECTORY java ibm java-x86_64-80 src de atrsoft successorofoak utilities logging atrshmlog tests
+ATRSHMLOGTestAcquireCount.java
+ATRSHMLOGTestArea.java
+ATRSHMLOGTestAttach.java
+ATRSHMLOGTestAutoflush.java
+ATRSHMLOGTestBufferMaxSize.java
+ATRSHMLOGTestBufferSize.java
+ATRSHMLOGTestBufferSlaveWait.java
+ATRSHMLOGTestChecksum.java
+ATRSHMLOGTestCleanupLocks.java
+ATRSHMLOGTestClicktime.java
+ATRSHMLOGTestClockId.java
+ATRSHMLOGTestCreate.java
+ATRSHMLOGTestCreateSlave.java
+ATRSHMLOGTestDecrementSlaveCount.java
+ATRSHMLOGTestDelete.java
+ATRSHMLOGTestEnvPrefix.java
+ATRSHMLOGTestEvent.java
+ATRSHMLOGTestEventLocksMax.java
+ATRSHMLOGTestFence.java
+ATRSHMLOGTestFlush.java
+ATRSHMLOGTestGetEnv.java
+ATRSHMLOGTestGetInitTime.java
+ATRSHMLOGTestGetRealtime.java
+ATRSHMLOGTestGettime.java
+ATRSHMLOGTestInitInAdvance.java
+ATRSHMLOGTestInitShmLog.java
+ATRSHMLOGTestLogging.java
+ATRSHMLOGTestNextSlave.java
+ATRSHMLOGTestPreallocCount.java
+ATRSHMLOGTestReadFetch.java
+ATRSHMLOGTestRead.java
+ATRSHMLOGTestReuseBuffer.java
+ATRSHMLOGTestSgettime.java
+ATRSHMLOGTestShmid.java
+ATRSHMLOGTestSlaveCount.java
+ATRSHMLOGTestSlaveRunOff.java
+ATRSHMLOGTestSleepNanos.java
+ATRSHMLOGTestStatistics.java
+ATRSHMLOGTestStop.java
+ATRSHMLOGTestStrategy.java
+ATRSHMLOGTestThreadLocal.java
+ATRSHMLOGTestVerify.java
+ATRSHMLOGTestVersion.java
+ATRSHMLOGTestWaitForSlaves.java
+ATRSHMLOGTestWriteBytes.java
+ATRSHMLOGTestWrite.java
+ATRSHMLOGTestWriteString2.java
+ATRSHMLOGTestWriteString3.java
+ATRSHMLOGTestWriteString.java
 
 DIRECTORY python
 readme.txt
@@ -637,7 +924,7 @@ DIRECTORY python doc
 gcc.notes.1.txt
 
 DIRECTORY python src
-atrshmlogmodule.c
+atrshmlogpython.c
 atrshmlogtest2.py
 atrshmlogtest3.py
 atrshmlogtest.py
@@ -646,9 +933,58 @@ create_python_lib.sh
 dot.python2.sh
 dot.python3.sh
 dot.python.sh
+t_test.sh
 
 DIRECTORY python src includes
 atrshmlogmodule.h
+
+DIRECTORY python src tests
+t_acquire_count.py
+t_area.py
+t_attach.py
+t_autoflush.py
+t_buffer_max_size.py
+t_buffer_size.py
+t_buffer_slave_wait.py
+t_checksum.py
+t_cleanup_locks.py
+t_clicktime.py
+t_clock_id.py
+t_create.py
+t_create_slave.py
+t_decrement_slave_count.py
+t_delete.py
+t_env_prefix.py
+t_event_locks_max.py
+t_event.py
+t_fence.py
+t_flush.py
+t_get_env.py
+t_get_inittime.py
+t_get_realtime.py
+t_gettime.py
+t_init_in_advance.py
+t_init_shm_log.py
+t_logging.py
+t_next_slave.py
+t_prealloc_count.py
+t_read_fetch.py
+t_read.py
+t_reuse_buffer.py
+t_shmid.py
+t_slave_count.py
+t_slave_run_off.py
+t_sleep_nanos.py
+t_statistics.py
+t_stop.py
+t_strategy.py
+t_thread_local.py
+t_verify.py
+t_version.py
+t_wait_for_slaves.py
+t_write0.py
+t_write.py
+
 
 DIRECTORY perl
 readme.txt
@@ -674,9 +1010,142 @@ create_perl_lib.sh
 doswig.sh
 dot.perl.sh
 dot.perl.sh.linux
+t_test.sh
 
 DIRECTORY perl src includes
 # nothing so far, only copy
+
+DIRECTORY perl src tests
+t_acquire_count.pl
+t_area.pl
+t_attach.pl
+t_autoflush.pl
+t_buffer_max_size.pl
+t_buffer_size.pl
+t_buffer_slave_wait.pl
+t_checksum.pl
+t_cleanup_locks.pl
+t_clicktime.pl
+t_clock_id.pl
+t_create.pl
+t_create_slave.pl
+t_decrement_slave_count.pl
+t_delete.pl
+t_env_prefix.pl
+t_event_locks_max.pl
+t_event.pl
+t_fence.pl
+t_flush.pl
+t_get_env.pl
+t_get_inittime.pl
+t_get_realtime.pl
+t_gettime.pl
+t_init_in_advance.pl
+t_init_shm_log.pl
+t_logging.pl
+t_next_slave.pl
+t_prealloc_count.pl
+t_read_fetch.pl
+t_read.pl
+t_reuse_buffer.pl
+t_shmid.pl
+t_slave_count.pl
+t_slave_run_off.pl
+t_sleep_nanos.pl
+t_statistics.pl
+t_stop.pl
+t_strategy.pl
+t_thread_local.pl
+t_verify.pl
+t_version.pl
+t_wait_for_slaves.pl
+t_write_binary.pl
+t_write.pl
+
+DIRECTORY ruby
+readme.txt
+
+DIRECTORY ruby bin
+dot.ruby.sh
+getfrommain.sh
+
+DIRECTORY ruby doc
+readme.txt
+
+DIRECTORY ruby atrshmlog
+atrshmlog.gemspec
+COPYING
+dot.ruby.sh
+NEWS
+Rakefile
+README.rdoc
+
+DIRECTORY ruby atrshmlog bin
+dummy.txt
+
+# nothing so far, only copy
+
+DIRECTORY ruby atrshmlog doc
+dummy.txt
+
+# nothing so far, only copy
+
+DIRECTORY ruby atrshmlog lib
+dummy.txt
+
+# nothing so far, only copy
+
+DIRECTORY ruby atrshmlog ext atrshmlog
+atrshmlogruby.c
+extconf.rb
+
+
+DIRECTORY ruby atrshmlog test
+t_acquire_count.rb
+t_area.rb
+t_attach.rb
+t_autoflush.rb
+t_buffer_max_size.rb
+t_buffer_size.rb
+t_buffer_slave_wait.rb
+t_checksum.rb
+t_cleanup_locks.rb
+t_clicktime.rb
+t_clock_id.rb
+t_create.rb
+t_create_slave.rb
+t_decrement_slave_count.rb
+t_delete.rb
+t_env_prefix.rb
+t_event_locks_max.rb
+t_event.rb
+t_fence.rb
+t_flush.rb
+t_get_env.rb
+t_get_inittime.rb
+t_get_realtime.rb
+t_gettime.rb
+t_init_in_advance.rb
+t_init_shm_log.rb
+t_logging.rb
+t_next_slave.rb
+t_prealloc_count.rb
+t_read_fetch.rb
+t_read.rb
+t_reuse_buffer.rb
+t_shmid.rb
+t_slave_count.rb
+t_slave_run_off.rb
+t_sleep_nanos.rb
+t_statistics.rb
+t_stop.rb
+t_strategy.rb
+t_thread_local.rb
+t_verify.rb
+t_version.rb
+t_wait_for_slaves.rb
+t_write.rb
+
 
 DIRECTORY SWIG
 readme.txt
@@ -701,6 +1170,7 @@ create_swig_lib.sh
 doswig.sh
 dot.swig.sh
 dot.swig.sh.linux
+tcl.sh
 
 DIRECTORY SWIG src includes
 # nothing so far, only copy

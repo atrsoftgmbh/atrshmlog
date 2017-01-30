@@ -203,7 +203,15 @@
 
     -200 => [ 'atrshmlog_error_get_autoflush_1 ' , 'Pthread specific buffer not available. ' ] , 
 
-    -201 => [ 'atrshmlog_error_set_autoflush_1 ' , 'Pthread specific buffer not available. ' ] 
+    -201 => [ 'atrshmlog_error_set_autoflush_1 ' , 'Pthread specific buffer not available. ' ] ,
+
+    -210 => [ 'atrshmlog_error_reattach_1 ' , 'No reattach possible without a successful attach first. ' ] ,
+
+    -211 => [ 'atrshmlog_error_reattach_2 ' , 'Reattach not successful for shm op. ' ] ,
+
+    -212 => [ 'atrshmlog_error_reattach_3 ' , 'Reattach or attach already done. ' ] ,
+
+    -213 => [ 'atrshmlog_error_reattach_4 ' , 'Parameter array null not allowed. ' ] 
 
     );
     

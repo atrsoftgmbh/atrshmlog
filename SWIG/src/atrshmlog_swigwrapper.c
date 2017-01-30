@@ -13,11 +13,9 @@
 #include <string.h>
   
 
-atrshmlog_time_t atrshmlog_gettime(atrshmlog_int32_t event)
+atrshmlog_time_t atrshmlog_gettime()
 {
-  atrshmlog_time_t result;
-
-  ATRSHMLOG_GETTIME(event,result);
+  atrshmlog_time_t result = ATRSHMLOG_GET_TSC_CALL();
 
   return result;
 }
@@ -362,7 +360,7 @@ void atratrshmlog_read (volatile const void* i_area,
   atrshmlog_int32_t counter_write2_adaptive_fast;
   atrshmlog_int32_t counter_write2_adaptive_very_fast;
 
-  *o_length = 0;
+  length = *o_length = 0;
 
   if (read_buffer == 0)
     read_buffer = malloc(1000000);
@@ -404,60 +402,70 @@ void atratrshmlog_read (volatile const void* i_area,
 		       &counter_write2_adaptive_very_fast);
   
 
-  if (ret < 0)
+    if (ret < 0)
     {
       *o_ret = ret;
+      *o_length = 0;
+      *o_read_buffer = 0;
+      
       return;
     }
 
-  if( ret > 0)
+  if (ret > 0)
     {
       *o_ret = ret;
+      *o_length = 0;
+      *o_read_buffer = 0;
       return;
     }
 
+  if (length == 0)
+    {
+      *o_ret = ret;
+      *o_length = 0;
+      *o_read_buffer = 0;
+      return;
+    }
+    
   // ok. we have data
   *o_ret = 0;
   *o_length = length;
 
-  if (length > 0)
-    {
-      memcpy(o_read_buffer, read_buffer, 1000000);
+  memcpy(o_read_buffer, read_buffer, 1000000);
 
-      *o_pid = pid;	    
-      *o_tid = tid; 		       
-      *o_inittime_seconds = inittime.tv_sec;	       
-      *o_inittime_nanos = inittime.tv_nsec;
-      *o_inittimetsc_before = inittimetsc_before;
-      *o_inittimetsc_after = inittimetsc_after;
-      *o_lasttime_seconds = lasttime.tv_sec;
-      *o_lasttime_nanos = lasttime.tv_nsec;
-      *o_lasttimetsc_before = lasttimetsc_before;
-      *o_lasttimetsc_after = lasttimetsc_after;
-      *o_difftimetransfer = difftimetransfer;
-      *o_starttransfer = starttransfer;
-      *o_acquiretime = acquiretime;
-      *o_id = id;
-      *o_number_dispatched = number_dispatched;
-      *o_counter_write0 = counter_write0;
-      *o_counter_write0_discard =counter_write0_discard;
-      *o_counter_write0_wait = counter_write0_wait;
-      *o_counter_write0_adaptive = counter_write0_adaptive;
-      *o_counter_write0_adaptive_fast = counter_write0_adaptive_fast;
-      *o_counter_write0_adaptive_very_fast = counter_write0_adaptive_very_fast;
-      *o_counter_write1 = counter_write1;
-      *o_counter_write1_discard = counter_write1_discard;
-      *o_counter_write1_wait = counter_write1_wait;
-      *o_counter_write1_adaptive = counter_write1_adaptive;
-      *o_counter_write1_adaptive_fast = counter_write1_adaptive_fast;
-      *o_counter_write1_adaptive_very_fast = counter_write1_adaptive_very_fast;
-      *o_counter_write2 = counter_write2;
-      *o_counter_write2_discard = counter_write2_discard;
-      *o_counter_write2_wait = counter_write2_wait;
-      *o_counter_write2_adaptive = counter_write2_adaptive;
-      *o_counter_write2_adaptive_fast = counter_write2_adaptive_fast;
-      *o_counter_write2_adaptive_very_fast = counter_write2_adaptive_very_fast;
-    }
+  *o_pid = pid;	    
+  *o_tid = tid; 		       
+  *o_inittime_seconds = inittime.tv_sec;	       
+  *o_inittime_nanos = inittime.tv_nsec;
+  *o_inittimetsc_before = inittimetsc_before;
+  *o_inittimetsc_after = inittimetsc_after;
+  *o_lasttime_seconds = lasttime.tv_sec;
+  *o_lasttime_nanos = lasttime.tv_nsec;
+  *o_lasttimetsc_before = lasttimetsc_before;
+  *o_lasttimetsc_after = lasttimetsc_after;
+  *o_difftimetransfer = difftimetransfer;
+  *o_starttransfer = starttransfer;
+  *o_acquiretime = acquiretime;
+  *o_id = id;
+  *o_number_dispatched = number_dispatched;
+  *o_counter_write0 = counter_write0;
+  *o_counter_write0_discard =counter_write0_discard;
+  *o_counter_write0_wait = counter_write0_wait;
+  *o_counter_write0_adaptive = counter_write0_adaptive;
+  *o_counter_write0_adaptive_fast = counter_write0_adaptive_fast;
+  *o_counter_write0_adaptive_very_fast = counter_write0_adaptive_very_fast;
+  *o_counter_write1 = counter_write1;
+  *o_counter_write1_discard = counter_write1_discard;
+  *o_counter_write1_wait = counter_write1_wait;
+  *o_counter_write1_adaptive = counter_write1_adaptive;
+  *o_counter_write1_adaptive_fast = counter_write1_adaptive_fast;
+  *o_counter_write1_adaptive_very_fast = counter_write1_adaptive_very_fast;
+  *o_counter_write2 = counter_write2;
+  *o_counter_write2_discard = counter_write2_discard;
+  *o_counter_write2_wait = counter_write2_wait;
+  *o_counter_write2_adaptive = counter_write2_adaptive;
+  *o_counter_write2_adaptive_fast = counter_write2_adaptive_fast;
+  *o_counter_write2_adaptive_very_fast = counter_write2_adaptive_very_fast;
 }
 
 
@@ -535,7 +543,7 @@ void atratrshmlog_read_fetch(volatile const void* i_area,
   atrshmlog_int32_t counter_write2_adaptive_fast;
   atrshmlog_int32_t counter_write2_adaptive_very_fast;
 
-  *o_length = 0;
+  length = *o_length = 0;
 
   if (read_buffer == 0)
     read_buffer = malloc(1000000);
@@ -580,58 +588,65 @@ void atratrshmlog_read_fetch(volatile const void* i_area,
   if (ret < 0)
     {
       *o_ret = ret;
+      *o_index = 0;
+      *o_length = 0;
+      *o_read_buffer = 0;
       return;
     }
 
   if( ret > 0)
     {
       *o_ret = ret;
+      *o_index = 0;
+      *o_length = 0;
+      *o_read_buffer = 0;
       return;
     }
+
 
   // ok. we have data
   *o_ret = 0;
   *o_index = index;
   *o_length = length;
 
-  if (length > 0)
-    {
-      memcpy(o_read_buffer, read_buffer, 1000000);
+  if (length == 0)
+    *o_read_buffer = 0;
+  else 
+    memcpy(o_read_buffer, read_buffer, length);
 
-      *o_pid = pid;	    
-      *o_tid = tid; 		       
-      *o_inittime_seconds = inittime.tv_sec;	       
-      *o_inittime_nanos = inittime.tv_nsec;
-      *o_inittimetsc_before = inittimetsc_before;
-      *o_inittimetsc_after = inittimetsc_after;
-      *o_lasttime_seconds = lasttime.tv_sec;
-      *o_lasttime_nanos = lasttime.tv_nsec;
-      *o_lasttimetsc_before = lasttimetsc_before;
-      *o_lasttimetsc_after = lasttimetsc_after;
-      *o_difftimetransfer = difftimetransfer;
-      *o_starttransfer = starttransfer;
-      *o_acquiretime = acquiretime;
-      *o_id = id;
-      *o_number_dispatched = number_dispatched;
-      *o_counter_write0 = counter_write0;
-      *o_counter_write0_discard =counter_write0_discard;
-      *o_counter_write0_wait = counter_write0_wait;
-      *o_counter_write0_adaptive = counter_write0_adaptive;
-      *o_counter_write0_adaptive_fast = counter_write0_adaptive_fast;
-      *o_counter_write0_adaptive_very_fast = counter_write0_adaptive_very_fast;
-      *o_counter_write1 = counter_write1;
-      *o_counter_write1_discard = counter_write1_discard;
-      *o_counter_write1_wait = counter_write1_wait;
-      *o_counter_write1_adaptive = counter_write1_adaptive;
-      *o_counter_write1_adaptive_fast = counter_write1_adaptive_fast;
-      *o_counter_write1_adaptive_very_fast = counter_write1_adaptive_very_fast;
-      *o_counter_write2 = counter_write2;
-      *o_counter_write2_discard = counter_write2_discard;
-      *o_counter_write2_wait = counter_write2_wait;
-      *o_counter_write2_adaptive = counter_write2_adaptive;
-      *o_counter_write2_adaptive_fast = counter_write2_adaptive_fast;
-      *o_counter_write2_adaptive_very_fast = counter_write2_adaptive_very_fast;
-    }
+  *o_pid = pid;	    
+  *o_tid = tid; 		       
+  *o_inittime_seconds = inittime.tv_sec;	       
+  *o_inittime_nanos = inittime.tv_nsec;
+  *o_inittimetsc_before = inittimetsc_before;
+  *o_inittimetsc_after = inittimetsc_after;
+  *o_lasttime_seconds = lasttime.tv_sec;
+  *o_lasttime_nanos = lasttime.tv_nsec;
+  *o_lasttimetsc_before = lasttimetsc_before;
+  *o_lasttimetsc_after = lasttimetsc_after;
+  *o_difftimetransfer = difftimetransfer;
+  *o_starttransfer = starttransfer;
+  *o_acquiretime = acquiretime;
+  *o_id = id;
+  *o_number_dispatched = number_dispatched;
+  *o_counter_write0 = counter_write0;
+  *o_counter_write0_discard =counter_write0_discard;
+  *o_counter_write0_wait = counter_write0_wait;
+  *o_counter_write0_adaptive = counter_write0_adaptive;
+  *o_counter_write0_adaptive_fast = counter_write0_adaptive_fast;
+  *o_counter_write0_adaptive_very_fast = counter_write0_adaptive_very_fast;
+  *o_counter_write1 = counter_write1;
+  *o_counter_write1_discard = counter_write1_discard;
+  *o_counter_write1_wait = counter_write1_wait;
+  *o_counter_write1_adaptive = counter_write1_adaptive;
+  *o_counter_write1_adaptive_fast = counter_write1_adaptive_fast;
+  *o_counter_write1_adaptive_very_fast = counter_write1_adaptive_very_fast;
+  *o_counter_write2 = counter_write2;
+  *o_counter_write2_discard = counter_write2_discard;
+  *o_counter_write2_wait = counter_write2_wait;
+  *o_counter_write2_adaptive = counter_write2_adaptive;
+  *o_counter_write2_adaptive_fast = counter_write2_adaptive_fast;
+  *o_counter_write2_adaptive_very_fast = counter_write2_adaptive_very_fast;
 }
 
 
@@ -639,6 +654,147 @@ int atratrshmlog_create(int key, int count)
 {
   return atrshmlog_create(key, count);
 }
+
+atrshmlog_ret_t atratrshmlog_reattach(int flag0,
+		       int id1,  
+		       int flag2,  
+		       int count3,  
+		       int flag4,  
+		       int iniinadvc5,  
+		       int flag6,  
+		       int bufferstrat7,  
+		       int flag8,  
+		       int wwtime9,  
+		       int flag10,  
+		       int delim11,  
+		       int flag12,  
+		       int evlocks13,  
+		       int flag14,  
+		       int buffinfosz15,  
+		       int flag16,  
+		       int pac17,  
+		       int flag18,  
+		       int slw19,  
+		       int flag20,  
+		       int slc21,  
+		       int flag22,  
+		       int wfs23,  
+		       int flag24,  
+		       int cid25,  
+		       int flag26,  
+		       int f1_27,  
+		       int flag28,  
+		       int f2_29,  
+		       int flag30,  
+		       int f3_31,  
+		       int flag32,  
+		       int f4_33,  
+		       int flag34,  
+		       int f5_35,  
+		       int flag36,  
+		       int f6_37,  
+		       int flag38,  
+		       int f7_39,  
+		       int flag40,  
+		       int f8_41,  
+		       int flag42,  
+		       int f9_43,  
+		       int flag44,  
+		       int f10_45,  
+		       int flag46,  
+		       int f11_47,  
+		       int flag48,  
+		       int f12_49,  
+		       int flag50,  
+		       int f13_51,  
+		       int flag52,  
+		       int chk53,  
+		       int flag54,  
+		       int loff55 
+		       )
+{
+  atrshmlog_int32_t pi[100];
+
+  pi[0] =  flag0;
+  pi[1] =  id1;
+  pi[2] =  flag2;
+  pi[3] =  count3;
+  pi[4] =  flag4;
+  pi[5] =  iniinadvc5;
+  pi[6] =  flag6;
+  pi[7] =  bufferstrat7;
+  pi[8] =  flag8;
+  pi[9] =  wwtime9;
+  pi[10] =  flag10;
+  pi[11] =  delim11;
+  pi[12] =  flag12;
+  pi[13] =  evlocks13;
+  pi[14] =  flag14;
+  pi[15] =  buffinfosz15;
+  pi[16] =  flag16;
+  pi[17] =  pac17;
+  pi[18] =  flag18;
+  pi[19] =  slw19;
+  pi[20] =  flag20;
+  pi[21] =  slc21;
+  pi[22] =  flag22;
+  pi[23] =  wfs23;
+  pi[24] =  flag24;
+  pi[25] =  cid25;
+  pi[26] =  flag26;
+  pi[27] =  f1_27;
+  pi[28] =  flag28;
+  pi[29] =  f2_29;
+  pi[30] =  flag30;
+  pi[31] =  f3_31;
+  pi[32] =  flag32;
+  pi[33] =  f4_33;
+  pi[34] =  flag34;
+  pi[35] =  f5_35;
+  pi[36] =  flag36;
+  pi[37] =  f6_37;
+  pi[38] =  flag38;
+  pi[39] =  f7_39;
+  pi[40] =  flag40;
+  pi[41] =  f8_41;
+  pi[42] =  flag42;
+  pi[43] =  f9_43;
+  pi[44] =  flag44;
+  pi[45] =  f10_45;
+  pi[46] =  flag46;
+  pi[47] =  f11_47;
+  pi[48] =  flag48;
+  pi[49] =  f12_49;
+  pi[50] =  flag50;
+  pi[51] =  f13_51;
+  pi[52] =  flag52;
+  pi[53] =  chk53;
+  pi[54] =  flag54;
+  pi[55] =  loff55;
+
+  return ATRSHMLOG_REATTACH(pi);
+}
+
+const char* atratrshmlog_get_env(const char* i_suffix)
+{
+  const char* p = atrshmlog_get_env(i_suffix);
+
+  if (p != NULL)
+    return p;
+
+  return "";
+}
+
+const char* atratrshmlog_get_env_shmid(void)
+{
+  const char* p = atrshmlog_get_env_shmid();
+
+  if (p != NULL)
+    return p;
+
+  return "";
+}
+
 
 /* end of file */
 

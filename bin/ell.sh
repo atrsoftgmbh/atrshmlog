@@ -22,42 +22,42 @@ case $ATRSHMLOG_PLATFORM in
 	    1) # fedora way
 		# linux x86_64 gnu
 		CC="gcc -pthread"
-		LIBMODULE=-latrshmlog
+		LIBMODULE=-latrshmlogc
 		;;
 
 	    2) # centos 7.2 after manual compile of gcc 5.4
 		CC="x86_64-unknown-linux-gnu-gcc-5.4.0 -pthread"
-		LIBMODULE=-latrshmlog
+		LIBMODULE=-latrshmlogc
 		;;
 
 	    7) # ubuntu way
 		# linux x86_64 gnu
 		CC="gcc -pthread"
-		LIBMODULE=-latrshmlog
+		LIBMODULE=-latrshmlogc
 		;;
 		
 	    8) # opensuse
 		# linux x86_64 gnu
 		CC="gcc-6 -pthread"
-		LIBMODULE=-latrshmlog
+		LIBMODULE=-latrshmlogc
 		;;
 		
 	    9) # debian 8.6 
 		# linux x86_64 gnu
 		CC="gcc -pthread"
-		LIBMODULE=-latrshmlog
+		LIBMODULE=-latrshmlogc
 		;;
 
 	    10) # sles , gcc 5.4.0 from source
 		# linux x86_64 gnu
 		CC="gcc -pthread"
-		LIBMODULE=-latrshmlog
+		LIBMODULE=-latrshmlogc
 		;;
 	    
 	    *)
 		# linux x86_64 gnu
 		CC="gcc -pthread"
-		LIBMODULE=-latrshmlog
+		LIBMODULE=-latrshmlogc
 		;;
 	esac
 
@@ -66,13 +66,13 @@ case $ATRSHMLOG_PLATFORM in
     cygwin)
 	# cygwin x86_64 gnu
 	CC="gcc -pthread"
-	LIBMODULE=-latrshmlog
+	LIBMODULE=-latrshmlogc
 	;;
 
     mingw)
 	# mingw x86_64 gnu via cygwin - optional -pthread  -pthread for libpthread support
 	CC="x86_64-w64-mingw32-gcc"
-	LIBMODULE=-latrshmlog
+	LIBMODULE=-latrshmlogc
 	;;
 
     bsd)
@@ -80,30 +80,30 @@ case $ATRSHMLOG_PLATFORM in
 	    3)
 		#  freebsd
 		CC="clang "
-		LIBMODULE="-latrshmlog  -lpthread"
+		LIBMODULE="-latrshmlogc  -lpthread"
 		;;
 	    4)
 		# openbsd
 		CC="clang "
-		LIBMODULE="-latrshmlog -lpthread"
+		LIBMODULE="-latrshmlogc -lpthread"
 		;;
 
 	    
 	    5) # netbsd has a gcc 6.2 in /usr/pkg/gcc6/bin
 		CC="gcc -pthread"
-		LIBMODULE=-latrshmlog
+		LIBMODULE=-latrshmlogc
 		;;
 
 	    *)
 		CC=cc
-		LIBMODULE=-latrshmlog
+		LIBMODULE=-latrshmlogc
 		;;
 	esac
 	;;
 
     solaris)
 	CC="gcc -pthread"
-	LIBMODULE="-latrshmlog -lthread -lpthread"
+	LIBMODULE="-latrshmlogc -lthread -lpthread"
 	;;
 
     *)
@@ -126,6 +126,6 @@ P=${1%%.o}
 
 shift
 
-$CC -L. -L.. ${P}.o $* $LIBMODULE -o $P
+$CC $LDFLAGS -L. -L.. ${P}.o $* $LIBMODULE -o $P
 
 # end of file

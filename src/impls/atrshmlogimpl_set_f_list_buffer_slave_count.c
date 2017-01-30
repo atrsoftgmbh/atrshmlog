@@ -34,7 +34,7 @@
  * 
  * There is an env for attach to set this.
  *
- * test t_dispatch_buffer.c
+ * test t_set_f_list_slave_count.c
  */
 atrshmlog_ret_t atrshmlog_set_f_list_buffer_slave_count(atrshmlog_int32_t i_count)
 {
@@ -42,8 +42,48 @@ atrshmlog_ret_t atrshmlog_set_f_list_buffer_slave_count(atrshmlog_int32_t i_coun
   
   int old = atrshmlog_f_list_buffer_slave_count;
   
-  if (i_count >= 0 && atrshmlog_attach_once == 0)
+  if (i_count >= ATRSHMLOG_SLAVE_COUNT_MIN && i_count <= ATRSHMLOG_SLAVE_COUNT_MAX)
     atrshmlog_f_list_buffer_slave_count = i_count;
+
+
+  // if we are attached and inited we change number this way
+  if (atrshmlog_attach_once != 0)
+    {
+      // now if we want to reduce ...
+
+      int i = 0;
+
+      volatile const void *sl = atrshmlog_get_next_slave_local (0);
+      
+      while (i < atrshmlog_f_list_buffer_slave_count && sl)
+	{
+	  i++;
+	  sl = atrshmlog_get_next_slave_local (sl);
+	}
+
+      // we are now at the limit ... any still remaining is to much
+      while (sl)
+	{
+	  volatile const void *next_slave = atrshmlog_get_next_slave_local (sl);
+	  
+	  atrshmlog_turn_slave_off(sl);
+
+	  sl = next_slave;
+	}
+
+      // now we check if we want to start more ...
+      
+      // the actual number - at least we have it after all slaves started
+      int aklimit = atomic_load(&atrshmlog_f_list_active_slaves);
+
+      for (int i = aklimit;
+	   i < atrshmlog_f_list_buffer_slave_count;
+	   i++)
+	{
+	  int rets = atrshmlog_create_slave();
+	}
+
+    }
   
   return old;
 }

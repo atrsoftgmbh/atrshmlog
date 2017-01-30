@@ -8,7 +8,7 @@ use Atrshmlog;
 
 $result = Atrshmlog::attach();
 
-$t = Atrshmlog::gettime(1);
+$t = Atrshmlog::gettime();
 
 print "gettime : $t : \n";
 

@@ -21,29 +21,29 @@ case $PYTHON_PLATFORM in
     linux)
 	# linux x86_64 gnu
 	LIB=atrshmlog.so
-	SOURCES="atrshmlogmodule.c"
-	LIBS=-latrshmlog
+	SOURCES="atrshmlogpython.c"
+	LIBS=-latrshmlogc
 	;;
 
     cygwin)
 	# cygwin x86_64 gnu
 	LIB=atrshmlog.dll
-	SOURCES="atrshmlogmodule.c"
-	LIBS=-latrshmlog
+	SOURCES="atrshmlogpython.c"
+	LIBS=-latrshmlogc
 	;;
 
     mingw)
 	# mingw x86_64 gnu via cygwin
 	LIB=atrshmlog.dll
-	SOURCES="atrshmlogmodule.c"
-	LIBS=-latrshmlog
+	SOURCES="atrshmlogpython.c"
+	LIBS=-latrshmlogc
 	;;
 
     posix)
 	# linux x86_64 gnu
 	LIB=atrshmlog.so
-	SOURCES="atrshmlogmodule.c"
-	LIBS=-latrshmlog
+	SOURCES="atrshmlogpython.c"
+	LIBS=-latrshmlogc
 	;;
 	
     *)

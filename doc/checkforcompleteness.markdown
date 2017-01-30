@@ -1,7 +1,9 @@
 PROCESS : The check for completeness.    {#process_checkforcompleteness}
 ===============================
 
-This is done by the script atrshmlogcheckcomplete.
+This is done by the script \n
+
+_atrshmlogcheckcomplete_ .
 
 You have to change to the BASEDIR/src directory.
 
@@ -9,9 +11,11 @@ There you need a shell.
 
 Then start the script.
 
+     $ atrshmlogcheckcomplete 
+
 If you cannot start the script check for perl.
 
-If you have perl start it with
+If you have perl, then start it with
 
     perl  atrshmlogcheckcomplete
 

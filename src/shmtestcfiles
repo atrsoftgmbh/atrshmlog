@@ -6,6 +6,8 @@ atrshmlogforkwrite.c
 t_acquire_buffer.c
 t_alloc.c
 t_attach.c
+t_detach.c
+t_reattach.c
 t_buffer_slave_proc.c
 t_cleanup_locks.c
 t_create.c
@@ -14,10 +16,15 @@ t_create_mapped_file.c
 t_attach_mapped_file.c
 t_create_slave.c
 t_decrement_slave_count.c
+t_set_f_list_slave_count.c
 t_dispatch_buffer.c
 t_exit_cleanup.c
 t_flush.c
 t_free.c
+t_slave_to_shm_wait.c
+t_strategy_wait_wait_time.c
+t_reflexion.c
+t_get_last_mem_to_shm.c
 t_set_event_locks_max.c
 t_get_acquire_count.c
 t_get_area.c
@@ -108,4 +115,8 @@ t_turn_logging_off.c
 t_turn_slave_off.c
 t_write0.c
 t_write1.c
+t_write_long.c
+t_write_blob.c
 t_write2.c
+t_writer_flag_detach.c
+t_writer_flag_slave.c

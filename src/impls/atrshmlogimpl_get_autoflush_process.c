@@ -4,7 +4,7 @@
 /*******************************************************************/
 
 /**
- * \file atrshmlogimpl_get_autoflush.c
+ * \file atrshmlogimpl_get_autoflush_process.c
  */
 
 /**

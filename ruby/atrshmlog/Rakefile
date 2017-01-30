@@ -1,0 +1,47 @@
+require 'rake/clean'
+
+require 'rake/testtask'
+
+EXT_CONF = 'ext/atrshmlog/extconf.rb'
+MAKEFILE = 'ext/atrshmlog/Makefile'
+MODULE = 'ext/atrshmlog/atrshmlog.so'
+SRC = Dir.glob('ext/atrshmlog/*.c')
+SRC << MAKEFILE
+CLEAN.include [ 'ext/atrshmlog/*.o', 'ext/atrshmlog/depend', MODULE ]
+CLOBBER.include [ 'config.save', 'ext/mkmf.log', 'ext/extconf.h',
+                      MAKEFILE ]
+
+file MAKEFILE => EXT_CONF do |t|
+    Dir::chdir(File::dirname(EXT_CONF)) do
+        unless sh "ruby #{File::basename(EXT_CONF)}"
+            $stderr.puts "Failed to run extconf"
+            break
+        end
+    end
+end
+
+file MODULE => SRC do |t|
+    Dir::chdir(File::dirname(EXT_CONF)) do
+        unless sh "make"
+            $stderr.puts "make failed"
+            break
+        end
+    end
+end
+
+desc "Build the native library"
+task :build => MODULE
+
+# require "rake/extensiontask"
+
+#Rake::ExtensionTask.new "atrshmlog" do |ext|
+#  ext.lib_dir = "lib/atrshmlog"
+#end
+
+# testing framework 
+Rake::TestTask.new do |t|
+  t.libs << 'test'
+end
+
+desc "Run tests"
+# task :default => :test

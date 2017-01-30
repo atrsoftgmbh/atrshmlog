@@ -104,6 +104,19 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 
   // Initialized
 
+
+  atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
+
+  // can happen - we are detached
+  if (a_shm == 0)
+    {
+      return atrshmlog_error_write1_8;
+    }
+  
+  /* Can be happen : end of logging anounced by user via flag in shm */
+  if (atomic_load_explicit(&a_shm->ich_habe_fertig, memory_order_acquire) != 0) 
+    return atrshmlog_error_write1_8;
+  
   // The hidden mechanism to get things minimised
   // in case we are bound to a layer for another language.
   if (i_eventflag == ATRSHMLOGPOINTINTIMEP
@@ -129,121 +142,139 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 
   int strategy_count = 0;
   
-  // We use some goto jumping here, so this is a first target
+  int null_buffers = 0;
+  
+    // We use some goto jumping here, so this is a first target
  testagain_dispatched:
 
   ;
     
   register atrshmlog_tbuff_t* tbuff = g->atrshmlog_targetbuffer_arr[g->atrshmlog_targetbuffer_index];
 
-  if (atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) != 0)
+  if (tbuff == NULL || atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) != 0)
     {
       g->atrshmlog_targetbuffer_index++;
 
       if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
 	g->atrshmlog_targetbuffer_index = 0;
 
+      if (tbuff == NULL)
+	++null_buffers;
 
       ++strategy_count;
 
       if ((strategy_count % ATRSHMLOGTARGETBUFFERMAX) == 0)
-	switch (g->strategy)
-	  {
-	  case atrshmlog_strategy_discard :
+	{
+	  // no buffer available ...
+	  if (null_buffers >= ATRSHMLOGTARGETBUFFERMAX)
+	    return  atrshmlog_error_write1_6;
+
+	  null_buffers = 0;
+	  
+	  switch (g->strategy)
 	    {
-	      ATRSHMLOGSTATLOCAL(g,counter_write1_discard);
+	    case atrshmlog_strategy_discard :
+	      {
+		ATRSHMLOGSTATLOCAL(g,counter_write1_discard);
 	      
- 	      // we discard
-	      return atrshmlog_error_write1_6;
-	    }
+		// we discard
+		return atrshmlog_error_write1_6;
+	      }
 
-	  case atrshmlog_strategy_spin_loop:
-	    // we spin loop
-	    break;
+	    case atrshmlog_strategy_spin_loop:
+	      // we spin loop
+	      break;
 
-	  case atrshmlog_strategy_wait:
-	    {
-	      ATRSHMLOGSTATLOCAL(g,counter_write1_wait);
+	    case atrshmlog_strategy_wait:
+	      {
+		ATRSHMLOGSTATLOCAL(g,counter_write1_wait);
 	      
-	      // we wait fix time
-	      ATRSHMLOG_SLEEP_NANOS(atrshmlog_strategy_wait_wait_time);
-	    }
-	    break;
+		// we wait fix time
+		ATRSHMLOG_SLEEP_NANOS(atrshmlog_strategy_wait_wait_time);
+	      }
+	      break;
 
-	  case atrshmlog_strategy_adaptive:
-	    {
-	      ATRSHMLOGSTATLOCAL(g,counter_write1_adaptive);
+	    case atrshmlog_strategy_adaptive:
+	      {
+		ATRSHMLOGSTATLOCAL(g,counter_write1_adaptive);
 
-	      int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
-	      t = ATRSHMLOGSCALECLICKTONANO(t);
+		int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
+		t = ATRSHMLOGSCALECLICKTONANO(t);
 
-	      t /=  ATRSHMLOGTARGETBUFFERMAX;
+		t /=  ATRSHMLOGTARGETBUFFERMAX;
 
 #if 0
-	      printf("adapotive %ld\n", (long)t);
+		printf("adapotive %ld\n", (long)t);
 #endif
 	      
-	      if (t > 999999999)
-		t = 999999999;
+		if (t > 999999999)
+		  t = 999999999;
 	      
-	      // adaptive : take the last transfer time and divide it
-	      ATRSHMLOG_SLEEP_NANOS(t);
-	    }
-	    break;
+		// adaptive : take the last transfer time and divide it
+		ATRSHMLOG_SLEEP_NANOS(t);
+	      }
+	      break;
 	    
-	  case atrshmlog_strategy_adaptive_fast:
-	    {
-	      ATRSHMLOGSTATLOCAL(g,counter_write1_adaptive_fast);
+	    case atrshmlog_strategy_adaptive_fast:
+	      {
+		ATRSHMLOGSTATLOCAL(g,counter_write1_adaptive_fast);
 
-	      int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
-	      t = ATRSHMLOGSCALECLICKTONANO(t);
+		int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
+		t = ATRSHMLOGSCALECLICKTONANO(t);
 
-	      t /=  ATRSHMLOGTARGETBUFFERMAX * 2;
-
-#if 0
-	      printf("adapotive %ld\n", (long)t);
-#endif
-	      
-	      if (t > 999999999)
-		t = 999999999;
-	      
-	      // adaptive fast : take the last transfer time and divide it 2
-	      ATRSHMLOG_SLEEP_NANOS(t);
-	    }
-	    break;
-
-	  case atrshmlog_strategy_adaptive_very_fast:
-	    {
-	      ATRSHMLOGSTATLOCAL(g,counter_write1_adaptive_very_fast);
-
-	      // adaptive very fast : take the last transfer time and divide it 10
-	      int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
-	      t = ATRSHMLOGSCALECLICKTONANO(t);
-
-	      t /=  ATRSHMLOGTARGETBUFFERMAX * 10;
+		t /=  ATRSHMLOGTARGETBUFFERMAX * 2;
 
 #if 0
-	      printf("adapotive %ld\n", (long)t);
+		printf("adapotive %ld\n", (long)t);
 #endif
 	      
-	      if (t > 999999999)
-		t = 999999999;
+		if (t > 999999999)
+		  t = 999999999;
 	      
-	      // adaptive fast : take the last transfer time and divide it 2
-	      ATRSHMLOG_SLEEP_NANOS(t);
-	    }
-	    break;
+		// adaptive fast : take the last transfer time and divide it 2
+		ATRSHMLOG_SLEEP_NANOS(t);
+	      }
+	      break;
+
+	    case atrshmlog_strategy_adaptive_very_fast:
+	      {
+		ATRSHMLOGSTATLOCAL(g,counter_write1_adaptive_very_fast);
+
+		// adaptive very fast : take the last transfer time and divide it 10
+		int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
+		t = ATRSHMLOGSCALECLICKTONANO(t);
+
+		t /=  ATRSHMLOGTARGETBUFFERMAX * 10;
+
+#if 0
+		printf("adapotive %ld\n", (long)t);
+#endif
+	      
+		if (t > 999999999)
+		  t = 999999999;
+	      
+		// adaptive fast : take the last transfer time and divide it 2
+		ATRSHMLOG_SLEEP_NANOS(t);
+	      }
+	      break;
 	    
-	  default:
-	    // we spin loop
-	    break;
-	  }
+	    default:
+	      // we spin loop
+	      break;
+	    }
+	}
       
       if (atrshmlog_logging_process_off_final)
 	return atrshmlog_error_write1_7;
 
       atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
 
+      // can happen - we are detached
+      if (a_shm == 0)
+	{
+	  return atrshmlog_error_write1_8;
+	}
+  
       /* Can be happen : end of logging anounced by user via flag in shm */
       if (atomic_load_explicit(&a_shm->ich_habe_fertig, memory_order_acquire) != 0) 
 	return atrshmlog_error_write1_8;
@@ -281,6 +312,12 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 
       atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
 
+      // can happen - we are detached
+      if (a_shm == 0)
+	{
+	  return atrshmlog_error_write1_8;
+	}
+  
       /* Bad thing. Safeguard invalid */
       if (a_shm->shmsafeguard != ATRSHMLOGSAFEGUARDVALUE) {
 	ATRSHMLOGSTAT(atrshmlog_counter_write_safeguard_shm);
@@ -288,10 +325,6 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 	return atrshmlog_error_write1_11;
       }
       
-      /* Can be happen : end of logging anounced by user via flag in shm */
-      if (atomic_load_explicit(&a_shm->ich_habe_fertig, memory_order_acquire) != 0) 
-	return atrshmlog_error_write1_12;
-
       tbuff->number_dispatched = g->number_dispatched++;
 
       tbuff->counter_write0 = g->counter_write0;
@@ -376,17 +409,19 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
       
       atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
 
+      // can happen - we are detached
+      if (a_shm == 0)
+	{
+	  return atrshmlog_error_write1_8;
+	}
+  
       /* Bad thing. safeguard invalid */
       if (a_shm->shmsafeguard != ATRSHMLOGSAFEGUARDVALUE) {
 	ATRSHMLOGSTAT(atrshmlog_counter_write_safeguard_shm);
 
-	return atrshmlog_error_write0_8;
+	return atrshmlog_error_write1_11;
       }
   
-      /* Can be happen : end of logging anounced by user via flag in shm */
-      if (atomic_load_explicit(&a_shm->ich_habe_fertig, memory_order_acquire) != 0) 
-	return atrshmlog_error_write0_9;
-
       tbuff->number_dispatched = g->number_dispatched++;
 
       tbuff->counter_write0 = g->counter_write0;
@@ -454,6 +489,44 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 	}
     }
   
+  // we check the shared mem writer 
+  if (a_shm->writerpid == g->atrshmlog_thread_pid)
+    {
+      // we use the lower 16 bit. the upper are bit flag to tell us what to do.
+      // so we have 16 different things to do. and 64k sub values
+      if ((a_shm->writerflag & ATRSHMLOG_WRITER_SLAVE) != 0)
+	{
+	  // ok. we want to change the number of slaves.
+	  // a value is set from the lower 16 bits.
+	  // so be carefull: you can start in theory 64 k slaves ....
+	  int newslaves = (a_shm->writerflag & ATRSHMLOG_WRITER_SUB);
+
+	  a_shm->writerflag = 0;
+
+	  a_shm->writerpid = 0;
+	  
+	  int old = atrshmlog_set_f_list_buffer_slave_count(newslaves);
+
+	  return atrshmlog_error_ok;
+	}
+
+      if ((a_shm->writerflag & ATRSHMLOG_WRITER_DETACH) != 0)
+	{
+	  // ok. we want to detach this one.
+	  a_shm->writerflag = 0;
+
+	  a_shm->writerpid = 0;
+	  
+	  atrshmlog_detach();
+
+	  return atrshmlog_error_ok;
+	}
+
+      a_shm->writerflag = 0;
+
+      a_shm->writerpid = 0;
+    }
+
   return atrshmlog_error_ok;
 }
 

@@ -16,6 +16,8 @@ There is
 - the internal details include atrshmlog_internal.h
 - the module implementation file atrshmlog.c
 - the files in the impls directory
+- the files in the dbs directory
+- the fiels in the tests directory
 - the details dummy file atrshmlog_internal.c
 - the buffer converter atrshmlogconvert.c
 - the shared memory buffer creater atrshmlogcreate.c
@@ -43,7 +45,7 @@ and several files for the build and documentation process.
 
 See the files.txt file for a detailed list.
 
-There is also a page for every file in this documentation.
+There is also a page for most files in this documentation.
 
 
 How do i use it ?
@@ -134,19 +136,23 @@ And of course the universal hello world.
 
 ###Implement your logging in different language
 You get support for the following languages
-- Java
+- Java\n
   There is a Java jni solution to use the module.
   [See for details the java module page.](\ref language_layer_java_jni)
   
-- Python
-  There is a python module solution.
-  [See for details the python module page.](\ref language_layer_python)
-  
-- Perl
+- Perl\n
   There is a perl module solution.
   [See for details the perl module page.](\ref language_layer_perl)
 
-- SWIG
+- Python\n
+  There is a python module solution.
+  [See for details the python module page.](\ref language_layer_python)
+  
+- Ruby\n
+  There is a ruby module solution.
+  [See for details the ruby module page.](\ref language_layer_ruby)
+
+- SWIG\n
   There is a SWIG solution.
   The examples work with tcl.
   [See for details the SWIG module page.](\ref language_layer_swig)

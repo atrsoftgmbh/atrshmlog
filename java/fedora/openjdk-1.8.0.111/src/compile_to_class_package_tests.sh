@@ -49,7 +49,6 @@ SOURCES="ATRSHMLOGTestAttach.java \
          ATRSHMLOGTestBufferSlaveWait.java \
          ATRSHMLOGTestAcquireCount.java \
          ATRSHMLOGTestPreallocCount.java \
-         ATRSHMLOGTestGetTime.java \
          ATRSHMLOGTestGetRealtime.java \
          ATRSHMLOGTestStop.java \
          ATRSHMLOGTestFlush.java \

@@ -57,21 +57,8 @@ The header atrshmlog.h
 
 Go to the src directory.
 
-If you have a supported platform you will find
-the headers already made in the directory alreadythere
-
-This is the actual list :
-
-     atrshmlog.h.cygwin
-     atrshmlog.h.linux
-     atrshmlog.h.mingw
-     atrshmlog_internal.h.cygwin
-     atrshmlog_internal.h.linux
-     atrshmlog_internal.h.mingw
-     shmCPPfiles.mingw
-
-
-If there is a hit, simply copy the stuff into the src.
+After the check you have a hint for the needed dot file for the
+platform. Or you have no hint at all.
 
 If not fire up your favorite text editor.
 
@@ -83,15 +70,13 @@ Read in till you arrive at the defines.
 
 One of these is yours.
 
-Set it to 1, all others to 0.
+Use the proper dot.platform file to set this to 1.
 
 GOOD.
 
 ###ATRSHMLOG_PLATFORM__os__architecture__subarchitecure__compiler not there ?
 
 BAD.
-
-Set all to 0.
 
 Create a new one.
 
@@ -110,6 +95,10 @@ platform is used - best is
 and start to copy the part of the platform.
 
 Change the define.
+
+Make a copy of the dot.platform file and rename it to the new platform.
+
+If you need add a new flavour.
 
 Good.
 
@@ -333,9 +322,18 @@ See the doc for this.
 If you need more buffers than the default for your system you
 should set this to a higher value.
 
-Then adjust also the buffers in atrshmlog.c
+Then adjust also the buffers.
 
 If you have no use for this many buffers you can reduce it.
+
+To adjust means also to change the code in impls for the static allocated
+buffers.
+
+To do this you use the script\n
+atrshmloggenbuffers\n
+which generates a proper proposal file for your change.
+You have to copy the proposal to the real file if you think its ok.
+
 
 ###ATRSHMLOGBUFFER_MINCOUNT
 
@@ -482,6 +480,10 @@ For the last element the number is ATRSHMLOGBUFFER_PREALLOCED_COUNT - 1
 and the macro is ATRSHMLOGBUFFERS_PRE_LAST().
 This is a must - not a nice - or you will have funny nights with debugging
 strange behavior.
+To make things easy there is now a helper to make a proposal file
+form the actual setting in the internal header.
+If you are ok with the proposal you simply copy it to the original file.
+The script is atrshmloggenbuffers.
 
 ###atrshmlog_buffer_strategy
 Be sure you know what you do. You can set another strategy here.
@@ -522,7 +524,7 @@ If your int is bigger than 64 bit you can try to change this.
 
 ###ATRSHMLOG_INLINE_TSC_CODE
 From here on you have to add new code if your platform
-differs from the alredy implemented.
+differs from the already implemented.
 
 The rest.
 ---------
@@ -537,6 +539,8 @@ For the reader it should also self adjust.
 But i have not tried everything yet.
 
 Check compiler warnings - errors should not exist.
+
+Check the bin files for the platform and flavour things.
 
 Thats so far the thing i know.
 

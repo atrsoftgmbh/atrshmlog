@@ -2,13 +2,10 @@ The ATRSHMLOG module.
 
 The directories are
 - bin
-  The binary files that are needed to build the module
+  The files that are needed to build the module
   The files in the folder itself are for the linux
-  x86 64 architecture. You find subdirectories for the
-  other architectures and have to replace the files in bin
-  with them.
-  The files work also for cygwin and for the cygwin based
-  mingw port.
+  x86 64 architecture and similar systems like BSD
+  and Solaris. 
 
 - doc
   The documentation build for the last version which is
@@ -29,9 +26,16 @@ The directories are
 - perl
   The perl layer for the module
 
+- ruby
+  The ruby layer for the module
+  
 - SWIG
   The SWIG layer for the module
 
+- unsupported
+  The binaries and the helpers thath have not directly
+  to do with the module.
+  
 To start : take the html documentation index file in your
 browser and start to read it.
 
@@ -42,3 +46,48 @@ and run makeall.sh,
 then to the other things as you like - i cannot help
 you anyway, so do as you please.....
 
+---
+
+This module is a high performance logging solution.
+
+It uses the tick counter of the CPU, so taking a timestamp is done in
+nanosecs compared to the usual things of your OS that takes several
+hundrets of them...
+
+The log is done in alternating or ring buffer usage way, so you
+are not slowed down if a buffer is full.
+
+Normal payloads given (10 to 80 bytes ) you get a log in less
+than 70 nanosecs done on a notebook....
+
+The transfer is done by shared memory and a slave process that can
+write to the filesystem. Alternatives are processes that write
+to a database.
+
+Supported databases are Mysql/MariaDB, PostgreSQL, Oracle, Cassandra.
+
+You can also use a filestore first and then transfer to database,
+without the need of an intermediate text file.
+
+The logging itself needs a supporting thread at least - for very small
+payloads you can circumvent the use of a thread at all and you can
+use alternative a process end cleanup transfer without a thread at all.
+
+The log also supports a direct to shared memory logging for
+post mortem logging.
+
+The log is highly configurable for the strategies if the buffers
+are exhausted, and it is highly adjustable to different machine
+architecture needs for synchronization of threads via memory barriers.
+
+The logging itself is done on per thread base, so no contention between
+logging threads.
+
+The log uses nolock structures based on atomics only.
+
+There are layers to make use of the log from perl, python, ruby, SWIG
+capable languages and via JNI from java.
+
+The log is documented by HTML and by a full fledge text documentation (440 pages in english).
+
+have fun.

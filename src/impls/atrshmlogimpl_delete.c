@@ -19,6 +19,11 @@ atrshmlog_ret_t atrshmlog_delete(const int i_shmid)
 {
   ATRSHMLOGSTAT(atrshmlog_counter_delete);
 
+  while (atomic_load(&atrshmlog_base_ptr_use_flag) > 0)
+    ATRSHMLOG_SLEEP_NANOS(atrshmlog_slave_to_shm_wait);
+
+  atrshmlog_base_ptr = 0;
+  
 #if ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
   
   int shmctl_result = shmctl(i_shmid, IPC_RMID, (struct shmid_ds *)0);

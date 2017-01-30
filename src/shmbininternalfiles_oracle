@@ -1,0 +1,2 @@
+atrshmlogconvert_ora atrshmlogconvert_db.o atrshmlogdb_oracle.o -L/opt/oracle/product/12.1.0/dbhome_1/lib -L/opt/oracle/product/12.1.0/dbhome_1/rdbms/lib -lclntsh -lclntshcore  -ldl -lm -lpthread -lnsl -lirc -limf -lirc -lrt -lsvml -m64
+atrshmlogreaderd_ora atrshmlogreaderd_db.o atrshmlogdb_oracle.o -L/opt/oracle/product/12.1.0/dbhome_1/lib -L/opt/oracle/product/12.1.0/dbhome_1/rdbms/lib -lclntsh -lclntshcore  -ldl -lm -lpthread -lnsl -lirc -limf -lirc -lrt -lsvml -m64

@@ -1,0 +1,9 @@
+
+# dot file for my postgres.
+ATRSHMLOG_ORADBNAME=atrshmlog
+ATRSHMLOG_ORAUSER=atrshmlog
+ATRSHMLOG_ORAPWD=atrshmlog4711
+export ATRSHMLOG_ORAUSER
+export ATRSHMLOG_ORAPWD
+export ATRSHMLOG_ORADBNAME
+

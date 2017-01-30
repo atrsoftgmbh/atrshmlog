@@ -29,7 +29,7 @@
    */
 
 
-extern atrshmlog_time_t atrshmlog_gettime(atrshmlog_int32_t event);
+extern atrshmlog_time_t atrshmlog_gettime();
 
 extern atrshmlog_ret_t atrshmlog_write_binary(const atrshmlog_int32_t i_eventnumber,
      const atrshmlog_int32_t i_eventflag,
@@ -237,6 +237,69 @@ extern atrshmlog_ret_t atrshmlog_peek(volatile const void* area, int index);
 
 extern int atratrshmlog_create(int key, int count);
 
+extern atrshmlog_ret_t atratrshmlog_reattach(int flag0,
+		       int id1,  
+		       int flag2,  
+		       int count3,  
+		       int flag4,  
+		       int iniinadvc5,  
+		       int flag6,  
+		       int bufferstrat7,  
+		       int flag8,  
+		       int wwtime9,  
+		       int flag10,  
+		       int delim11,  
+		       int flag12,  
+		       int evlocks13,  
+		       int flag14,  
+		       int buffinfosz15,  
+		       int flag16,  
+		       int pac17,  
+		       int flag18,  
+		       int slw19,  
+		       int flag20,  
+		       int slc21,  
+		       int flag22,  
+		       int wfs23,  
+		       int flag24,  
+		       int cid25,  
+		       int flag26,  
+		       int f1_27,  
+		       int flag28,  
+		       int f2_29,  
+		       int flag30,  
+		       int f3_31,  
+		       int flag32,  
+		       int f4_33,  
+		       int flag34,  
+		       int f5_35,  
+		       int flag36,  
+		       int f6_37,  
+		       int flag38,  
+		       int f7_39,  
+		       int flag40,  
+		       int f8_41,  
+		       int flag42,  
+		       int f9_43,  
+		       int flag44,  
+		       int f10_45,  
+		       int flag46,  
+		       int f11_47,  
+		       int flag48,  
+		       int f12_49,  
+		       int flag50,  
+		       int f13_51,  
+		       int flag52,  
+		       int chk53,  
+		       int flag54,  
+		       int loff55 
+					     );
+
+ extern const char* atratrshmlog_get_env(const char* i_suffix);
+
+ extern const char* atratrshmlog_get_env_shmid(void);
+ 
+
 %}
 
 /**
@@ -271,6 +334,9 @@ extern int atratrshmlog_create(int key, int count);
 %ignore atrshmlog_get_realtime; 
 %ignore atrshmlog_read;         
 %ignore atrshmlog_read_fetch;   
+%ignore atrshmlog_reattach;   
+%ignore atrshmlog_get_env;
+%ignore atrshmlog_get_env_shmid;
 
 // a dirty ignore for stdint included
 %ignore _STDINT_H;
@@ -455,8 +521,8 @@ extern int atratrshmlog_create(int key, int count);
 %rename(sleep_nanos) atrshmlog_sleep_nanos;
 %rename(set_env_prefix) atrshmlog_set_env_prefix;
 %rename(get_env_prefix) atrshmlog_get_env_prefix;
-%rename(get_env) atrshmlog_get_env;
-%rename(get_env_shmid) atrshmlog_get_env_shmid;
+%rename(get_env) atratrshmlog_get_env;
+%rename(get_env_shmid) atratrshmlog_get_env_shmid;
 %rename(get_env_id_suffix) atrshmlog_get_env_id_suffix;
 %rename(get_version) atrshmlog_get_version;
 %rename(get_minor_version) atrshmlog_get_minor_version;
@@ -562,6 +628,33 @@ extern int atratrshmlog_create(int key, int count);
 %rename(set_checksum) atrshmlog_set_checksum;  
 %rename(set_autoflush) atrshmlog_set_autoflush;  
 %rename(set_autoflush_process) atrshmlog_set_autoflush_process;  
+%rename(detach) atrshmlog_detach;  
+%rename(reattach) atratrshmlog_reattach;  
+%rename(get_strategy_wait_wait_time) atrshmlog_get_strategy_wait_wait_time;  
+%rename(set_strategy_wait_wait_time) atrshmlog_set_strategy_wait_wait_time;  
+%rename(get_thread_local_pid) atrshmlog_get_thread_local_pid;
+%rename(get_thread_local_index) atrshmlog_get_thread_local_index;
+%rename(get_thread_local_buffer) atrshmlog_get_thread_local_buffer;
+%rename(get_thread_buffer_next_cleanup) atrshmlog_get_thread_buffer_next_cleanup;
+%rename(get_thread_buffer_next_full) atrshmlog_get_thread_buffer_next_full;
+%rename(get_thread_buffer_next_append) atrshmlog_get_thread_buffer_next_append;
+%rename(get_thread_buffer_safeguard) atrshmlog_get_thread_buffer_safeguard;
+%rename(get_thread_buffer_pid) atrshmlog_get_thread_buffer_pid;
+%rename(get_thread_buffer_tid) atrshmlog_get_thread_buffer_tid;
+%rename(get_thread_buffer_acquiretime) atrshmlog_get_thread_buffer_acquiretime;
+%rename(get_thread_buffer_id) atrshmlog_get_thread_buffer_id;
+%rename(get_thread_buffer_chksum) atrshmlog_get_thread_buffer_chksum;
+%rename(get_thread_buffer_size) atrshmlog_get_thread_buffer_size;
+%rename(get_thread_buffer_maxsize) atrshmlog_get_thread_buffer_maxsize;
+%rename(get_thread_buffer_dispose) atrshmlog_get_thread_buffer_dispose;
+%rename(get_thread_buffer_dispatched) atrshmlog_get_thread_buffer_dispatched;
+%rename(get_thread_buffer_payload) atrshmlog_get_thread_buffer_payload;
+%rename(get_slave_to_shm_wait) atrshmlog_get_slave_to_shm_wait;
+%rename(set_slave_to_shm_wait) atrshmlog_set_slave_to_shm_wait;
+%rename(get_last_mem_to_shm) atrshmlog_get_last_mem_to_shm;
+%rename(get_buffer_cleanup_anchor) atrshmlog_get_buffer_cleanup_anchor;
+%rename(get_buffer_full_anchor) atrshmlog_get_buffer_full_anchor;
+%rename(get_buffer_append_anchor) atrshmlog_get_buffer_append_anchor;
 
 %constant int EVENT_POINT_IN_TIME_C = 80;
 %constant int EVENT_POINT_IN_TIME_UCS2 = 112;
@@ -606,7 +699,7 @@ extern atrshmlog_ret_t atrshmlog_init_shm_log(volatile const void *i_area,
 					      const atrshmlog_int32_t i_count_buffers);
 
 
-extern atrshmlog_time_t atrshmlog_gettime(atrshmlog_int32_t event);
+extern atrshmlog_time_t atrshmlog_gettime();
 
 extern atrshmlog_ret_t atrshmlog_write_binary(const atrshmlog_int32_t i_eventnumber,
      const atrshmlog_int32_t i_eventflag,
@@ -841,5 +934,69 @@ atrshmlog_ret_t atrshmlog_peek(volatile const void* area, int index)
 }
 
 extern int atratrshmlog_create(int key, int count);
+
+extern atrshmlog_ret_t atratrshmlog_reattach(int flag0,
+		       int id1,  
+		       int flag2,  
+		       int count3,  
+		       int flag4,  
+		       int iniinadvc5,  
+		       int flag6,  
+		       int bufferstrat7,  
+		       int flag8,  
+		       int wwtime9,  
+		       int flag10,  
+		       int delim11,  
+		       int flag12,  
+		       int evlocks13,  
+		       int flag14,  
+		       int buffinfosz15,  
+		       int flag16,  
+		       int pac17,  
+		       int flag18,  
+		       int slw19,  
+		       int flag20,  
+		       int slc21,  
+		       int flag22,  
+		       int wfs23,  
+		       int flag24,  
+		       int cid25,  
+		       int flag26,  
+		       int f1_27,  
+		       int flag28,  
+		       int f2_29,  
+		       int flag30,  
+		       int f3_31,  
+		       int flag32,  
+		       int f4_33,  
+		       int flag34,  
+		       int f5_35,  
+		       int flag36,  
+		       int f6_37,  
+		       int flag38,  
+		       int f7_39,  
+		       int flag40,  
+		       int f8_41,  
+		       int flag42,  
+		       int f9_43,  
+		       int flag44,  
+		       int f10_45,  
+		       int flag46,  
+		       int f11_47,  
+		       int flag48,  
+		       int f12_49,  
+		       int flag50,  
+		       int f13_51,  
+		       int flag52,  
+		       int chk53,  
+		       int flag54,  
+		       int loff55 
+					     );
+ 
+
+ extern const char* atratrshmlog_get_env(const char* i_suffix);
+
+ extern const char* atratrshmlog_get_env_shmid(void);
+ 
 
 /* end of file */
