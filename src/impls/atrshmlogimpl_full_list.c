@@ -25,3 +25,23 @@
  */
 atomic_intptr_t atrshmlog_tpf = ATOMIC_VAR_INIT(0);
 
+
+/**
+ * \n Main code:
+ *
+ * \brief We get the buffer full anchor
+ *
+ * \return
+ * Pointer to buffer
+ *
+ * test  t_reflexion
+ */
+volatile const void *atrshmlog_get_buffer_full_anchor (void)
+{
+  volatile const void *result;
+
+  result = (volatile const void *)atomic_load(&atrshmlog_tpf);
+
+  return result;
+}
+

@@ -39,9 +39,13 @@ fails to make the inline code if i switch to -g for debugging.
 
 So this is coupled with the defines for
 - ATRSHMLOG_PLATFORM
+- ATRSHMLOG_FLAVOUR
 - ATRSHMLOG_INLINE
 - ATRSHMLOG_INLINE_TSC_CODE
 - ATRSHMLOG_INLINE_GETTIME
+
+See the dot.platform files in the BASEDIR for the settings of
+environment variables for the bin files that are used in the header.
 
 If you want to use the -g or an optimization level that the compiler
 fails to inline you have to switch the last defines to 0.

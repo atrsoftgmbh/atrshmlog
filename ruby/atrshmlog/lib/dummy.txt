@@ -1,0 +1,4 @@
+
+we are a dummy.
+in the next version we add here some stuff to use with the module.
+for now we simply have the module as extension only in place.

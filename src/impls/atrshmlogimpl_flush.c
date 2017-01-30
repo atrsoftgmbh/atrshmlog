@@ -78,9 +78,11 @@ void atrshmlog_flush(void)
 	  t->counter_write2_adaptive_fast = g->counter_write2_adaptive_fast;
 
 	  t->counter_write2_adaptive_very_fast = g->counter_write2_adaptive_very_fast;
+	  if (t->dispose)
+	    g->atrshmlog_targetbuffer_arr[i] = 0;
+	  
+	  atrshmlog_dispatch_buffer(t);
 	}
-      
-      atrshmlog_dispatch_buffer(t);
     }
 }
 

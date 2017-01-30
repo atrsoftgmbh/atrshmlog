@@ -96,9 +96,13 @@ int atrshmlog_init_in_write(atrshmlog_g_tl_t* g)
 	      atrshmlog_tbuff_t* t = g->atrshmlog_targetbuffer_arr[j];
 
 	      if (t)
-		t->dispose = 1;
+		{
+		  t->dispose = 1;
 
-	      atrshmlog_dispatch_buffer(t);
+		  atrshmlog_dispatch_buffer(t);
+		}
+	      
+	      g->atrshmlog_targetbuffer_arr[j] = 0;
 	    }
 	  
 	  g->atrshmlog_idnotok = 1; // no logging for this thread

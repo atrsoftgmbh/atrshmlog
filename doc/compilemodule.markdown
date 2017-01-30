@@ -15,6 +15,8 @@ The script is in the BASEDIR/src directory.
 You have to set up the platform with the dot file in the BASEDIR
 for your platform.
 
+This is setting some environment variables and also sets some defines
+for the compile this way.
 
 Open a shell.
 
@@ -49,16 +51,16 @@ You can redirect with the usual
 
 It takes on my box (Intel P9600 at 2.6 GHz and 8 GB ram with fedora 23
 and virtualbox with win 7 64 bit):
-- about 20 seconds on linux x86_64
-- about 5 minutes on cygwin win 7
-- about 10 minutes on cygwin win 7 for mingw x86_64 target
+- about 40 seconds on linux x86_64
+- about 8 minutes on cygwin win 7
+- about 12 minutes on cygwin win 7 for mingw x86_64 target
 
 You can go through the output, its not so much if everything is right.
 
 The makeall first makes the documentation. It calls doxygen for this.
 
 If you have not installed doxygen you can comment the step in the
-makeall like this.
+buddydoc like this.
 
      # doxygen
 
@@ -67,7 +69,9 @@ The  mingw does not do this step.
 
 
 After the doxygen has done its job we have the compile for the
-C source files. This is a simple loop for all files in the shmcfiles list.
+C source files.
+
+This is a simple loop for all files in the shmcfiles list.
 Any residing object is deleted and then the g99 script is
 used to compile the source file.
 
@@ -86,17 +90,37 @@ There it simply compiles every c file.
 
 After doing the job in the impls it switches back to the src.
 
-The library is made.
+If you have activate the database option you get done the dbs next.
+
+This step is normally off.
+
+The database needs at least the thing and the development part
+in place. And in its full version it needs postgreSQL, mysql or mariadb,
+the oracle 11 or later, the cassandra from apache.
+
+So I have made this optional because I think you will not have
+these in place. If you plan to use the database you have to check for the
+build, adjust it, and then make the proper environment settings.
+
+For oracle there is the unsupported folder with some helper scripts.
+
+Then the library is made.
 
 After the loop for the compile comes the loop for linking.
 
+First the shmbin files, then the internals.
+
 This loop uses the ell script.
 
-Last is the loop for the C++ sources.
+Then the tests .
+
+Last in tests is the loop for the C++ sources.
 
 Again the files in the directory are compiled and it is the
 g++14w script that does the job.
 
+If you have the database option active the linking of the database
+parts is done.
 
 Compile manual
 --------------
@@ -119,7 +143,7 @@ In case of the linkage of c programs its the program name.
 
      $ ell.sh progname
 
-The object has to be there from aformer g99.sh run.
+The object has to be there from a former g99.sh run.
 
 
 Build documentation
@@ -159,7 +183,7 @@ For the headers its
 
 For the library it like this
 
-     $ cp libatrshmlog.a /usr/local/lib
+     $ cp libatrshmlogc.a /usr/local/lib
 
 
 For the documentation you have to copy the subdirectories.

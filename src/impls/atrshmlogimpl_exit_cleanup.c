@@ -141,5 +141,9 @@ void atrshmlog_exit_cleanup (void)
   // No more waiting in loops
   // this has to be AFTER the last use of mem to shm ...
   atrshmlog_set_logging_process_off_final();
+
+  // we detach regulary from the shm
+
+  atrshmlog_detach();
 }
 

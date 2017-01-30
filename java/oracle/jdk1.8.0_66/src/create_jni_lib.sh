@@ -22,28 +22,28 @@ case $JAVA_JNI_PLATFORM in
 	# linux x86_64 gnu
 	LIB=libatrshmlogjni.so
 	SOURCES="atrshmlogjnipackage.c"
-	LIBS=-latrshmlog
+	LIBS=-latrshmlogc
 	;;
 
     cygwin)
 	# cygwin x86_64 gnu
 	LIB=atrshmlogjni.dll
 	SOURCES="atrshmlogjnipackage.c"
-	LIBS=-latrshmlog
+	LIBS=-latrshmlogc
 	;;
 
     mingw)
 	# mingw x86_64 gnu via cygwin
 	LIB=atrshmlogjni.dll
 	SOURCES="atrshmlogjnipackage.c"
-	LIBS=-latrshmlog
+	LIBS=-latrshmlogc
 	;;
 
     posix)
 	# linux x86_64 gnu
 	LIB=libatrshmlogjni.so
 	SOURCES="atrshmlogjnipackage.c"
-	LIBS=-latrshmlog
+	LIBS=-latrshmlogc
 	;;
 	
     *)

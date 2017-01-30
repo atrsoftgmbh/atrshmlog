@@ -1,0 +1,4 @@
+
+we are a dummy.
+in the next version the doc follows.
+for now use the C module and the tests to get a tast how it works.

@@ -635,7 +635,7 @@ This is a small test driver for the jni layer.
 How to use it
 -------------
 
-Import the ATRSHMLOG class and see the ATRSHMLOGTest fro the use of
+Import the ATRSHMLOG class and see the ATRSHMLOGTest for the use of
 attach, gettime and write.
 
 You will need an initialized buffer.
@@ -761,6 +761,19 @@ the content of this file.
 Compile the jni library.
 
      $  create_jni_lib.sh
+
+Test
+----
+
+Beside the small moke test ther is a package tests in ATRSHMLOG.
+You will find there most tests for the module.
+Because the module is always used for the C function its more a test
+that you get the call through from java to the C function - not a test
+of the function itself. That is already done in the C module tests.
+
+If you need stuff for your java project you can get plenty of usage examples here.
+
+And there is a tast for all in start_package_test.sh.
 
 Summary
 -------

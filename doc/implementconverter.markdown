@@ -198,6 +198,25 @@ If you plan to use only binary for the logging you can of course try to
 do it diffrent, but this will cost at least some kind of effort then
 for the tools to use the text files.
 
+Output changes
+--------------
+
+For the output there is also the database thing.
+
+The converter then does not use a file for output, it uses a database.
+The interface is made in functions and a vanilla pointer type for the
+context info the thing needs. So you can also put anything you want as
+a backend under that converter.
+Together with different types of conversions this make it possible to
+make outputs to different systems and even to different types of targets.
+In theory you can also implement a multi db approach here.
+
+There is also a reader with an integrated convert so you can do the
+transfer imemdiate in the reader if you insist.
+
+Check the dbs directory for details.
+
+
 Summary
 -------
 

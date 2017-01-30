@@ -1,0 +1,2 @@
+atrshmlogconvert_my atrshmlogconvert_db.o atrshmlogdb_mariadb.o -L/usr/lib64/mysql -lmysqlclient -lpthread -lz -lm -lssl -lcrypto -ldl 
+atrshmlogreaderd_my atrshmlogreaderd_db.o atrshmlogdb_mariadb.o -L/usr/lib64/mysql -lmysqlclient -lpthread -lz -lm -lssl -lcrypto -ldl 

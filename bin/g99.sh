@@ -135,6 +135,6 @@ esac
 
 ###############################################
 
-$CC $PICFLAG -I. $OPTMODE $* -c
+$CC $CFLAGS $PICFLAG -I. $OPTMODE $* -c
 
 # end of file

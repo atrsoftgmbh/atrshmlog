@@ -23,4 +23,3 @@ atrshmlog_tid_t atrshmlog_get_thread_local_tid (volatile const void *i_local)
 
   return g->atrshmlog_thread_tid;
 }
-

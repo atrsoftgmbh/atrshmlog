@@ -48,6 +48,8 @@ int atrshmlog_transfer_mem_to_shm(const atrshmlog_tbuff_t* restrict i_mem,
 
   ATRSHMLOGSTAT(atrshmlog_counter_mem_to_shm);
 
+  atrshmlog_base_ptr_use_flag++;
+  
   if (atrshmlog_base_ptr == 0)
     {
       result =  atrshmlog_error_mem_to_shm_1;
@@ -268,6 +270,8 @@ int atrshmlog_transfer_mem_to_shm(const atrshmlog_tbuff_t* restrict i_mem,
 
   // however we made it to this point : the buffer is no longer to be transfered.
   ((atrshmlog_tbuff_t*)i_mem)->size = 0;
+
+  atrshmlog_base_ptr_use_flag--;
 
   return result;
   

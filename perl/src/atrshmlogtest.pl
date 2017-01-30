@@ -10,11 +10,11 @@ $ret = Atrshmlog::attach();
 
 print "Attach was $ret \n";
 
-$t1 = Atrshmlog::gettime(1);
+$t1 = Atrshmlog::gettime();
 
 print "time 1 is $t1 \n";
 
-$t2 = Atrshmlog::gettime(1);
+$t2 = Atrshmlog::gettime();
 
 print "time 2 is $t2 \n";
 

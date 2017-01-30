@@ -22,28 +22,28 @@ case $PERL_PLATFORM in
 	# linux x86_64 gnu
 	LIB=Atrshmlog.so
 	SOURCES="Atrshmlog_wrap.c atrshmlog_perlwrapper.c"
-	LIBS=-latrshmlog
+	LIBS=-latrshmlogc
 	;;
 
     cygwin)
 	# cygwin x86_64 gnu
 	LIB=Atrshmlog.dll
 	SOURCES="Atrshmlog_wrap.c atrshmlog_perlwrapper.c"
-	LIBS=-latrshmlog
+	LIBS=-latrshmlogc
 	;;
 
     mingw)
 	# mingw x86_64 gnu via cygwin
-	LIB=atrshmlog.dll
+	LIB=Atrshmlog.dll
 	SOURCES="Atrshmlog_wrap.c atrshmlog_perlwrapper.c"
-	LIBS=-latrshmlog
+	LIBS=-latrshmlogc
 	;;
 
     posix)
 	# linux x86_64 gnu
-	LIB=atrshmlog.so
+	LIB=Atrshmlog.so
 	SOURCES="Atrshmlog_wrap.c atrshmlog_perlwrapper.c"
-	LIBS=-latrshmlog
+	LIBS=-latrshmlogc
 	;;
 	
     *)
