@@ -905,7 +905,7 @@ DIRECTORY python doc
 gcc.notes.1.txt
 
 DIRECTORY python src
-atrshmlogmodule.c
+atrshmlogpython.c
 atrshmlogtest2.py
 atrshmlogtest3.py
 atrshmlogtest.py
