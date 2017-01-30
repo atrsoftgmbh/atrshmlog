@@ -994,4 +994,9 @@ extern atrshmlog_ret_t atratrshmlog_reattach(int flag0,
 					     );
  
 
+ extern const char* atratrshmlog_get_env(const char* i_suffix);
+
+ extern const char* atratrshmlog_get_env_shmid(void);
+ 
+
 /* end of file */
