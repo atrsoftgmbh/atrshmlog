@@ -3,7 +3,7 @@
 
 
 /********************************************************************/
-
+#if 0
 /**
  * \file atrshmlogimpl_write0.c
  */
@@ -504,3 +504,4 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
   
   return atrshmlog_error_ok;
 }
+#endif
