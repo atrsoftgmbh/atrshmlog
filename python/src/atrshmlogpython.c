@@ -2,7 +2,7 @@
  * the python module for the log
  */
 
-/** \file atrshmlogmodule.c
+/** \file atrshmlogpython.c
  * \brief We implement the python bridge for the atrshmlog module
  * 
  * We can do this in python 2 and python 3.
