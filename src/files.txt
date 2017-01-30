@@ -115,6 +115,7 @@ atrshmlogimpl_fence6_flag.c
 atrshmlogimpl_fence7_flag.c
 atrshmlogimpl_fence8_flag.c
 atrshmlogimpl_fence9_flag.c
+atrshmlogimpl_fill_chunk_head.c
 atrshmlogimpl_flush.c
 atrshmlogimpl_free.c
 atrshmlogimpl_full_list.c
