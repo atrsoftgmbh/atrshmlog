@@ -2,7 +2,7 @@
 #include "../atrshmlog_internal.h"
 
 /*******************************************************************/
-
+#if 0
 /**
  * \file atrshmlogimpl_write2.c
  */
@@ -622,3 +622,4 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
   goto afterargv;
 }
 
+#endif

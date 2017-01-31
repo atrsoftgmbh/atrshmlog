@@ -7,7 +7,7 @@
 /**
  * \file atrshmlogimpl_write1.c
  */
-
+#if 0
 /** 
  * \n Main code:
  *
@@ -530,3 +530,4 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
   return atrshmlog_error_ok;
 }
 
+#endif
