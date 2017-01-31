@@ -770,7 +770,7 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
   
   // The hidden mechanism to get things minimised
   // in case we are bound to a layer for another language.
-  if ((i_eventflag == ATRSHMLOGPOINTINTIMEP) | (i_eventflag == ATRSHMLOGPOINTINTIMEp)
+  if ((i_eventflag == ATRSHMLOGPOINTINTIMEP) || (i_eventflag == ATRSHMLOGPOINTINTIMEp)
       )
     {
       if (i_starttime == 0)
@@ -1039,7 +1039,8 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 
   *(p + ( ATRSHMLOGCONTROLDATASIZE - 1 ) )= (char)i_eventflag;
 
-  memcpy(p + ATRSHMLOGCONTROLDATASIZE, i_local, copy_local);
+  if (copy_local != 0)
+    memcpy(p + ATRSHMLOGCONTROLDATASIZE, i_local, copy_local);
 
   tbuff->size += totallen;
 
