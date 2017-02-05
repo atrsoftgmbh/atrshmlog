@@ -273,9 +273,6 @@ atrshmlogimpl_turn_logging_off.c
 atrshmlogimpl_turn_slave_off.c
 atrshmlogimpl_verify.c
 atrshmlogimpl_wait_for_slaves_flag.c
-atrshmlogimpl_write0.c
-atrshmlogimpl_write1.c
-atrshmlogimpl_write2.c
 
 DIRECTORY src alreadythere
 shmCPPfiles.mingw

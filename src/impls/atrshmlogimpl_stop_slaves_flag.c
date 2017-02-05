@@ -22,5 +22,5 @@
  * the slaves. If any thread runs into full buffers after
  * that you have a busy wait thread running.
  */
-volatile int atrshmlog_f_list_buffer_slave_run = 1;
+_Alignas(128) volatile int atrshmlog_f_list_buffer_slave_run = 1;
 

@@ -42,7 +42,7 @@
  * So we put all those in one struct and use this from 
  * the initial get on.
  */
-_Thread_local static atrshmlog_g_tl_t atrshmlog_g_tl = { .atrshmlog_idnotok = -1,
+_Alignas(64) _Thread_local static atrshmlog_g_tl_t atrshmlog_g_tl = { .atrshmlog_idnotok = -1,
 				     .atrshmlog_targetbuffer_arr = { 0 },
 				     0
                                     };
@@ -190,14 +190,14 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 {
 #if ATRSHMLOG_THREAD_LOCAL == 1
 
-  atrshmlog_g_tl_t* g  = (atrshmlog_g_tl_t* )&atrshmlog_g_tl;
+  atrshmlog_g_tl_t* const g  = (atrshmlog_g_tl_t* )&atrshmlog_g_tl;
 
 #endif
       
 #if ATRSHMLOG_THREAD_LOCAL == 0
 
   
-  atrshmlog_g_tl_t* g  = (atrshmlog_g_tl_t* )atrshmlog_get_thread_locals_adress();
+  atrshmlog_g_tl_t* const g  = (atrshmlog_g_tl_t* )atrshmlog_get_thread_locals_adress();
   
 
   // this can happen if pthread specific is in
@@ -206,20 +206,6 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 
 #endif
 
-  ATRSHMLOGSTATLOCAL(g,counter_write0);
-  
-  if (i_eventnumber < 0) {
-    ATRSHMLOGSTAT(atrshmlog_counter_write0_abort1);
-    
-    return atrshmlog_error_write0_1;
-  }
-  
-  if (i_eventnumber >= atrshmlog_event_locks_max) {
-    ATRSHMLOGSTAT(atrshmlog_counter_write0_abort2);
-
-    return atrshmlog_error_write0_2;
-  }
-
   /* We use this flag also as the initialized flag
    * So we have all the initialize stuff hereafter 
    */
@@ -227,7 +213,7 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
     {
       if (g->atrshmlog_idnotok != -1) {
 	ATRSHMLOGSTAT(atrshmlog_counter_write0_abort3);
-
+	
 	return atrshmlog_error_write0_3;
       }
       
@@ -241,9 +227,12 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 	}
     }
 
+  ATRSHMLOGSTATLOCAL(g,counter_write0);
+  
+
   // Initialized
 
-  atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
+  volatile atrshmlog_area_t * const a_shm = ATRSHMLOG_GETAREA;
 
   // can happen - we are detached
   if (a_shm == 0)
@@ -252,14 +241,12 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
     }
   
   /* Can be happen : end of logging anounced by user via flag in shm */
-  if (atomic_load_explicit(&a_shm->ich_habe_fertig, memory_order_acquire) != 0) 
+  if (a_shm->ich_habe_fertig != 0) 
     return atrshmlog_error_write0_6;
   
   // The hidden mechanism to get things minimised
   // in case we are bound to a layer for another language.
-  if (i_eventflag == ATRSHMLOGPOINTINTIMEP
-       || i_eventflag == ATRSHMLOGPOINTINTIMEp
-      )
+  if (((char)i_eventflag & ~0x20) == ATRSHMLOGPOINTINTIMEP)
     {
       if (i_starttime == 0)
 	i_starttime = ATRSHMLOG_GET_TSC_CALL();
@@ -273,11 +260,9 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
     }
 
   
-  atrshmlog_int32_t totallen;
-
   // Do the normal stuff now ...
 
-  totallen = ATRSHMLOGCONTROLDATASIZE;
+  const atrshmlog_int32_t totallen = ATRSHMLOGCONTROLDATASIZE;
 
   int strategy_count = 0;
   
@@ -292,7 +277,7 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 
   if (tbuff == NULL || atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) != 0)
     {
-      g->atrshmlog_targetbuffer_index++;
+      ++g->atrshmlog_targetbuffer_index;
       
       if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
 	g->atrshmlog_targetbuffer_index = 0;
@@ -406,30 +391,30 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
       if (atrshmlog_logging_process_off_final)
 	return atrshmlog_error_write0_5;
 
-      atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
-
       // can happen - we are detached
-      if (a_shm == 0)
+      if (ATRSHMLOG_GETAREA == 0)
 	{
 	  return atrshmlog_error_write0_6;
 	}
   
       /* Can be happen : end of logging anounced by user via flag in shm */
-      if (atomic_load_explicit(&a_shm->ich_habe_fertig, memory_order_acquire) != 0) 
+      if (a_shm->ich_habe_fertig != 0) 
 	return atrshmlog_error_write0_6;
       
       // There is no way to do the things follow for a dispatched buffer
       goto testagain_dispatched;
     }
 
+#if ATRSHMLOG_FENCE_2_OFF == 0  
   if (atrshmlog_thread_fence_2)
     atomic_thread_fence (memory_order_acquire);
-
+#endif
+  
   // Ok. We have an undispatched buffer 
   register size_t akindex = tbuff->size;
 
   // Is the size limit reached ? 
-  if (akindex + totallen > tbuff->maxsize )
+  if ((akindex + totallen) > tbuff->maxsize )
     {
 #if ATRSHMLOGDEBUG == 1
       printf("size hit %ld %ld\n", (long)tbuff->id, (long)akindex);
@@ -449,7 +434,7 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 	return atrshmlog_error_write0_8;
       }
   
-      tbuff->number_dispatched = g->number_dispatched++;
+      tbuff->number_dispatched = ++g->number_dispatched;
 
       tbuff->counter_write0 = g->counter_write0;
 
@@ -501,6 +486,8 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 
   // Ok. we have an undispatched and not full buffer.
     
+  tbuff->size += totallen;
+    
   register char* p = tbuff->b + akindex;
 
   // Transfer the log data
@@ -510,11 +497,7 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
   memcpy(p + sizeof(atrshmlog_time_t) + sizeof(atrshmlog_time_t) + sizeof(atrshmlog_int32_t) , &i_eventnumber, sizeof(atrshmlog_int32_t));
   memcpy(p + sizeof(atrshmlog_time_t) + sizeof(atrshmlog_time_t) + sizeof(atrshmlog_int32_t) + sizeof(atrshmlog_int32_t), &i_userflag, sizeof(atrshmlog_int32_t));
 
-  *(p + ( ATRSHMLOGCONTROLDATASIZE - 1 ) )= (char)i_eventflag;
-
-  akindex += totallen;
-
-  tbuff->size = akindex;
+  *(p + ( ATRSHMLOGCONTROLDATASIZE - 1 ) ) = (char)i_eventflag;
 
   if (g->autoflush)
     {
@@ -525,10 +508,8 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 	return atrshmlog_error_write0_7;
       }
       
-      atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
-
       // can happen - we are detached
-      if (a_shm == 0)
+      if (ATRSHMLOG_GETAREA == 0)
 	{
 	  return atrshmlog_error_write0_8;
 	}
@@ -540,7 +521,7 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 	return atrshmlog_error_write0_8;
       }
   
-      tbuff->number_dispatched = g->number_dispatched++;
+      tbuff->number_dispatched = ++g->number_dispatched;
 
       tbuff->counter_write0 = g->counter_write0;
 
@@ -583,7 +564,7 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 	  atrshmlog_dispatch_buffer(tbuff);
 
 	  // Switch the targetbuffer and try again
-	  g->atrshmlog_targetbuffer_index++;
+	  ++g->atrshmlog_targetbuffer_index;
 
 	  if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
 	    g->atrshmlog_targetbuffer_index = 0;
@@ -595,7 +576,7 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 	  // we calc the checksum trivial. but this is ok for our needs
 	  if (atrshmlog_checksum)
 	    {
-	      for (int k = 0; k < tbuff->size; k++)
+	      for (int k = 0; k < tbuff->size; ++k)
 		{
 		  chksum += tbuff->b[k];
 		}
@@ -678,59 +659,19 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 {
 #if ATRSHMLOG_THREAD_LOCAL == 1
 
-  atrshmlog_g_tl_t* g  = (atrshmlog_g_tl_t* )&atrshmlog_g_tl;
+  atrshmlog_g_tl_t* const g  = (atrshmlog_g_tl_t* )&atrshmlog_g_tl;
 
 #endif
       
 #if ATRSHMLOG_THREAD_LOCAL == 0
 
-  atrshmlog_g_tl_t* g  = (atrshmlog_g_tl_t* )atrshmlog_get_thread_locals_adress();
+  atrshmlog_g_tl_t* const g  = (atrshmlog_g_tl_t* )atrshmlog_get_thread_locals_adress();
 
   // this can happen if pthread specific is in
   if (g == NULL)
     return atrshmlog_error_write1_13;
 
 #endif
-
-  ATRSHMLOGSTATLOCAL(g,counter_write1);
-
-  /* This is a two way used one. Its the size and the flag too */
-  int copy_local = i_size;
-
-#if 0
-  /* No logging , wrong parameter ... */
-  if (i_size < 0) {
-    ATRSHMLOGSTAT(atrshmlog_counter_write1_abort5);
-    
-    return atrshmlog_error_write1_1;
-  }
-#endif
-  
-  /* If the pointer is null we set the length to 0 */
-  if (!i_local)
-    copy_local = 0;
-
-#if 0
-  if (i_eventnumber < 0) {
-    ATRSHMLOGSTAT(atrshmlog_counter_write1_abort1);
-    
-    return atrshmlog_error_write1_2;
-  }
-#endif
-
-  // we use a trick here. the unsigned of negative numbers is big ...
-  if (((unsigned int)i_eventnumber) >= atrshmlog_event_locks_max) {
-    ATRSHMLOGSTAT(atrshmlog_counter_write1_abort2);
-    
-    return atrshmlog_error_write1_3;
-  }
-  
-  if (((unsigned int)copy_local) >= (ATRSHMLOGBUFFER_INFOSIZE - ATRSHMLOGCONTROLDATASIZE - 1))
-    {
-      ATRSHMLOGSTAT(atrshmlog_counter_write1_abort6);
-      // Cannot work.
-      return atrshmlog_error_write1_4;
-    }
 
   /* We use this flag also as the initialized flag
    * So we have all the initialize stuff hereafter 
@@ -753,10 +694,11 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 	}
     }
 
+  ATRSHMLOGSTATLOCAL(g,counter_write1);
+
   // Initialized
 
-
-  atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
+  volatile atrshmlog_area_t * const a_shm = ATRSHMLOG_GETAREA;
 
   // can happen - we are detached
   if (a_shm == 0)
@@ -765,13 +707,12 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
     }
   
   /* Can be happen : end of logging anounced by user via flag in shm */
-  if (atomic_load_explicit(&a_shm->ich_habe_fertig, memory_order_acquire) != 0) 
+  if (a_shm->ich_habe_fertig != 0) 
     return atrshmlog_error_write1_8;
   
   // The hidden mechanism to get things minimised
   // in case we are bound to a layer for another language.
-  if ((i_eventflag == ATRSHMLOGPOINTINTIMEP) || (i_eventflag == ATRSHMLOGPOINTINTIMEp)
-      )
+  if (((char)i_eventflag & ~0x20) == ATRSHMLOGPOINTINTIMEP)
     {
       if (i_starttime == 0)
 	i_starttime = ATRSHMLOG_GET_TSC_CALL();
@@ -784,11 +725,16 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 	i_endtime = ATRSHMLOG_GET_TSC_CALL();
     }
 
-  atrshmlog_int32_t totallen;
-  
   // Do the normal stuff now ...
 
-  totallen = ATRSHMLOGCONTROLDATASIZE + copy_local;
+  /* This is a two way used one. Its the size and the flag too */
+  size_t copy_local = i_size;
+
+  /* If the pointer is null we set the length to 0 */
+  if (!i_local)
+    copy_local = 0;
+
+  const atrshmlog_int32_t totallen = ATRSHMLOGCONTROLDATASIZE + copy_local;
 
   int strategy_count = 0;
   
@@ -803,7 +749,7 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 
   if (tbuff == NULL || atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) != 0)
     {
-      g->atrshmlog_targetbuffer_index++;
+      ++g->atrshmlog_targetbuffer_index;
 
       if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
 	g->atrshmlog_targetbuffer_index = 0;
@@ -917,37 +863,37 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
       if (atrshmlog_logging_process_off_final)
 	return atrshmlog_error_write1_7;
 
-      a_shm = ATRSHMLOG_GETAREA;
-
       // can happen - we are detached
-      if (a_shm == 0)
+      if (ATRSHMLOG_GETAREA == 0)
 	{
 	  return atrshmlog_error_write1_8;
 	}
   
       /* Can be happen : end of logging anounced by user via flag in shm */
-      if (atomic_load_explicit(&a_shm->ich_habe_fertig, memory_order_acquire) != 0) 
+      if (a_shm->ich_habe_fertig != 0) 
 	return atrshmlog_error_write1_8;
       
       // There is no way to do the things follow for a dispatched buffer
       goto testagain_dispatched;
     }
 
+#if ATRSHMLOG_FENCE_2_OFF == 0  
   if (atrshmlog_thread_fence_2)
     atomic_thread_fence (memory_order_acquire);
-
+#endif
+  
   // special case for the payload thing
-  if (totallen > tbuff->maxsize) {
+  if ((unsigned int)totallen > tbuff->maxsize) {
     ATRSHMLOGSTAT(atrshmlog_counter_write1_abort7);
     
     return atrshmlog_error_write1_9; // Cannot work.
   }
   
   // Ok. We have an undispatched buffer 
-  //  register size_t akindex = tbuff->size;
+  register size_t akindex = tbuff->size;
 
   // Is the size limit reached ? 
-  if ((tbuff->size + totallen) > tbuff->maxsize )
+  if ((akindex + totallen) > tbuff->maxsize )
     {
 #if ATRSHMLOGDEBUG == 1
       printf("size hit %ld %ld\n", (long)tbuff->id, (long)tbuff->size);
@@ -960,10 +906,8 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 	return atrshmlog_error_write1_10;
       }
 
-      a_shm = ATRSHMLOG_GETAREA;
-
       // can happen - we are detached
-      if (a_shm == 0)
+      if (ATRSHMLOG_GETAREA == 0)
 	{
 	  return atrshmlog_error_write1_8;
 	}
@@ -975,7 +919,7 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 	return atrshmlog_error_write1_11;
       }
       
-      tbuff->number_dispatched = g->number_dispatched++;
+      tbuff->number_dispatched = ++g->number_dispatched;
 
       tbuff->counter_write0 = g->counter_write0;
 
@@ -1016,7 +960,7 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
       atrshmlog_dispatch_buffer(tbuff);
 
       // Switch the targetbuffer and try again
-      g->atrshmlog_targetbuffer_index++;
+      ++g->atrshmlog_targetbuffer_index;
 
       if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
 	g->atrshmlog_targetbuffer_index = 0;
@@ -1026,9 +970,10 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
     } 
 
   // Ok. We have an undispatched and not full buffer.
-  //  s = ATRSHMLOG_GET_TSC_CALL();
+
+  tbuff->size += totallen;
     
-  register char* p = tbuff->b + tbuff->size;
+  register char* p = tbuff->b + akindex;
 
   // Transfer the log data
   memcpy(p, &i_starttime, sizeof(atrshmlog_time_t));
@@ -1039,11 +984,11 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 
   *(p + ( ATRSHMLOGCONTROLDATASIZE - 1 ) )= (char)i_eventflag;
 
-  if (copy_local != 0)
-    memcpy(p + ATRSHMLOGCONTROLDATASIZE, i_local, copy_local);
-
-  tbuff->size += totallen;
-
+  if (copy_local)
+    {
+      memcpy(p + ATRSHMLOGCONTROLDATASIZE, i_local, copy_local);
+    }
+  
   if (g->autoflush)
     {
       // Checkings: valid buffer 
@@ -1053,10 +998,8 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 	return atrshmlog_error_write0_7;
       }
       
-      atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
-
       // can happen - we are detached
-      if (a_shm == 0)
+      if (ATRSHMLOG_GETAREA == 0)
 	{
 	  return atrshmlog_error_write1_8;
 	}
@@ -1068,7 +1011,7 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 	return atrshmlog_error_write1_11;
       }
   
-      tbuff->number_dispatched = g->number_dispatched++;
+      tbuff->number_dispatched = ++g->number_dispatched;
 
       tbuff->counter_write0 = g->counter_write0;
 
@@ -1111,7 +1054,7 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 	  atrshmlog_dispatch_buffer(tbuff);
 
 	  // Switch the targetbuffer and try again
-	  g->atrshmlog_targetbuffer_index++;
+	  ++g->atrshmlog_targetbuffer_index;
 
 	  if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
 	    g->atrshmlog_targetbuffer_index = 0;
@@ -1123,7 +1066,7 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 	  // we calc the checksum trivial. but this is ok for our needs
 	  if (atrshmlog_checksum)
 	    {
-	      for (int k = 0; k < tbuff->size; k++)
+	      for (int k = 0; k < tbuff->size; ++k)
 		{
 		  chksum += tbuff->b[k];
 		}
@@ -1205,61 +1148,19 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 {
 #if ATRSHMLOG_THREAD_LOCAL == 1
 
-  atrshmlog_g_tl_t* g  = (atrshmlog_g_tl_t* )&atrshmlog_g_tl;
+  atrshmlog_g_tl_t* const g  = (atrshmlog_g_tl_t* )&atrshmlog_g_tl;
 
 #endif
       
 #if ATRSHMLOG_THREAD_LOCAL == 0
 
-  atrshmlog_g_tl_t* g  = (atrshmlog_g_tl_t* )atrshmlog_get_thread_locals_adress();
+  atrshmlog_g_tl_t* const g  = (atrshmlog_g_tl_t* )atrshmlog_get_thread_locals_adress();
 
   // this can happen if pthread specific is in
   if (g == NULL)
     return atrshmlog_error_write2_13;
 
 #endif
-
-  ATRSHMLOGSTATLOCAL(g,counter_write2);
-
-  // this is a bit a compromise now.
-  // in a later version i try to move the argv directly,
-  // so we spare time and space. But for now
-  // we use a helper here ...
-  char atrshmlog_argvbuffer[ATRSHMLOGARGVBUFFERLEN];
-  
-  /* This is a two way used one. Its the size and the flag too */
-  int copy_local = i_size;
-
-  /* No logging , wrong parameter ... */
-  if (i_size < 0) {
-    ATRSHMLOGSTAT(atrshmlog_counter_write2_abort5);
-
-    return atrshmlog_error_write2_1;
-  }
-  
-  /* If the pointer is null we set the length to 0 */
-  if (!i_local)
-    copy_local = 0;
-
-  if (i_eventnumber < 0) {
-    ATRSHMLOGSTAT(atrshmlog_counter_write2_abort1);
-    
-    return atrshmlog_error_write2_2;
-  }
-  
-  if (i_eventnumber >= atrshmlog_event_locks_max) {
-    ATRSHMLOGSTAT(atrshmlog_counter_write2_abort2);
-    
-    return atrshmlog_error_write2_3;
-  }
-  
-  if (i_size >= ATRSHMLOGBUFFER_INFOSIZE - ATRSHMLOGCONTROLDATASIZE - 1)
-    {
-      ATRSHMLOGSTAT(atrshmlog_counter_write2_abort6);
-
-      // Cannot work.
-      return atrshmlog_error_write2_4;
-    }
 
   /* We use this flag also as the initialized flag
    * So we have all the initialize stuff hereafter 
@@ -1282,9 +1183,11 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 	}
     }
 
+  ATRSHMLOGSTATLOCAL(g,counter_write2);
+
   // Initialized
-  
-  atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
+
+  volatile atrshmlog_area_t * const a_shm = ATRSHMLOG_GETAREA;
 
   // can happen - we are detached
   if (a_shm == 0)
@@ -1293,14 +1196,12 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
     }
   
   /* Can be happen : end of logging anounced by user via flag in shm */
-  if (atomic_load_explicit(&a_shm->ich_habe_fertig, memory_order_acquire) != 0) 
+  if (a_shm->ich_habe_fertig != 0) 
     return atrshmlog_error_write2_8;
   
   // The hidden mechanism to get things minimised
   // in case we are bound to a layer for another language.
-  if (i_eventflag == ATRSHMLOGPOINTINTIMEP
-       || i_eventflag == ATRSHMLOGPOINTINTIMEp
-      )
+  if (((char)i_eventflag & ~0x20) == ATRSHMLOGPOINTINTIMEP)
     {
       if (i_starttime == 0)
 	i_starttime = ATRSHMLOG_GET_TSC_CALL();
@@ -1312,6 +1213,19 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
       if (i_endtime == 0)
 	i_endtime = ATRSHMLOG_GET_TSC_CALL();
     }
+
+  // this is a bit a compromise now.
+  // in a later version i try to move the argv directly,
+  // so we spare time and space. But for now
+  // we use a helper here ...
+  char atrshmlog_argvbuffer[ATRSHMLOGARGVBUFFERLEN];
+  
+  /* This is a two way used one. Its the size and the flag too */
+  size_t copy_local = i_size;
+
+  /* If the pointer is null we set the length to 0 */
+  if (!i_local)
+    copy_local = 0;
 
   /* We collect at max the length of the argv.
    * Having more data in the argv is simply ignored, the max is the buffer
@@ -1329,11 +1243,10 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
   ;
 
 
-  atrshmlog_int32_t totallen;
-  
+    
   // Do the normal stuff now ...
 
-  totallen = ATRSHMLOGCONTROLDATASIZE + argvbufferlen + copy_local;
+  const atrshmlog_int32_t totallen = ATRSHMLOGCONTROLDATASIZE + argvbufferlen + copy_local;
 
   int strategy_count = 0;
   
@@ -1348,7 +1261,7 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 
   if (tbuff == NULL || atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) != 0)
     {
-      g->atrshmlog_targetbuffer_index++;
+      ++g->atrshmlog_targetbuffer_index;
 
       if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
 	g->atrshmlog_targetbuffer_index = 0;
@@ -1462,27 +1375,27 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
       if (atrshmlog_logging_process_off_final)
 	return atrshmlog_error_write2_7;
 
-      atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
-
       // can happen - we are detached
-      if (a_shm == 0)
+      if (ATRSHMLOG_GETAREA == 0)
 	{
 	  return atrshmlog_error_write2_8;
 	}
   
       /* Can be happen : end of logging anounced by user via flag in shm */
-      if (atomic_load_explicit(&a_shm->ich_habe_fertig, memory_order_acquire) != 0) 
+      if (a_shm->ich_habe_fertig != 0) 
 	return atrshmlog_error_write2_8;
       
       // There is no way to do the things follow for a dispatched buffer
       goto testagain_dispatched;
     }
 
+#if ATRSHMLOG_FENCE_2_OFF == 0  
   if (atrshmlog_thread_fence_2)
     atomic_thread_fence (memory_order_acquire);
-
+#endif
+  
   // special case for the argv thing
-  if (totallen > tbuff->maxsize) {
+  if ((unsigned int)totallen > tbuff->maxsize) {
     ATRSHMLOGSTAT(atrshmlog_counter_write2_abort7);
     
     return atrshmlog_error_write2_9; // Cannot work.
@@ -1492,7 +1405,7 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
   register size_t akindex = tbuff->size;
 
   // Is the size limit reached ? 
-  if (akindex + totallen > tbuff->maxsize )
+  if ((akindex + totallen) > tbuff->maxsize )
     {
       // Checkings: valid buffer 
       if (tbuff->safeguardfront != ATRSHMLOGSAFEGUARDVALUE) {
@@ -1501,10 +1414,8 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 	return atrshmlog_error_write2_10;
       }
       
-      atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
-
       // can happen - we are detached
-      if (a_shm == 0)
+      if (ATRSHMLOG_GETAREA == 0)
 	{
 	  return atrshmlog_error_write2_8;
 	}
@@ -1516,7 +1427,7 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 	return atrshmlog_error_write2_11;
       }
       
-      tbuff->number_dispatched = g->number_dispatched++;
+      tbuff->number_dispatched = ++g->number_dispatched;
 
       tbuff->counter_write0 = g->counter_write0;
 
@@ -1558,7 +1469,7 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
       atrshmlog_dispatch_buffer(tbuff);
 
       // Switch the targetbuffer and try again
-      g->atrshmlog_targetbuffer_index++;
+      ++g->atrshmlog_targetbuffer_index;
 
       if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
 	g->atrshmlog_targetbuffer_index = 0;
@@ -1568,6 +1479,8 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
     }
 
   // Ok. We have an undispatched and not full buffer.
+    
+  tbuff->size += totallen;
     
   register char* p = tbuff->b + akindex;
 
@@ -1590,11 +1503,6 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
       memcpy(p + ATRSHMLOGCONTROLDATASIZE + copy_local, atrshmlog_argvbuffer, argvbufferlen);
     }
 
-
-  akindex += totallen;
-
-  tbuff->size = akindex;
-
   if (g->autoflush)
     {
       // Checkings: valid buffer 
@@ -1603,11 +1511,9 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 	
 	return atrshmlog_error_write2_7;
       }
-      
-      atrshmlog_area_t * a_shm = ATRSHMLOG_GETAREA;
 
       // can happen - we are detached
-      if (a_shm == 0)
+      if (ATRSHMLOG_GETAREA == 0)
 	{
 	  return atrshmlog_error_write2_8;
 	}
@@ -1619,7 +1525,7 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 	return atrshmlog_error_write2_11;
       }
   
-      tbuff->number_dispatched = g->number_dispatched++;
+      tbuff->number_dispatched = ++g->number_dispatched;
 
       tbuff->counter_write0 = g->counter_write0;
 
@@ -1663,7 +1569,7 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 	  atrshmlog_dispatch_buffer(tbuff);
 
 	  // Switch the targetbuffer and try again
-	  g->atrshmlog_targetbuffer_index++;
+	  ++g->atrshmlog_targetbuffer_index;
 
 	  if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
 	    g->atrshmlog_targetbuffer_index = 0;
@@ -1675,7 +1581,7 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 	  // we calc the checksum trivial. but this is ok for our needs
 	  if (atrshmlog_checksum)
 	    {
-	      for (int k = 0; k < tbuff->size; k++)
+	      for (int k = 0; k < tbuff->size; ++k)
 		{
 		  chksum += tbuff->b[k];
 		}

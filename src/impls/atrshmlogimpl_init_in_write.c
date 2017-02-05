@@ -12,7 +12,7 @@
 /**
  * We need a safe guard against race conditions 
  */
-static atomic_flag atrshmlog_init_in_write_once_flag = ATOMIC_FLAG_INIT;
+_Alignas(128) static atomic_flag atrshmlog_init_in_write_once_flag = ATOMIC_FLAG_INIT;
 
 
 /**

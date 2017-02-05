@@ -495,6 +495,53 @@ bumm bumm bumm bumm error in platform active count
 // nothing to change
 #endif
 
+/**
+ * We switch the fence in write off if we are in intel land
+ */
+#define ATRSHMLOG_FENCE_2_OFF 0
+
+#if  ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
+
+#undef ATRSHMLOG_FENCE_2_OFF
+#define ATRSHMLOG_FENCE_2_OFF 1
+
+#endif
+
+#if  ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC == 1
+
+#undef ATRSHMLOG_FENCE_2_OFF
+#define ATRSHMLOG_FENCE_2_OFF 1
+
+#endif
+
+#if  ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 1
+
+#undef ATRSHMLOG_FENCE_2_OFF
+#define ATRSHMLOG_FENCE_2_OFF 1
+
+#endif
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+
+#undef ATRSHMLOG_FENCE_2_OFF
+#define ATRSHMLOG_FENCE_2_OFF 1
+
+#endif
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
+
+#undef ATRSHMLOG_FENCE_2_OFF
+#define ATRSHMLOG_FENCE_2_OFF 1
+
+#endif
+
+#if ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC == 1
+
+#undef ATRSHMLOG_FENCE_2_OFF
+#define ATRSHMLOG_FENCE_2_OFF 1
+
+#endif
+
 // candidates for the platform tsc call function
 // #define ATRSHMLOG_GET_TSC_CALL atrshmlog_get_tsc_par_x86_64_gnu
 // #define ATRSHMLOG_GET_TSC_CALL atrshmlog_get_tsc_fence_x86_64_gnu

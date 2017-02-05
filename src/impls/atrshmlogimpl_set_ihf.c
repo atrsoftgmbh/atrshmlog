@@ -22,12 +22,12 @@ atrshmlog_ret_t atrshmlog_set_area_ich_habe_fertig(volatile const void* i_area, 
   if (!(i_area && atrshmlog_attach_once != 0))
     return atrshmlog_error_area_ich_habe_fertig_1;
   
-  int ret = atomic_load(&((volatile atrshmlog_area_t *)i_area)->ich_habe_fertig);
+  int ret = ((volatile atrshmlog_area_t *)i_area)->ich_habe_fertig;
 
   // we cast const away. const is used to hinder the user of the module to
   // accidently write. but this function really has to write.
   // so we use a bad thing here, cast const away...
-  atomic_store(&((volatile atrshmlog_area_t *)i_area)->ich_habe_fertig, i_flag);
+  ((volatile atrshmlog_area_t *)i_area)->ich_habe_fertig = i_flag;
 
   return ret;
 }

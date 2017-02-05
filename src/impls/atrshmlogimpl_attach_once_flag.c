@@ -12,5 +12,5 @@
  * \brief We are the flag for attach has been done
  *
  */
-volatile int atrshmlog_attach_once = 0;
+_Alignas(128) volatile int atrshmlog_attach_once = 0;
 

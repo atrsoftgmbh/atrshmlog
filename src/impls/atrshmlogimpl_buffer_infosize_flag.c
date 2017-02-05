@@ -32,5 +32,5 @@
  * There is an env in attach to set it external.
  * It works only for the dyn allocated memory.
  */
-int atrshmlog_buffer_infosize = ATRSHMLOGBUFFER_INFOSIZE;
+_Alignas(128) int atrshmlog_buffer_infosize = ATRSHMLOGBUFFER_INFOSIZE;
 

@@ -54,7 +54,7 @@
  * - reader output additional to the buffer
  * - converter input
  */
-#define ATRSHMLOGVERSION (1)
+#define ATRSHMLOGVERSION (2)
 
 /**
  * \brief The minor version number.
@@ -63,7 +63,7 @@
  * Can mean additional functions for fences, sleeps etc.
  * Not meaning a simple bugfix.
  */
-#define ATRSHMLOGMINORVERSION (3)
+#define ATRSHMLOGMINORVERSION (0)
 
 /**
  * \brief Patch level version for handling of errors and changes internal .
@@ -984,7 +984,7 @@ struct atrshmlog_buffer_s {
    * The initial time of the process that wrote the buffer
    */
   atrshmlog_internal_time_t inittime;
-
+  
   /**
    * The click before the real time
    */
@@ -1137,8 +1137,9 @@ struct atrshmlog_buffer_s {
    * So we use that index. We add this to the start and get the first byte
    * for the buffer data.
    */
-   int info;
+  int info;
 
+  char filler1[128];
 };
 
 /** The typedef for the struct */ 
@@ -1171,6 +1172,8 @@ struct atrshmlog_area_s {
    */
   volatile long shmsafeguard; 
 
+  char filler1[128];
+  
   /**
    * The anchor of the available list
    * \li Index -1 is empty, 
@@ -1178,6 +1181,8 @@ struct atrshmlog_area_s {
    */
   atomic_int shma;
   
+  char filler2[128];
+
   /**
    * The anchor of the full list.
    * \li Index -1 is empty,
@@ -1185,6 +1190,8 @@ struct atrshmlog_area_s {
    */
   atomic_int shmf;
 
+  char filler3[128];
+  
   /** The buffer count is ... ro for users   */
   volatile int shmcount; 
 
@@ -1196,7 +1203,7 @@ struct atrshmlog_area_s {
    *
    * rw
    */
-  atomic_int ich_habe_fertig;
+  volatile int ich_habe_fertig;
 
   /** 
    * The info for the reader rw 
@@ -1217,6 +1224,8 @@ struct atrshmlog_area_s {
    * The pid of the writer 
    */
   volatile atrshmlog_pid_t writerpid;
+
+  char filler4[128];
 
   /** 
    * The array of the descriptors for the buffers 

@@ -21,5 +21,5 @@
  * which it gets with the iteration
  * or switch the slave to stop via flag.
  */
-atomic_intptr_t atrshmlog_tpslave = ATOMIC_VAR_INIT(0);
+_Alignas(128) atomic_intptr_t atrshmlog_tpslave = ATOMIC_VAR_INIT(0);
 

@@ -139,7 +139,7 @@ atrshmlog_ret_t atrshmlog_init_shm_log(volatile const void *i_area,
   atomic_init(&a->shmf, -1);
 
   /* The flag that stops system wide logging */
-  atomic_init(&a->ich_habe_fertig , 0);
+  a->ich_habe_fertig = 0;
   
   a->readerflag = 0;
   a->readerpid = 0;

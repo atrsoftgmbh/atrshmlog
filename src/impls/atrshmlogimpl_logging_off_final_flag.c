@@ -23,5 +23,5 @@
  * 
  * So this works not instantan, but with a little time shift.
  */
-int atrshmlog_logging_process_off_final = 0;
+_Alignas(128) int atrshmlog_logging_process_off_final = 0;
 

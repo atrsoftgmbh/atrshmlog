@@ -13,7 +13,7 @@
  *
  * We need a once init flag here 
  */
-static atomic_flag atrshmlog_alloc_init = ATOMIC_FLAG_INIT;
+_Alignas(128) static atomic_flag atrshmlog_alloc_init = ATOMIC_FLAG_INIT;
 
 /** 
  * \brief We allocate a buffer for the use of thread loging.

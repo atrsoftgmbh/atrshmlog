@@ -30,5 +30,5 @@
  *
  * If you dont do it it is set in the first call in attach.
  */
-char atrshmlog_prefix_name_buffer[ATRSHMLOG_PREFIX_SIZE];
+_Alignas(128) char atrshmlog_prefix_name_buffer[ATRSHMLOG_PREFIX_SIZE];
 

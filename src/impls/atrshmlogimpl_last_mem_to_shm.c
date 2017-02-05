@@ -12,4 +12,4 @@
  * \brief  We hold the last clicktime for a transfer of logbuffer to area.
  *
  */
-atomic_int atrshmlog_last_mem_to_shm = ATOMIC_VAR_INIT(ATRSHMLOG_TRANSFER_TO_SHM_START_DEFAULT);
+_Alignas(128) atomic_int atrshmlog_last_mem_to_shm = ATOMIC_VAR_INIT(ATRSHMLOG_TRANSFER_TO_SHM_START_DEFAULT);

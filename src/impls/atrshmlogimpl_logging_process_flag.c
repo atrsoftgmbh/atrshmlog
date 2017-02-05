@@ -27,5 +27,5 @@
  *
  * There is an env in attach to set this.
  */
-volatile atrshmlog_int32_t atrshmlog_logging_process = 0;
+_Alignas(128) volatile atrshmlog_int32_t atrshmlog_logging_process = 0;
 

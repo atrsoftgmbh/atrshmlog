@@ -73,7 +73,7 @@
  *
  * This memory is then connected in the descriptors.
  */
-char atrshmlog_buffers_prealloced_chunks[ATRSHMLOGBUFFER_PREALLOCED_COUNT * ATRSHMLOGBUFFER_INFOSIZE ];
+_Alignas(128) char atrshmlog_buffers_prealloced_chunks[ATRSHMLOGBUFFER_PREALLOCED_COUNT * ATRSHMLOGBUFFER_INFOSIZE ];
 
 /**
  * \n Main code:
@@ -121,7 +121,7 @@ char atrshmlog_buffers_prealloced_chunks[ATRSHMLOGBUFFER_PREALLOCED_COUNT * ATRS
  * footprint - its a running fragmenter then 
  *
  */
-atrshmlog_tbuff_t atrshmlog_buffers_prealloced[ATRSHMLOGBUFFER_PREALLOCED_COUNT]
+_Alignas(128) atrshmlog_tbuff_t atrshmlog_buffers_prealloced[ATRSHMLOGBUFFER_PREALLOCED_COUNT]
 = {
   ATRSHMLOGBUFFERS_PRE(0),
   ATRSHMLOGBUFFERS_PRE(1),
@@ -211,7 +211,7 @@ atrshmlog_tbuff_t atrshmlog_buffers_prealloced[ATRSHMLOGBUFFER_PREALLOCED_COUNT]
  * AFTER an exit call ...
  *
  */
-atomic_intptr_t atrshmlog_tps = ATOMIC_VAR_INIT((intptr_t)atrshmlog_buffers_prealloced);
+_Alignas(128) atomic_intptr_t atrshmlog_tps = ATOMIC_VAR_INIT((intptr_t)atrshmlog_buffers_prealloced);
 
 
 /**
@@ -261,7 +261,7 @@ volatile const void *atrshmlog_get_buffer_cleanup_anchor (void)
  * Be sure you know what you do if you try to use a buffer after a dispose 
  * in the old thread ....
  */
-atomic_intptr_t atrshmlog_tpa = ATOMIC_VAR_INIT((intptr_t)atrshmlog_buffers_prealloced);
+_Alignas(128) atomic_intptr_t atrshmlog_tpa = ATOMIC_VAR_INIT((intptr_t)atrshmlog_buffers_prealloced);
 
 /**
  * \n Main code:
