@@ -26,5 +26,5 @@
  *
  * For starters we wait loop.
  */
-int atrshmlog_buffer_strategy = atrshmlog_strategy_wait;
+_Alignas(128) int atrshmlog_buffer_strategy = atrshmlog_strategy_wait;
 

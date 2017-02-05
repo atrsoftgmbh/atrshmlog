@@ -15,5 +15,5 @@
  * At start its the number of buffers on the static buffer list.
  * Later on this can be growing in case we need dyn memory .
  */
-volatile int atrshmlog_acquire_count = ATRSHMLOGBUFFER_PREALLOCED_COUNT;
+_Alignas(128) volatile int atrshmlog_acquire_count = ATRSHMLOGBUFFER_PREALLOCED_COUNT;
 

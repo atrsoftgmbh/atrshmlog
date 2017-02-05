@@ -15,5 +15,5 @@
  * allocated buffer in the connect function.
  * So in theory they are diffrent but after the connect should be same.
 */
-volatile int atrshmlog_buffer_id = ATRSHMLOGBUFFER_PREALLOCED_COUNT;
+_Alignas(128) volatile int atrshmlog_buffer_id = ATRSHMLOGBUFFER_PREALLOCED_COUNT;
 

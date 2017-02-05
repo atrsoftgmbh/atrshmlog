@@ -24,5 +24,5 @@
  *
  * There is an env in attach to set this.
  */
-volatile  int atrshmlog_clock_id = 1; 
+_Alignas(128) volatile  int atrshmlog_clock_id = 1; 
 

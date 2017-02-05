@@ -23,7 +23,7 @@
  *
  * So we are empty at begining.
  */
-atomic_intptr_t atrshmlog_tpf = ATOMIC_VAR_INIT(0);
+_Alignas(128) atomic_intptr_t atrshmlog_tpf = ATOMIC_VAR_INIT(0);
 
 
 /**

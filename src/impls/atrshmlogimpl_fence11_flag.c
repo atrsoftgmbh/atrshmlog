@@ -17,5 +17,5 @@
  *
  * For the fences see the doc.
  */
-int atrshmlog_thread_fence_11 = 0;
+_Alignas(128) int atrshmlog_thread_fence_11 = 0;
 

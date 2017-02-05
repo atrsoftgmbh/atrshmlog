@@ -42,7 +42,7 @@
  * So we put all those in one struct and use this from 
  * the initial get on.
  */
-_Thread_local static atrshmlog_g_tl_t atrshmlog_g_tl = { .atrshmlog_idnotok = -1,
+_Alignas(64) _Thread_local static atrshmlog_g_tl_t atrshmlog_g_tl = { .atrshmlog_idnotok = -1,
 				     .atrshmlog_targetbuffer_arr = { 0 },
 				     0
                                     };

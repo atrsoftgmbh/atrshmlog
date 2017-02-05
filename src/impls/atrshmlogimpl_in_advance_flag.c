@@ -19,5 +19,5 @@
  * phase of running system to the phase of initialization.
  * this was encountered on mingw port.
  */
-int atrshmlog_init_buffers_in_advance = ATRSHMLOGINITINADVANCEDEFAULT;
+_Alignas(128) int atrshmlog_init_buffers_in_advance = ATRSHMLOGINITINADVANCEDEFAULT;
 

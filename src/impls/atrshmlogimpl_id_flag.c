@@ -23,5 +23,5 @@
  *
  * Use this as it where readonly.
  */
-volatile int atrshmlog_id = 0;
+_Alignas(128) volatile int atrshmlog_id = 0;
 

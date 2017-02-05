@@ -28,5 +28,5 @@
  *
  * Use it as it where readonly.
  */
-volatile atrshmlog_pid_t atrshmlog_attach_pid;
+_Alignas(128) volatile atrshmlog_pid_t atrshmlog_attach_pid;
 

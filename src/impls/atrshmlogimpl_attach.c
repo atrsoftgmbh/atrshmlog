@@ -100,7 +100,7 @@ typedef struct atrshmlog_init_param_s atrshmlog_init_param_t;
 /**
  * We need a safe guard against race conditions 
  */
-static atomic_flag atrshmlog_attach_once_flag = ATOMIC_FLAG_INIT;
+_Alignas(128) static atomic_flag atrshmlog_attach_once_flag = ATOMIC_FLAG_INIT;
 
 /**
  * \n Main code:

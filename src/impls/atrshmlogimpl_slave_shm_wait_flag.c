@@ -16,5 +16,5 @@
  * So we have at least no busy wait here.
  *
  */
-int atrshmlog_slave_to_shm_wait  = ATRSHMLOG_INIT_SLAVE_TO_SHM_WAIT;
+_Alignas(128) int atrshmlog_slave_to_shm_wait  = ATRSHMLOG_INIT_SLAVE_TO_SHM_WAIT;
 

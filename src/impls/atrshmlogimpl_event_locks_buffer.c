@@ -40,7 +40,7 @@ int atrshmlog_event_locks_max = ATRSHMLOGEVENTCOUNT;
  * You can set this before attach to a dyn allocatd buffer.
  * You can set this with an env in attach.
  */
-atrshmlog_event_t atrshmlog_event_locks_buffer [ ATRSHMLOGEVENTCOUNT ];
+_Alignas(128) atrshmlog_event_t atrshmlog_event_locks_buffer [ ATRSHMLOGEVENTCOUNT ];
 
 
 /********************************************************************/
@@ -58,6 +58,6 @@ atrshmlog_event_t atrshmlog_event_locks_buffer [ ATRSHMLOGEVENTCOUNT ];
  *
  * Use this as it is a read only.
  */
-volatile const atrshmlog_event_t* atrshmlog_event_locks = atrshmlog_event_locks_buffer; 
+_Alignas(128) volatile const atrshmlog_event_t* atrshmlog_event_locks = atrshmlog_event_locks_buffer; 
 
 
