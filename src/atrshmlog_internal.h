@@ -54,7 +54,7 @@
  * - reader output additional to the buffer
  * - converter input
  */
-#define ATRSHMLOGVERSION (1)
+#define ATRSHMLOGVERSION (2)
 
 /**
  * \brief The minor version number.
@@ -63,7 +63,7 @@
  * Can mean additional functions for fences, sleeps etc.
  * Not meaning a simple bugfix.
  */
-#define ATRSHMLOGMINORVERSION (3)
+#define ATRSHMLOGMINORVERSION (0)
 
 /**
  * \brief Patch level version for handling of errors and changes internal .
@@ -1196,7 +1196,7 @@ struct atrshmlog_area_s {
    *
    * rw
    */
-  atomic_int ich_habe_fertig;
+  volatile int ich_habe_fertig;
 
   /** 
    * The info for the reader rw 
