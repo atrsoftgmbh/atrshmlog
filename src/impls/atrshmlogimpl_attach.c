@@ -659,6 +659,13 @@ atrshmlog_ret_t atrshmlog_attach(void)
 		1
 	      },
 
+	      {
+		ATRSHMLOG_TARGETBUFFERMAX_SUFFIX,
+		&atrshmlog_targetbuffer_max,
+		2,
+		ATRSHMLOGTARGETBUFFERMAX
+	      },
+
 	      /*
 	       * This is the exception env variable.
 	       *
@@ -809,7 +816,7 @@ atrshmlog_ret_t atrshmlog_attach(void)
  * So you can start with new values where you 
  * want to.
  * The array has to be set to 0 for all values not used.
- * The array has so far 56 ints.
+ * The array has so far 58 ints.
  *
  * We can set the values, but we do NOT reinit buffers.
  * We do NOT restart slaves.
@@ -1029,6 +1036,7 @@ atrshmlog_ret_t atrshmlog_reattach(const atrshmlog_int32_t *i_params)
 	  MMSET(i_params[52], atrshmlog_checksum, 0, 1, i_params[53]);
 	  
 	  MMSET(i_params[54], onoff, 0, 1, i_params[55]);
+	  MMSET(i_params[56], atrshmlog_targetbuffer_max, 2, ATRSHMLOGTARGETBUFFERMAX, i_params[57]);
 	  
 	  atrshmlog_clock_id = my_clock_id;
 	  

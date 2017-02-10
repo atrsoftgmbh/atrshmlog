@@ -20,6 +20,11 @@
  * pthread.
  *
  * The rest of the module is now in impls.
+ *
+ * From Version 2.0.0 on the most delicate thing is again in here.
+ * Its the write0, write1 and write 2 call.
+ * They use the option to use the thread local directly now again.
+ * This is a small price to pay for a reduction  of runtime.   
  */
 
 /* our includes are here */
@@ -42,7 +47,7 @@
  * So we put all those in one struct and use this from 
  * the initial get on.
  */
-_Alignas(64) _Thread_local static atrshmlog_g_tl_t atrshmlog_g_tl = { .atrshmlog_idnotok = -1,
+_Alignas(256) _Thread_local static atrshmlog_g_tl_t atrshmlog_g_tl = { .atrshmlog_idnotok = -1,
 				     .atrshmlog_targetbuffer_arr = { 0 },
 				     0
                                     };
@@ -266,8 +271,6 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 
   int strategy_count = 0;
   
-  int null_buffers = 0;
-  
   // We use some goto jumping here, so this is a first target
  testagain_dispatched:
 
@@ -275,26 +278,18 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
     
   register atrshmlog_tbuff_t* tbuff = g->atrshmlog_targetbuffer_arr[g->atrshmlog_targetbuffer_index];
 
-  if (tbuff == NULL || atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) != 0)
+  if (atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) != 0)
     {
       ++g->atrshmlog_targetbuffer_index;
       
-      if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
+      if (g->atrshmlog_targetbuffer_index >= g->atrshmlog_targetbuffer_count)
 	g->atrshmlog_targetbuffer_index = 0;
-
-      if (tbuff == NULL)
-	++null_buffers;
 
       ++strategy_count;
 
-      if ((strategy_count % ATRSHMLOGTARGETBUFFERMAX) == 0)
+      if ((strategy_count % g->atrshmlog_targetbuffer_count) == 0
+	  || g->atrshmlog_targetbuffer_count == 1)
 	{
-	  // no buffer available ...
-	  if (null_buffers >= ATRSHMLOGTARGETBUFFERMAX)
-	    return atrshmlog_error_write0_4;
-
-	  null_buffers = 0;
-	  
 	  switch (g->strategy)
 	    {
 	    case atrshmlog_strategy_discard :
@@ -325,7 +320,7 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 		int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm, memory_order_acquire);
 		t = ATRSHMLOGSCALECLICKTONANO(t);
 
-		t /=  ATRSHMLOGTARGETBUFFERMAX;
+		t /=  g->atrshmlog_targetbuffer_count;
 
 #if 0
 		printf("adapotive %ld\n", (long)t);
@@ -346,7 +341,7 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 		int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
 		t = ATRSHMLOGSCALECLICKTONANO(t);
 
-		t /=  ATRSHMLOGTARGETBUFFERMAX * 2;
+		t /=  g->atrshmlog_targetbuffer_count * 2;
 
 #if 0
 		printf("adapotive %ld\n", (long)t);
@@ -368,7 +363,7 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 		int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
 		t = ATRSHMLOGSCALECLICKTONANO(t);
 
-		t /=  ATRSHMLOGTARGETBUFFERMAX * 10;
+		t /=  g->atrshmlog_targetbuffer_count * 10;
 
 #if 0
 		printf("adapotive %ld\n", (long)t);
@@ -477,7 +472,7 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
       // Switch the targetbuffer and try again
       g->atrshmlog_targetbuffer_index++;
 
-      if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
+      if (g->atrshmlog_targetbuffer_index >= g->atrshmlog_targetbuffer_count)
 	g->atrshmlog_targetbuffer_index = 0;
 
       // End of full buffer handling
@@ -566,7 +561,7 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 	  // Switch the targetbuffer and try again
 	  ++g->atrshmlog_targetbuffer_index;
 
-	  if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
+	  if (g->atrshmlog_targetbuffer_index >= g->atrshmlog_targetbuffer_count)
 	    g->atrshmlog_targetbuffer_index = 0;
 	}
       else if (g->autoflush == 2)
@@ -719,7 +714,7 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 
       i_endtime = i_starttime;
     }
-  else
+  else 
     {
       if (i_endtime == 0)
 	i_endtime = ATRSHMLOG_GET_TSC_CALL();
@@ -738,8 +733,6 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 
   int strategy_count = 0;
   
-  int null_buffers = 0;
-  
     // We use some goto jumping here, so this is a first target
  testagain_dispatched:
 
@@ -747,26 +740,18 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
     
   register atrshmlog_tbuff_t* tbuff = g->atrshmlog_targetbuffer_arr[g->atrshmlog_targetbuffer_index];
 
-  if (tbuff == NULL || atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) != 0)
+  if (atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) != 0)
     {
       ++g->atrshmlog_targetbuffer_index;
 
-      if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
+      if (g->atrshmlog_targetbuffer_index >= g->atrshmlog_targetbuffer_count)
 	g->atrshmlog_targetbuffer_index = 0;
-
-      if (tbuff == NULL)
-	++null_buffers;
 
       ++strategy_count;
 
-      if ((strategy_count % ATRSHMLOGTARGETBUFFERMAX) == 0)
+      if ((strategy_count % g->atrshmlog_targetbuffer_count) == 0
+	  || g->atrshmlog_targetbuffer_count == 1)
 	{
-	  // no buffer available ...
-	  if (null_buffers >= ATRSHMLOGTARGETBUFFERMAX)
-	    return  atrshmlog_error_write1_6;
-
-	  null_buffers = 0;
-	  
 	  switch (g->strategy)
 	    {
 	    case atrshmlog_strategy_discard :
@@ -797,7 +782,7 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 		int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
 		t = ATRSHMLOGSCALECLICKTONANO(t);
 
-		t /=  ATRSHMLOGTARGETBUFFERMAX;
+		t /=  g->atrshmlog_targetbuffer_count;
 
 #if 0
 		printf("adapotive %ld\n", (long)t);
@@ -818,7 +803,7 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 		int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
 		t = ATRSHMLOGSCALECLICKTONANO(t);
 
-		t /=  ATRSHMLOGTARGETBUFFERMAX * 2;
+		t /=  g->atrshmlog_targetbuffer_count * 2;
 
 #if 0
 		printf("adapotive %ld\n", (long)t);
@@ -840,7 +825,7 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 		int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
 		t = ATRSHMLOGSCALECLICKTONANO(t);
 
-		t /=  ATRSHMLOGTARGETBUFFERMAX * 10;
+		t /=  g->atrshmlog_targetbuffer_count * 10;
 
 #if 0
 		printf("adapotive %ld\n", (long)t);
@@ -962,7 +947,7 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
       // Switch the targetbuffer and try again
       ++g->atrshmlog_targetbuffer_index;
 
-      if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
+      if (g->atrshmlog_targetbuffer_index >= g->atrshmlog_targetbuffer_count)
 	g->atrshmlog_targetbuffer_index = 0;
 
       // End of full buffer handling
@@ -1056,7 +1041,7 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 	  // Switch the targetbuffer and try again
 	  ++g->atrshmlog_targetbuffer_index;
 
-	  if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
+	  if (g->atrshmlog_targetbuffer_index >= g->atrshmlog_targetbuffer_count)
 	    g->atrshmlog_targetbuffer_index = 0;
 	}
       else if (g->autoflush == 2)
@@ -1250,8 +1235,6 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 
   int strategy_count = 0;
   
-  int null_buffers = 0;
-  
   // We use some goto jumping here, so this is a first target
  testagain_dispatched:
 
@@ -1259,26 +1242,18 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
     
   register atrshmlog_tbuff_t* tbuff = g->atrshmlog_targetbuffer_arr[g->atrshmlog_targetbuffer_index];
 
-  if (tbuff == NULL || atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) != 0)
+  if (atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) != 0)
     {
       ++g->atrshmlog_targetbuffer_index;
 
-      if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
+      if (g->atrshmlog_targetbuffer_index >= g->atrshmlog_targetbuffer_count)
 	g->atrshmlog_targetbuffer_index = 0;
-
-      if (tbuff == NULL)
-	++null_buffers;
 
       ++strategy_count;
 
-      if ((strategy_count % ATRSHMLOGTARGETBUFFERMAX) == 0)
+      if ((strategy_count % g->atrshmlog_targetbuffer_count) == 0
+	  || g->atrshmlog_targetbuffer_count == 1)
 	{
-	  // no buffer available ...
-	  if (null_buffers >= ATRSHMLOGTARGETBUFFERMAX)
-	    return atrshmlog_error_write2_6;
-
-	  null_buffers = 0;
-	  
 	  switch (g->strategy)
 	    {
 	    case atrshmlog_strategy_discard :
@@ -1309,7 +1284,7 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 		int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
 		t = ATRSHMLOGSCALECLICKTONANO(t);
 
-		t /=  ATRSHMLOGTARGETBUFFERMAX;
+		t /=  g->atrshmlog_targetbuffer_count;
 
 #if 0
 		printf("adapotive %ld\n", (long)t);
@@ -1330,7 +1305,7 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 		int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
 		t = ATRSHMLOGSCALECLICKTONANO(t);
 
-		t /=  ATRSHMLOGTARGETBUFFERMAX * 2;
+		t /=  g->atrshmlog_targetbuffer_count * 2;
 
 #if 0
 		printf("adapotive %ld\n", (long)t);
@@ -1352,7 +1327,7 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 		int t = atomic_load_explicit(&atrshmlog_last_mem_to_shm,memory_order_acquire);
 		t = ATRSHMLOGSCALECLICKTONANO(t);
 
-		t /=  ATRSHMLOGTARGETBUFFERMAX * 10;
+		t /=  g->atrshmlog_targetbuffer_count * 10;
 
 #if 0
 		printf("adapotive %ld\n", (long)t);
@@ -1471,7 +1446,7 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
       // Switch the targetbuffer and try again
       ++g->atrshmlog_targetbuffer_index;
 
-      if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
+      if (g->atrshmlog_targetbuffer_index >= g->atrshmlog_targetbuffer_count)
 	g->atrshmlog_targetbuffer_index = 0;
 
       // End of full buffer handling
@@ -1571,7 +1546,7 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 	  // Switch the targetbuffer and try again
 	  ++g->atrshmlog_targetbuffer_index;
 
-	  if (g->atrshmlog_targetbuffer_index >= ATRSHMLOGTARGETBUFFERMAX)
+	  if (g->atrshmlog_targetbuffer_index >= g->atrshmlog_targetbuffer_count)
 	    g->atrshmlog_targetbuffer_index = 0;
 	}
       else if (g->autoflush == 2)

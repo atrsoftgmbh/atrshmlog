@@ -2202,6 +2202,18 @@ extern "C" {
 #define ATRSHMLOG_GET_THREAD_LOCAL_INDEX(__thread_local) atrshmlog_get_thread_local_index ((__thread_local))
 
   /** 
+   * \brief We get the buffer count of a thread local
+   *
+   * \param __thread_local
+   * Pointer to a thread local or NULL
+   *
+   * \return
+   * - 0 if pointer is NULL
+   * - count
+   */
+#define ATRSHMLOG_GET_THREAD_LOCAL_COUNT(__thread_local) atrshmlog_get_thread_local_count ((__thread_local))
+
+  /** 
    * \brief We get the buffer adress via index of a thread local
    *
    * \param __thread_local
@@ -2649,6 +2661,25 @@ extern "C" {
 #define ATRSHMLOG_GET_THREAD_BUFFER_PAYLOAD(__buffer)  atrshmlog_get_thread_buffer_payload ((__buffer))
 
   
+  /**
+   *  \brief The targetbuffer max
+   *
+   * \return
+   * The flag
+   */
+#define ATRSHMLOG_GET_TARGETBUFFER_MAX()  atrshmlog_get_targetbuffer_max()
+
+  /**
+   * \brief Set the targetbuffer max
+   *
+   * \param __flag
+   * Our new  flag
+   *
+   * \return 
+   * The old flag
+   */
+#define ATRSHMLOG_SET_TARGETBUFFER_MAX(__flag) atrshmlog_set_targetbuffer_max((__flag))
+
       
   /**
    *  \brief The checksum flag
@@ -4201,6 +4232,18 @@ extern "C" {
   extern atrshmlog_ret_t atrshmlog_get_thread_local_index (volatile const void *i_thread_local);
 
   /** 
+   * \brief We get the buffer count of a thread local
+   *
+   * \param i_thread_local
+   * Pointer to a thread local or NULL
+   *
+   * \return
+   * - 0 if pointer is NULL
+   * - count
+   */
+  extern atrshmlog_ret_t atrshmlog_get_thread_local_count (volatile const void *i_thread_local);
+
+  /** 
    * \brief We get the buffer adress via index of a thread local
    *
    * \param i_thread_local
@@ -4615,6 +4658,25 @@ extern "C" {
    */
   extern volatile const void *atrshmlog_get_thread_buffer_payload (volatile const void *i_buffer);
   
+  /**
+   *  \brief The targetbuffer max
+   *
+   * \return
+   * The flag
+   */
+  extern atrshmlog_ret_t atrshmlog_get_targetbuffer_max(void);
+    
+  /**
+   * \brief Set the targetbuffer max
+   *
+   * \param i_flag
+   * Our new  flag
+   *
+   * \return 
+   * The old flag
+   */
+  extern atrshmlog_ret_t atrshmlog_set_targetbuffer_max(int i_flag);
+
   /**
    *  \brief The checksum flag
    *

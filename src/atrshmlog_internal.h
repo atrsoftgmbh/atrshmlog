@@ -250,7 +250,7 @@
 
 
 /** 
- * \brief The number of buffers per thread.
+ * \brief The number of max buffers per thread.
  *
  * You can give more a try. Then you should 
  * have more buffers, too.
@@ -258,7 +258,7 @@
  * but at the price of using more memory.
  * In theory the simple use of 2 should be enough.
  */
-#define ATRSHMLOGTARGETBUFFERMAX (2)
+#define ATRSHMLOGTARGETBUFFERMAX (16)
 
 
 /**************************************************************/
@@ -867,6 +867,11 @@ typedef void atrshmlog_thread_ret_t;
  * \brief The checksum swith
  */
 #define ATRSHMLOG_CHECKSUM_SUFFIX "_CHECKSUM"
+
+/**
+ * \brief The targetbuffer max count 
+ */
+#define ATRSHMLOG_TARGETBUFFERMAX_SUFFIX "_TARGETBUFFERMAX"
 
 /**
  * \brief The dispose flag for reuse
@@ -2106,7 +2111,8 @@ extern atrshmlog_int32_t atrshmlog_int32_change_order(atrshmlog_int32_t v);
 extern uint64_t atrshmlog_int64_change_order(uint64_t v);
 extern void atrshmlog_io_head_change_order(atrshmlog_io_head_t* h);
 extern void atrshmlog_chunk_head_change_order(atrshmlog_chunk_head_t* h);
-
+extern void atrshmlog_remove_tbuff(atrshmlog_g_tl_t* i_g, int i);
+extern int atrshmlog_targetbuffer_max;
 
 /************************************************************************/
 /* helper macros*/
