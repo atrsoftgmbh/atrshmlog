@@ -80,6 +80,8 @@ int atrshmlog_init_in_write(atrshmlog_g_tl_t* g)
   atomic_flag_clear(&atrshmlog_init_in_write_once_flag);
  
 
+  g->atrshmlog_targetbuffer_count = 0;
+  
   /* We reach this only if we are still ok 
    * and we are the initialized flag before 
    * so we now have to make all those buffers and list linking
@@ -114,6 +116,8 @@ int atrshmlog_init_in_write(atrshmlog_g_tl_t* g)
   // we start by using first buffer
   g->atrshmlog_targetbuffer_index = 0;
 
+  g->atrshmlog_targetbuffer_count = ATRSHMLOGTARGETBUFFERMAX;
+  
   return atrshmlog_error_ok;
 }
 
