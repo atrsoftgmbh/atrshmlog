@@ -1586,6 +1586,11 @@ struct atrshmlog_g_tl_s {
   
 
   /**
+   * The count of buffers for this thread
+   */
+  int atrshmlog_targetbuffer_count;
+  
+  /**
    * The strategy for this thread.
    */
   int strategy;
@@ -2134,7 +2139,6 @@ extern void atrshmlog_chunk_head_change_order(atrshmlog_chunk_head_t* h);
 #define ATRSHMLOGSTATLOCAL(__tl,__e)			\
   (++(__tl->__e))
 
-
 /**
  * \brief Create the shm area. 
  *
@@ -2179,59 +2183,59 @@ extern void atrshmlog_chunk_head_change_order(atrshmlog_chunk_head_t* h);
  */
 #define ATRSHMLOG_INIT_SHM_LOG(__a,__c) atrshmlog_init_shm_log((__a),(__c))
 
+
+
 /************************************************************************/
+  /** 
+   * \brief We create the shm  area.
+   *
+   * \param i_key
+   * The shmid of the system.
+   *
+   * \param i_count
+   * The number of buffers for this area.
+   *
+   * \return
+   * - Positive number for the shmid in case of success
+   * - negative for error
+   */
+  extern int atrshmlog_create(const atrshmlog_key_t i_key,
+			      const int i_count);
 
-/* the functions */
+  /** 
+   * \brief We destroy the shm 
+   *
+   * \param i_shmid
+   * The shm id of the system
+   *
+   * \return
+   * The error code of the delete
+   */
+  extern atrshmlog_ret_t atrshmlog_delete(const int i_shmid);
 
-/** 
- * \brief We create the shm  area.
- *
- * \param i_key
- * The shmid of the system.
- *
- * \param i_count
- * The number of buffers for this area.
- *
- * \return
- * - Positive number for the shmid in case of success
- * - negative for error
- */
-extern int atrshmlog_create(const atrshmlog_key_t i_key,
-			    const int i_count);
+  /** 
+   * \brief We have to clean up the locks after error condition 
+   *
+   * \param i_area
+   * Points to the start of the area.
+   *
+   * \return
+   * void
+   */
+  extern void atrshmlog_cleanup_locks(volatile const void* i_area);
 
-/** 
- * \brief We destroy the shm 
- *
- * \param i_shmid
- * The shm id of the system
- *
- * \return
- * The error code of the delete
- */
-extern atrshmlog_ret_t atrshmlog_delete(const int i_shmid);
+  /** 
+   * \brief We initialize the buffer after it is attached 
+   *
+   * \param i_area
+   * Points to the start of the area.
+   *
+   * \param i_count_buffers
+   * The number of buffers for the shm are.
+   */
+  extern atrshmlog_ret_t atrshmlog_init_shm_log(volatile const void *i_area,
+						const atrshmlog_int32_t i_count_buffers);
 
-/** 
- * \brief We have to clean up the locks after error condition 
- *
- * \param i_area
- * Points to the start of the area.
- *
- * \return
- * void
- */
-extern void atrshmlog_cleanup_locks(volatile const void* i_area);
-
-/** 
- * \brief We initialize the buffer after it is attached 
- *
- * \param i_area
- * Points to the start of the area.
- *
- * \param i_count_buffers
- * The number of buffers for the shm are.
- */
-extern atrshmlog_ret_t atrshmlog_init_shm_log(volatile const void *i_area,
-					      const atrshmlog_int32_t i_count_buffers);
 
 #endif
 /* end of file */
