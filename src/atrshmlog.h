@@ -5304,6 +5304,7 @@ extern "C" {
 					      atrshmlog_int32_t* o_counter_write2_adaptive_very_fast
 					      );
 
+
   /**************************************************************/
   // inline code 
 
