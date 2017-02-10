@@ -36,56 +36,53 @@
 	  
    if (logging)
      {
-       for (int i = 0; i < ATRSHMLOGTARGETBUFFERMAX; i++)
+       while (g->atrshmlog_targetbuffer_count > 0)
 	 {
-	   atrshmlog_tbuff_t* t = g->atrshmlog_targetbuffer_arr[i];
+	   atrshmlog_tbuff_t* t = g->atrshmlog_targetbuffer_arr[0];
 
-	   if (t)
-	     {
-	       t->dispose = 1;
+	   t->dispose = 1;
 
-	       t->number_dispatched = g->number_dispatched++;
+	   t->number_dispatched = g->number_dispatched++;
 
-	       t->counter_write0 = g->counter_write0;
+	   t->counter_write0 = g->counter_write0;
 
-	       t->counter_write0_discard = g->counter_write0_discard;
+	   t->counter_write0_discard = g->counter_write0_discard;
 
-	       t->counter_write0_wait = g->counter_write0_wait;
+	   t->counter_write0_wait = g->counter_write0_wait;
 
-	       t->counter_write0_adaptive = g->counter_write0_adaptive;
+	   t->counter_write0_adaptive = g->counter_write0_adaptive;
 
-	       t->counter_write0_adaptive_fast = g->counter_write0_adaptive_fast;
+	   t->counter_write0_adaptive_fast = g->counter_write0_adaptive_fast;
 
-	       t->counter_write0_adaptive_very_fast = g->counter_write0_adaptive_very_fast;
+	   t->counter_write0_adaptive_very_fast = g->counter_write0_adaptive_very_fast;
 
-	       t->counter_write1 = g->counter_write1;
+	   t->counter_write1 = g->counter_write1;
 
-	       t->counter_write1_discard = g->counter_write1_discard;
+	   t->counter_write1_discard = g->counter_write1_discard;
 
-	       t->counter_write1_wait = g->counter_write1_wait;
+	   t->counter_write1_wait = g->counter_write1_wait;
 
-	       t->counter_write1_adaptive = g->counter_write1_adaptive;
+	   t->counter_write1_adaptive = g->counter_write1_adaptive;
 
-	       t->counter_write1_adaptive_fast = g->counter_write1_adaptive_fast;
+	   t->counter_write1_adaptive_fast = g->counter_write1_adaptive_fast;
 
-	       t->counter_write1_adaptive_very_fast = g->counter_write1_adaptive_very_fast;
+	   t->counter_write1_adaptive_very_fast = g->counter_write1_adaptive_very_fast;
 
-	       t->counter_write2 = g->counter_write2;
+	   t->counter_write2 = g->counter_write2;
 
-	       t->counter_write2_discard = g->counter_write2_discard;
+	   t->counter_write2_discard = g->counter_write2_discard;
 
-	       t->counter_write2_wait = g->counter_write2_wait;
+	   t->counter_write2_wait = g->counter_write2_wait;
 
-	       t->counter_write2_adaptive = g->counter_write2_adaptive;
+	   t->counter_write2_adaptive = g->counter_write2_adaptive;
 
-	       t->counter_write2_adaptive_fast = g->counter_write2_adaptive_fast;
+	   t->counter_write2_adaptive_fast = g->counter_write2_adaptive_fast;
 
-	       t->counter_write2_adaptive_very_fast = g->counter_write2_adaptive_very_fast;
+	   t->counter_write2_adaptive_very_fast = g->counter_write2_adaptive_very_fast;
 
-	       atrshmlog_dispatch_buffer(t);
+	   atrshmlog_dispatch_buffer(t);
 
-	       g->atrshmlog_targetbuffer_arr[i] = 0;
-	     }
+	   atrshmlog_remove_tbuff(g, 0);
 	 }
      }      
  }
