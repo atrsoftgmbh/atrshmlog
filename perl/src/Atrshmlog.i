@@ -634,6 +634,7 @@ extern atrshmlog_ret_t atratrshmlog_reattach(int flag0,
 %rename(set_strategy_wait_wait_time) atrshmlog_set_strategy_wait_wait_time;  
 %rename(get_thread_local_pid) atrshmlog_get_thread_local_pid;
 %rename(get_thread_local_index) atrshmlog_get_thread_local_index;
+%rename(get_thread_local_count) atrshmlog_get_thread_local_count;
 %rename(get_thread_local_buffer) atrshmlog_get_thread_local_buffer;
 %rename(get_thread_buffer_next_cleanup) atrshmlog_get_thread_buffer_next_cleanup;
 %rename(get_thread_buffer_next_full) atrshmlog_get_thread_buffer_next_full;
@@ -655,6 +656,8 @@ extern atrshmlog_ret_t atratrshmlog_reattach(int flag0,
 %rename(get_buffer_cleanup_anchor) atrshmlog_get_buffer_cleanup_anchor;
 %rename(get_buffer_full_anchor) atrshmlog_get_buffer_full_anchor;
 %rename(get_buffer_append_anchor) atrshmlog_get_buffer_append_anchor;
+%rename(get_targetbuffer_max) atrshmlog_get_targetbuffer_max;
+%rename(set_targetbuffer_max) atrshmlog_set_targetbuffer_max;
 
 %constant int EVENT_POINT_IN_TIME_C = 80;
 %constant int EVENT_POINT_IN_TIME_UCS2 = 112;
