@@ -37,8 +37,13 @@ void atrshmlog_stop(void)
 
 #endif
 
-  // still logging
-  if (g->atrshmlog_idnotok == 0)
+  int logging = g->atrshmlog_idnotok;
+  
+  // We ultimately stop logging for this thread.
+  g->atrshmlog_idnotok = 1;
+
+  // was still logging
+  if (logging == 0)
     {
       // we remove all existing buffers. 
       while (g->atrshmlog_targetbuffer_count > 0)
@@ -89,8 +94,5 @@ void atrshmlog_stop(void)
 	  atrshmlog_remove_tbuff(g, 0);
 	}
     }      
-
-  // We ultimately stop logging for this thread.
-  g->atrshmlog_idnotok = 1;
 }
 

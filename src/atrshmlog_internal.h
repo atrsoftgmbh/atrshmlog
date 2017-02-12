@@ -1594,6 +1594,11 @@ struct atrshmlog_g_tl_s {
    * The count of buffers for this thread
    */
   int atrshmlog_targetbuffer_count;
+
+  /**
+   * The actual used buffer
+   */
+  atrshmlog_tbuff_t* atrshmlog_buff;
   
   /**
    * The strategy for this thread.

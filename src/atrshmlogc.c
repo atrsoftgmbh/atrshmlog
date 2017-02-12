@@ -47,10 +47,11 @@
  * So we put all those in one struct and use this from 
  * the initial get on.
  */
-_Alignas(256) _Thread_local static atrshmlog_g_tl_t atrshmlog_g_tl = { .atrshmlog_idnotok = -1,
-				     .atrshmlog_targetbuffer_arr = { 0 },
-				     0
-                                    };
+_Alignas(256) _Thread_local static atrshmlog_g_tl_t atrshmlog_g_tl = {
+  .atrshmlog_idnotok = -1,
+  .atrshmlog_targetbuffer_arr = { 0 },
+  0
+};
 
 
 /*******************************************************************/
@@ -269,17 +270,34 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 
   const atrshmlog_int32_t totallen = ATRSHMLOGCONTROLDATASIZE;
 
-  int strategy_count = 0;
+  int strategy_count;
+
+  // we check for the last in use buffer
+  register atrshmlog_tbuff_t* tbuff = g->atrshmlog_buff;
+
+  // was there a used one ?
+  if (tbuff)
+    goto sizecheck;
   
+  strategy_count = 0;
+
   // We use some goto jumping here, so this is a first target
  testagain_dispatched:
 
   ;
     
-  register atrshmlog_tbuff_t* tbuff = g->atrshmlog_targetbuffer_arr[g->atrshmlog_targetbuffer_index];
+  tbuff = g->atrshmlog_targetbuffer_arr[g->atrshmlog_targetbuffer_index];
 
-  if (atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) != 0)
+  if (atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) == 0)
     {
+      // we use this buffer, its not dispatched so far
+      g->atrshmlog_buff = tbuff;
+    }
+  else
+    {
+      g->atrshmlog_buff = 0;
+      
+      // check next buffer ...
       ++g->atrshmlog_targetbuffer_index;
       
       if (g->atrshmlog_targetbuffer_index >= g->atrshmlog_targetbuffer_count)
@@ -404,6 +422,10 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
   if (atrshmlog_thread_fence_2)
     atomic_thread_fence (memory_order_acquire);
 #endif
+
+  /********************/
+ sizecheck:
+  ;
   
   // Ok. We have an undispatched buffer 
   register size_t akindex = tbuff->size;
@@ -469,16 +491,22 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 
       atrshmlog_dispatch_buffer(tbuff);
 
+      g->atrshmlog_buff = 0;
+      
       // Switch the targetbuffer and try again
       g->atrshmlog_targetbuffer_index++;
 
       if (g->atrshmlog_targetbuffer_index >= g->atrshmlog_targetbuffer_count)
 	g->atrshmlog_targetbuffer_index = 0;
 
+      strategy_count = 0;
+
       // End of full buffer handling
       goto testagain_dispatched;
     } 
 
+  /****************/
+  
   // Ok. we have an undispatched and not full buffer.
     
   tbuff->size += totallen;
@@ -558,6 +586,8 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 	{
 	  atrshmlog_dispatch_buffer(tbuff);
 
+	  g->atrshmlog_buff = 0;
+	  
 	  // Switch the targetbuffer and try again
 	  ++g->atrshmlog_targetbuffer_index;
 
@@ -734,17 +764,33 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 
   const atrshmlog_int32_t totallen = ATRSHMLOGCONTROLDATASIZE + copy_local;
 
-  int strategy_count = 0;
+  int strategy_count;
+  
+  // we check for the last in use buffer
+  register atrshmlog_tbuff_t* tbuff = g->atrshmlog_buff;
+
+  // was there a used one ?
+  if (tbuff)
+    goto sizecheck;
+
+  strategy_count = 0;
   
     // We use some goto jumping here, so this is a first target
  testagain_dispatched:
 
   ;
     
-  register atrshmlog_tbuff_t* tbuff = g->atrshmlog_targetbuffer_arr[g->atrshmlog_targetbuffer_index];
+  tbuff = g->atrshmlog_targetbuffer_arr[g->atrshmlog_targetbuffer_index];
 
-  if (atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) != 0)
+  if (atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) == 0)
     {
+      // we use this buffer, its not dispatched so far
+      g->atrshmlog_buff = tbuff;
+    }
+  else
+    {
+      g->atrshmlog_buff = 0;
+
       ++g->atrshmlog_targetbuffer_index;
 
       if (g->atrshmlog_targetbuffer_index >= g->atrshmlog_targetbuffer_count)
@@ -760,7 +806,7 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 	    case atrshmlog_strategy_discard :
 	      {
 		ATRSHMLOGSTATLOCAL(g,counter_write1_discard);
-	      
+
 		// we discard
 		return atrshmlog_error_write1_6;
 	      }
@@ -870,6 +916,10 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
     atomic_thread_fence (memory_order_acquire);
 #endif
   
+  /********************/
+ sizecheck:
+  ;
+  
   // special case for the payload thing
   if ((unsigned int)totallen > tbuff->maxsize) {
     ATRSHMLOGSTAT(atrshmlog_counter_write1_abort7);
@@ -947,11 +997,15 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 
       atrshmlog_dispatch_buffer(tbuff);
 
+      g->atrshmlog_buff = 0;
+
       // Switch the targetbuffer and try again
       ++g->atrshmlog_targetbuffer_index;
 
       if (g->atrshmlog_targetbuffer_index >= g->atrshmlog_targetbuffer_count)
 	g->atrshmlog_targetbuffer_index = 0;
+
+      strategy_count = 0;
 
       // End of full buffer handling
       goto testagain_dispatched;
@@ -1040,6 +1094,8 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
       if (g->autoflush == 1)
 	{
 	  atrshmlog_dispatch_buffer(tbuff);
+
+	  g->atrshmlog_buff = 0;
 
 	  // Switch the targetbuffer and try again
 	  ++g->atrshmlog_targetbuffer_index;
@@ -1239,17 +1295,33 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 
   const atrshmlog_int32_t totallen = ATRSHMLOGCONTROLDATASIZE + argvbufferlen + copy_local;
 
-  int strategy_count = 0;
+  int strategy_count;
+    // we check for the last in use buffer
+  register atrshmlog_tbuff_t* tbuff = g->atrshmlog_buff;
+
+  // was there a used one ?
+  if (tbuff)
+    goto sizecheck;
+
+  strategy_count = 0;
   
+
   // We use some goto jumping here, so this is a first target
  testagain_dispatched:
 
   ;
     
-  register atrshmlog_tbuff_t* tbuff = g->atrshmlog_targetbuffer_arr[g->atrshmlog_targetbuffer_index];
+  tbuff = g->atrshmlog_targetbuffer_arr[g->atrshmlog_targetbuffer_index];
 
-  if (atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) != 0)
+  if (atomic_load_explicit(&(tbuff->dispatched), memory_order_acquire) == 0)
     {
+      // we use this buffer, its not dispatched so far
+      g->atrshmlog_buff = tbuff;
+    }
+  else
+    {
+      g->atrshmlog_buff = 0;
+      
       ++g->atrshmlog_targetbuffer_index;
 
       if (g->atrshmlog_targetbuffer_index >= g->atrshmlog_targetbuffer_count)
@@ -1375,6 +1447,11 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
     atomic_thread_fence (memory_order_acquire);
 #endif
   
+  
+  /********************/
+ sizecheck:
+  ;
+  
   // special case for the argv thing
   if ((unsigned int)totallen > tbuff->maxsize) {
     ATRSHMLOGSTAT(atrshmlog_counter_write2_abort7);
@@ -1449,12 +1526,16 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 
       atrshmlog_dispatch_buffer(tbuff);
 
+      g->atrshmlog_buff = 0;
+       
       // Switch the targetbuffer and try again
       ++g->atrshmlog_targetbuffer_index;
 
       if (g->atrshmlog_targetbuffer_index >= g->atrshmlog_targetbuffer_count)
 	g->atrshmlog_targetbuffer_index = 0;
 
+      strategy_count = 0;
+      
       // End of full buffer handling
       goto testagain_dispatched;
     }
@@ -1549,6 +1630,8 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 	{
 	  atrshmlog_dispatch_buffer(tbuff);
 
+	   g->atrshmlog_buff = 0;
+	   
 	  // Switch the targetbuffer and try again
 	  ++g->atrshmlog_targetbuffer_index;
 

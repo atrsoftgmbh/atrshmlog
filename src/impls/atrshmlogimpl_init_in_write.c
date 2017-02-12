@@ -115,6 +115,9 @@ int atrshmlog_init_in_write(atrshmlog_g_tl_t* g)
 
   // all went well... 
   g->atrshmlog_targetbuffer_count = atrshmlog_targetbuffer_max;
+
+  // we set the actual used buffer to this
+  g->atrshmlog_buff = g->atrshmlog_targetbuffer_arr[0];
   
   return atrshmlog_error_ok;
 }
