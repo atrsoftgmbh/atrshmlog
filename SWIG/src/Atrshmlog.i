@@ -266,7 +266,9 @@ extern void atratrshmlog_read_fetch(volatile const void* area,
 		       int flag52,  
 		       int chk53,  
 		       int flag54,  
-		       int loff55 
+		       int loff55,  
+		       int flag56,  
+		       int tarbufmax57 
 					     );
 
  
@@ -931,7 +933,9 @@ extern atrshmlog_ret_t atratrshmlog_reattach(int flag0,
 		       int flag52,  
 		       int chk53,  
 		       int flag54,  
-		       int loff55 
+		       int loff55, 
+		       int flag56,  
+		       int tarbufmax57 
 					     );
  
  extern const char* atratrshmlog_get_env(const char* i_suffix);
