@@ -87,7 +87,7 @@ JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlo
   
   jboolean is_copy = JNI_FALSE;
 
-  int needed = 56; // version 1.2.0
+  int needed = 58; // version 2.0.0
   
   jsize length = (*i_jnienv)->GetArrayLength(i_jnienv, i_payload);
   
