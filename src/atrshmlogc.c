@@ -583,42 +583,45 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 	}
     }
 
-  // we check the shared mem writer 
-  if (a_shm->writerpid == g->atrshmlog_thread_pid)
+  if (a_shm->writerpid != 0)
     {
-      // we use the lower 16 bit. the upper are bit flag to tell us what to do.
-      // so we have 16 different things to do. and 64k sub values
-      if ((a_shm->writerflag & ATRSHMLOG_WRITER_SLAVE) != 0)
+      // we check the shared mem writer 
+      if (a_shm->writerpid == g->atrshmlog_thread_pid)
 	{
-	  // ok. we want to change the number of slaves.
-	  // a value is set from the lower 16 bits.
-	  // so be carefull: you can start in theory 64 k slaves ....
-	  int newslaves = (a_shm->writerflag & ATRSHMLOG_WRITER_SUB);
+	  // we use the lower 16 bit. the upper are bit flag to tell us what to do.
+	  // so we have 16 different things to do. and 64k sub values
+	  if ((a_shm->writerflag & ATRSHMLOG_WRITER_SLAVE) != 0)
+	    {
+	      // ok. we want to change the number of slaves.
+	      // a value is set from the lower 16 bits.
+	      // so be carefull: you can start in theory 64 k slaves ....
+	      int newslaves = (a_shm->writerflag & ATRSHMLOG_WRITER_SUB);
+
+	      a_shm->writerflag = 0;
+
+	      a_shm->writerpid = 0;
+	  
+	      int old = atrshmlog_set_f_list_buffer_slave_count(newslaves);
+
+	      return atrshmlog_error_ok;
+	    }
+
+	  if ((a_shm->writerflag & ATRSHMLOG_WRITER_DETACH) != 0)
+	    {
+	      // ok. we want to detach this one.
+	      a_shm->writerflag = 0;
+
+	      a_shm->writerpid = 0;
+	  
+	      atrshmlog_detach();
+
+	      return atrshmlog_error_ok;
+	    }
 
 	  a_shm->writerflag = 0;
 
 	  a_shm->writerpid = 0;
-	  
-	  int old = atrshmlog_set_f_list_buffer_slave_count(newslaves);
-
-	  return atrshmlog_error_ok;
 	}
-
-      if ((a_shm->writerflag & ATRSHMLOG_WRITER_DETACH) != 0)
-	{
-	  // ok. we want to detach this one.
-	  a_shm->writerflag = 0;
-
-	  a_shm->writerpid = 0;
-	  
-	  atrshmlog_detach();
-
-	  return atrshmlog_error_ok;
-	}
-
-      a_shm->writerflag = 0;
-
-      a_shm->writerpid = 0;
     }
   
   return atrshmlog_error_ok;
@@ -704,7 +707,7 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
   /* Can be happen : end of logging anounced by user via flag in shm */
   if (a_shm->ich_habe_fertig != 0) 
     return atrshmlog_error_write1_8;
-  
+
   // The hidden mechanism to get things minimised
   // in case we are bound to a layer for another language.
   if (((char)i_eventflag & ~0x20) == ATRSHMLOGPOINTINTIMEP)
@@ -1064,41 +1067,44 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
     }
   
   // we check the shared mem writer 
-  if (a_shm->writerpid == g->atrshmlog_thread_pid)
+  if (a_shm->writerpid != 0)
     {
-      // we use the lower 16 bit. the upper are bit flag to tell us what to do.
-      // so we have 16 different things to do. and 64k sub values
-      if ((a_shm->writerflag & ATRSHMLOG_WRITER_SLAVE) != 0)
+      if (a_shm->writerpid == g->atrshmlog_thread_pid)
 	{
-	  // ok. we want to change the number of slaves.
-	  // a value is set from the lower 16 bits.
-	  // so be carefull: you can start in theory 64 k slaves ....
-	  int newslaves = (a_shm->writerflag & ATRSHMLOG_WRITER_SUB);
+	  // we use the lower 16 bit. the upper are bit flag to tell us what to do.
+	  // so we have 16 different things to do. and 64k sub values
+	  if ((a_shm->writerflag & ATRSHMLOG_WRITER_SLAVE) != 0)
+	    {
+	      // ok. we want to change the number of slaves.
+	      // a value is set from the lower 16 bits.
+	      // so be carefull: you can start in theory 64 k slaves ....
+	      int newslaves = (a_shm->writerflag & ATRSHMLOG_WRITER_SUB);
+
+	      a_shm->writerflag = 0;
+
+	      a_shm->writerpid = 0;
+	  
+	      int old = atrshmlog_set_f_list_buffer_slave_count(newslaves);
+
+	      return atrshmlog_error_ok;
+	    }
+
+	  if ((a_shm->writerflag & ATRSHMLOG_WRITER_DETACH) != 0)
+	    {
+	      // ok. we want to detach this one.
+	      a_shm->writerflag = 0;
+
+	      a_shm->writerpid = 0;
+	  
+	      atrshmlog_detach();
+
+	      return atrshmlog_error_ok;
+	    }
 
 	  a_shm->writerflag = 0;
 
 	  a_shm->writerpid = 0;
-	  
-	  int old = atrshmlog_set_f_list_buffer_slave_count(newslaves);
-
-	  return atrshmlog_error_ok;
 	}
-
-      if ((a_shm->writerflag & ATRSHMLOG_WRITER_DETACH) != 0)
-	{
-	  // ok. we want to detach this one.
-	  a_shm->writerflag = 0;
-
-	  a_shm->writerpid = 0;
-	  
-	  atrshmlog_detach();
-
-	  return atrshmlog_error_ok;
-	}
-
-      a_shm->writerflag = 0;
-
-      a_shm->writerpid = 0;
     }
 
   return atrshmlog_error_ok;
@@ -1568,44 +1574,47 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 	}
     }
 
-  // we check the shared mem writer 
-  if (a_shm->writerpid == g->atrshmlog_thread_pid)
+  if (a_shm->writerpid != 0)
     {
-      // we use the lower 16 bit. the upper are bit flag to tell us what to do.
-      // so we have 16 different things to do. and 64k sub values
-      if ((a_shm->writerflag & ATRSHMLOG_WRITER_SLAVE) != 0)
+      // we check the shared mem writer 
+      if (a_shm->writerpid == g->atrshmlog_thread_pid)
 	{
-	  // ok. we want to change the number of slaves.
-	  // a value is set from the lower 16 bits.
-	  // so be carefull: you can start in theory 64 k slaves ....
-	  int newslaves = (a_shm->writerflag & ATRSHMLOG_WRITER_SUB);
+	  // we use the lower 16 bit. the upper are bit flag to tell us what to do.
+	  // so we have 16 different things to do. and 64k sub values
+	  if ((a_shm->writerflag & ATRSHMLOG_WRITER_SLAVE) != 0)
+	    {
+	      // ok. we want to change the number of slaves.
+	      // a value is set from the lower 16 bits.
+	      // so be carefull: you can start in theory 64 k slaves ....
+	      int newslaves = (a_shm->writerflag & ATRSHMLOG_WRITER_SUB);
+
+	      a_shm->writerflag = 0;
+
+	      a_shm->writerpid = 0;
+	  
+	      int old = atrshmlog_set_f_list_buffer_slave_count(newslaves);
+
+	      return atrshmlog_error_ok;
+	    }
+
+	  if ((a_shm->writerflag & ATRSHMLOG_WRITER_DETACH) != 0)
+	    {
+	      // ok. we want to detach this one.
+	      a_shm->writerflag = 0;
+
+	      a_shm->writerpid = 0;
+	  
+	      atrshmlog_detach();
+
+	      return atrshmlog_error_ok;
+	    }
 
 	  a_shm->writerflag = 0;
 
 	  a_shm->writerpid = 0;
-	  
-	  int old = atrshmlog_set_f_list_buffer_slave_count(newslaves);
-
-	  return atrshmlog_error_ok;
 	}
-
-      if ((a_shm->writerflag & ATRSHMLOG_WRITER_DETACH) != 0)
-	{
-	  // ok. we want to detach this one.
-	  a_shm->writerflag = 0;
-
-	  a_shm->writerpid = 0;
-	  
-	  atrshmlog_detach();
-
-	  return atrshmlog_error_ok;
-	}
-
-      a_shm->writerflag = 0;
-
-      a_shm->writerpid = 0;
     }
-
+ 
   return atrshmlog_error_ok;
   
   /************************/  

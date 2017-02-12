@@ -91,6 +91,7 @@ int main (int argc, char *argv[])
   PN(atomic_load(&atrshmlog_last_mem_to_shm));
   PN(atrshmlog_logging_process);
   PN(atrshmlog_clock_id);
+  PN(atrshmlog_targetbuffer_max);
   
   PP(atrshmlog_base_ptr);
   PP(atomic_load(&atrshmlog_tps));
@@ -169,6 +170,7 @@ int main (int argc, char *argv[])
   PN(atomic_load(&atrshmlog_last_mem_to_shm));
   PN(atrshmlog_logging_process);
   PN(atrshmlog_clock_id);
+  PN(atrshmlog_targetbuffer_max);
   
   PP(atrshmlog_base_ptr);
 
