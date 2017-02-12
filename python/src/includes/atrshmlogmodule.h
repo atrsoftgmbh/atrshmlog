@@ -707,9 +707,22 @@ typedef void (*pyatrshmlog_vfctv_t)(void);
 #define PyAtrshmlog_get_buffer_append_anchor_RETURN pyatrshmlog_buffer_t
 #define PyAtrshmlog_get_buffer_append_anchor_PROTO  (void)
   
-/* Total number of C API pointers */
+#define PyAtrshmlog_get_thread_local_count_NUM 140
+#define PyAtrshmlog_get_thread_local_count_RETURN long
+#define PyAtrshmlog_get_thread_local_count_PROTO  (pyatrshmlog_threadlocal_t tl)
 
-#define PyAtrshmlog_API_pointers 140
+#define PyAtrshmlog_set_targetbuffer_max_NUM 141
+#define PyAtrshmlog_set_targetbuffer_max_RETURN long 
+#define PyAtrshmlog_set_targetbuffer_max_PROTO (pyatrshmlog_int32_t flag) 
+
+#define PyAtrshmlog_get_targetbuffer_max_NUM 142
+#define PyAtrshmlog_get_targetbuffer_max_RETURN long 
+#define PyAtrshmlog_get_targetbuffer_max_PROTO (void) 
+
+  
+/* Total number of C API pointers : last index  + 1*/
+
+#define PyAtrshmlog_API_pointers 143
 
 
 
@@ -840,6 +853,7 @@ typedef void (*pyatrshmlog_vfctv_t)(void);
   static PyAtrshmlog_set_strategy_wait_wait_time_RETURN PyAtrshmlog_set_strategy_wait_wait_time PyAtrshmlog_set_strategy_wait_wait_time_PROTO;
   static PyAtrshmlog_get_thread_local_pid_RETURN PyAtrshmlog_get_thread_local_pid PyAtrshmlog_get_thread_local_pid_PROTO;
   static PyAtrshmlog_get_thread_local_index_RETURN PyAtrshmlog_get_thread_local_index PyAtrshmlog_get_thread_local_index_PROTO;
+  static PyAtrshmlog_get_thread_local_count_RETURN PyAtrshmlog_get_thread_local_count PyAtrshmlog_get_thread_local_count_PROTO;
   static PyAtrshmlog_get_thread_local_buffer_RETURN PyAtrshmlog_get_thread_local_buffer PyAtrshmlog_get_thread_local_buffer_PROTO;
   static PyAtrshmlog_get_thread_buffer_next_cleanup_RETURN PyAtrshmlog_get_thread_buffer_next_cleanup PyAtrshmlog_get_thread_buffer_next_cleanup_PROTO;
   static PyAtrshmlog_get_thread_buffer_next_full_RETURN PyAtrshmlog_get_thread_buffer_next_full  PyAtrshmlog_get_thread_buffer_next_full_PROTO ;
@@ -861,6 +875,8 @@ typedef void (*pyatrshmlog_vfctv_t)(void);
   static PyAtrshmlog_get_buffer_cleanup_anchor_RETURN PyAtrshmlog_get_buffer_cleanup_anchor  PyAtrshmlog_get_buffer_cleanup_anchor_PROTO;
   static PyAtrshmlog_get_buffer_full_anchor_RETURN PyAtrshmlog_get_buffer_full_anchor  PyAtrshmlog_get_buffer_full_anchor_PROTO;
   static PyAtrshmlog_get_buffer_append_anchor_RETURN PyAtrshmlog_get_buffer_append_anchor  PyAtrshmlog_get_buffer_append_anchor_PROTO;
+  static PyAtrshmlog_set_targetbuffer_max_RETURN PyAtrshmlog_set_targetbuffer_max PyAtrshmlog_set_targetbuffer_max_PROTO;
+  static PyAtrshmlog_get_targetbuffer_max_RETURN PyAtrshmlog_get_targetbuffer_max PyAtrshmlog_get_targetbuffer_max_PROTO;
   
   
 #else
@@ -1227,6 +1243,9 @@ static pyatrshmlog_vfctv_t *PyAtrshmlog_API;
 #define PyAtrshmlog_get_thread_local_index \
   (*(PyAtrshmlog_get_thread_local_index_RETURN (*)PyAtrshmlog_get_thread_local_index_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_local_index_NUM])
   
+#define PyAtrshmlog_get_thread_local_count \
+  (*(PyAtrshmlog_get_thread_local_count_RETURN (*)PyAtrshmlog_get_thread_local_count_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_local_count_NUM])
+  
 #define PyAtrshmlog_get_thread_local_buffer \
   (*(PyAtrshmlog_get_thread_local_buffer_RETURN (*)PyAtrshmlog_get_thread_local_buffer_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_thread_local_buffer_NUM])
   
@@ -1289,6 +1308,12 @@ static pyatrshmlog_vfctv_t *PyAtrshmlog_API;
 
 #define PyAtrshmlog_get_buffer_append_anchor \
   (*(PyAtrshmlog_get_buffer_append_anchor_RETURN (*)PyAtrshmlog_get_buffer_append_anchor_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_buffer_append_anchor_NUM])
+
+#define PyAtrshmlog_set_targetbuffer_max \
+  (*(PyAtrshmlog_set_targetbuffer_max_RETURN (*)PyAtrshmlog_set_targetbuffer_max_PROTO) PyAtrshmlog_API[PyAtrshmlog_set_targetbuffer_max_NUM])
+  
+#define PyAtrshmlog_get_targetbuffer_max \
+  (*(PyAtrshmlog_get_targetbuffer_max_RETURN (*)PyAtrshmlog_get_targetbuffer_max_PROTO) PyAtrshmlog_API[PyAtrshmlog_get_targetbuffer_max_NUM])
 
   
   /* Return -1 on error, 0 on success.
