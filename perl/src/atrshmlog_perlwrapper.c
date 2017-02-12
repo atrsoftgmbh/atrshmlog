@@ -708,7 +708,9 @@ atrshmlog_ret_t atratrshmlog_reattach(int flag0,
 		       int flag52,  
 		       int chk53,  
 		       int flag54,  
-		       int loff55 
+		       int loff55,
+		       int flag56,  
+		       int tarbufmax57 
 		       )
 {
   atrshmlog_int32_t pi[100];
@@ -769,6 +771,8 @@ atrshmlog_ret_t atratrshmlog_reattach(int flag0,
   pi[53] =  chk53;
   pi[54] =  flag54;
   pi[55] =  loff55;
+  pi[56] =  flag56;
+  pi[57] =  tarbufmax57;
 
   return ATRSHMLOG_REATTACH(pi);
 }
