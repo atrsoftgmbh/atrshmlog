@@ -2407,6 +2407,25 @@ JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlo
 
 /*
  * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getThreadLocalCount
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getThreadLocalCount
+(JNIEnv *i_jnienv, jobject i_myself, jlong i_thread_locals)
+{
+  jint result;
+  
+  u_t u;
+
+  u.l = i_thread_locals;
+
+  result = ATRSHMLOG_GET_THREAD_LOCAL_COUNT(u.p);
+
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
  * Method:    getThreadLocalBuffer
  * Signature: (JI)J
  */
@@ -2704,6 +2723,37 @@ JNIEXPORT jlong JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshml
   
   return result;
 }
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    getTargetbufferMax
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_getTargetbufferMax
+  (JNIEnv *i_jnienv, jobject i_myself)
+{
+  jint result;
+
+  result = ATRSHMLOG_GET_TARGETBUFFER_MAX();
+  
+  return result;
+}
+
+/*
+ * Class:     de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG
+ * Method:    setTargetbufferMax
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_de_atrsoft_successorofoak_utilities_logging_atrshmlog_ATRSHMLOG_setTargetbufferMax
+(JNIEnv *i_jnienv, jobject i_myself, jint i_flag)
+{
+  jint result;
+  
+  result = ATRSHMLOG_SET_TARGETBUFFER_MAX(i_flag);
+
+  return result;
+}
+
 
 /**
  * \brief We remove the slave from the list of slaves

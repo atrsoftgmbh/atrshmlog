@@ -1221,7 +1221,7 @@ public class ATRSHMLOG {
      * We DO resize the event locks array.
      *
      * @param params
-     * int array with 56 values.
+     * int array with 58 values.
      * - 0 : flag for use id
      * - 1 : new value for id
      * - 2 : flag for use count
@@ -1278,6 +1278,8 @@ public class ATRSHMLOG {
      * - 53 : new value for atrshmlog_checksum
      * - 54 : flag for use logging process off
      * - 55 : new value for logging process off
+     * - 56 : flag for targetbuffer max
+     * - 57 : new value for targetbuffer max
      *
      * @return
      * - Zero ok
@@ -2668,6 +2670,18 @@ public class ATRSHMLOG {
     public native int getThreadLocalIndex (long i_thread_local);
 
     /** 
+     * We get the buffer count of a thread local
+     *
+     * @param i_thread_local
+     * Pointer to a thread local or NULL
+     *
+     * @return
+     * - 0 if pointer is NULL
+     * - count
+     */
+    public native int getThreadLocalCount (long i_thread_local);
+
+    /** 
      * We get the buffer adress via index of a thread local
      *
      * @param i_thread_local
@@ -2836,6 +2850,25 @@ public class ATRSHMLOG {
      */
     public native long getThreadBufferPayload (long i_buffer);
   
+    /**
+     *  The targetbuffer max
+     *
+     * @return
+     * The flag
+     */
+    public native int getTargetbufferMax();
+    
+    /**
+     *  Set the targetbuffer max
+     *
+     * @param i_flag
+     * Our new  flag
+     *
+     * @return 
+     * The old flag
+     */
+    public native int setTargetbufferMax(int i_flag);
+
     /** 
      *  We remove the save from the list of slaves
      *

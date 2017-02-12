@@ -1630,7 +1630,7 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 	{
 	  atrshmlog_dispatch_buffer(tbuff);
 
-	   g->atrshmlog_buff = 0;
+	  g->atrshmlog_buff = 0;
 	   
 	  // Switch the targetbuffer and try again
 	  ++g->atrshmlog_targetbuffer_index;
