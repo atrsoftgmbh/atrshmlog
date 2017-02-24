@@ -369,18 +369,6 @@
 /** Include of types for unix stuff */
 # include <sys/types.h>
 
-/** The ipc stuff */
-# include <sys/ipc.h>
-
-/** The shm stuff */
-# include <sys/shm.h>
-
-/** All the rest of unix */
-# include <unistd.h>
-
-/** File creation masks */
-# include <fcntl.h>
-
 /* the shared memory key in posix */
 
 typedef key_t atrshmlog_key_t;
@@ -402,18 +390,6 @@ typedef key_t atrshmlog_key_t;
 /** Include of types for unix stuff */
 # include <sys/types.h>
 
-/** The ipc stuff */
-# include <sys/ipc.h>
-
-/** The shm stuff */
-# include <sys/shm.h>
-
-/** All the rest of unix */
-# include <unistd.h>
-
-/** File creation masks */
-# include <fcntl.h>
-
 /* the shared memory key in posix XSI with cygserver and cygrunsrv */
 
 typedef key_t atrshmlog_key_t;
@@ -434,7 +410,7 @@ typedef key_t atrshmlog_key_t;
 typedef long atrshmlog_key_t;
 
 # if ATRSHMLOG_USE_PTHREAD == 1
-#  include <unistd.h>
+
 # else
 // for windows we need the native sleep
 #  define sleep(__s) Sleep((__s) * 1000)
@@ -451,11 +427,6 @@ typedef long atrshmlog_key_t;
 /** Include of types for unix stuff */
 # include <sys/types.h>
 
-/** The ipc stuff */
-# include <sys/ipc.h>
-
-/** The shm stuff */
-# include <sys/shm.h>
 
 // bsd freebsd 
 #if ATRSHMLOG_FLAVOUR == 3
@@ -464,15 +435,6 @@ typedef long atrshmlog_key_t;
 #endif
 
 // bsd openbsd
-#if ATRSHMLOG_FLAVOUR == 4
-#include <unistd.h>
-#endif
-
-/** All the rest of unix */
-# include <unistd.h>
-
-/** File creation masks */
-# include <fcntl.h>
 
 /* the shared memory key in posix */
 
@@ -489,23 +451,11 @@ typedef key_t atrshmlog_key_t;
 /** Include of types for unix stuff */
 # include <sys/types.h>
 
-/** The ipc stuff */
-# include <sys/ipc.h>
-
-/** The shm stuff */
-# include <sys/shm.h>
-
 // bsd netbsd 
 #if ATRSHMLOG_FLAVOUR == 5
 /** The thread stuff */
 #include <lwp.h>
 #endif
-
-/** All the rest of unix */
-# include <unistd.h>
-
-/** File creation masks */
-# include <fcntl.h>
 
 /* the shared memory key in posix */
 
@@ -524,23 +474,11 @@ typedef key_t atrshmlog_key_t;
 /** Include of types for unix stuff */
 # include <sys/types.h>
 
-/** The ipc stuff */
-# include <sys/ipc.h>
-
-/** The shm stuff */
-# include <sys/shm.h>
-
 // solaris 
 #if ATRSHMLOG_FLAVOUR == 6
 /** The thread stuff */
 #include <thread.h>
 #endif
-
-/** All the rest of unix */
-# include <unistd.h>
-
-/** File creation masks */
-# include <fcntl.h>
 
 /* the shared memory key in posix */
 
