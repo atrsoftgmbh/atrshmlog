@@ -7,6 +7,13 @@
 
 #include <stdlib.h>
 
+/** All the rest of unix */
+# include <unistd.h>
+
+/** The shm stuff */
+# include <sys/shm.h>
+
+
 /**
  * \file atrshmlogimpl_attach.c
  */

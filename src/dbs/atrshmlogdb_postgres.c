@@ -37,6 +37,9 @@
 
 #include <string.h>
 
+/** All the rest of unix */
+# include <unistd.h>
+
 /*
  *--------------------------------------------------------
  */

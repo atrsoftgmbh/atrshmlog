@@ -1,6 +1,9 @@
 
 #include "../atrshmlog_internal.h"
 
+/** The shm stuff */
+# include <sys/shm.h>
+
 
 /*******************************************************************/
 

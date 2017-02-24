@@ -1934,7 +1934,67 @@ extern "C" {
    * We do NOT restart slaves.
    * We DO resize the event locks array.
    *
-
+   * \param __p
+   * int array with 56 values.
+   * - 0 : flag for use id
+   * - 1 : new value for id
+   * - 2 : flag for use count
+   * - 3 : new value for count
+   * - 4 : flag for use atrshmlog_init_buffers_in_advance
+   * - 5 : new value for atrshmlog_init_buffers_in_advance
+   * - 6 : flag for use atrshmlog_buffer_strategy
+   * - 7 : new value for atrshmlog_buffer_strategy
+   * - 8 : flag for use atrshmlog_strategy_wait_wait_time
+   * - 9 : new value for atrshmlog_strategy_wait_wait_time
+   * - 10 : flag for use atrshmlog_delimiter
+   * - 11 : new value for atrshmlog_delimiter
+   * - 12 : flag for use atrshmlog_event_locks_max
+   * - 13 : new value for atrshmlog_event_locks_max
+   * - 14 : flag for use atrshmlog_buffer_infosize
+   * - 15 : new value for atrshmlog_buffer_infosize
+   * - 16 : flag for use atrshmlog_prealloc_buffer_count
+   * - 17 : new value for atrshmlog_prealloc_buffer_count
+   * - 18 : flag for use atrshmlog_f_list_buffer_slave_wait
+   * - 19 : new value for atrshmlog_f_list_buffer_slave_wait
+   * - 20 : flag for use atrshmlog_f_list_buffer_slave_count
+   * - 21 : new value for atrshmlog_f_list_buffer_slave_count
+   * - 22 : flag for use atrshmlog_wait_for_slaves
+   * - 23 : new value for atrshmlog_wait_for_slaves
+   * - 24 : flag for use atrshmlog_clock_id
+   * - 25 : new value for atrshmlog_clock_id
+   * - 26 : flag for use atrshmlog_thread_fence_1
+   * - 27 : new value for atrshmlog_thread_fence_1
+   * - 28 : flag for use atrshmlog_thread_fence_2
+   * - 29 : new value for atrshmlog_thread_fence_2
+   * - 30 : flag for use atrshmlog_thread_fence_3
+   * - 31 : new value for atrshmlog_thread_fence_3
+   * - 32 : flag for use atrshmlog_thread_fence_4
+   * - 33 : new value for atrshmlog_thread_fence_4
+   * - 34 : flag for use atrshmlog_thread_fence_5
+   * - 35 : new value for atrshmlog_thread_fence_5
+   * - 36 : flag for use atrshmlog_thread_fence_6
+   * - 37 : new value for atrshmlog_thread_fence_6
+   * - 38 : flag for use atrshmlog_thread_fence_7
+   * - 39 : new value for atrshmlog_thread_fence_7
+   * - 40 : flag for use atrshmlog_thread_fence_8
+   * - 41 : new value for atrshmlog_thread_fence_8
+   * - 42 : flag for use atrshmlog_thread_fence_9
+   * - 43 : new value for atrshmlog_thread_fence_9
+   * - 44 : flag for use atrshmlog_thread_fence_10
+   * - 45 : new value for atrshmlog_thread_fence_10
+   * - 46 : flag for use atrshmlog_thread_fence_11
+   * - 47 : new value for atrshmlog_thread_fence_11
+   * - 48 : flag for use atrshmlog_thread_fence_12
+   * - 49 : new value for atrshmlog_thread_fence_12
+   * - 50 : flag for use atrshmlog_thread_fence_13
+   * - 51 : new value for atrshmlog_thread_fence_13
+   * - 52 : flag for use atrshmlog_checksum
+   * - 53 : new value for atrshmlog_checksum
+   * - 54 : flag for use logging process off
+   * - 55 : new value for logging process off
+   * - 56 : flag for use targetbuffer max
+   * - 57 : new value for targetbuffer max 
+   * 
    * \return
    * - Zero ok
    * - negative for error

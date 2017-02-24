@@ -28,6 +28,9 @@
 
 #include <stdlib.h>
 
+/** All the rest of unix */
+# include <unistd.h>
+
 
 #define PN(_x) printf( #_x " : %ld :\n", (long) _x)
 

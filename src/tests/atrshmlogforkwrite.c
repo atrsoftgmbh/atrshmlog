@@ -37,6 +37,9 @@
 
 #include <stdlib.h>
 
+/** All the rest of unix */
+# include <unistd.h>
+
 /*
  *------------------------------------------------
  */

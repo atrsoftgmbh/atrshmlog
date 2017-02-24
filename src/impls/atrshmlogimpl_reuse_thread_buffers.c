@@ -2,6 +2,9 @@
 #include "../atrshmlog_internal.h"
 
 
+/** All the rest of unix */
+# include <unistd.h>
+
 
 /************************************************************/
 
