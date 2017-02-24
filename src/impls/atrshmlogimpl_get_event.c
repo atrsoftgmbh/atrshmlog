@@ -15,7 +15,7 @@
  *
  * test t_get_event.c
  */
-atrshmlog_event_t atrshmlog_get_event(atrshmlog_int32_t i_index)
+atrshmlog_event_t atrshmlog_get_event(const atrshmlog_int32_t i_index)
 {
   if (i_index < 0 || i_index >= atrshmlog_event_locks_max)
     return atrshmlog_error_get_event_1;

@@ -15,7 +15,7 @@
  *
  * test t_set_clock_id.c
  */
-atrshmlog_ret_t atrshmlog_set_clock_id(atrshmlog_int32_t i_id)
+atrshmlog_ret_t atrshmlog_set_clock_id(const atrshmlog_int32_t i_id)
 {
   ATRSHMLOGSTAT(atrshmlog_counter_set_clock_id);
 

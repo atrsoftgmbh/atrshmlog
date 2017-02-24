@@ -18,7 +18,7 @@
  *
  * test t_turn_slave_off.c
  */
- void atrshmlog_turn_slave_off(volatile const void* i_slave)
+ void atrshmlog_turn_slave_off(volatile const void* const i_slave)
  {
    if (i_slave == NULL)
      return;

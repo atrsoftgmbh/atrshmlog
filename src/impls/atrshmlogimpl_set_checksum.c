@@ -14,7 +14,7 @@
  *
  * test t_set_checksum.c
  */
-atrshmlog_ret_t atrshmlog_set_checksum(int i_flag)
+atrshmlog_ret_t atrshmlog_set_checksum(const int i_flag)
 {
   int old  = atrshmlog_checksum;
 

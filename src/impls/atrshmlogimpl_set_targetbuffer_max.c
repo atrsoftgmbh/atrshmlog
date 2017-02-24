@@ -14,7 +14,7 @@
  *
  * test t_set_checksum.c
  */
-atrshmlog_ret_t atrshmlog_set_targetbuffer_max(int i_flag)
+atrshmlog_ret_t atrshmlog_set_targetbuffer_max(const int i_flag)
 {
   int old  = atrshmlog_targetbuffer_max;
 

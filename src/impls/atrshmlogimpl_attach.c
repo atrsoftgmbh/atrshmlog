@@ -1,6 +1,11 @@
 
 #include "../atrshmlog_internal.h"
 
+#include <stdio.h>
+
+#include <string.h>
+
+#include <stdlib.h>
 
 /**
  * \file atrshmlogimpl_attach.c
@@ -828,7 +833,7 @@ atrshmlog_ret_t atrshmlog_attach(void)
  * - Negativ error
  * - positive worked with minor error
  */
-atrshmlog_ret_t atrshmlog_reattach(const atrshmlog_int32_t *i_params)
+atrshmlog_ret_t atrshmlog_reattach(const atrshmlog_int32_t *const i_params)
 {
   ATRSHMLOGSTAT(atrshmlog_counter_reattach);
   

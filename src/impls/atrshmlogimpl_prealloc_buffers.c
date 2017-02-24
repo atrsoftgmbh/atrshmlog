@@ -1,6 +1,7 @@
 
 #include "../atrshmlog_internal.h"
 
+#include <string.h>
 
 /**
  * \file atrshmlogimpl_prealloc_buffers.c

@@ -75,7 +75,7 @@ static int atrshmlog_init_one_buffer(volatile atrshmlog_area_t *i_shm,
  *
  * test t_init_shm_log.c
  */
-atrshmlog_ret_t atrshmlog_init_shm_log(volatile const void *i_area,
+atrshmlog_ret_t atrshmlog_init_shm_log(volatile const void * const i_area,
 				       const atrshmlog_int32_t i_count_buffers)
 {
   ATRSHMLOGSTAT(atrshmlog_counter_init_shm);

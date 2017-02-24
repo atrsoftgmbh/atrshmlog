@@ -17,17 +17,19 @@
  *
  * test t_sleep_nanos.c
  */
-void atrshmlog_sleep_nanos(atrshmlog_int32_t i_nanos)
+void atrshmlog_sleep_nanos(const atrshmlog_int32_t i_nanos)
 {
+  int nanos = (int)i_nanos;
 
 #if ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC  == 1
+#define ishit 1
   const int timeframe = 100000;
 
-  if (i_nanos < 0)
-    i_nanos = 1;
+  if (nanos < 0)
+    nanos = 1;
 
-  int limit = i_nanos / timeframe;
-  int rest = i_nanos % timeframe;
+  int limit = nanos / timeframe;
+  int rest = nanos % timeframe;
   
   struct timespec ts;
   ts.tv_sec = 0;
@@ -45,6 +47,7 @@ void atrshmlog_sleep_nanos(atrshmlog_int32_t i_nanos)
 #endif
 
 #if   ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC == 1
+#define ishit 1
 
   // careful. we try this at least, but there is on this OS
   // no easy way to get it done. so we hope the best
@@ -52,11 +55,11 @@ void atrshmlog_sleep_nanos(atrshmlog_int32_t i_nanos)
   // and his gang to make it 
   const int timeframe = 100000;
 
-  if (i_nanos < 0)
-    i_nanos = 1;
+  if (nanos < 0)
+    nanos = 1;
 
-  int limit = i_nanos / timeframe;
-  int rest = i_nanos % timeframe;
+  int limit = nanos / timeframe;
+  int rest = nanos % timeframe;
   
   struct timespec ts;
   ts.tv_sec = 0;
@@ -75,6 +78,7 @@ void atrshmlog_sleep_nanos(atrshmlog_int32_t i_nanos)
 #endif
 
 #if ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 1
+#define ishit 1
 
 # if ATRSHMLOG_USE_NANOSLEEP == 1
   // there is always hope that the guys
@@ -83,11 +87,11 @@ void atrshmlog_sleep_nanos(atrshmlog_int32_t i_nanos)
   // if it does not work try the millis approch
   const int timeframe = 100000;
 
-  if (i_nanos < 0)
-    i_nanos = 1;
+  if (nanos < 0)
+    nanos = 1;
 
-  int limit = i_nanos / timeframe;
-  int rest = i_nanos % timeframe;
+  int limit = nanos / timeframe;
+  int rest = nanos % timeframe;
   
   struct timespec ts;
   ts.tv_sec = 0;
@@ -106,7 +110,7 @@ void atrshmlog_sleep_nanos(atrshmlog_int32_t i_nanos)
 
 # else  
   // sorry. but the OS does simply not support that.
-  int millis = i_nanos / 1000000;
+  int millis = nanos / 1000000;
 
   Sleep(millis);
   
@@ -115,13 +119,14 @@ void atrshmlog_sleep_nanos(atrshmlog_int32_t i_nanos)
 #endif
 
 #if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+#define ishit 1
   const int timeframe = 100000;
 
-  if (i_nanos < 0)
-    i_nanos = 1;
+  if (nanos < 0)
+    nanos = 1;
 
-  int limit = i_nanos / timeframe;
-  int rest = i_nanos % timeframe;
+  int limit = nanos / timeframe;
+  int rest = nanos % timeframe;
   
   struct timespec ts;
   ts.tv_sec = 0;
@@ -139,13 +144,14 @@ void atrshmlog_sleep_nanos(atrshmlog_int32_t i_nanos)
 #endif
 
 #if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
+#define ishit 1
   const int timeframe = 100000;
 
-  if (i_nanos < 0)
-    i_nanos = 1;
+  if (nanos < 0)
+    nanos = 1;
 
-  int limit = i_nanos / timeframe;
-  int rest = i_nanos % timeframe;
+  int limit = nanos / timeframe;
+  int rest = nanos % timeframe;
   
   struct timespec ts;
   ts.tv_sec = 0;
@@ -163,13 +169,14 @@ void atrshmlog_sleep_nanos(atrshmlog_int32_t i_nanos)
 #endif
 
 #if ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC  == 1
+#define ishit 1
   const int timeframe = 100000;
 
-  if (i_nanos < 0)
-    i_nanos = 1;
+  if (nanos < 0)
+    nanos = 1;
 
-  int limit = i_nanos / timeframe;
-  int rest = i_nanos % timeframe;
+  int limit = nanos / timeframe;
+  int rest = nanos % timeframe;
   
   struct timespec ts;
   ts.tv_sec = 0;
@@ -187,3 +194,7 @@ void atrshmlog_sleep_nanos(atrshmlog_int32_t i_nanos)
 #endif
 
 }  
+
+#ifndef ishit
+#error missing a branch in the code for the platform
+#endif

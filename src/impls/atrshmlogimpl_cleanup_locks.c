@@ -19,9 +19,12 @@
  * So use a simple program for that
  * see the atrshmlogfinish.c
  *
+ * NOTE:
+ * we break here const deliberately
+ *
  * test t_cleanup_locks.c
  */
-void atrshmlog_cleanup_locks(volatile const void *i_area)
+void atrshmlog_cleanup_locks(volatile const void * const i_area)
 {
   ATRSHMLOGSTAT(atrshmlog_counter_cleanup_locks);
 

@@ -16,7 +16,7 @@
  *
  * test t_get_area_version.c
  */
-atrshmlog_ret_t atrshmlog_get_area_version(volatile const void* i_area)
+atrshmlog_ret_t atrshmlog_get_area_version(volatile const void* const i_area)
 {
   if (i_area && atrshmlog_attach_once != 0)
     return ((volatile const atrshmlog_area_t *)i_area)->shmversion;

@@ -31,6 +31,12 @@
 // we are the postgreSQL 
 #include <libpq-fe.h>
 
+#include <stdlib.h>
+
+#include <stdio.h>
+
+#include <string.h>
+
 /*
  *--------------------------------------------------------
  */

@@ -38,7 +38,7 @@ static atrshmlog_event_t atrshmlog_set_event(const atrshmlog_int32_t i_index,
  *
  * test t_set_event.c
  */
-atrshmlog_event_t atrshmlog_set_event_on(atrshmlog_int32_t i_index)
+atrshmlog_event_t atrshmlog_set_event_on(const atrshmlog_int32_t i_index)
 {
   return atrshmlog_set_event(i_index, 1);
 }
@@ -55,7 +55,7 @@ atrshmlog_event_t atrshmlog_set_event_on(atrshmlog_int32_t i_index)
  *
  * test t_set_event.c
  */
-atrshmlog_event_t atrshmlog_set_event_off(atrshmlog_int32_t i_index)
+atrshmlog_event_t atrshmlog_set_event_off(const atrshmlog_int32_t i_index)
 {
   return atrshmlog_set_event(i_index, 0);
 }

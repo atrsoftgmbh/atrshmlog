@@ -16,7 +16,7 @@
  *
  * test t_buffer_slave_proc.c
  */
-volatile const void* atrshmlog_get_next_slave_local(volatile const void* i_actual)
+volatile const void* atrshmlog_get_next_slave_local(volatile const void* const i_actual)
 {
   volatile const void *n = 0;
 

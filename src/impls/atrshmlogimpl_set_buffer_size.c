@@ -24,7 +24,7 @@
  *
  * test t_set_buffer_size.c
  */
-atrshmlog_ret_t atrshmlog_set_buffer_size(atrshmlog_int32_t i_size)
+atrshmlog_ret_t atrshmlog_set_buffer_size(const atrshmlog_int32_t i_size)
 {
   ATRSHMLOGSTAT(atrshmlog_counter_set_buffer_size);
 

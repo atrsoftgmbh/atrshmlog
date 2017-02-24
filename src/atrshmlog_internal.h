@@ -290,7 +290,7 @@
 # define   _POSIX_C_SOURCE 199309L
 #endif
 
-#define ATRSHMLOGCDECLBINDING /**/
+#define ATRSHMLOGCDECLBINDING 
 
 #endif
 
@@ -322,7 +322,7 @@
 /**
  * The binding of the thread function
  */
-#define ATRSHMLOGCDECLBINDING /**/
+#define ATRSHMLOGCDECLBINDING 
 
 #endif
 
@@ -337,13 +337,13 @@
 
 #if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
 
-#define ATRSHMLOGCDECLBINDING /**/
+#define ATRSHMLOGCDECLBINDING 
 
 #endif
 
 #if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
 
-#define ATRSHMLOGCDECLBINDING /**/
+#define ATRSHMLOGCDECLBINDING 
 
 #endif
 
@@ -357,7 +357,7 @@
 # define _DEFAULT_SOURCE 1
 #endif
 
-#define ATRSHMLOGCDECLBINDING /**/
+#define ATRSHMLOGCDECLBINDING 
 
 #endif
 
@@ -622,25 +622,6 @@ typedef void atrshmlog_thread_ret_t;
 #define ATRSHMLOG_GETTHREADID(__o) ((__o) = (atrshmlog_tid_t)(thr_self()))
 #endif
 
-
-/** File io needed from 1.1.0 on */
-#include <stdio.h>
-
-/** Time meaturement - this includes structs */
-#include <time.h>
-
-/** Low level string ops , namely memcpy */
-#include <string.h>
-
-/** Error code */
-#include <errno.h>
-
-/** Checks for types of chars */
-#include <ctype.h>
-
-/** Standard c stuff for alloc */  
-#include <stdlib.h>
-
 /** 
  * atomics
  *
@@ -871,7 +852,7 @@ typedef void atrshmlog_thread_ret_t;
 /**
  * \brief The targetbuffer max count 
  */
-#define ATRSHMLOG_TARGETBUFFERMAX_SUFFIX "_TARGETBUFFERMAX"
+#define ATRSHMLOG_TARGETBUFFERMAX_SUFFIX "_TARGETBUFFER_MAX"
 
 /**
  * \brief The dispose flag for reuse
@@ -913,7 +894,8 @@ typedef void atrshmlog_thread_ret_t;
  * Please dont misuse it.
  * You can corrupt the system by changing it by yourself.
  */
-extern volatile const void* atrshmlog_base_ptr;
+ATRSHMLOG_VARIABLE_DECORATOR extern
+volatile const void* atrshmlog_base_ptr;
 
 /*********************************************************************/
 
@@ -2111,10 +2093,15 @@ extern int atrshmlog_detach_mapped_file(void* p);
 extern void atrshmlog_memset_prealloced(void);
 extern atomic_int atrshmlog_last_mem_to_shm;
 extern atomic_int atrshmlog_base_ptr_use_flag;
+ATRSHMLOG_FUNCTION_DECORATOR
 extern void atrshmlog_fill_chunk_head (volatile const void *i_chunk, atrshmlog_chunk_head_t* c);
+ATRSHMLOG_FUNCTION_DECORATOR
 extern atrshmlog_int32_t atrshmlog_int32_change_order(atrshmlog_int32_t v);
+ATRSHMLOG_FUNCTION_DECORATOR
 extern uint64_t atrshmlog_int64_change_order(uint64_t v);
+ATRSHMLOG_FUNCTION_DECORATOR
 extern void atrshmlog_io_head_change_order(atrshmlog_io_head_t* h);
+ATRSHMLOG_FUNCTION_DECORATOR
 extern void atrshmlog_chunk_head_change_order(atrshmlog_chunk_head_t* h);
 extern void atrshmlog_remove_tbuff(atrshmlog_g_tl_t* i_g, int i);
 extern int atrshmlog_targetbuffer_max;
@@ -2197,55 +2184,59 @@ extern int atrshmlog_targetbuffer_max;
 
 
 /************************************************************************/
-  /** 
-   * \brief We create the shm  area.
-   *
-   * \param i_key
-   * The shmid of the system.
-   *
-   * \param i_count
-   * The number of buffers for this area.
-   *
-   * \return
-   * - Positive number for the shmid in case of success
-   * - negative for error
-   */
-  extern int atrshmlog_create(const atrshmlog_key_t i_key,
-			      const int i_count);
+/** 
+ * \brief We create the shm  area.
+ *
+ * \param i_key
+ * The shmid of the system.
+ *
+ * \param i_count
+ * The number of buffers for this area.
+ *
+ * \return
+ * - Positive number for the shmid in case of success
+ * - negative for error
+ */
+ATRSHMLOG_FUNCTION_DECORATOR extern
+int atrshmlog_create(const atrshmlog_key_t i_key,
+		     const int i_count);
 
-  /** 
-   * \brief We destroy the shm 
-   *
-   * \param i_shmid
-   * The shm id of the system
-   *
-   * \return
-   * The error code of the delete
-   */
-  extern atrshmlog_ret_t atrshmlog_delete(const int i_shmid);
+/** 
+ * \brief We destroy the shm 
+ *
+ * \param i_shmid
+ * The shm id of the system
+ *
+ * \return
+ * The error code of the delete
+ */
+ATRSHMLOG_FUNCTION_DECORATOR extern
+atrshmlog_ret_t atrshmlog_delete(const int i_shmid);
 
-  /** 
-   * \brief We have to clean up the locks after error condition 
-   *
-   * \param i_area
-   * Points to the start of the area.
-   *
-   * \return
-   * void
-   */
-  extern void atrshmlog_cleanup_locks(volatile const void* i_area);
+/** 
+ * \brief We have to clean up the locks after error condition 
+ *
+ * \param i_area
+ * Points to the start of the area.
+ *
+ * \return
+ * void
+ */
+ATRSHMLOG_FUNCTION_DECORATOR extern
+void atrshmlog_cleanup_locks(volatile const void* const i_area);
 
-  /** 
-   * \brief We initialize the buffer after it is attached 
-   *
-   * \param i_area
-   * Points to the start of the area.
-   *
-   * \param i_count_buffers
-   * The number of buffers for the shm are.
-   */
-  extern atrshmlog_ret_t atrshmlog_init_shm_log(volatile const void *i_area,
-						const atrshmlog_int32_t i_count_buffers);
+/** 
+ * \brief We initialize the buffer after it is attached 
+ *
+ * \param i_area
+ * Points to the start of the area.
+ *
+ * \param i_count_buffers
+ * The number of buffers for the shm are.
+ */
+ATRSHMLOG_FUNCTION_DECORATOR extern
+atrshmlog_ret_t atrshmlog_init_shm_log(volatile const void * const i_area,
+				       const atrshmlog_int32_t i_count_buffers);
 
 
 #endif

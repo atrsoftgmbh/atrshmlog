@@ -4,7 +4,7 @@
 /*******************************************************************/
 
 /**
- * \file atrshmlogimpl_turn_logging.off.c
+ * \file atrshmlogimpl_turn_logging_off.c
  */
 
 /** 
@@ -18,7 +18,7 @@
  *
  * test t_turn_logging_off.c
  */
-void atrshmlog_turn_logging_off(volatile const void* i_thread_locals)
+void atrshmlog_turn_logging_off(volatile const void* const i_thread_locals)
 {
   ATRSHMLOGSTAT(atrshmlog_counter_turn_logging_off);
   

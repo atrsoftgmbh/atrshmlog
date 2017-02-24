@@ -14,7 +14,7 @@
  *
  * test t_set_fence_2.c
  */
-atrshmlog_ret_t atrshmlog_set_thread_fence_2(atrshmlog_int32_t i_switch)
+atrshmlog_ret_t atrshmlog_set_thread_fence_2(const atrshmlog_int32_t i_switch)
 {
   return atrshmlog_set_thread_fence(&atrshmlog_thread_fence_2, i_switch);
 }

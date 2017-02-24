@@ -31,6 +31,8 @@
 
 #include "atrshmlog_internal.h"
 
+#include <string.h>
+
 /* end of includes */
 
 /********************************************************************/
@@ -194,6 +196,21 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 				 atrshmlog_time_t i_starttime,
 				 atrshmlog_time_t i_endtime)
 {
+  // The hidden mechanism to get things minimised
+  // in case we are bound to a layer for another language.
+  if (((char)i_eventflag & ~0x20) == ATRSHMLOGPOINTINTIMEP)
+    {
+      if (i_starttime == 0)
+	i_starttime = ATRSHMLOG_GET_TSC_CALL();
+
+      i_endtime = i_starttime;
+    }
+  else 
+    {
+      if (i_endtime == 0)
+	i_endtime = ATRSHMLOG_GET_TSC_CALL();
+    }
+
 #if ATRSHMLOG_THREAD_LOCAL == 1
 
   atrshmlog_g_tl_t* const g  = (atrshmlog_g_tl_t* )&atrshmlog_g_tl;
@@ -238,6 +255,12 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 
   // Initialized
 
+  if (atrshmlog_logging_process_off_final)
+    return atrshmlog_error_write0_5;
+
+  // we check for the last in use buffer
+  register atrshmlog_tbuff_t* tbuff = g->atrshmlog_buff;
+
   volatile atrshmlog_area_t * const a_shm = ATRSHMLOG_GETAREA;
 
   // can happen - we are detached
@@ -250,30 +273,12 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
   if (a_shm->ich_habe_fertig != 0) 
     return atrshmlog_error_write0_6;
   
-  // The hidden mechanism to get things minimised
-  // in case we are bound to a layer for another language.
-  if (((char)i_eventflag & ~0x20) == ATRSHMLOGPOINTINTIMEP)
-    {
-      if (i_starttime == 0)
-	i_starttime = ATRSHMLOG_GET_TSC_CALL();
-
-      i_endtime = i_starttime;
-    }
-  else
-    {
-      if (i_endtime == 0)
-	i_endtime = ATRSHMLOG_GET_TSC_CALL();
-    }
-
   
   // Do the normal stuff now ...
 
+  int strategy_count; // we need this later on to count in case we have  buffer full
+
   const atrshmlog_int32_t totallen = ATRSHMLOGCONTROLDATASIZE;
-
-  int strategy_count;
-
-  // we check for the last in use buffer
-  register atrshmlog_tbuff_t* tbuff = g->atrshmlog_buff;
 
   // was there a used one ?
   if (tbuff)
@@ -340,10 +345,6 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 
 		t /=  g->atrshmlog_targetbuffer_count;
 
-#if 0
-		printf("adapotive %ld\n", (long)t);
-#endif
-	      
 		if (t > 999999999)
 		  t = 999999999;
 	      
@@ -361,10 +362,6 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 
 		t /=  g->atrshmlog_targetbuffer_count * 2;
 
-#if 0
-		printf("adapotive %ld\n", (long)t);
-#endif
-	      
 		if (t > 999999999)
 		  t = 999999999;
 	      
@@ -383,10 +380,6 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
 
 		t /=  g->atrshmlog_targetbuffer_count * 10;
 
-#if 0
-		printf("adapotive %ld\n", (long)t);
-#endif
-	      
 		if (t > 999999999)
 		  t = 999999999;
 	      
@@ -433,10 +426,6 @@ atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
   // Is the size limit reached ? 
   if ((akindex + totallen) > tbuff->maxsize )
     {
-#if ATRSHMLOGDEBUG == 1
-      printf("size hit %ld %ld\n", (long)tbuff->id, (long)akindex);
-#endif
-
       // Checkings: valid buffer 
       if (tbuff->safeguardfront != ATRSHMLOGSAFEGUARDVALUE) {
 	ATRSHMLOGSTAT(atrshmlog_counter_write_safeguard);
@@ -682,9 +671,24 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 				 const atrshmlog_int32_t i_userflag,
 				 atrshmlog_time_t i_starttime,
 				 atrshmlog_time_t i_endtime,
-				 const void* i_local,
+				 const void* const i_local,
 				 const atrshmlog_int32_t i_size)
 {
+  // The hidden mechanism to get things minimised
+  // in case we are bound to a layer for another language.
+  if (((char)i_eventflag & ~0x20) == ATRSHMLOGPOINTINTIMEP)
+    {
+      if (i_starttime == 0)
+	i_starttime = ATRSHMLOG_GET_TSC_CALL();
+
+      i_endtime = i_starttime;
+    }
+  else 
+    {
+      if (i_endtime == 0)
+	i_endtime = ATRSHMLOG_GET_TSC_CALL();
+    }
+  
 #if ATRSHMLOG_THREAD_LOCAL == 1
 
   atrshmlog_g_tl_t* const g  = (atrshmlog_g_tl_t* )&atrshmlog_g_tl;
@@ -726,6 +730,12 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 
   // Initialized
 
+  if (atrshmlog_logging_process_off_final)
+    return atrshmlog_error_write1_7;
+
+  // we check for the last in use buffer
+  register atrshmlog_tbuff_t* tbuff = g->atrshmlog_buff;
+
   volatile atrshmlog_area_t * const a_shm = ATRSHMLOG_GETAREA;
 
   // can happen - we are detached
@@ -738,21 +748,6 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
   if (a_shm->ich_habe_fertig != 0) 
     return atrshmlog_error_write1_8;
 
-  // The hidden mechanism to get things minimised
-  // in case we are bound to a layer for another language.
-  if (((char)i_eventflag & ~0x20) == ATRSHMLOGPOINTINTIMEP)
-    {
-      if (i_starttime == 0)
-	i_starttime = ATRSHMLOG_GET_TSC_CALL();
-
-      i_endtime = i_starttime;
-    }
-  else 
-    {
-      if (i_endtime == 0)
-	i_endtime = ATRSHMLOG_GET_TSC_CALL();
-    }
-
   // Do the normal stuff now ...
 
   /* This is a two way used one. Its the size and the flag too */
@@ -762,13 +757,10 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
   if (!i_local)
     copy_local = 0;
 
-  const atrshmlog_int32_t totallen = ATRSHMLOGCONTROLDATASIZE + copy_local;
-
-  int strategy_count;
+  int strategy_count; // we need this later on to count in case we have  buffer full
   
-  // we check for the last in use buffer
-  register atrshmlog_tbuff_t* tbuff = g->atrshmlog_buff;
-
+  const atrshmlog_int32_t totallen = ATRSHMLOGCONTROLDATASIZE + copy_local;
+  
   // was there a used one ?
   if (tbuff)
     goto sizecheck;
@@ -833,10 +825,6 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 
 		t /=  g->atrshmlog_targetbuffer_count;
 
-#if 0
-		printf("adapotive %ld\n", (long)t);
-#endif
-	      
 		if (t > 999999999)
 		  t = 999999999;
 	      
@@ -854,10 +842,6 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 
 		t /=  g->atrshmlog_targetbuffer_count * 2;
 
-#if 0
-		printf("adapotive %ld\n", (long)t);
-#endif
-	      
 		if (t > 999999999)
 		  t = 999999999;
 	      
@@ -876,10 +860,6 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 
 		t /=  g->atrshmlog_targetbuffer_count * 10;
 
-#if 0
-		printf("adapotive %ld\n", (long)t);
-#endif
-	      
 		if (t > 999999999)
 		  t = 999999999;
 	      
@@ -919,7 +899,7 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
   /********************/
  sizecheck:
   ;
-  
+
   // special case for the payload thing
   if ((unsigned int)totallen > tbuff->maxsize) {
     ATRSHMLOGSTAT(atrshmlog_counter_write1_abort7);
@@ -933,10 +913,6 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
   // Is the size limit reached ? 
   if ((akindex + totallen) > tbuff->maxsize )
     {
-#if ATRSHMLOGDEBUG == 1
-      printf("size hit %ld %ld\n", (long)tbuff->id, (long)tbuff->size);
-#endif
-	 
       // Checkings: valid buffer 
       if (tbuff->safeguardfront != ATRSHMLOGSAFEGUARDVALUE) {
 	ATRSHMLOGSTAT(atrshmlog_counter_write_safeguard);
@@ -1026,10 +1002,7 @@ atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
 
   *(p + ( ATRSHMLOGCONTROLDATASIZE - 1 ) )= (char)i_eventflag;
 
-  if (copy_local)
-    {
-      memcpy(p + ATRSHMLOGCONTROLDATASIZE, i_local, copy_local);
-    }
+  memcpy(p + ATRSHMLOGCONTROLDATASIZE, i_local, copy_local);
   
   if (g->autoflush)
     {
@@ -1188,11 +1161,26 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 				 const atrshmlog_int32_t i_userflag,
 				 atrshmlog_time_t i_starttime,
 				 atrshmlog_time_t i_endtime,
-				 const void* i_local,
+				 const void* const i_local,
 				 const atrshmlog_int32_t i_size,
-				 const char* i_argv[],
+				 const char* const i_argv[],
 				 const atrshmlog_int32_t i_argc_hint)
 {
+  // The hidden mechanism to get things minimised
+  // in case we are bound to a layer for another language.
+  if (((char)i_eventflag & ~0x20) == ATRSHMLOGPOINTINTIMEP)
+    {
+      if (i_starttime == 0)
+	i_starttime = ATRSHMLOG_GET_TSC_CALL();
+
+      i_endtime = i_starttime;
+    }
+  else 
+    {
+      if (i_endtime == 0)
+	i_endtime = ATRSHMLOG_GET_TSC_CALL();
+    }
+
 #if ATRSHMLOG_THREAD_LOCAL == 1
 
   atrshmlog_g_tl_t* const g  = (atrshmlog_g_tl_t* )&atrshmlog_g_tl;
@@ -1234,6 +1222,12 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 
   // Initialized
 
+  if (atrshmlog_logging_process_off_final)
+    return atrshmlog_error_write2_7;
+
+  // we check for the last in use buffer
+  register atrshmlog_tbuff_t* tbuff = g->atrshmlog_buff;
+
   volatile atrshmlog_area_t * const a_shm = ATRSHMLOG_GETAREA;
 
   // can happen - we are detached
@@ -1246,34 +1240,12 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
   if (a_shm->ich_habe_fertig != 0) 
     return atrshmlog_error_write2_8;
   
-  // The hidden mechanism to get things minimised
-  // in case we are bound to a layer for another language.
-  if (((char)i_eventflag & ~0x20) == ATRSHMLOGPOINTINTIMEP)
-    {
-      if (i_starttime == 0)
-	i_starttime = ATRSHMLOG_GET_TSC_CALL();
-
-      i_endtime = i_starttime;
-    }
-  else
-    {
-      if (i_endtime == 0)
-	i_endtime = ATRSHMLOG_GET_TSC_CALL();
-    }
-
   // this is a bit a compromise now.
   // in a later version i try to move the argv directly,
   // so we spare time and space. But for now
   // we use a helper here ...
   char atrshmlog_argvbuffer[ATRSHMLOGARGVBUFFERLEN];
   
-  /* This is a two way used one. Its the size and the flag too */
-  size_t copy_local = i_size;
-
-  /* If the pointer is null we set the length to 0 */
-  if (!i_local)
-    copy_local = 0;
-
   /* We collect at max the length of the argv.
    * Having more data in the argv is simply ignored, the max is the buffer
    * len. No more 
@@ -1289,15 +1261,19 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
  afterargv:
   ;
 
-
     
   // Do the normal stuff now ...
 
-  const atrshmlog_int32_t totallen = ATRSHMLOGCONTROLDATASIZE + argvbufferlen + copy_local;
+  /* This is a two way used one. Its the size and the flag too */
+  size_t copy_local = i_size;
 
-  int strategy_count;
-    // we check for the last in use buffer
-  register atrshmlog_tbuff_t* tbuff = g->atrshmlog_buff;
+  /* If the pointer is null we set the length to 0 */
+  if (!i_local)
+    copy_local = 0;
+
+  int strategy_count; // we need this later on to count in case we have  buffer full
+
+  const atrshmlog_int32_t totallen = ATRSHMLOGCONTROLDATASIZE + argvbufferlen + copy_local;
 
   // was there a used one ?
   if (tbuff)
@@ -1364,10 +1340,6 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 
 		t /=  g->atrshmlog_targetbuffer_count;
 
-#if 0
-		printf("adapotive %ld\n", (long)t);
-#endif
-	      
 		if (t > 999999999)
 		  t = 999999999;
 	      
@@ -1385,10 +1357,6 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 
 		t /=  g->atrshmlog_targetbuffer_count * 2;
 
-#if 0
-		printf("adapotive %ld\n", (long)t);
-#endif
-	      
 		if (t > 999999999)
 		  t = 999999999;
 	      
@@ -1407,10 +1375,6 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 
 		t /=  g->atrshmlog_targetbuffer_count * 10;
 
-#if 0
-		printf("adapotive %ld\n", (long)t);
-#endif
-	      
 		if (t > 999999999)
 		  t = 999999999;
 	      
@@ -1555,15 +1519,9 @@ atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
 
   *(p + ( ATRSHMLOGCONTROLDATASIZE - 1 ) )= (char)i_eventflag;
 
-  if (copy_local)
-    {
-      memcpy(p + ATRSHMLOGCONTROLDATASIZE, i_local, copy_local);
-    }
+  memcpy(p + ATRSHMLOGCONTROLDATASIZE, i_local, copy_local);
     
-  if (argvbufferlen)
-    {
-      memcpy(p + ATRSHMLOGCONTROLDATASIZE + copy_local, atrshmlog_argvbuffer, argvbufferlen);
-    }
+  memcpy(p + ATRSHMLOGCONTROLDATASIZE + copy_local, atrshmlog_argvbuffer, argvbufferlen);
 
   if (g->autoflush)
     {

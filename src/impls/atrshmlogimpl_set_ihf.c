@@ -17,7 +17,7 @@
  *
  * test t_set_area_ihf.c
  */
-atrshmlog_ret_t atrshmlog_set_area_ich_habe_fertig(volatile const void* i_area, atrshmlog_int32_t i_flag)
+atrshmlog_ret_t atrshmlog_set_area_ich_habe_fertig(volatile const void* const i_area, const atrshmlog_int32_t i_flag)
 {
   if (!(i_area && atrshmlog_attach_once != 0))
     return atrshmlog_error_area_ich_habe_fertig_1;

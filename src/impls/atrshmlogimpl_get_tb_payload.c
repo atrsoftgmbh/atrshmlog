@@ -15,7 +15,7 @@
  * test t_get_tid.c
  */
 
-volatile const void *atrshmlog_get_thread_buffer_payload (volatile const void *i_buffer)
+volatile const void *atrshmlog_get_thread_buffer_payload (volatile const void * const i_buffer)
 {
   atrshmlog_tbuff_t* b = ( atrshmlog_tbuff_t* ) i_buffer;
   if (b == NULL)
