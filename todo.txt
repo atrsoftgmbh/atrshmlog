@@ -1,6 +1,4 @@
 
-SPEED SPEED SPEED ....
-
 ------
 arm
 
@@ -62,7 +60,7 @@ binaries compiler platforms
 
 ------
 
-1 4 0
+2 0 0
 
 ------
 
@@ -82,3 +80,6 @@ c++ module
 * alle shm vars via helper procedure wie ich habe fertig ..
 
 
+-----
+
+3 0 0 
