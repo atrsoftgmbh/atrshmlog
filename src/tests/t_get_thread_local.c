@@ -12,28 +12,11 @@
 *                                                                      *
 ***********************************************************************/
 
-/** \file t_get_tid.c
+/** \file t_get_thread_local.c
  * \brief We are a test program.
  */
 
-#include "../atrshmlog.h"
-
-#include "../atrshmlog_internal.h"
-
-/*
- * ------------------------------------------------------------
- */
-
-#include <stdio.h>
-
-#include <stdlib.h>
-
-
-#define PN(_x) printf( #_x " : %ld :\n", (long) _x)
-
-#define PS(_x) printf( #_x " : %s :\n", _x);
-
-#define PP(_x) printf( #_x " : %p :\n", (void*)_x);
+#include "tests.h"
 
 
 int main (int argc, char *argv[])
