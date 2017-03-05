@@ -10,9 +10,15 @@
 /** All the rest of unix */
 # include <unistd.h>
 
+#if ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1 \
+  || ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC == 1 \
+  || ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1 \
+  || ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1 \
+  || ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC == 1
 /** The shm stuff */
 # include <sys/shm.h>
 
+#endif
 
 /**
  * \file atrshmlogimpl_attach.c
