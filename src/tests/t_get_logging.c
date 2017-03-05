@@ -59,7 +59,7 @@ int main (int argc, char *argv[])
 
   atrshmlog_area_t * a = ATRSHMLOG_GETAREA;
 
-  PN(atomic_load(&a->ich_habe_fertig));
+  PN(a->ich_habe_fertig);
 
   PN(atrshmlog_logging_process_off_final);
 
@@ -75,7 +75,7 @@ int main (int argc, char *argv[])
 
   PN(atrshmlog_get_logging());
 
-  atomic_store(&a->ich_habe_fertig, 1);
+  a->ich_habe_fertig = 1;
 
   PN(atrshmlog_get_logging());
 
