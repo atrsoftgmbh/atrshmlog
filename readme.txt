@@ -39,7 +39,8 @@ The directories are
 To start : take the html documentation index file in your
 browser and start to read it.
 
-For the impatient : change to src and run makeall,
+For the impatient : source the right dot file, change to src
+and run makeall,
 then to the other things as you like - i cannot help
 you anyway, so do as you please.....
 
