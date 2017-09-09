@@ -1,4 +1,5 @@
 
+2 0 0 
 ------
 arm
 
@@ -39,7 +40,7 @@ dynamic use of flag files in get_env
 
 ------
 
-support programs in target langues
+support programs in target languages
 
 -----
 
@@ -60,7 +61,7 @@ binaries compiler platforms
 
 ------
 
-2 0 0
+2 1 0
 
 ------
 

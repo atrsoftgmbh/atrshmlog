@@ -19,10 +19,6 @@
 #include "tests.h"
 
 
-/** All the rest of unix */
-# include <unistd.h>
-
-
 
 int main (int argc, char *argv[])
 {
