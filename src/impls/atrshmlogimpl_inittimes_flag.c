@@ -32,7 +32,7 @@
  * The calculation for the ral time approximation is done in the convert.
  * So we dont do any of that in the module.
  */
-atrshmlog_internal_time_t atrshmlog_inittime;
+_Alignas(128) atrshmlog_internal_time_t atrshmlog_inittime;
 
 
 /********************************************************************/
@@ -42,7 +42,7 @@ atrshmlog_internal_time_t atrshmlog_inittime;
  *
  * \brief The click before we get the real time.
  */
-atrshmlog_time_t atrshmlog_inittimetsc_before;
+_Alignas(128) atrshmlog_time_t atrshmlog_inittimetsc_before;
 
 
 /********************************************************************/
@@ -52,5 +52,5 @@ atrshmlog_time_t atrshmlog_inittimetsc_before;
  *
  * \brief The click after we get the ral time.
  */
-atrshmlog_time_t atrshmlog_inittimetsc_after;
+_Alignas(128) atrshmlog_time_t atrshmlog_inittimetsc_after;
 

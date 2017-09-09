@@ -20,7 +20,7 @@
  *
  * test t_set_prealloc_count.c
  */
-atrshmlog_ret_t atrshmlog_set_prealloc_buffer_count(atrshmlog_int32_t i_count)
+atrshmlog_ret_t atrshmlog_set_prealloc_buffer_count(const atrshmlog_int32_t i_count)
 {
   ATRSHMLOGSTAT(atrshmlog_counter_set_prealloc_count);
 

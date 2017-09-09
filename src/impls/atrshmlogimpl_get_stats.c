@@ -16,7 +16,7 @@
  *
  * test t_get_stats.c
  */
-void atrshmlog_get_statistics(atrshmlog_int32_t* o_target)
+void atrshmlog_get_statistics(atrshmlog_int32_t* const o_target)
 {
   
   atrshmlog_time_t n =  ATRSHMLOG_GET_TSC_CALL();

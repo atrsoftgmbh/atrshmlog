@@ -24,6 +24,7 @@
  *
  * Check the documentation for things that you can or even have to 
  * adjust before you compile it.
+ * See the dot.platform.sh files for the setting of the platform.
  *
  * Use this file to access the functions via macros. 
  */
@@ -47,6 +48,11 @@
 // You have to know at least the hardware platform
 // and optional the os
 // and if you are depending on compiler stuff.
+// See the dot.platform.sh files for setting it and
+// the related environment variables.
+//
+// If you are sure about it you can set one of the defines right
+// in this place to 1.
 
 #ifndef ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC
 /** 
@@ -106,6 +112,7 @@
 /** 
  * \brief We have a x86 64 bit, a solaris and a gnu c 
  *
+ * No java support tested so far.
  */
 #define ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC 0
 
@@ -121,7 +128,9 @@
       + ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC ) == 1
 // we are ok. one platform is active
 #else
-bumm bumm bumm bumm error in platform active count
+#error bumm bumm bumm bumm error in platform active count
+#error did you not set the platform with a dot.platform file
+#error check the documentation about the build and example use
 #endif
 
 /*******************************************************/
@@ -129,18 +138,41 @@ bumm bumm bumm bumm error in platform active count
 
 /** 
  * \brief What is our compilers inline attribut 
+ * We use the c99 inline here 
  */
-#define ATRSHMLOG_INLINE __inline__
+#ifndef ATRSHMLOG_INLINE
+#define ATRSHMLOG_INLINE inline
+#endif
+
+/**
+ * \brief What is our compilers function decoration
+ * You can use this for the windows declspec for example
+ */
+#ifndef ATRSHMLOG_FUNCTION_DECORATOR
+#define ATRSHMLOG_FUNCTION_DECORATOR 
+#endif
+
+/**
+ * \brief What is our compilers variable decoration
+ * You can use this for the windows declspec for example
+ */
+#ifndef ATRSHMLOG_VARIABLE_DECORATOR
+#define ATRSHMLOG_VARIABLE_DECORATOR 
+#endif
 
 /** 
  * \brief Do we use inlined click timers 
  */
+#ifndef ATRSHMLOG_INLINE_TSC_CODE
 #define ATRSHMLOG_INLINE_TSC_CODE 1
+#endif
 
 /** 
  * \brief Do we inline the gettime 
  */
+#ifndef ATRSHMLOG_INLINE_GETTIME
 #define ATRSHMLOG_INLINE_GETTIME 1
+#endif
 
 /** The threading model */
 
@@ -151,7 +183,9 @@ bumm bumm bumm bumm error in platform active count
  * it uses the -pthread flag for the compiler and a dll
  * you have then clock_gettime and nanosleep too
  */
+#ifndef ATRSHMLOG_USE_PTHREAD
 #define ATRSHMLOG_USE_PTHREAD 0
+#endif
 
 #if ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
 # undef ATRSHMLOG_USE_PTHREAD
@@ -183,8 +217,9 @@ bumm bumm bumm bumm error in platform active count
  *
  * this is the mingw default
  */
+#ifndef ATRSHMLOG_USE_WINTHREAD
 #define ATRSHMLOG_USE_WINTHREAD 0
-
+#endif
 
 #if ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 1
 # if ATRSHMLOG_USE_PTHREAD == 1
@@ -197,7 +232,9 @@ bumm bumm bumm bumm error in platform active count
 /** 
  * \brief Do we use c11 threads - last resort
  */
+#ifndef ATRSHMLOG_USE_C11_THREAD
 #define ATRSHMLOG_USE_C11_THREAD 0
+#endif
 
 #if ATRSHMLOG_USE_PTHREAD == 0
 # if ATRSHMLOG_USE_WINTHREAD == 0
@@ -209,7 +246,9 @@ bumm bumm bumm bumm error in platform active count
 /** 
  * \brief Do we use the syscall interface 
  */
+#ifndef ATRSHMLOG_SYSCALL
 #define ATRSHMLOG_SYSCALL 0
+#endif
 
 #if ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
 # undef ATRSHMLOG_SYSCALL
@@ -229,7 +268,9 @@ bumm bumm bumm bumm error in platform active count
 /** 
  * \brief Do we use the clock_gettime here 
  */
+#ifndef ATRSHMLOG_USE_CLOCK_GETTIME
 #define ATRSHMLOG_USE_CLOCK_GETTIME 0
+#endif
 
 #if ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
 # undef ATRSHMLOG_USE_CLOCK_GETTIME
@@ -266,7 +307,9 @@ bumm bumm bumm bumm error in platform active count
 /** 
  * \brief Do we use the win filetime here 
  */
+#ifndef ATRSHMLOG_USE_WIN_FILETIME
 #define ATRSHMLOG_USE_WIN_FILETIME 0
+#endif
 
 #if ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 1
 # if ATRSHMLOG_USE_CLOCK_GETTIME == 1
@@ -279,7 +322,9 @@ bumm bumm bumm bumm error in platform active count
 /**
  * \brief  Do we use gettimeofday as a last resort
  */
+#ifndef ATRSHMLOG_USE_GETTIMEOFDAY
 #define ATRSHMLOG_USE_GETTIMEOFDAY 0
+#endif
 
 #if ATRSHMLOG_USE_CLOCK_GETTIME == 0
 # if ATRSHMLOG_USE_WIN_FILETIME == 0
@@ -295,7 +340,9 @@ bumm bumm bumm bumm error in platform active count
  * so then add the -pthread to the compiler switches and
  * have a nice time
  */
+#ifndef ATRSHMLOG_USE_NANOSLEEP
 #define ATRSHMLOG_USE_NANOSLEEP 0
+#endif
 
 #if ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
 # undef ATRSHMLOG_USE_NANOSLEEP
@@ -333,7 +380,9 @@ bumm bumm bumm bumm error in platform active count
 /** 
  * \brief Do we use the syscall for linux to get TID 
  */
+#ifndef ATRSHMLOG_USE_SYSCALL_TID
 #define ATRSHMLOG_USE_SYSCALL_TID 0
+#endif
 
 #if ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
 # undef ATRSHMLOG_USE_SYSCALL_TID 
@@ -343,7 +392,9 @@ bumm bumm bumm bumm error in platform active count
 /** 
  * \brief Do we use the pthread tid 
  */
+#ifndef ATRSHMLOG_USE_PTHREAD_TID
 #define ATRSHMLOG_USE_PTHREAD_TID 0
+#endif
 
 #if ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC == 1
 # undef ATRSHMLOG_USE_PTHREAD_TID
@@ -353,8 +404,9 @@ bumm bumm bumm bumm error in platform active count
 /** 
  * \brief Do we use the winthread tid 
  */
+#ifndef ATRSHMLOG_USE_WINTHREAD_TID
 #define ATRSHMLOG_USE_WINTHREAD_TID 0
-
+#endif
 
 #if ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 1
 # undef ATRSHMLOG_USE_WINTHREAD_TID
@@ -364,7 +416,9 @@ bumm bumm bumm bumm error in platform active count
 /**
  * \brief We use the thr_self call of freebsd here
  */
+#ifndef ATRSHMLOG_USE_THR_SELF_TID
 #define ATRSHMLOG_USE_THR_SELF_TID 0
+#endif
 
 #if ATRSHMLOG_FLAVOUR == 3
 # undef ATRSHMLOG_USE_THR_SELF_TID
@@ -374,7 +428,9 @@ bumm bumm bumm bumm error in platform active count
 /**
  * \brief We use the getthrid call on openbsd here
  */
+#ifndef ATRSHMLOG_USE_GETTHRID
 #define ATRSHMLOG_USE_GETTHRID 0
+#endif
 
 #if ATRSHMLOG_FLAVOUR == 4
 # undef ATRSHMLOG_USE_GETTHRID
@@ -384,7 +440,9 @@ bumm bumm bumm bumm error in platform active count
 /**
  * \brief We use the _lwp_self call on netbsd here
  */
+#ifndef ATRSHMLOG_USE_LWP_SELF
 #define ATRSHMLOG_USE_LWP_SELF 0
+#endif
 
 #if ATRSHMLOG_FLAVOUR == 5
 # undef ATRSHMLOG_USE_LWP_SELF
@@ -394,7 +452,9 @@ bumm bumm bumm bumm error in platform active count
 /**
  * \brief We use the thr_self call on opensolaris
  */
+#ifndef ATRSHMLOG_USE_SOLARIS_THR_SELF
 #define ATRSHMLOG_USE_SOLARIS_THR_SELF 0
+#endif
 
 #if ATRSHMLOG_FLAVOUR == 6
 # undef ATRSHMLOG_USE_SOLARIS_THR_SELF 
@@ -405,7 +465,9 @@ bumm bumm bumm bumm error in platform active count
 /**
  * \brief We have a system with thread loacls and the compiler support it
  */
+#ifndef ATRSHMLOG_THREAD_LOCAL
 #define ATRSHMLOG_THREAD_LOCAL 0
+#endif
 
 #if  ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
 # undef ATRSHMLOG_THREAD_LOCAL
@@ -449,7 +511,9 @@ bumm bumm bumm bumm error in platform active count
  * than the old one. 
  * Perhaps we will use it on fenster;plural too.
  */
+#ifndef ATRSHMLOG_USE_SAFER_COPY
 #define ATRSHMLOG_USE_SAFER_COPY 0
+#endif
 
 #if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1 || ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1 || ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC == 1
 # if ATRSHMLOG_FLAVOUR == 3 || ATRSHMLOG_FLAVOUR == 4 || ATRSHMLOG_FLAVOUR == 5 || ATRSHMLOG_FLAVOUR == 6
@@ -469,7 +533,9 @@ bumm bumm bumm bumm error in platform active count
  * If you are on a platform that make it different 
  * add your if blblplatform == 1 , undef , define 1 , endif after it.
  */ 
+#ifndef ATRSHMLOG_H_ORDER_IS_N_ORDER
 #define ATRSHMLOG_H_ORDER_IS_N_ORDER 0
+#endif
 
 #if  ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
 // nothing to change
@@ -495,6 +561,55 @@ bumm bumm bumm bumm error in platform active count
 // nothing to change
 #endif
 
+/**
+ * We switch the fence in write off if we are in intel land
+ */
+#ifndef ATRSHMLOG_FENCE_2_OFF
+#define ATRSHMLOG_FENCE_2_OFF 0
+#endif
+
+#if  ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
+
+#undef ATRSHMLOG_FENCE_2_OFF
+#define ATRSHMLOG_FENCE_2_OFF 1
+
+#endif
+
+#if  ATRSHMLOG_PLATFORM_CYGWIN_X86_64_GCC == 1
+
+#undef ATRSHMLOG_FENCE_2_OFF
+#define ATRSHMLOG_FENCE_2_OFF 1
+
+#endif
+
+#if  ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 1
+
+#undef ATRSHMLOG_FENCE_2_OFF
+#define ATRSHMLOG_FENCE_2_OFF 1
+
+#endif
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
+
+#undef ATRSHMLOG_FENCE_2_OFF
+#define ATRSHMLOG_FENCE_2_OFF 1
+
+#endif
+
+#if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
+
+#undef ATRSHMLOG_FENCE_2_OFF
+#define ATRSHMLOG_FENCE_2_OFF 1
+
+#endif
+
+#if ATRSHMLOG_PLATFORM_SOLARIS_X86_64_GCC == 1
+
+#undef ATRSHMLOG_FENCE_2_OFF
+#define ATRSHMLOG_FENCE_2_OFF 1
+
+#endif
+
 // candidates for the platform tsc call function
 // #define ATRSHMLOG_GET_TSC_CALL atrshmlog_get_tsc_par_x86_64_gnu
 // #define ATRSHMLOG_GET_TSC_CALL atrshmlog_get_tsc_fence_x86_64_gnu
@@ -507,7 +622,9 @@ bumm bumm bumm bumm error in platform active count
  *
  * This will be replaced by get_clicktime eventually.
  */
+#ifndef ATRSHMLOG_GET_TSC_CALL
 #define ATRSHMLOG_GET_TSC_CALL atrshmlog_get_clicktime
+#endif
 
 #if ATRSHMLOG_PLATFORM_LINUX_X86_64_GCC == 1
 # undef ATRSHMLOG_GET_TSC_CALL
@@ -542,9 +659,12 @@ bumm bumm bumm bumm error in platform active count
 
 /********************************************************************/
 
+/* start of inludes */
+
 /* 
  * We need the 64 bit unsigned type here.
  * So this is the include to deliver it.
+ * Dont try do do it without a include ...
  */
 #include <stdint.h>
 
@@ -557,6 +677,8 @@ bumm bumm bumm bumm error in platform active count
 extern "C" { 
 #endif
 
+  /* start typedefs */
+  
   /** 
    * \brief Our seconds in the real time struct.
    *
@@ -669,6 +791,8 @@ extern "C" {
    */
   typedef int atrshmlog_ret_t;
 
+  /* end typedefs */
+  
   /*******************************************************************/
 
   #ifdef SWIG
@@ -722,7 +846,8 @@ extern "C" {
    *
    * But for the access from our macros we use this pointer.
    */
-  extern volatile const atrshmlog_event_t*  atrshmlog_event_locks;
+  ATRSHMLOG_VARIABLE_DECORATOR extern
+  volatile const atrshmlog_event_t*  atrshmlog_event_locks;
 
 #ifdef SWIG
 %mutable;
@@ -747,7 +872,8 @@ extern "C" {
    * See for operation the \ref atrshmlog_set_logging_process_on()
    * and \ref atrshmlog_set_logging_process_off()
    */
-  extern volatile atrshmlog_int32_t atrshmlog_logging_process;
+  ATRSHMLOG_VARIABLE_DECORATOR extern
+  volatile atrshmlog_int32_t atrshmlog_logging_process;
 
 #ifdef SWIG
 %mutable;
@@ -765,7 +891,8 @@ extern "C" {
    * for the inlining thing.
    * See for use \ref atrshmlog_set_clock_id()
    */
-  extern volatile int atrshmlog_clock_id;
+  ATRSHMLOG_VARIABLE_DECORATOR extern
+  volatile int atrshmlog_clock_id;
   
 #ifdef SWIG
 %mutable;
@@ -803,23 +930,23 @@ extern "C" {
     /**
      * \brief This is the first constant for the point in time event
      */
-    ATRSHMLOG_POINT_IN_TIME_C = ATRSHMLOGPOINTINTIMEP,
+    ATRSHMLOG_POINT_IN_TIME_C = (int)ATRSHMLOGPOINTINTIMEP,
 
     /**
      * \brief This is the second constant for the point in time event
      */
-    ATRSHMLOG_POINT_IN_TIME_UCS2 =  ATRSHMLOGPOINTINTIMEp,
+    ATRSHMLOG_POINT_IN_TIME_UCS2 =  (int)ATRSHMLOGPOINTINTIMEp,
 
     
     /**
      * \brief This is the first constant for the interval in time event
      */
-    ATRSHMLOG_INTERVAL_IN_TIME_C = ATRSHMLOGPOINTINTIMEI,
+    ATRSHMLOG_INTERVAL_IN_TIME_C = (int)ATRSHMLOGPOINTINTIMEI,
 
     /**
      * \brief This is the second constant for the interval in time event
      */
-    ATRSHMLOG_INTERVAL_IN_TIME_UCS2 = ATRSHMLOGPOINTINTIMEi
+    ATRSHMLOG_INTERVAL_IN_TIME_UCS2 = (int)ATRSHMLOGPOINTINTIMEi
   };
 
 
@@ -1412,6 +1539,9 @@ extern "C" {
    */
 
   /************************************************************************/
+
+  /* start function macros */ 
+
   /* burocracy functions */
 
   /** 
@@ -1456,6 +1586,7 @@ extern "C" {
    * The bitwise and of the event flag and the global logging switch.
    * So it is a wise thing to set an event only to 0 or 1 and to set
    * the global logging switch only to 0 or 1 , too.
+   * we use a binary and her, for real ...
    */
 #define ATRSHMLOG_EVENTCHECK(__ev)				\
   ((atrshmlog_event_locks[(__ev)]) & atrshmlog_logging_process)
@@ -1803,7 +1934,67 @@ extern "C" {
    * We do NOT restart slaves.
    * We DO resize the event locks array.
    *
-
+   * \param __p
+   * int array with 56 values.
+   * - 0 : flag for use id
+   * - 1 : new value for id
+   * - 2 : flag for use count
+   * - 3 : new value for count
+   * - 4 : flag for use atrshmlog_init_buffers_in_advance
+   * - 5 : new value for atrshmlog_init_buffers_in_advance
+   * - 6 : flag for use atrshmlog_buffer_strategy
+   * - 7 : new value for atrshmlog_buffer_strategy
+   * - 8 : flag for use atrshmlog_strategy_wait_wait_time
+   * - 9 : new value for atrshmlog_strategy_wait_wait_time
+   * - 10 : flag for use atrshmlog_delimiter
+   * - 11 : new value for atrshmlog_delimiter
+   * - 12 : flag for use atrshmlog_event_locks_max
+   * - 13 : new value for atrshmlog_event_locks_max
+   * - 14 : flag for use atrshmlog_buffer_infosize
+   * - 15 : new value for atrshmlog_buffer_infosize
+   * - 16 : flag for use atrshmlog_prealloc_buffer_count
+   * - 17 : new value for atrshmlog_prealloc_buffer_count
+   * - 18 : flag for use atrshmlog_f_list_buffer_slave_wait
+   * - 19 : new value for atrshmlog_f_list_buffer_slave_wait
+   * - 20 : flag for use atrshmlog_f_list_buffer_slave_count
+   * - 21 : new value for atrshmlog_f_list_buffer_slave_count
+   * - 22 : flag for use atrshmlog_wait_for_slaves
+   * - 23 : new value for atrshmlog_wait_for_slaves
+   * - 24 : flag for use atrshmlog_clock_id
+   * - 25 : new value for atrshmlog_clock_id
+   * - 26 : flag for use atrshmlog_thread_fence_1
+   * - 27 : new value for atrshmlog_thread_fence_1
+   * - 28 : flag for use atrshmlog_thread_fence_2
+   * - 29 : new value for atrshmlog_thread_fence_2
+   * - 30 : flag for use atrshmlog_thread_fence_3
+   * - 31 : new value for atrshmlog_thread_fence_3
+   * - 32 : flag for use atrshmlog_thread_fence_4
+   * - 33 : new value for atrshmlog_thread_fence_4
+   * - 34 : flag for use atrshmlog_thread_fence_5
+   * - 35 : new value for atrshmlog_thread_fence_5
+   * - 36 : flag for use atrshmlog_thread_fence_6
+   * - 37 : new value for atrshmlog_thread_fence_6
+   * - 38 : flag for use atrshmlog_thread_fence_7
+   * - 39 : new value for atrshmlog_thread_fence_7
+   * - 40 : flag for use atrshmlog_thread_fence_8
+   * - 41 : new value for atrshmlog_thread_fence_8
+   * - 42 : flag for use atrshmlog_thread_fence_9
+   * - 43 : new value for atrshmlog_thread_fence_9
+   * - 44 : flag for use atrshmlog_thread_fence_10
+   * - 45 : new value for atrshmlog_thread_fence_10
+   * - 46 : flag for use atrshmlog_thread_fence_11
+   * - 47 : new value for atrshmlog_thread_fence_11
+   * - 48 : flag for use atrshmlog_thread_fence_12
+   * - 49 : new value for atrshmlog_thread_fence_12
+   * - 50 : flag for use atrshmlog_thread_fence_13
+   * - 51 : new value for atrshmlog_thread_fence_13
+   * - 52 : flag for use atrshmlog_checksum
+   * - 53 : new value for atrshmlog_checksum
+   * - 54 : flag for use logging process off
+   * - 55 : new value for logging process off
+   * - 56 : flag for use targetbuffer max
+   * - 57 : new value for targetbuffer max 
+   * 
    * \return
    * - Zero ok
    * - negative for error
@@ -2153,6 +2344,18 @@ extern "C" {
    * - index
    */
 #define ATRSHMLOG_GET_THREAD_LOCAL_INDEX(__thread_local) atrshmlog_get_thread_local_index ((__thread_local))
+
+  /** 
+   * \brief We get the buffer count of a thread local
+   *
+   * \param __thread_local
+   * Pointer to a thread local or NULL
+   *
+   * \return
+   * - 0 if pointer is NULL
+   * - count
+   */
+#define ATRSHMLOG_GET_THREAD_LOCAL_COUNT(__thread_local) atrshmlog_get_thread_local_count ((__thread_local))
 
   /** 
    * \brief We get the buffer adress via index of a thread local
@@ -2602,6 +2805,25 @@ extern "C" {
 #define ATRSHMLOG_GET_THREAD_BUFFER_PAYLOAD(__buffer)  atrshmlog_get_thread_buffer_payload ((__buffer))
 
   
+  /**
+   *  \brief The targetbuffer max
+   *
+   * \return
+   * The flag
+   */
+#define ATRSHMLOG_GET_TARGETBUFFER_MAX()  atrshmlog_get_targetbuffer_max()
+
+  /**
+   * \brief Set the targetbuffer max
+   *
+   * \param __flag
+   * Our new  flag
+   *
+   * \return 
+   * The old flag
+   */
+#define ATRSHMLOG_SET_TARGETBUFFER_MAX(__flag) atrshmlog_set_targetbuffer_max((__flag))
+
       
   /**
    *  \brief The checksum flag
@@ -3273,25 +3495,27 @@ extern "C" {
 		 (__s18) \
     )
 
+  /* end function macros */ 
   
   /************************************************************************/
 
-  /* the functions */
+  /* the real functions */
 
   /* burocracy functions */
 
   /** 
-   * \brief The version of the buffer system .
+   * \brief The version of the buffer system.
    *
    * If we change anything of the buffer layout we have to change this too.
    * Its for layout compatible processing of buffers. 
-   * From the internal shm buffer tot eh readers to the converters.
+   * From the internal shm buffer to the readers to the converters.
    * Any change you need is a new layout. Even a simple additional number.
    * 
    * \return
    * Number of the major version of the shmlog.
    */   
-  extern atrshmlog_ret_t atrshmlog_get_version(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_version(void);
 
   /**
    * \brief The functionality of the version of the log.
@@ -3304,10 +3528,11 @@ extern "C" {
    * \return
    * Number of the minor version of the shmlog.
    */  
-  extern atrshmlog_ret_t atrshmlog_get_minor_version(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_minor_version(void);
 
   /**
-   *  \brief This is the patch level, it inform of important changes in functionality 
+   *  \brief This is the patch level, it inform of important changes in functionality  
    * for removing errors from the log.
    *
    * So no additional functionality, no new fences or new waits.
@@ -3316,7 +3541,8 @@ extern "C" {
    * \return
    * Number of the patch version of the shmlog.
    */  
-  extern atrshmlog_ret_t atrshmlog_get_patch_version(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_patch_version(void);
 
   /* write log related functions */
 
@@ -3379,11 +3605,12 @@ extern "C" {
    * - 0 for a working log write
    * - else for an error or a suppressed one
    */
-  extern atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
-					  const atrshmlog_int32_t i_eventflag,
-					  const atrshmlog_int32_t i_userflag,
-					  atrshmlog_time_t i_starttime,
-					  atrshmlog_time_t i_endtime);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_write0(const atrshmlog_int32_t i_eventnumber,
+				   const atrshmlog_int32_t i_eventflag,
+				   const atrshmlog_int32_t i_userflag,
+				   atrshmlog_time_t i_starttime,
+				   atrshmlog_time_t i_endtime);
 
   /** 
    * \brief We write an entry, one buffer as additional payload.
@@ -3463,13 +3690,14 @@ extern "C" {
    * - 0 for a working log write
    * - else for an error or a suppressed one
    */
-  extern atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
-					  const atrshmlog_int32_t i_eventflag,
-					  const atrshmlog_int32_t i_userflag,
-					  atrshmlog_time_t i_starttime,
-					  atrshmlog_time_t i_endtime,
-					  const void* i_local,
-					  const atrshmlog_int32_t i_size);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_write1(const atrshmlog_int32_t i_eventnumber,
+				   const atrshmlog_int32_t i_eventflag,
+				   const atrshmlog_int32_t i_userflag,
+				   atrshmlog_time_t i_starttime,
+				   atrshmlog_time_t i_endtime,
+				   const void* const i_local,
+				   const atrshmlog_int32_t i_size);
 
   /** 
    * \brief We write an entry, one buffer and one argv array payload.
@@ -3541,15 +3769,16 @@ extern "C" {
    * - for a working log write
    * - else for an error or a suppressed one
    */
-  extern atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
-					  const atrshmlog_int32_t i_eventflag,
-					  const atrshmlog_int32_t i_userflag,
-					  atrshmlog_time_t i_starttime,
-					  atrshmlog_time_t i_endtime,
-					  const void* i_local,
-					  const atrshmlog_int32_t i_size,
-					  const char* i_argv[],
-					  const atrshmlog_int32_t i_argc_hint);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_write2(const atrshmlog_int32_t i_eventnumber,
+				   const atrshmlog_int32_t i_eventflag,
+				   const atrshmlog_int32_t i_userflag,
+				   atrshmlog_time_t i_starttime,
+				   atrshmlog_time_t i_endtime,
+				   const void* const i_local,
+				   const atrshmlog_int32_t i_size,
+				   const char* const i_argv[],
+				   const atrshmlog_int32_t i_argc_hint);
 
 
   /**
@@ -3558,7 +3787,8 @@ extern "C" {
    * \return
    * The flag
    */
-  extern atrshmlog_ret_t atrshmlog_get_autoflush_process(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_autoflush_process(void);
   
   /**
    * \brief Set the autoflush for the process
@@ -3569,15 +3799,17 @@ extern "C" {
    * \return 
    * The old flag
    */
-  extern atrshmlog_ret_t atrshmlog_set_autoflush_process(int i_flag);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_autoflush_process(const int i_flag);
 
   /**
-   *  \brief The autoflush flag
+   *  \brief The autoflush flag for this thread
    *
    * \return
    * The flag
    */
-  extern atrshmlog_ret_t atrshmlog_get_autoflush(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_autoflush(void);
   
   /**
    * \brief Set the autoflush for the thread
@@ -3588,7 +3820,8 @@ extern "C" {
    * \return 
    * The old flag
    */
-  extern atrshmlog_ret_t atrshmlog_set_autoflush(int i_flag);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_autoflush(const int i_flag);
 
   /**
    * \brief Deliver logging state for the program.
@@ -3597,7 +3830,8 @@ extern "C" {
    * - Zero is logging
    * - not zero is not logging.
    */
-  extern atrshmlog_ret_t atrshmlog_get_logging(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_logging(void);
   
   /**
    * \brief Switch the logging for the process on .
@@ -3605,7 +3839,8 @@ extern "C" {
    * \return
    * The old number of the logging flag.
    */  
-  extern atrshmlog_ret_t atrshmlog_set_logging_process_on(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_logging_process_on(void);
 
   /**
    * \brief Switch the logging for the process off.
@@ -3613,7 +3848,8 @@ extern "C" {
    * \return
    * The old number of the logging flag.
    */
-  extern atrshmlog_ret_t atrshmlog_set_logging_process_off(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_logging_process_off(void);
 
   /**
    * \brief Switch the logging for the process off finally.
@@ -3621,7 +3857,8 @@ extern "C" {
    * \return
    * Old flag.
    */
-  extern atrshmlog_ret_t atrshmlog_set_logging_process_off_final(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_logging_process_off_final(void);
 
   /* timing functions */
 
@@ -3634,7 +3871,8 @@ extern "C" {
    * \return
    * void
    */
-  extern void atrshmlog_sleep_nanos (atrshmlog_int32_t i_nanos);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  void atrshmlog_sleep_nanos (const atrshmlog_int32_t i_nanos);
   
   /**
    * \brief Get the used clock id for the timing info from real time clock.
@@ -3642,7 +3880,8 @@ extern "C" {
    * \return
    * The id of the clock to use in get clock call.
    */
-  extern atrshmlog_ret_t atrshmlog_get_clock_id(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_clock_id(void);
 
   /**
    * \brief Set the clock id for the gettime call.
@@ -3653,7 +3892,8 @@ extern "C" {
    * \return
    * The old id for the get clock call.
    */
-  extern atrshmlog_ret_t atrshmlog_set_clock_id(atrshmlog_int32_t i_id);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_clock_id(const atrshmlog_int32_t i_id);
 
   /**
    * \brief We get the real time
@@ -3661,7 +3901,8 @@ extern "C" {
    * \return 
    * The real time in our format
    */
-  extern atrshmlog_internal_time_t atrshmlog_get_realtime(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_internal_time_t atrshmlog_get_realtime(void);
 
   /**
    * \brief Initial time for the module .
@@ -3669,7 +3910,8 @@ extern "C" {
    * \return
    * The internal time struct with the inittime of the process.
    */
-  extern atrshmlog_internal_time_t atrshmlog_get_inittime(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_internal_time_t atrshmlog_get_inittime(void);
 
   /**
    * \brief Initial click before get inittime.
@@ -3677,7 +3919,8 @@ extern "C" {
    * \return
    * The time for the click before the get clock call to fill inittime.
    */
-  extern atrshmlog_time_t atrshmlog_get_inittime_tsc_before(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_time_t atrshmlog_get_inittime_tsc_before(void);
 
   /**
    * \brief Initial click after get initttime.
@@ -3685,7 +3928,8 @@ extern "C" {
    * \return
    * The time for the click after the get clock call to fill inittime.
    */
-  extern atrshmlog_time_t atrshmlog_get_inittime_tsc_after(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_time_t atrshmlog_get_inittime_tsc_after(void);
 
   /* initialization and configuration functions */
 
@@ -3704,7 +3948,8 @@ extern "C" {
    * - Negative if no connect was possible.
    * - Positive if we were already connected.
    */
-  extern atrshmlog_ret_t atrshmlog_attach(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_attach(void);
 
   /** 
    * \brief We disconnect to the shm buffer.
@@ -3720,7 +3965,8 @@ extern "C" {
    * - Zero ok
    * - -1 for error
    */
-  extern atrshmlog_ret_t atrshmlog_detach(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_detach(void);
 
 
   /** 
@@ -3790,13 +4036,16 @@ extern "C" {
    * - 53 : new value for atrshmlog_checksum
    * - 54 : flag for use logging process off
    * - 55 : new value for logging process off
-   *
+   * - 56 : flag for use targetbuffer max
+   * - 57 : new value for targetbuffer max 
+   * 
    * \return
    * - Zero ok
    * - negative for error
    * - positiv for minor problem
    */
-  extern atrshmlog_ret_t atrshmlog_reattach(const atrshmlog_int32_t* i_params);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_reattach(const atrshmlog_int32_t* const i_params);
 
 
 
@@ -3806,7 +4055,8 @@ extern "C" {
    * \return 
    * Points to the used prefix.
    */  
-  extern const char* atrshmlog_get_env_prefix(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  const char* atrshmlog_get_env_prefix(void);
 
   /** 
    * \brief We set the prefix for name lookup in the program. 
@@ -3817,7 +4067,8 @@ extern "C" {
    * \return
    * void
    */
-  extern void atrshmlog_set_env_prefix (const char *i_prefix);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  void atrshmlog_set_env_prefix (const char * const i_prefix);
 
 
   /** 
@@ -3830,7 +4081,8 @@ extern "C" {
    * - Points to the value of the variable.
    * - Zero if no variable defined.
    */
-  extern const char* atrshmlog_get_env(const char* i_suffix); 
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  const char* atrshmlog_get_env(const char* const i_suffix); 
 
   /** 
    * \brief We get the value of the environment variable holding the shmid in text.
@@ -3839,7 +4091,8 @@ extern "C" {
    * - Points to the shmid variable value
    * - Zero if no variable defined.
    */  
-  extern const char* atrshmlog_get_env_shmid(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  const char* atrshmlog_get_env_shmid(void);
 
   /** 
    * \brief We get the suffix for the shmid environment variable.
@@ -3847,7 +4100,8 @@ extern "C" {
    * \return
    * Points to the c string.
    */
-  extern const char* atrshmlog_get_env_id_suffix(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  const char* atrshmlog_get_env_id_suffix(void);
   
   /** 
    * \brief Get the event flag maximum index number
@@ -3855,7 +4109,8 @@ extern "C" {
    * \return
    * Number of the max event + 1 
    */
-  extern atrshmlog_ret_t atrshmlog_get_event_locks_max(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_event_locks_max(void);
 
   /** 
    * \brief Set the event flags maximum index number.
@@ -3873,7 +4128,8 @@ extern "C" {
    * \return
    * Number of the old max event + 1 
    */
-  extern atrshmlog_ret_t atrshmlog_set_event_locks_max(atrshmlog_int32_t i_max);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_event_locks_max(const atrshmlog_int32_t i_max);
 
 
   /**
@@ -3890,7 +4146,8 @@ extern "C" {
    * \return
    * void
    */
-  extern atrshmlog_event_t atrshmlog_get_event(atrshmlog_int32_t i_index);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_event_t atrshmlog_get_event(const atrshmlog_int32_t i_index);
 
   /**
    * \brief Helper to set an event from the program.
@@ -3901,7 +4158,8 @@ extern "C" {
    * \return
    * Old event
    */  
-  extern atrshmlog_event_t atrshmlog_set_event_on(atrshmlog_int32_t i_index);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_event_t atrshmlog_set_event_on(const atrshmlog_int32_t i_index);
 
   /**
    * \brief Helper to clear an event from the program.
@@ -3912,7 +4170,8 @@ extern "C" {
    * \return
    * old event
    */
-  extern atrshmlog_event_t atrshmlog_set_event_off(atrshmlog_int32_t i_index);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_event_t atrshmlog_set_event_off(const atrshmlog_int32_t i_index);
 
 
   /**
@@ -3923,7 +4182,8 @@ extern "C" {
    * \return
    * Number of the shared memory id.
    */  
-  extern int atrshmlog_get_shmid(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  int atrshmlog_get_shmid(void);
 
 
   /**
@@ -3932,7 +4192,8 @@ extern "C" {
    * \return
    * The number of the maximum size of log buffers.
    */
-  extern atrshmlog_ret_t atrshmlog_get_buffer_max_size(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_buffer_max_size(void);
   
   /**
    * \brief We get the actual set info size for a log buffer.
@@ -3940,7 +4201,8 @@ extern "C" {
    * \return
    * Number of the actual size for log buffers.
    */
-  extern atrshmlog_ret_t atrshmlog_get_buffer_size(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_buffer_size(void);
 
   /**
    * \brief We get the old size and set the new size if between 0 and 
@@ -3952,7 +4214,8 @@ extern "C" {
    * \return
    * The old number of bytes for log buffers.
    */
-  extern atrshmlog_ret_t atrshmlog_set_buffer_size(atrshmlog_int32_t i_size);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_buffer_size(const atrshmlog_int32_t i_size);
 
   /** 
    * \brief Count of buffers ready for acquire.
@@ -3960,7 +4223,8 @@ extern "C" {
    * \return
    * The number of buffers for logging in the threads.
    */
-  extern atrshmlog_ret_t atrshmlog_get_acquire_count(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_acquire_count(void);
 
   /**
    * \brief Get count of preallocate buffers in one alloc.
@@ -3969,7 +4233,8 @@ extern "C" {
    * The number of buffers a dyn alloc count gets in one malloc
    * from the dyn memory area.
    */
-  extern atrshmlog_ret_t atrshmlog_get_prealloc_buffer_count(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_prealloc_buffer_count(void);
 
   /**
    * \brief Set count of buffers in prealloc in alloc.
@@ -3981,7 +4246,8 @@ extern "C" {
    * \return
    * The old number of buffers fetched in one malloc.
    */
-  extern atrshmlog_ret_t atrshmlog_set_prealloc_buffer_count(atrshmlog_int32_t i_count);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_prealloc_buffer_count(const atrshmlog_int32_t i_count);
 
   /**
    * \brief Get highest id for buffers.
@@ -3989,7 +4255,8 @@ extern "C" {
    * \return
    * get the id of the last buffer initialized.
    */
-  extern atrshmlog_ret_t atrshmlog_get_buffer_id(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_buffer_id(void);
 
   /**
    * \brief we get the init in advance flag
@@ -3997,7 +4264,8 @@ extern "C" {
    * \return
    * The flag
    */
-  extern atrshmlog_ret_t atrshmlog_get_init_buffers_in_advance(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_init_buffers_in_advance(void);
 
   /**
    * \brief we turn the init in advance on
@@ -4005,7 +4273,8 @@ extern "C" {
    * \return
    * The old flag
    */
-  extern atrshmlog_ret_t atrshmlog_set_init_buffers_in_advance_on(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_init_buffers_in_advance_on(void);
   
   /**
    * \brief we turn the init in advance off
@@ -4013,7 +4282,8 @@ extern "C" {
    * \return
    * The old flag
    */
-  extern atrshmlog_ret_t atrshmlog_set_init_buffers_in_advance_off(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_init_buffers_in_advance_off(void);
 
   /* thread related functions */
 
@@ -4023,7 +4293,8 @@ extern "C" {
    * \return 
    * The thread tid
    */
-  extern atrshmlog_tid_t atrshmlog_get_tid(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_tid_t atrshmlog_get_tid(void);
 
   /**
    * \brief We get the thread locals adress of a thread
@@ -4031,7 +4302,8 @@ extern "C" {
    * \return
    * the adress of the thread locals
    */
-  extern volatile const void* atrshmlog_get_thread_locals_adress(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  volatile const void* atrshmlog_get_thread_locals_adress(void);
 
   /**
    * \brief We stop loging for the calling thread.
@@ -4039,7 +4311,8 @@ extern "C" {
    * \return
    * void
    */
-  extern void atrshmlog_stop(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  void atrshmlog_stop(void);
 
   /**
    * \brief We flush the buffers for the calling thread.
@@ -4047,7 +4320,8 @@ extern "C" {
    * \return
    * void
    */
-  extern void atrshmlog_flush(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  void atrshmlog_flush(void);
 
 
   /** 
@@ -4056,7 +4330,8 @@ extern "C" {
    * \return
    * The value 
    */
-  extern atrshmlog_ret_t atrshmlog_get_strategy(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_strategy(void);
   
   /**
    * \brief Set the strategy for this thread.
@@ -4071,7 +4346,8 @@ extern "C" {
    * \return
    * The old strategy value 
    */
-  extern atrshmlog_ret_t atrshmlog_set_strategy(const enum atrshmlog_strategy i_strategy);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_strategy(const enum atrshmlog_strategy i_strategy);
 
   /** 
    * \brief We get the strategy for the process
@@ -4079,7 +4355,8 @@ extern "C" {
    * \return
    * The value 
    */
-  extern atrshmlog_ret_t atrshmlog_get_strategy_process(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_strategy_process(void);
 
   /**
    * \brief Set the strategy for the process
@@ -4094,7 +4371,8 @@ extern "C" {
    * \return
    * The old strategy value 
    */
-  extern atrshmlog_ret_t atrshmlog_set_strategy_process(const enum atrshmlog_strategy i_strategy);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_strategy_process(const enum atrshmlog_strategy i_strategy);
 
   
 
@@ -4104,7 +4382,8 @@ extern "C" {
    * \return
    * The number of nanos
    */
-  extern atrshmlog_ret_t atrshmlog_get_strategy_wait_wait_time(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_strategy_wait_wait_time(void);
 
   /**
    * \brief Set the wait time for the wait strategy
@@ -4115,7 +4394,8 @@ extern "C" {
    * \return
    * The old number of nanos the slave had to wait
    */
-  extern atrshmlog_ret_t atrshmlog_set_strategy_wait_wait_time(atrshmlog_int32_t i_wait_nanos);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_strategy_wait_wait_time(const atrshmlog_int32_t i_wait_nanos);
 
   /** 
    * \brief We get the tid of a thread local
@@ -4127,7 +4407,8 @@ extern "C" {
    * - 0 if pointer is NULL
    * - tid
    */
-  extern atrshmlog_tid_t atrshmlog_get_thread_local_tid (volatile const void *i_thread_local);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_tid_t atrshmlog_get_thread_local_tid (volatile const void * const i_thread_local);
 
   /** 
    * \brief We get the pid of a thread local
@@ -4139,7 +4420,8 @@ extern "C" {
    * - 0 if pointer is NULL
    * - pid
    */
-  extern atrshmlog_pid_t atrshmlog_get_thread_local_pid (volatile const void *i_thread_local);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_pid_t atrshmlog_get_thread_local_pid (volatile const void * const i_thread_local);
 
   /** 
    * \brief We get the buffer index of a thread local
@@ -4151,7 +4433,21 @@ extern "C" {
    * - 0 if pointer is NULL
    * - index
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_local_index (volatile const void *i_thread_local);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_local_index (volatile const void * const i_thread_local);
+
+  /** 
+   * \brief We get the buffer count of a thread local
+   *
+   * \param i_thread_local
+   * Pointer to a thread local or NULL
+   *
+   * \return
+   * - 0 if pointer is NULL
+   * - count
+   */
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_local_count (volatile const void * const i_thread_local);
 
   /** 
    * \brief We get the buffer adress via index of a thread local
@@ -4165,7 +4461,8 @@ extern "C" {
    * - 0 if pointer is NULL
    * - buffer pointer
    */
-  extern volatile const void *atrshmlog_get_thread_local_buffer (volatile const void *i_thread_local, atrshmlog_int32_t i_index);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  volatile const void *atrshmlog_get_thread_local_buffer (volatile const void * const i_thread_local, const atrshmlog_int32_t i_index);
 
 
   /**
@@ -4177,7 +4474,8 @@ extern "C" {
    * \return 
    * void
    */
-  extern void atrshmlog_turn_logging_off(volatile const void* i_thread_locals);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  void atrshmlog_turn_logging_off(volatile const void* const i_thread_locals);
 
   /** 
    * \brief We make reuse of buffers of a dead thread
@@ -4188,7 +4486,8 @@ extern "C" {
    * \return
    * The number of found buffers
    */
-  extern atrshmlog_ret_t atrshmlog_reuse_thread_buffers(atrshmlog_tid_t i_tid);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_reuse_thread_buffers(const atrshmlog_tid_t i_tid);
 
   
   /**
@@ -4197,7 +4496,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_fence_1(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_fence_1(void);
 
   /**
    * \brief We switch a fence on or off
@@ -4205,7 +4505,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_set_thread_fence_1(atrshmlog_int32_t i_switch);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_thread_fence_1(const atrshmlog_int32_t i_switch);
   
   
   /**
@@ -4214,7 +4515,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_fence_2(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_fence_2(void);
 
   /**
    * \brief We switch a fence on or off
@@ -4222,7 +4524,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_set_thread_fence_2(atrshmlog_int32_t i_switch);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_thread_fence_2(const atrshmlog_int32_t i_switch);
   
   /**
    * \brief We get a fence on or off flag
@@ -4230,7 +4533,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_fence_3(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_fence_3(void);
 
   /**
    * \brief We switch a fence on or off
@@ -4238,24 +4542,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_set_thread_fence_3(atrshmlog_int32_t i_switch);
-  
-  
-  /**
-   * \brief We get a fence on or off flag
-   *
-   * \return
-   * The old flag for fence.
-   */
-  extern atrshmlog_ret_t atrshmlog_get_thread_fence_4(void);
-
-  /**
-   * \brief We switch a fence on or off
-   *
-   * \return
-   * The old flag for fence.
-   */
-  extern atrshmlog_ret_t atrshmlog_set_thread_fence_4(atrshmlog_int32_t i_switch);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_thread_fence_3(const atrshmlog_int32_t i_switch);
   
   
   /**
@@ -4264,7 +4552,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_fence_5(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_fence_4(void);
 
   /**
    * \brief We switch a fence on or off
@@ -4272,7 +4561,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_set_thread_fence_5(atrshmlog_int32_t i_switch);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_thread_fence_4(const atrshmlog_int32_t i_switch);
   
   
   /**
@@ -4281,7 +4571,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_fence_6(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_fence_5(void);
 
   /**
    * \brief We switch a fence on or off
@@ -4289,7 +4580,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_set_thread_fence_6(atrshmlog_int32_t i_switch);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_thread_fence_5(const atrshmlog_int32_t i_switch);
   
   
   /**
@@ -4298,7 +4590,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_fence_7(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_fence_6(void);
 
   /**
    * \brief We switch a fence on or off
@@ -4306,7 +4599,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_set_thread_fence_7(atrshmlog_int32_t i_switch);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_thread_fence_6(const atrshmlog_int32_t i_switch);
   
   
   /**
@@ -4315,7 +4609,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_fence_8(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_fence_7(void);
 
   /**
    * \brief We switch a fence on or off
@@ -4323,7 +4618,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_set_thread_fence_8(atrshmlog_int32_t i_switch);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_thread_fence_7(const atrshmlog_int32_t i_switch);
   
   
   /**
@@ -4332,7 +4628,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_fence_9(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_fence_8(void);
 
   /**
    * \brief We switch a fence on or off
@@ -4340,7 +4637,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_set_thread_fence_9(atrshmlog_int32_t i_switch);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_thread_fence_8(const atrshmlog_int32_t i_switch);
   
   
   /**
@@ -4349,7 +4647,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_fence_10(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_fence_9(void);
 
   /**
    * \brief We switch a fence on or off
@@ -4357,7 +4656,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_set_thread_fence_10(atrshmlog_int32_t i_switch);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_thread_fence_9(const atrshmlog_int32_t i_switch);
   
   
   /**
@@ -4366,7 +4666,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_fence_11(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_fence_10(void);
 
   /**
    * \brief We switch a fence on or off
@@ -4374,7 +4675,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_set_thread_fence_11(atrshmlog_int32_t i_switch);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_thread_fence_10(const atrshmlog_int32_t i_switch);
   
   
   /**
@@ -4383,7 +4685,27 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_fence_12(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_fence_11(void);
+
+  /**
+   * \brief We switch a fence on or off
+   *
+   * \return
+   * The old flag for fence.
+   */
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_thread_fence_11(const atrshmlog_int32_t i_switch);
+  
+  
+  /**
+   * \brief We get a fence on or off flag
+   *
+   * \return
+   * The old flag for fence.
+   */
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_fence_12(void);
   
   /**
    * \brief We switch a fence on or off
@@ -4391,7 +4713,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_set_thread_fence_12(atrshmlog_int32_t i_switch);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_thread_fence_12(const atrshmlog_int32_t i_switch);
 
   /**
    * \brief We get a fence on or off flag
@@ -4399,7 +4722,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_fence_13(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_fence_13(void);
   
   /**
    * \brief We switch a fence on or off
@@ -4407,7 +4731,8 @@ extern "C" {
    * \return
    * The old flag for fence.
    */
-  extern atrshmlog_ret_t atrshmlog_set_thread_fence_13(atrshmlog_int32_t i_switch);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_thread_fence_13(const atrshmlog_int32_t i_switch);
 
   /**********************************************/
 
@@ -4422,7 +4747,8 @@ extern "C" {
    * \return
    * Pointer to buffer
    */
-  extern volatile const void *atrshmlog_get_thread_buffer_next_cleanup (volatile const void *i_buffer);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  volatile const void *atrshmlog_get_thread_buffer_next_cleanup (volatile const void * const i_buffer);
   
   /** 
    * \brief We get the buffers next full pointer
@@ -4433,7 +4759,8 @@ extern "C" {
    * \return
    * Pointer to buffer
    */
-  extern volatile const void *atrshmlog_get_thread_buffer_next_full (volatile const void *i_buffer);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  volatile const void *atrshmlog_get_thread_buffer_next_full (volatile const void * const i_buffer);
   
   /** 
    * \brief We get the buffers next append pointer
@@ -4444,7 +4771,8 @@ extern "C" {
    * \return
    * Pointer to buffer
    */
-  extern volatile const void *atrshmlog_get_thread_buffer_next_append (volatile const void *i_buffer);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  volatile const void *atrshmlog_get_thread_buffer_next_append (volatile const void * const i_buffer);
   
   
   /** 
@@ -4456,7 +4784,8 @@ extern "C" {
    * \return
    * safeguard
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_safeguard (volatile const void *i_buffer);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_buffer_safeguard (volatile const void * const i_buffer);
   
   /** 
    * \brief We get the buffers pid
@@ -4467,7 +4796,8 @@ extern "C" {
    * \return
    * pid
    */
-  extern atrshmlog_pid_t atrshmlog_get_thread_buffer_pid (volatile const void *i_buffer);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_pid_t atrshmlog_get_thread_buffer_pid (volatile const void * const i_buffer);
   
   /** 
    * \brief We get the buffers tid
@@ -4478,7 +4808,8 @@ extern "C" {
    * \return
    * tid
    */
-  extern atrshmlog_tid_t atrshmlog_get_thread_buffer_tid (volatile const void *i_buffer);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_tid_t atrshmlog_get_thread_buffer_tid (volatile const void * const i_buffer);
   
   /** 
    * \brief We get the buffers acquiretime
@@ -4489,7 +4820,8 @@ extern "C" {
    * \return
    * acquiretime
    */
-  extern atrshmlog_time_t atrshmlog_get_thread_buffer_acquiretime (volatile const void *i_buffer);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_time_t atrshmlog_get_thread_buffer_acquiretime (volatile const void * const i_buffer);
   
   /** 
    * \brief We get the buffers id
@@ -4500,7 +4832,8 @@ extern "C" {
    * \return
    * id
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_id (volatile const void *i_buffer);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_buffer_id (volatile const void * const i_buffer);
   
   /** 
    * \brief We get the buffers chksum
@@ -4511,7 +4844,8 @@ extern "C" {
    * \return
    * id
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_chksum (volatile const void *i_buffer);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_buffer_chksum (volatile const void * const i_buffer);
   
   /** 
    * \brief We get the buffers size
@@ -4522,7 +4856,8 @@ extern "C" {
    * \return
    * size
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_size (volatile const void *i_buffer);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_buffer_size (volatile const void * const i_buffer);
   
   /** 
    * \brief We get the buffers maxsize
@@ -4533,7 +4868,8 @@ extern "C" {
    * \return
    * maxsize
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_maxsize (volatile const void *i_buffer);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_buffer_maxsize (volatile const void * const i_buffer);
   
   /** 
    * \brief We get the buffers dispose flag
@@ -4544,7 +4880,8 @@ extern "C" {
    * \return
    * dispose
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_dispose (volatile const void *i_buffer);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_buffer_dispose (volatile const void * const i_buffer);
   
   /** 
    * \brief We get the buffers dispatched flag
@@ -4555,7 +4892,8 @@ extern "C" {
    * \return
    * dispatched
    */
-  extern atrshmlog_ret_t atrshmlog_get_thread_buffer_dispatched (volatile const void *i_buffer);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_thread_buffer_dispatched (volatile const void * const i_buffer);
   
   /** 
    * \brief We get the buffers payload adress
@@ -4566,15 +4904,38 @@ extern "C" {
    * \return
    * Pointer to payload
    */
-  extern volatile const void *atrshmlog_get_thread_buffer_payload (volatile const void *i_buffer);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  volatile const void *atrshmlog_get_thread_buffer_payload (volatile const void * const i_buffer);
   
+  /**
+   *  \brief The targetbuffer max
+   *
+   * \return
+   * The flag
+   */
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_targetbuffer_max(void);
+    
+  /**
+   * \brief Set the targetbuffer max
+   *
+   * \param i_flag
+   * Our new  flag
+   *
+   * \return 
+   * The old flag
+   */
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_targetbuffer_max(const int i_flag);
+
   /**
    *  \brief The checksum flag
    *
    * \return
    * The flag
    */
-  extern atrshmlog_ret_t atrshmlog_get_checksum(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_checksum(void);
     
   /**
    * \brief Set the checksum flag
@@ -4585,7 +4946,8 @@ extern "C" {
    * \return 
    * The old flag
    */
-  extern atrshmlog_ret_t atrshmlog_set_checksum(int i_flag);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_checksum(const int i_flag);
 
   /** 
    * \brief We get the buffer cleanup anchor
@@ -4593,7 +4955,8 @@ extern "C" {
    * \return
    * Pointer to buffer
    */
-  extern volatile const void *atrshmlog_get_buffer_cleanup_anchor (void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  volatile const void *atrshmlog_get_buffer_cleanup_anchor (void);
 
   /** 
    * \brief We get the buffer full anchor
@@ -4601,7 +4964,8 @@ extern "C" {
    * \return
    * Pointer to buffer
    */
-  extern volatile const void *atrshmlog_get_buffer_full_anchor (void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  volatile const void *atrshmlog_get_buffer_full_anchor (void);
 
   /** 
    * \brief We get the buffer append anchor
@@ -4609,7 +4973,8 @@ extern "C" {
    * \return
    * Pointer to buffer
    */
-  extern volatile const void *atrshmlog_get_buffer_append_anchor (void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  volatile const void *atrshmlog_get_buffer_append_anchor (void);
 
   /**********************************************/
   
@@ -4627,7 +4992,8 @@ extern "C" {
    * - top if parameter NULL
    * - next if parameter is thread local of slave
    */
-  extern volatile const void* atrshmlog_get_next_slave_local(volatile const void* i_slave_local);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  volatile const void* atrshmlog_get_next_slave_local(volatile const void* const i_slave_local);
 
   /**
    * \brief Get the count of slave threads that the logging use.
@@ -4635,7 +5001,8 @@ extern "C" {
    * \return
    * The number of threads running the function for slave proc.
    */ 
-  extern atrshmlog_ret_t atrshmlog_get_f_list_buffer_slave_count(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_f_list_buffer_slave_count(void);
 
   /**
    * \brief Set the number of logging slave threads.
@@ -4652,7 +5019,8 @@ extern "C" {
    * \return
    * The old number of slave threads to start.
    */
-  extern atrshmlog_ret_t atrshmlog_set_f_list_buffer_slave_count(atrshmlog_int32_t i_count);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_f_list_buffer_slave_count(const atrshmlog_int32_t i_count);
 
   /**
    * \brief We can start a slave thread with it.
@@ -4660,7 +5028,8 @@ extern "C" {
    * \return
    * The return code of the used function to start the thread.
    */
-  extern int atrshmlog_create_slave(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  int atrshmlog_create_slave(void);
 
 
   /** 
@@ -4672,7 +5041,8 @@ extern "C" {
    * \return
    * old count
    */
-  extern atrshmlog_ret_t atrshmlog_decrement_slave_count(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_decrement_slave_count(void);
 
 
   /** 
@@ -4686,7 +5056,8 @@ extern "C" {
    * - 1 list was empty
    * - non zero error
    */
-  extern atrshmlog_ret_t atrshmlog_remove_slave_via_local(volatile const void* i_thread_local);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_remove_slave_via_local(volatile const void* const i_thread_local);
 
   /**
    * \brief We switch the thread off 
@@ -4697,7 +5068,8 @@ extern "C" {
    * \return 
    * void
    */
-  extern void atrshmlog_turn_slave_off(volatile const void* i_slave);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  void atrshmlog_turn_slave_off(volatile const void* const i_slave);
 
   /** 
    * \brief We get the tid of a slave
@@ -4709,7 +5081,8 @@ extern "C" {
    * - 0 if pointer is NULL
    * - tid
    */
-  extern atrshmlog_tid_t atrshmlog_get_slave_tid (volatile const void *i_slave);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_tid_t atrshmlog_get_slave_tid (volatile const void * const i_slave);
 
 
   /**
@@ -4724,7 +5097,8 @@ extern "C" {
    * \return
    * void
    */
-  extern void atrshmlog_set_f_list_buffer_slave_run_off(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  void atrshmlog_set_f_list_buffer_slave_run_off(void);
 
   /**
    * \brief This is the flag value for waiting in atexit for slaves down.
@@ -4732,7 +5106,8 @@ extern "C" {
    * \return
    * The flag for the wait for slaves.
    */
-  extern atrshmlog_ret_t atrshmlog_get_wait_for_slaves(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_wait_for_slaves(void);
 
 
   /**
@@ -4742,7 +5117,8 @@ extern "C" {
    * \return
    * The old flag.
    */
-  extern atrshmlog_ret_t atrshmlog_set_wait_for_slaves_on(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_wait_for_slaves_on(void);
 
   /**
    * \brief This switches the waiting flag off in the atexit.
@@ -4750,7 +5126,8 @@ extern "C" {
    * \return
    * The old flag.
    */
-  extern atrshmlog_ret_t atrshmlog_set_wait_for_slaves_off(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_wait_for_slaves_off(void);
 
   /**
    * \brief Get the wait time in nanoseconds for the slave .
@@ -4758,7 +5135,8 @@ extern "C" {
    * \return
    * The number of nanos the slave sleeps when nothing has to be done.
    */
-  extern atrshmlog_ret_t atrshmlog_get_f_list_buffer_slave_wait(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_f_list_buffer_slave_wait(void);
 
   /**
    * \brief Set the wait time for the slaves in nanoseconds.
@@ -4770,7 +5148,8 @@ extern "C" {
    * \return
    * The old number of nanos the slave had to wait.
    */
-  extern atrshmlog_ret_t atrshmlog_set_f_list_buffer_slave_wait(atrshmlog_int32_t i_wait_nanos);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_f_list_buffer_slave_wait(const atrshmlog_int32_t i_wait_nanos);
 
 
   /**
@@ -4779,7 +5158,8 @@ extern "C" {
    * \return
    * The number of nanos the slave sleepswhen shm full
    */
-  extern atrshmlog_ret_t atrshmlog_get_slave_to_shm_wait(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_slave_to_shm_wait(void);
 
 
   /**
@@ -4792,7 +5172,8 @@ extern "C" {
    * \return
    * The old number of nanos the slave had to wait
    */
-  extern atrshmlog_ret_t atrshmlog_set_slave_to_shm_wait(atrshmlog_int32_t i_wait_nanos);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_slave_to_shm_wait(const atrshmlog_int32_t i_wait_nanos);
 
 
   /**
@@ -4801,7 +5182,8 @@ extern "C" {
    * \return
    * The number of nanos 
    */
-  extern atrshmlog_ret_t atrshmlog_get_last_mem_to_shm(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_last_mem_to_shm(void);
 
   /* shared memory area related functions */
   
@@ -4811,7 +5193,8 @@ extern "C" {
    * \return
    * Points to the shared memory area.
    */
-  extern volatile const void* atrshmlog_get_area(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  volatile const void* atrshmlog_get_area(void);
 
   /**
    * \brief The value of the flag in shm.
@@ -4823,7 +5206,8 @@ extern "C" {
    * The number of the flag. Zero means we are running, Not zero we are 
    * no longer running the log.
    */
-  extern atrshmlog_ret_t atrshmlog_get_area_ich_habe_fertig(volatile const void* i_area);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_area_ich_habe_fertig(volatile const void* const i_area);
 
   /**
    * \brief The value of the flag of the shm area
@@ -4838,7 +5222,8 @@ extern "C" {
    * \return
    * The number of buffers in the area.
    */
-  extern atrshmlog_ret_t atrshmlog_set_area_ich_habe_fertig(volatile const void* i_area, atrshmlog_int32_t i_flag);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_set_area_ich_habe_fertig(volatile const void* const i_area, const atrshmlog_int32_t i_flag);
 
   
   /**
@@ -4850,7 +5235,8 @@ extern "C" {
    * \return
    * The number of the version in the shared memory area.
    */
-  extern atrshmlog_ret_t atrshmlog_get_area_count(volatile const void* i_area);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_area_count(volatile const void* const i_area);
 
   /**
    * \brief The version of the log area in shm.
@@ -4861,7 +5247,8 @@ extern "C" {
    * \return
    * The number of the version in the shared memory area.
    */
-  extern atrshmlog_ret_t atrshmlog_get_area_version(volatile const void* i_area);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_get_area_version(volatile const void* const i_area);
   /** 
    * \brief We verify the buffer is inited and structural ok .
    *
@@ -4870,7 +5257,8 @@ extern "C" {
    * - Positive for minor error.
    * - Negative for major error.
    */
-  extern atrshmlog_ret_t atrshmlog_verify(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_verify(void);
 
   /* statistics functions */
 
@@ -4880,7 +5268,8 @@ extern "C" {
    * \return 
    * Maximum index of the statistics buffer.
    */
-  extern atrshmlog_int32_t atrshmlog_get_statistics_max_index(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_int32_t atrshmlog_get_statistics_max_index(void);
 
   /**
    * \brief We deliver the statistics counter.
@@ -4894,7 +5283,8 @@ extern "C" {
    * \return 
    * void
    */
-  extern void atrshmlog_get_statistics(atrshmlog_int32_t* o_target);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  void atrshmlog_get_statistics(atrshmlog_int32_t* const o_target);
 
   /* reader transfer functions */
 
@@ -5042,42 +5432,43 @@ extern "C" {
    * - Positiv if the call didnt fetch a buffer. In this case the 
    *   buffer length is 0 and all other values are meaningless.
    */
-  extern atrshmlog_ret_t atrshmlog_read(volatile const void* i_area,
-					const atrshmlog_int32_t i_index_buffer,
-					void *o_target,
-					atrshmlog_int32_t* o_target_length,
-					atrshmlog_pid_t* o_pid,
-					atrshmlog_tid_t* o_tid,
-					atrshmlog_internal_time_t* o_inittime,
-					atrshmlog_time_t* o_inittimetsc_before,
-					atrshmlog_time_t* o_inittimetsc_after,
-					atrshmlog_internal_time_t* o_lasttime,
-					atrshmlog_time_t* o_lasttimetsc_before,
-					atrshmlog_time_t* o_lasttimetsc_after,
-					atrshmlog_time_t* o_difftimetransfer,
-					atrshmlog_time_t* o_starttransfer,
-					atrshmlog_time_t* o_acquiretime,
-					atrshmlog_int32_t* o_id,
-					atrshmlog_int32_t* o_number_dispatched,
-					atrshmlog_int32_t* o_counter_write0,
-					atrshmlog_int32_t* o_counter_write0_discard,
-					atrshmlog_int32_t* o_counter_write0_wait,
-					atrshmlog_int32_t* o_counter_write0_adaptive,
-					atrshmlog_int32_t* o_counter_write0_adaptive_fast,
-					atrshmlog_int32_t* o_counter_write0_adaptive_very_fast,
-					atrshmlog_int32_t* o_counter_write1,
-					atrshmlog_int32_t* o_counter_write1_discard,
-					atrshmlog_int32_t* o_counter_write1_wait,
-					atrshmlog_int32_t* o_counter_write1_adaptive,
-					atrshmlog_int32_t* o_counter_write1_adaptive_fast,
-					atrshmlog_int32_t* o_counter_write1_adaptive_very_fast,
-					atrshmlog_int32_t* o_counter_write2,
-					atrshmlog_int32_t* o_counter_write2_discard,
-					atrshmlog_int32_t* o_counter_write2_wait,
-					atrshmlog_int32_t* o_counter_write2_adaptive,
-					atrshmlog_int32_t* o_counter_write2_adaptive_fast,
-					atrshmlog_int32_t* o_counter_write2_adaptive_very_fast
-					);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_read(volatile const void* const i_area,
+				 const atrshmlog_int32_t i_index_buffer,
+				 void * const o_target,
+				 atrshmlog_int32_t* const o_target_length,
+				 atrshmlog_pid_t* const o_pid,
+				 atrshmlog_tid_t* const o_tid,
+				 atrshmlog_internal_time_t* const o_inittime,
+				 atrshmlog_time_t* const o_inittimetsc_before,
+				 atrshmlog_time_t* const o_inittimetsc_after,
+				 atrshmlog_internal_time_t* const o_lasttime,
+				 atrshmlog_time_t* const o_lasttimetsc_before,
+				 atrshmlog_time_t* const o_lasttimetsc_after,
+				 atrshmlog_time_t* const o_difftimetransfer,
+				 atrshmlog_time_t* const o_starttransfer,
+				 atrshmlog_time_t* const o_acquiretime,
+				 atrshmlog_int32_t* const o_id,
+				 atrshmlog_int32_t* const o_number_dispatched,
+				 atrshmlog_int32_t* const o_counter_write0,
+				 atrshmlog_int32_t* const o_counter_write0_discard,
+				 atrshmlog_int32_t* const o_counter_write0_wait,
+				 atrshmlog_int32_t* const o_counter_write0_adaptive,
+				 atrshmlog_int32_t* const o_counter_write0_adaptive_fast,
+				 atrshmlog_int32_t* const o_counter_write0_adaptive_very_fast,
+				 atrshmlog_int32_t* const o_counter_write1,
+				 atrshmlog_int32_t* const o_counter_write1_discard,
+				 atrshmlog_int32_t* const o_counter_write1_wait,
+				 atrshmlog_int32_t* const o_counter_write1_adaptive,
+				 atrshmlog_int32_t* const o_counter_write1_adaptive_fast,
+				 atrshmlog_int32_t* const o_counter_write1_adaptive_very_fast,
+				 atrshmlog_int32_t* const o_counter_write2,
+				 atrshmlog_int32_t* const o_counter_write2_discard,
+				 atrshmlog_int32_t* const o_counter_write2_wait,
+				 atrshmlog_int32_t* const o_counter_write2_adaptive,
+				 atrshmlog_int32_t* const o_counter_write2_adaptive_fast,
+				 atrshmlog_int32_t* const o_counter_write2_adaptive_very_fast
+				 );
 
   /** 
    * \brief We read a buffer and write it to a local memory area. 
@@ -5220,45 +5611,60 @@ extern "C" {
    * - Positiv if the call didnt fetch a buffer. In this case the 
    *   buffer length is 0 and all other values are meaningless.
    */
-  extern atrshmlog_ret_t atrshmlog_read_fetch(volatile const void* i_area,
-					      atrshmlog_int32_t *o_index_buffer,
-					      void *o_target,
-					      atrshmlog_int32_t *o_target_length,
-					      atrshmlog_pid_t* o_pid,
-					      atrshmlog_tid_t* o_tid,
-					      atrshmlog_internal_time_t* o_inittime,
-					      atrshmlog_time_t* o_inittimetsc_before,
-					      atrshmlog_time_t* o_inittimetsc_after,
-					      atrshmlog_internal_time_t* o_lasttime,
-					      atrshmlog_time_t* o_lasttimetsc_before,
-					      atrshmlog_time_t* o_lasttimetsc_after,
-					      atrshmlog_time_t* o_difftimetransfer,
-					      atrshmlog_time_t* o_starttransfer,
-					      atrshmlog_time_t* o_acquiretime,
-					      atrshmlog_int32_t* o_id,
-					      atrshmlog_int32_t* o_number_dispatched,
-					      atrshmlog_int32_t* o_counter_write0,
-					      atrshmlog_int32_t* o_counter_write0_discard,
-					      atrshmlog_int32_t* o_counter_write0_wait,
-					      atrshmlog_int32_t* o_counter_write0_adaptive,
-					      atrshmlog_int32_t* o_counter_write0_adaptive_fast,
-					      atrshmlog_int32_t* o_counter_write0_adaptive_very_fast,
-					      atrshmlog_int32_t* o_counter_write1,
-					      atrshmlog_int32_t* o_counter_write1_discard,
-					      atrshmlog_int32_t* o_counter_write1_wait,
-					      atrshmlog_int32_t* o_counter_write1_adaptive,
-					      atrshmlog_int32_t* o_counter_write1_adaptive_fast,
-					      atrshmlog_int32_t* o_counter_write1_adaptive_very_fast,
-					      atrshmlog_int32_t* o_counter_write2,
-					      atrshmlog_int32_t* o_counter_write2_discard,
-					      atrshmlog_int32_t* o_counter_write2_wait,
-					      atrshmlog_int32_t* o_counter_write2_adaptive,
-					      atrshmlog_int32_t* o_counter_write2_adaptive_fast,
-					      atrshmlog_int32_t* o_counter_write2_adaptive_very_fast
-					      );
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_ret_t atrshmlog_read_fetch(volatile const void* const i_area,
+				       atrshmlog_int32_t * const o_index_buffer,
+				       void * const o_target,
+				       atrshmlog_int32_t * const o_target_length,
+				       atrshmlog_pid_t* const o_pid,
+				       atrshmlog_tid_t* const o_tid,
+				       atrshmlog_internal_time_t* const o_inittime,
+				       atrshmlog_time_t* const o_inittimetsc_before,
+				       atrshmlog_time_t* const o_inittimetsc_after,
+				       atrshmlog_internal_time_t* const o_lasttime,
+				       atrshmlog_time_t* const o_lasttimetsc_before,
+				       atrshmlog_time_t* const o_lasttimetsc_after,
+				       atrshmlog_time_t* const o_difftimetransfer,
+				       atrshmlog_time_t* const o_starttransfer,
+				       atrshmlog_time_t* const o_acquiretime,
+				       atrshmlog_int32_t* const o_id,
+				       atrshmlog_int32_t* const o_number_dispatched,
+				       atrshmlog_int32_t* const o_counter_write0,
+				       atrshmlog_int32_t* const o_counter_write0_discard,
+				       atrshmlog_int32_t* const o_counter_write0_wait,
+				       atrshmlog_int32_t* const o_counter_write0_adaptive,
+				       atrshmlog_int32_t* const o_counter_write0_adaptive_fast,
+				       atrshmlog_int32_t* const o_counter_write0_adaptive_very_fast,
+				       atrshmlog_int32_t* const o_counter_write1,
+				       atrshmlog_int32_t* const o_counter_write1_discard,
+				       atrshmlog_int32_t* const o_counter_write1_wait,
+				       atrshmlog_int32_t* const o_counter_write1_adaptive,
+				       atrshmlog_int32_t* const o_counter_write1_adaptive_fast,
+				       atrshmlog_int32_t* const o_counter_write1_adaptive_very_fast,
+				       atrshmlog_int32_t* const o_counter_write2,
+				       atrshmlog_int32_t* const o_counter_write2_discard,
+				       atrshmlog_int32_t* const o_counter_write2_wait,
+				       atrshmlog_int32_t* const o_counter_write2_adaptive,
+				       atrshmlog_int32_t* const o_counter_write2_adaptive_fast,
+				       atrshmlog_int32_t* const o_counter_write2_adaptive_very_fast
+				       );
+
+  /* end real functions */
 
   /**************************************************************/
-  // inline code 
+  // inline code
+  // We have inline what should be done reallly fast and has no
+  // big impact in footprint.
+  // So we inline the timing and the get clicktime.
+  // We will not inline the write code.
+
+  // Inline code can be a problem. We share this header with c and c++.
+  // And with the language layers.
+  // So if you encounter problems you can first shut off the thing.
+
+  // Inline should be on for speed in the C and C++ world.
+  // If you really sure it is of help you can do it in the layers too.
+  
 
   /*
    * our internal helpers. we need them in the testdrivers 
@@ -5275,7 +5681,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline uint64_t  atrshmlog_get_tsc_par_x86_64_gnu(void)
+  ATRSHMLOG_INLINE uint64_t  atrshmlog_get_tsc_par_x86_64_gnu(void)
   {
     uint32_t hi, lo;
 
@@ -5293,7 +5699,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline uint64_t  atrshmlog_get_tsc_fence_x86_64_gnu(void)
+  ATRSHMLOG_INLINE uint64_t  atrshmlog_get_tsc_fence_x86_64_gnu(void)
   {
     uint32_t hi, lo;
     
@@ -5313,7 +5719,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline  uint64_t atrshmlog_get_tsc_x86_64_gnu(void)
+  ATRSHMLOG_INLINE  uint64_t atrshmlog_get_tsc_x86_64_gnu(void)
   {
     uint32_t hi, lo;
 
@@ -5328,7 +5734,7 @@ extern "C" {
    * \return 
    * Null.
    */
-  inline  uint64_t  atrshmlog_get_tsc_null_x86_64_gnu(void)
+  ATRSHMLOG_INLINE  uint64_t  atrshmlog_get_tsc_null_x86_64_gnu(void)
   {
     return 0;
   }
@@ -5344,7 +5750,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline uint64_t  atrshmlog_get_tsc_par_x86_64_gnu(void)
+  ATRSHMLOG_INLINE uint64_t  atrshmlog_get_tsc_par_x86_64_gnu(void)
   {
     uint32_t hi, lo;
 
@@ -5362,7 +5768,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline uint64_t  atrshmlog_get_tsc_fence_x86_64_gnu(void)
+  ATRSHMLOG_INLINE uint64_t  atrshmlog_get_tsc_fence_x86_64_gnu(void)
   {
     uint32_t hi, lo;
     
@@ -5382,7 +5788,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline  uint64_t atrshmlog_get_tsc_x86_64_gnu(void)
+  ATRSHMLOG_INLINE  uint64_t atrshmlog_get_tsc_x86_64_gnu(void)
   {
     uint32_t hi, lo;
 
@@ -5397,7 +5803,7 @@ extern "C" {
    * \return 
    * Null.
    */
-  inline  uint64_t  atrshmlog_get_tsc_null_x86_64_gnu(void)
+  ATRSHMLOG_INLINE  uint64_t  atrshmlog_get_tsc_null_x86_64_gnu(void)
   {
     return 0;
   }
@@ -5413,7 +5819,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline uint64_t  atrshmlog_get_tsc_par_x86_64_gnu(void)
+  ATRSHMLOG_INLINE uint64_t  atrshmlog_get_tsc_par_x86_64_gnu(void)
   {
     uint32_t hi, lo;
 
@@ -5431,7 +5837,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline uint64_t  atrshmlog_get_tsc_fence_x86_64_gnu(void)
+  ATRSHMLOG_INLINE uint64_t  atrshmlog_get_tsc_fence_x86_64_gnu(void)
   {
     uint32_t hi, lo;
     
@@ -5451,7 +5857,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline  uint64_t atrshmlog_get_tsc_x86_64_gnu(void)
+  ATRSHMLOG_INLINE  uint64_t atrshmlog_get_tsc_x86_64_gnu(void)
   {
     uint32_t hi, lo;
 
@@ -5466,7 +5872,7 @@ extern "C" {
    * \return 
    * Null.
    */
-  inline  uint64_t  atrshmlog_get_tsc_null_x86_64_gnu(void)
+  ATRSHMLOG_INLINE  uint64_t  atrshmlog_get_tsc_null_x86_64_gnu(void)
   {
     return 0;
   }
@@ -5482,7 +5888,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline uint64_t  atrshmlog_get_tsc_par_amd64_clang(void)
+  ATRSHMLOG_INLINE uint64_t  atrshmlog_get_tsc_par_amd64_clang(void)
   {
     uint32_t hi, lo;
 
@@ -5500,7 +5906,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline uint64_t  atrshmlog_get_tsc_fence_amd64_clang(void)
+  ATRSHMLOG_INLINE uint64_t  atrshmlog_get_tsc_fence_amd64_clang(void)
   {
     uint32_t hi, lo;
     
@@ -5520,7 +5926,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline  uint64_t atrshmlog_get_tsc_amd64_clang(void)
+  ATRSHMLOG_INLINE  uint64_t atrshmlog_get_tsc_amd64_clang(void)
   {
     uint32_t hi, lo;
 
@@ -5535,7 +5941,7 @@ extern "C" {
    * \return 
    * Null.
    */
-  inline  uint64_t  atrshmlog_get_tsc_null_amd64_clang(void)
+  ATRSHMLOG_INLINE  uint64_t  atrshmlog_get_tsc_null_amd64_clang(void)
   {
     return 0;
   }
@@ -5551,7 +5957,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline uint64_t  atrshmlog_get_tsc_par_amd64_gnu(void)
+  ATRSHMLOG_INLINE uint64_t  atrshmlog_get_tsc_par_amd64_gnu(void)
   {
     uint32_t hi, lo;
 
@@ -5569,7 +5975,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline uint64_t  atrshmlog_get_tsc_fence_amd64_gnu(void)
+  ATRSHMLOG_INLINE uint64_t  atrshmlog_get_tsc_fence_amd64_gnu(void)
   {
     uint32_t hi, lo;
     
@@ -5589,7 +5995,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline  uint64_t atrshmlog_get_tsc_amd64_gnu(void)
+  ATRSHMLOG_INLINE  uint64_t atrshmlog_get_tsc_amd64_gnu(void)
   {
     uint32_t hi, lo;
 
@@ -5604,7 +6010,7 @@ extern "C" {
    * \return 
    * Null.
    */
-  inline  uint64_t  atrshmlog_get_tsc_null_amd64_gnu(void)
+  ATRSHMLOG_INLINE  uint64_t  atrshmlog_get_tsc_null_amd64_gnu(void)
   {
     return 0;
   }
@@ -5620,7 +6026,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline uint64_t  atrshmlog_get_tsc_par_x86_64_gnu(void)
+  ATRSHMLOG_INLINE uint64_t  atrshmlog_get_tsc_par_x86_64_gnu(void)
   {
     uint32_t hi, lo;
 
@@ -5638,7 +6044,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline uint64_t  atrshmlog_get_tsc_fence_x86_64_gnu(void)
+  ATRSHMLOG_INLINE uint64_t  atrshmlog_get_tsc_fence_x86_64_gnu(void)
   {
     uint32_t hi, lo;
     
@@ -5658,7 +6064,7 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  inline  uint64_t atrshmlog_get_tsc_x86_64_gnu(void)
+  ATRSHMLOG_INLINE  uint64_t atrshmlog_get_tsc_x86_64_gnu(void)
   {
     uint32_t hi, lo;
 
@@ -5673,7 +6079,7 @@ extern "C" {
    * \return 
    * Null.
    */
-  inline  uint64_t  atrshmlog_get_tsc_null_x86_64_gnu(void)
+  ATRSHMLOG_INLINE  uint64_t  atrshmlog_get_tsc_null_x86_64_gnu(void)
   {
     return 0;
   }
@@ -5692,7 +6098,8 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_par_x86_64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_par_x86_64_gnu(void);
 
   /**
    * We use the old cpu version of reading the click counter
@@ -5701,7 +6108,8 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_fence_x86_64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_fence_x86_64_gnu(void);
 
   /**
    * We use the old cpu version of reading the click counter
@@ -5710,14 +6118,16 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_x86_64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_x86_64_gnu(void);
 
   /**
    * The well know dummy 
    * \return 
    * Null.
    */
-  extern uint64_t atrshmlog_get_tsc_null_x86_64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_null_x86_64_gnu(void);
 
 # endif
   // linux 86 64 gnu
@@ -5732,7 +6142,8 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_par_x86_64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_par_x86_64_gnu(void);
 
   /**
    * We use the old cpu version of reading the click counter
@@ -5741,7 +6152,8 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_fence_x86_64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_fence_x86_64_gnu(void);
 
   /**
    * We use the old cpu version of reading the click counter
@@ -5750,14 +6162,16 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_x86_64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_x86_64_gnu(void);
 
   /**
    * The well know dummy 
    * \return 
    * Null.
    */
-  extern uint64_t atrshmlog_get_tsc_null_x86_64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_null_x86_64_gnu(void);
 
 # endif
   // cygwin 86 64 gnu
@@ -5772,7 +6186,8 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_par_x86_64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_par_x86_64_gnu(void);
 
   /**
    * We use the old cpu version of reading the click counter
@@ -5781,7 +6196,8 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_fence_x86_64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_fence_x86_64_gnu(void);
 
   /**
    * We use the old cpu version of reading the click counter
@@ -5790,14 +6206,16 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_x86_64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_x86_64_gnu(void);
 
   /**
    * The well know dummy 
    * \return 
    * Null.
    */
-  extern uint64_t atrshmlog_get_tsc_null_x86_64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_null_x86_64_gnu(void);
 
 # endif
   // mingw 86 64 gnu
@@ -5812,7 +6230,8 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_par_amd64_clang(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_par_amd64_clang(void);
 
   /**
    * We use the old cpu version of reading the click counter
@@ -5821,7 +6240,8 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_fence_amd64_clang(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_fence_amd64_clang(void);
 
   /**
    * We use the old cpu version of reading the click counter
@@ -5830,14 +6250,16 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_amd64_clang(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_amd64_clang(void);
 
   /**
    * The well know dummy 
    * \return 
    * Null.
    */
-  extern uint64_t atrshmlog_get_tsc_null_amd64_clang(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_null_amd64_clang(void);
 
 # endif
   // bsd amd64 clang
@@ -5851,7 +6273,8 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_par_amd64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_par_amd64_gnu(void);
 
   /**
    * We use the old cpu version of reading the click counter
@@ -5860,7 +6283,8 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_fence_amd64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_fence_amd64_gnu(void);
 
   /**
    * We use the old cpu version of reading the click counter
@@ -5869,14 +6293,16 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_amd64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_amd64_gnu(void);
 
   /**
    * The well know dummy 
    * \return 
    * Null.
    */
-  extern uint64_t atrshmlog_get_tsc_null_amd64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_null_amd64_gnu(void);
 
 # endif
   // bsd amd64 clang
@@ -5890,7 +6316,8 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_par_x86_64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_par_x86_64_gnu(void);
 
   /**
    * We use the old cpu version of reading the click counter
@@ -5899,7 +6326,8 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_fence_x86_64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_fence_x86_64_gnu(void);
 
   /**
    * We use the old cpu version of reading the click counter
@@ -5908,14 +6336,16 @@ extern "C" {
    * \return
    * The 64 bit number with the tick count.
    */
-  extern uint64_t atrshmlog_get_tsc_x86_64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_x86_64_gnu(void);
 
   /**
    * The well know dummy 
    * \return 
    * Null.
    */
-  extern uint64_t atrshmlog_get_tsc_null_x86_64_gnu(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  uint64_t atrshmlog_get_tsc_null_x86_64_gnu(void);
 
 # endif
   // SOLARIS 86 64 gnu
@@ -5939,7 +6369,7 @@ extern "C" {
    * \return
    * The 64 bit  click time 
    */
-  inline atrshmlog_time_t  atrshmlog_get_clicktime(void)
+  ATRSHMLOG_INLINE atrshmlog_time_t  atrshmlog_get_clicktime(void)
   {
     if (atrshmlog_clock_id == 3)
       {
@@ -5975,7 +6405,7 @@ extern "C" {
    * \return
    * The 64 bit  click time 
    */
-  inline atrshmlog_time_t  atrshmlog_get_clicktime(void)
+  ATRSHMLOG_INLINE atrshmlog_time_t  atrshmlog_get_clicktime(void)
   {
     if (atrshmlog_clock_id == 3)
       {
@@ -6011,7 +6441,7 @@ extern "C" {
    * \return
    * The 64 bit  click time 
    */
-  inline atrshmlog_time_t  atrshmlog_get_clicktime(void)
+  ATRSHMLOG_INLINE atrshmlog_time_t  atrshmlog_get_clicktime(void)
   {
     if (atrshmlog_clock_id == 3)
       {
@@ -6047,7 +6477,7 @@ extern "C" {
    * \return
    * The 64 bit  click time 
    */
-  inline atrshmlog_time_t  atrshmlog_get_clicktime(void)
+  ATRSHMLOG_INLINE atrshmlog_time_t  atrshmlog_get_clicktime(void)
   {
     if (atrshmlog_clock_id == 3)
       {
@@ -6083,7 +6513,7 @@ extern "C" {
    * \return
    * The 64 bit  click time 
    */
-  inline atrshmlog_time_t  atrshmlog_get_clicktime(void)
+  ATRSHMLOG_INLINE atrshmlog_time_t  atrshmlog_get_clicktime(void)
   {
     if (atrshmlog_clock_id == 3)
       {
@@ -6119,7 +6549,7 @@ extern "C" {
    * \return
    * The 64 bit  click time 
    */
-  inline atrshmlog_time_t  atrshmlog_get_clicktime(void)
+  ATRSHMLOG_INLINE atrshmlog_time_t  atrshmlog_get_clicktime(void)
   {
     if (atrshmlog_clock_id == 3)
       {
@@ -6151,7 +6581,8 @@ extern "C" {
    * \return
    * void
    */
-  extern atrshmlog_time_t atrshmlog_get_clicktime(void);
+  ATRSHMLOG_FUNCTION_DECORATOR  extern
+  atrshmlog_time_t atrshmlog_get_clicktime(void);
   
 #endif
   

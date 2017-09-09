@@ -22,5 +22,5 @@
  *
  * There is an env in attach to set this.
  */
-int atrshmlog_wait_for_slaves = 0;
+_Alignas(128) int atrshmlog_wait_for_slaves = 0;
 

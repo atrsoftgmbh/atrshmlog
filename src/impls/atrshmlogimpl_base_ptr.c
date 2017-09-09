@@ -28,8 +28,8 @@
  *
  * Use it as it where readonly.
  */
-volatile const void* atrshmlog_base_ptr = 0;
+_Alignas(128) volatile const void* atrshmlog_base_ptr = 0;
 
-atomic_int atrshmlog_base_ptr_use_flag = ATOMIC_VAR_INIT(0);
+_Alignas(128) atomic_int atrshmlog_base_ptr_use_flag = ATOMIC_VAR_INIT(0);
 
 

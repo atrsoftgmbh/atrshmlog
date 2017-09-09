@@ -17,7 +17,7 @@
  *
  * test t_strategy_wait_wait_time.c
  */
-atrshmlog_ret_t atrshmlog_set_strategy_wait_wait_time(atrshmlog_int32_t i_nanos)
+atrshmlog_ret_t atrshmlog_set_strategy_wait_wait_time(const atrshmlog_int32_t i_nanos)
 {
   int old = atrshmlog_strategy_wait_wait_time;
 

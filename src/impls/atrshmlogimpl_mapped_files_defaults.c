@@ -10,7 +10,7 @@
 
 #if ATRSHMLOG_PLATFORM_MINGW_X86_64_GCC == 1
 
-const char *atrshmlog_mapped_files[] = {
+_Alignas(128) const char *atrshmlog_mapped_files[] = {
   "dummy",
   "Local\\atrshmlogbuffer1",
   "Local\\atrshmlogbuffer2",

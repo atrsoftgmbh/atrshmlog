@@ -36,7 +36,7 @@
  *
  * test t_set_f_list_slave_count.c
  */
-atrshmlog_ret_t atrshmlog_set_f_list_buffer_slave_count(atrshmlog_int32_t i_count)
+atrshmlog_ret_t atrshmlog_set_f_list_buffer_slave_count(const atrshmlog_int32_t i_count)
 {
   ATRSHMLOGSTAT(atrshmlog_counter_set_slave_count);
   

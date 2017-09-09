@@ -14,7 +14,7 @@
  *
  * test t_get_tid.c
  */
-atrshmlog_tid_t atrshmlog_get_thread_local_tid (volatile const void *i_local)
+atrshmlog_tid_t atrshmlog_get_thread_local_tid (volatile const void * const i_local)
 {
   atrshmlog_g_tl_t *g = (atrshmlog_g_tl_t*) i_local;
 

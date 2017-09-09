@@ -16,22 +16,8 @@
  * \brief We are a test program.
  */
 
-#include "../atrshmlog.h"
+#include "tests.h"
 
-#include "../atrshmlog_internal.h"
-
-/*
- * ------------------------------------------------------------
- */
-
-#include <stdio.h>
-
-
-#define PN(_x) printf( #_x " : %ld :\n", (long) _x)
-
-#define PS(_x) printf( #_x " : %s :\n", _x);
-
-#define PP(_x) printf( #_x " : %p :\n", _x);
 
 int main (int argc, char *argv[])
 {
@@ -57,7 +43,7 @@ int main (int argc, char *argv[])
 
   atrshmlog_area_t * a = ATRSHMLOG_GETAREA;
 
-  PN(atomic_load(&a->ich_habe_fertig));
+  PN(a->ich_habe_fertig);
 
   PN(atrshmlog_logging_process_off_final);
 
@@ -73,7 +59,7 @@ int main (int argc, char *argv[])
 
   PN(atrshmlog_get_logging());
 
-  atomic_store(&a->ich_habe_fertig, 1);
+  a->ich_habe_fertig = 1;
 
   PN(atrshmlog_get_logging());
 

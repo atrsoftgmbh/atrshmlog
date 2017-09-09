@@ -1,6 +1,5 @@
 
-SPEED SPEED SPEED ....
-
+2 0 0 
 ------
 arm
 
@@ -41,7 +40,7 @@ dynamic use of flag files in get_env
 
 ------
 
-support programs in target langues
+support programs in target languages
 
 -----
 
@@ -62,7 +61,7 @@ binaries compiler platforms
 
 ------
 
-1 4 0
+2 1 0
 
 ------
 
@@ -82,3 +81,6 @@ c++ module
 * alle shm vars via helper procedure wie ich habe fertig ..
 
 
+-----
+
+3 0 0 

@@ -15,5 +15,5 @@
  * This is used when we init a buffer.
  * After the first transfer its gone.
  */
-atrshmlog_time_t atrshmlog_transfer_to_shm_time = ATRSHMLOG_TRANSFER_TO_SHM_START_DEFAULT;
+_Alignas(128) atrshmlog_time_t atrshmlog_transfer_to_shm_time = ATRSHMLOG_TRANSFER_TO_SHM_START_DEFAULT;
 

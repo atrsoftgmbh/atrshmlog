@@ -16,22 +16,8 @@
  * \brief We are a test program.
  */
 
-#include "../atrshmlog.h"
+#include "tests.h"
 
-#include "../atrshmlog_internal.h"
-
-/*
- * ------------------------------------------------------------
- */
-
-#include <stdio.h>
-
-
-#define PN(_x) printf( #_x " : %ld :\n", (long) _x)
-
-#define PS(_x) printf( #_x " : %s :\n", _x);
-
-#define PP(_x) printf( #_x " : %p :\n", _x);
 
 int main (int argc, char *argv[])
 {
@@ -91,6 +77,7 @@ int main (int argc, char *argv[])
   PN(atomic_load(&atrshmlog_last_mem_to_shm));
   PN(atrshmlog_logging_process);
   PN(atrshmlog_clock_id);
+  PN(atrshmlog_targetbuffer_max);
   
   PP(atrshmlog_base_ptr);
   PP(atomic_load(&atrshmlog_tps));
@@ -169,6 +156,7 @@ int main (int argc, char *argv[])
   PN(atomic_load(&atrshmlog_last_mem_to_shm));
   PN(atrshmlog_logging_process);
   PN(atrshmlog_clock_id);
+  PN(atrshmlog_targetbuffer_max);
   
   PP(atrshmlog_base_ptr);
 

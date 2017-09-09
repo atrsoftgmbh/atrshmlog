@@ -15,5 +15,5 @@
  *
  * There is an env in attach to set this.
  */
-int atrshmlog_f_list_buffer_slave_wait = ATRSHMLOG_INIT_BUFFER_SLAVE_WAIT;
+_Alignas(128) int atrshmlog_f_list_buffer_slave_wait = ATRSHMLOG_INIT_BUFFER_SLAVE_WAIT;
 

@@ -15,7 +15,7 @@
  *
  * test t_set_slave_wait_nanos.c
  */
-atrshmlog_ret_t atrshmlog_set_f_list_buffer_slave_wait(atrshmlog_int32_t i_wait_nanos)
+atrshmlog_ret_t atrshmlog_set_f_list_buffer_slave_wait(const atrshmlog_int32_t i_wait_nanos)
 {
   ATRSHMLOGSTAT(atrshmlog_counter_set_slave_wait);
 

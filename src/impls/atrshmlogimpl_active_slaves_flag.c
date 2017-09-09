@@ -16,5 +16,5 @@
  * Be carefull to maintain this if you
  * KILL threads.
  */
-atomic_int atrshmlog_f_list_active_slaves = ATOMIC_VAR_INIT(0);
+_Alignas(128) atomic_int atrshmlog_f_list_active_slaves = ATOMIC_VAR_INIT(0);
 

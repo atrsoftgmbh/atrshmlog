@@ -21,5 +21,5 @@
  *
  * There is an env in attach to set this.
  */
-int atrshmlog_prealloc_buffer_count = ATRSHMLOG_INIT_PREALLOC_COUNT;
+_Alignas(128) int atrshmlog_prealloc_buffer_count = ATRSHMLOG_INIT_PREALLOC_COUNT;
 

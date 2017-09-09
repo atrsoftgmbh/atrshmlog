@@ -172,7 +172,7 @@ atrshmlogimpl_get_stats_max_index.c
 atrshmlogimpl_get_strategy.c
 atrshmlogimpl_get_strategy_process.c
 atrshmlogimpl_get_strategy_wait_wait_time.c
-atrshmlogimpl_get_tid.c
+atrshmlogimpl_get_targetbuffer_max.c
 atrshmlogimpl_get_tb_acquiretime.c
 atrshmlogimpl_get_tb_chksum.c
 atrshmlogimpl_get_tb_dispatched.c
@@ -187,10 +187,12 @@ atrshmlogimpl_get_tb_pid.c
 atrshmlogimpl_get_tb_safeguard.c
 atrshmlogimpl_get_tb_size.c
 atrshmlogimpl_get_tb_tid.c
-atrshmlogimpl_get_tl_tid.c
-atrshmlogimpl_get_tl_pid.c
-atrshmlogimpl_get_tl_index.c
+atrshmlogimpl_get_tid.c
 atrshmlogimpl_get_tl_buffer.c
+atrshmlogimpl_get_tl_count.c
+atrshmlogimpl_get_tl_index.c
+atrshmlogimpl_get_tl_pid.c
+atrshmlogimpl_get_tl_tid.c
 atrshmlogimpl_get_version.c
 atrshmlogimpl_get_wait_for_slaves.c
 atrshmlogimpl_id_flag.c
@@ -218,6 +220,7 @@ atrshmlogimpl_prefix_buffer.c
 atrshmlogimpl_read.c
 atrshmlogimpl_read_fetch.c
 atrshmlogimpl_remove_sl.c
+atrshmlogimpl_remove_tbuff.c
 atrshmlogimpl_reuse_thread_buffers.c
 atrshmlogimpl_set_advance_off.c
 atrshmlogimpl_set_advance_on.c
@@ -253,6 +256,7 @@ atrshmlogimpl_set_slave_wait_nanos.c
 atrshmlogimpl_set_strategy.c
 atrshmlogimpl_set_strategy_process.c
 atrshmlogimpl_set_strategy_wait_wait_time.c
+atrshmlogimpl_set_targetbuffer_max.c
 atrshmlogimpl_set_thread_fence.c
 atrshmlogimpl_set_wait_for_slaves_off.c
 atrshmlogimpl_set_wait_for_slaves_on.c
@@ -267,15 +271,13 @@ atrshmlogimpl_stats_buffer.c
 atrshmlogimpl_stop.c
 atrshmlogimpl_stop_slaves_flag.c
 atrshmlogimpl_strategy_flag.c
+atrshmlogimpl_targetbuffer_max.c
 atrshmlogimpl_transfer_mem_to_shm.c
 atrshmlogimpl_transfer_to_shm_time_flag.c
 atrshmlogimpl_turn_logging_off.c
 atrshmlogimpl_turn_slave_off.c
 atrshmlogimpl_verify.c
 atrshmlogimpl_wait_for_slaves_flag.c
-atrshmlogimpl_write0.c
-atrshmlogimpl_write1.c
-atrshmlogimpl_write2.c
 
 DIRECTORY src alreadythere
 shmCPPfiles.mingw
@@ -349,6 +351,7 @@ t_get_thread_fence_6.c
 t_get_thread_fence_7.c
 t_get_thread_fence_8.c
 t_get_thread_fence_9.c
+t_get_thread_local.c
 t_get_tid.c
 t_get_wait_for_slaves.c
 t_init_events.c
@@ -391,6 +394,7 @@ t_set_prealloc_count.c
 t_set_slave_wait_nanos.c
 t_set_strategy.c
 t_set_strategy_process.c
+t_set_targetbuffer_max.c
 t_set_wait_for_slaves.c
 t_slave_to_shm_wait.c
 t_sleep_nanos.c
@@ -406,6 +410,8 @@ t_write_blob.c
 t_write_long.c
 t_writer_flag_detach.c
 t_writer_flag_slave.c
+atrshmlogtest02.C
+atrshmlogtest03.C
 
 DIRECTORY src dbs
 atrshmlogconvert_cass.c

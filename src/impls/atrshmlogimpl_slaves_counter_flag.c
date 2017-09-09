@@ -29,5 +29,5 @@
  *
  * There is an env in attach to set this.
  */
-int atrshmlog_f_list_buffer_slave_count = 1;
+_Alignas(128) int atrshmlog_f_list_buffer_slave_count = 1;
 

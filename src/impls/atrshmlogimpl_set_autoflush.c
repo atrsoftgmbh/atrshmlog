@@ -20,7 +20,7 @@
  *
  * test t_set_autoflush.c
  */
-atrshmlog_ret_t atrshmlog_set_autoflush(int i_flag)
+atrshmlog_ret_t atrshmlog_set_autoflush(const int i_flag)
 {
   atrshmlog_g_tl_t* g  = (atrshmlog_g_tl_t* )atrshmlog_get_thread_locals_adress();
 

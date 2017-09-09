@@ -1,6 +1,7 @@
 
 #include "../atrshmlog_internal.h"
 
+#include <string.h>
 
 /*******************************************************************/
 
@@ -140,7 +141,7 @@ int atrshmlog_transfer_mem_to_shm(const atrshmlog_tbuff_t* restrict i_mem,
 	   */
 	  ATRSHMLOG_SLEEP_NANOS(atrshmlog_slave_to_shm_wait);
 
-	  if (atomic_load_explicit(&a->ich_habe_fertig, memory_order_relaxed) != 0)
+	  if (a->ich_habe_fertig != 0)
 	    {
 	      result =  atrshmlog_error_mem_to_shm_7;
 	      goto ende;

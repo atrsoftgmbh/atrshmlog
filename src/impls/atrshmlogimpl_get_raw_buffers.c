@@ -2,6 +2,8 @@
 
 #include "../atrshmlog_internal.h"
 
+#include <stdlib.h>
+
 /**
  * \file atrshmlogimpl_get_raw_buffers.c
  */

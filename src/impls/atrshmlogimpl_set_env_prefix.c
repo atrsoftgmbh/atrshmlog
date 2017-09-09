@@ -1,6 +1,7 @@
 
 #include "../atrshmlog_internal.h"
 
+#include <string.h>
 
 /******************************************************************/
 
@@ -20,7 +21,7 @@
  *
  * test t_set_env_prefix.c
  */
-void atrshmlog_set_env_prefix (const char*i_prefix)
+void atrshmlog_set_env_prefix (const char* const i_prefix)
 {
   ATRSHMLOGSTAT(atrshmlog_counter_set_env_prefix);
 

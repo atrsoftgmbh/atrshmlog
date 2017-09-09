@@ -16,22 +16,9 @@
  * \brief We are a test program.
  */
 
-#include "../atrshmlog.h"
-
-#include "../atrshmlog_internal.h"
-
-/*
- * ------------------------------------------------------------
- */
-
-#include <stdio.h>
+#include "tests.h"
 
 
-#define PN(_x) printf( #_x " : %ld :\n", (long) _x)
-
-#define PS(_x) printf( #_x " : %s :\n", _x);
-
-#define PP(_x) printf( #_x " : %p :\n", _x);
 
 int main (int argc, char *argv[])
 {

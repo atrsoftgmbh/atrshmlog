@@ -20,5 +20,5 @@
  * We have also a thread switch.
  * The thread starts with this as default.
 */
-int atrshmlog_autoflush = 0;
+_Alignas(128) int atrshmlog_autoflush = 0;
 

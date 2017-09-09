@@ -31,6 +31,10 @@
 // we are the cassandra db
 #include <cassandra.h>
 
+#include <stdlib.h>
+
+#include <stdio.h>
+
 // ... and its a lie. We are the datastax driver, no part
 // of cassandra at all. They use simply the cassandra like it were
 // a build in part - its a lie, they only make the driver...

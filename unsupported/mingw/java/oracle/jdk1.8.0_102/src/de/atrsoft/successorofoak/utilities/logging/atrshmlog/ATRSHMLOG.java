@@ -514,7 +514,27 @@ public class ATRSHMLOG {
 	/**
 	 * The number of calls to @ref  atrshmlog_set_autoflush()
 	 */
-	atrshmlog_counter_set_autoflush (86);
+	atrshmlog_counter_set_autoflush (86),
+
+	/**
+	 * The number of checksum errors in tranfer mem to shm part 1
+	 */
+	atrshmlog_counter_fence_alarm_1 (87),
+
+	/**
+	 * The number of checksum errors in tranfer shm to mem part 2
+	 */
+	atrshmlog_counter_fence_alarm_2 (88),
+
+	/**
+	 * The number of calls to @ref  atrshmlog_detach()
+	 */
+	atrshmlog_counter_detach (89),
+
+	/**
+	 * The number of calls to @ref  atrshmlog_reattach()
+	 */
+	atrshmlog_counter_reattach (90);
 	
     	final int  err_code;
     	
@@ -1020,7 +1040,27 @@ public class ATRSHMLOG {
 	/**
 	 * Pthread specific buffer not available. 
 	 */
-	atrshmlog_error_set_autoflush_1 (-201);
+	atrshmlog_error_set_autoflush_1 (-201),
+
+	/**
+	 * No reattach possible without a successful attach first.
+	 */
+	atrshmlog_error_reattach_1 (-210),
+
+	/**
+	 * Reattach not successful for shm op
+	 */
+	atrshmlog_error_reattach_2 (-211),
+
+	/**
+	 * Reattach or attach already done
+	 */
+	atrshmlog_error_reattach_3 (-212),
+
+	/**
+	 * Parameter array null not allowed
+	 */
+	atrshmlog_error_reattach_4 (-213);
 	
     	final int  err_code;
     	
@@ -1154,6 +1194,99 @@ public class ATRSHMLOG {
      * - Positive if we were already connected.
      */
     public native int attach();
+
+    /** 
+     * We disconnect to the shm buffer.
+     * 
+     * We do no cleanup.
+     *
+     * So if we attach again at another area
+     * we deliver to that area.
+     *
+     * We do not log after we are detached
+     *
+     * @return
+     * - Zero ok
+     * - -1 for error
+     */
+    public native int detach();
+
+    /** 
+     * We reattach to a shm buffer
+     * 
+     * We set the values and do most of the attach
+     *
+     * We can set the values, but we do NOT reinit buffers.
+     * We do NOT restart slaves.
+     * We DO resize the event locks array.
+     *
+     * @param params
+     * int array with 58 values.
+     * - 0 : flag for use id
+     * - 1 : new value for id
+     * - 2 : flag for use count
+     * - 3 : new value for count
+     * - 4 : flag for use atrshmlog_init_buffers_in_advance
+     * - 5 : new value for atrshmlog_init_buffers_in_advance
+     * - 6 : flag for use atrshmlog_buffer_strategy
+     * - 7 : new value for atrshmlog_buffer_strategy
+     * - 8 : flag for use atrshmlog_strategy_wait_wait_time
+     * - 9 : new value for atrshmlog_strategy_wait_wait_time
+     * - 10 : flag for use atrshmlog_delimiter
+     * - 11 : new value for atrshmlog_delimiter
+     * - 12 : flag for use atrshmlog_event_locks_max
+     * - 13 : new value for atrshmlog_event_locks_max
+     * - 14 : flag for use atrshmlog_buffer_infosize
+     * - 15 : new value for atrshmlog_buffer_infosize
+     * - 16 : flag for use atrshmlog_prealloc_buffer_count
+     * - 17 : new value for atrshmlog_prealloc_buffer_count
+     * - 18 : flag for use atrshmlog_f_list_buffer_slave_wait
+     * - 19 : new value for atrshmlog_f_list_buffer_slave_wait
+     * - 20 : flag for use atrshmlog_f_list_buffer_slave_count
+     * - 21 : new value for atrshmlog_f_list_buffer_slave_count
+     * - 22 : flag for use atrshmlog_wait_for_slaves
+     * - 23 : new value for atrshmlog_wait_for_slaves
+     * - 24 : flag for use atrshmlog_clock_id
+     * - 25 : new value for atrshmlog_clock_id
+     * - 26 : flag for use atrshmlog_thread_fence_1
+     * - 27 : new value for atrshmlog_thread_fence_1
+     * - 28 : flag for use atrshmlog_thread_fence_2
+     * - 29 : new value for atrshmlog_thread_fence_2
+     * - 30 : flag for use atrshmlog_thread_fence_3
+     * - 31 : new value for atrshmlog_thread_fence_3
+     * - 32 : flag for use atrshmlog_thread_fence_4
+     * - 33 : new value for atrshmlog_thread_fence_4
+     * - 34 : flag for use atrshmlog_thread_fence_5
+     * - 35 : new value for atrshmlog_thread_fence_5
+     * - 36 : flag for use atrshmlog_thread_fence_6
+     * - 37 : new value for atrshmlog_thread_fence_6
+     * - 38 : flag for use atrshmlog_thread_fence_7
+     * - 39 : new value for atrshmlog_thread_fence_7
+     * - 40 : flag for use atrshmlog_thread_fence_8
+     * - 41 : new value for atrshmlog_thread_fence_8
+     * - 42 : flag for use atrshmlog_thread_fence_9
+     * - 43 : new value for atrshmlog_thread_fence_9
+     * - 44 : flag for use atrshmlog_thread_fence_10
+     * - 45 : new value for atrshmlog_thread_fence_10
+     * - 46 : flag for use atrshmlog_thread_fence_11
+     * - 47 : new value for atrshmlog_thread_fence_11
+     * - 48 : flag for use atrshmlog_thread_fence_12
+     * - 49 : new value for atrshmlog_thread_fence_12
+     * - 50 : flag for use atrshmlog_thread_fence_13
+     * - 51 : new value for atrshmlog_thread_fence_13
+     * - 52 : flag for use atrshmlog_checksum
+     * - 53 : new value for atrshmlog_checksum
+     * - 54 : flag for use logging process off
+     * - 55 : new value for logging process off
+     * - 56 : flag for targetbuffer max
+     * - 57 : new value for targetbuffer max
+     *
+     * @return
+     * - Zero ok
+     * - negative for error
+     * - positiv for minor problem
+     */
+    public native int reattach(int[] params);
 
     /** 
      * Get the click time into the time variable.
@@ -1923,6 +2056,9 @@ public class ATRSHMLOG {
      * This has to be before we start the threads. 
      * This means you have to do it before attach.
      *
+     * If we do it after attach or reattach it sets not only the number.
+     * It also starts and stops slaves to adjust to the delivered number.
+     *
      * @param i_count
      * The new count of slave threads to start.
      *
@@ -2009,6 +2145,36 @@ public class ATRSHMLOG {
      * The old number of nanos the slave had to wait.
      */
     public native int setFListBufferSlaveWait(int i_wait_nanos);
+
+    /**
+     * Get the wait time in nanoseconds for the slave if shm full.
+     *
+     * @return
+     * The number of nanos the slave sleepswhen shm full
+     */
+    public native int getSlaveToShmWait();
+
+
+    /**
+     * Set the wait time for the slaves in nanoseconds.
+     *
+     * @param i_wait_nanos
+     * The number of nanos the slave has to sleep when shm full.
+     * to be done.
+     *
+     * @return
+     * The old number of nanos the slave had to wait
+     */
+    public native int setSlaveToShmWait(int i_wait_nanos);
+    
+    
+    /**
+     * Get the time for mem to shm
+     *
+     * @return
+     * The number of nanos 
+     */
+    public native int getLastMemToShm();
 
     /** 
      * Count of buffers ready for acquire.
@@ -2138,6 +2304,26 @@ public class ATRSHMLOG {
      */
     public native int getStrategyProcess();
 
+    /**
+     * Get the wait time in nanoseconds for the strategy wait
+     *
+     * @return
+     * The number of nanos
+     */
+    public native int getStrategyWaitWaitTtime();
+
+    /**
+     * Set the wait time for the wait strategy
+     *
+     * @param i_wait_nanos
+     * The number of nanos 
+     *
+     * @return
+     * The old number of nanos the slave had to wait
+     */
+    public native int setStrategyWaitWaitTime(int i_wait_nanos);
+
+    
     /**
      * We can start a slave thread with it.
      *
@@ -2460,6 +2646,230 @@ public class ATRSHMLOG {
     public native long getThreadLocalTid (long i_thread_local);
   
     /** 
+     * We get the pid of a thread local
+     *
+     * @param i_thread_local
+     * Pointer to a thread local or NULL
+     *
+     * @return
+     * - 0 if pointer is NULL
+     * - pid
+     */
+    public native long getThreadLocalPid (long i_thread_local);
+
+    /** 
+     * We get the buffer index of a thread local
+     *
+     * @param i_thread_local
+     * Pointer to a thread local or NULL
+     *
+     * @return
+     * - 0 if pointer is NULL
+     * - index
+     */
+    public native int getThreadLocalIndex (long i_thread_local);
+
+    /** 
+     * We get the buffer count of a thread local
+     *
+     * @param i_thread_local
+     * Pointer to a thread local or NULL
+     *
+     * @return
+     * - 0 if pointer is NULL
+     * - count
+     */
+    public native int getThreadLocalCount (long i_thread_local);
+
+    /** 
+     * We get the buffer adress via index of a thread local
+     *
+     * @param i_thread_local
+     * Pointer to a thread local or NULL
+     * @param i_index
+     * Index in the buffer pointer array
+     *
+     * @return
+     * - 0 if pointer is NULL
+     * - buffer pointer
+     */
+    public native long getThreadLocalBuffer (long i_thread_local, int i_index);
+
+    /** 
+     * We get the buffers next cleanup pointer
+     *
+     * @param i_buffer
+     * Pointer to buffer
+     *
+     * @return
+     * Pointer to buffer
+     */
+    public native long getThreadBufferNextCleanup (long i_buffer);
+  
+    /** 
+     * We get the buffers next full pointer
+     *
+     * @param i_buffer
+     * Pointer to buffer
+     *
+     * @return
+     * Pointer to buffer
+     */
+    public native long getThreadBufferNextFull (long i_buffer);
+  
+    /** 
+     * We get the buffers next append pointer
+     *
+     * @param i_buffer
+     * Pointer to buffer
+     *
+     * @return
+     * Pointer to buffer
+     */
+    public native long getThreadBufferNextAppend (long i_buffer);
+  
+    
+    /** 
+     * We get the buffers safeguard
+     *
+     * @param i_buffer
+     * Pointer to buffer
+     *
+     * @return
+     * safeguard
+     */
+    public native int getThreadBufferSafeguard (long i_buffer);
+  
+    /** 
+     * We get the buffers pid
+     *
+     * @param i_buffer
+     * Pointer to buffer
+     *
+     * @return
+     * pid
+     */
+    public native long getThreadBufferPid (long i_buffer);
+  
+    /** 
+     * We get the buffers tid
+     *
+     * @param i_buffer
+     * Pointer to buffer
+     *
+     * @return
+     * tid
+     */
+    public native long getThreadBufferTid (long i_buffer);
+  
+    /** 
+     * We get the buffers acquiretime
+     *
+     * @param i_buffer
+     * Pointer to buffer
+     *
+     * @return
+     * acquiretime
+     */
+    public native long getThreadBufferAcquiretime (long i_buffer);
+    
+    /** 
+     * We get the buffers id
+     *
+     * @param i_buffer
+     * Pointer to buffer
+     *
+     * @return
+     * id
+     */
+    public native int getThreadBufferId (long i_buffer);
+  
+    /** 
+     * We get the buffers chksum
+     *
+     * @param i_buffer
+     * Pointer to buffer
+     *
+     * @return
+     * id
+     */
+    public native int getThreadBufferChksum (long i_buffer);
+  
+    /** 
+     * We get the buffers size
+     *
+     * @param i_buffer
+     * Pointer to buffer
+     *
+     * @return
+     * size
+     */
+    public native int getThreadBufferSize (long i_buffer);
+  
+    /** 
+     * We get the buffers maxsize
+     *
+     * @param i_buffer
+     * Pointer to buffer
+     *
+     * @return
+     * maxsize
+     */
+    public native int getThreadBufferMaxsize (long i_buffer);
+  
+    /** 
+     * We get the buffers dispose flag
+     *
+     * @param i_buffer
+     * Pointer to buffer
+     *
+     * @return
+     * dispose
+     */
+    public native int getThreadBufferDispose (long i_buffer);
+  
+    /** 
+     * We get the buffers dispatched flag
+     *
+     * @param i_buffer
+     * Pointer to buffer
+     *
+     * @return
+     * dispatched
+     */
+    public native int getThreadBufferDispatched (long i_buffer);
+  
+    /** 
+     * We get the buffers payload adress
+     *
+     * @param i_buffer
+     * Pointer to buffer
+     *
+     * @return
+     * Pointer to payload
+     */
+    public native long getThreadBufferPayload (long i_buffer);
+  
+    /**
+     *  The targetbuffer max
+     *
+     * @return
+     * The flag
+     */
+    public native int getTargetbufferMax();
+    
+    /**
+     *  Set the targetbuffer max
+     *
+     * @param i_flag
+     * Our new  flag
+     *
+     * @return 
+     * The old flag
+     */
+    public native int setTargetbufferMax(int i_flag);
+
+    /** 
      *  We remove the save from the list of slaves
      *
      * @param i_slave_local
@@ -2563,6 +2973,30 @@ public class ATRSHMLOG {
      * The flag
      */
     public native int getChecksum();
+
+    /** 
+     * We get the buffer cleanup anchor
+     *
+     * @return
+     * Pointer to buffer
+     */
+    public native long getBufferCleanupAnchor();
+
+    /** 
+     * We get the buffer full anchor
+     *
+     * @return
+     * Pointer to buffer
+     */
+    public native long getBufferFullAnchor();
+
+    /** 
+     * We get the buffer append anchor
+     *
+     * @return
+     * Pointer to buffer
+     */
+    public native long getBufferAppendAnchor();
 
     /** 
      * We verify the buffer is inited and structural ok .

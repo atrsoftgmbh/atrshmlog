@@ -70,6 +70,7 @@ t_get_stats.c
 t_get_strategy.c
 t_get_strategy_process.c
 t_get_tid.c
+t_get_thread_local.c
 t_get_wait_for_slaves.c
 t_init_events.c
 t_init_in_write.c
@@ -106,6 +107,7 @@ t_set_prealloc_count.c
 t_set_slave_wait_nanos.c
 t_set_strategy.c
 t_set_strategy_process.c
+t_set_targetbuffer_max.c
 t_set_wait_for_slaves.c
 t_set_f_list_buffer_slave_run_off.c
 t_sleep_nanos.c

@@ -1,6 +1,9 @@
 
 #include "../atrshmlog_internal.h"
 
+/** All the rest of unix */
+# include <unistd.h>
+
 /************************************************************************/
 
 /**
@@ -34,8 +37,11 @@ int atrshmlog_init_thread_local (atrshmlog_g_tl_t* restrict i_g)
       for (int i = 0; i < ATRSHMLOGTARGETBUFFERMAX; i++)
 	i_g->atrshmlog_targetbuffer_arr[i] = NULL;
 
-      // we clear the index
+      i_g->atrshmlog_buff = 0;
+      
+      // we clear the index and count
       i_g->atrshmlog_targetbuffer_index = 0;
+      i_g->atrshmlog_targetbuffer_count = 0;
       
       atrshmlog_base_ptr_use_flag++;
       

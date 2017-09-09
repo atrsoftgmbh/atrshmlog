@@ -54,7 +54,7 @@
  * - reader output additional to the buffer
  * - converter input
  */
-#define ATRSHMLOGVERSION (1)
+#define ATRSHMLOGVERSION (2)
 
 /**
  * \brief The minor version number.
@@ -63,7 +63,7 @@
  * Can mean additional functions for fences, sleeps etc.
  * Not meaning a simple bugfix.
  */
-#define ATRSHMLOGMINORVERSION (2)
+#define ATRSHMLOGMINORVERSION (0)
 
 /**
  * \brief Patch level version for handling of errors and changes internal .
@@ -250,7 +250,7 @@
 
 
 /** 
- * \brief The number of buffers per thread.
+ * \brief The number of max buffers per thread.
  *
  * You can give more a try. Then you should 
  * have more buffers, too.
@@ -258,7 +258,7 @@
  * but at the price of using more memory.
  * In theory the simple use of 2 should be enough.
  */
-#define ATRSHMLOGTARGETBUFFERMAX (2)
+#define ATRSHMLOGTARGETBUFFERMAX (16)
 
 
 /**************************************************************/
@@ -290,7 +290,7 @@
 # define   _POSIX_C_SOURCE 199309L
 #endif
 
-#define ATRSHMLOGCDECLBINDING /**/
+#define ATRSHMLOGCDECLBINDING 
 
 #endif
 
@@ -322,7 +322,7 @@
 /**
  * The binding of the thread function
  */
-#define ATRSHMLOGCDECLBINDING /**/
+#define ATRSHMLOGCDECLBINDING 
 
 #endif
 
@@ -337,13 +337,13 @@
 
 #if ATRSHMLOG_PLATFORM_BSD_AMD64_CLANG == 1
 
-#define ATRSHMLOGCDECLBINDING /**/
+#define ATRSHMLOGCDECLBINDING 
 
 #endif
 
 #if ATRSHMLOG_PLATFORM_BSD_AMD64_GCC == 1
 
-#define ATRSHMLOGCDECLBINDING /**/
+#define ATRSHMLOGCDECLBINDING 
 
 #endif
 
@@ -357,7 +357,7 @@
 # define _DEFAULT_SOURCE 1
 #endif
 
-#define ATRSHMLOGCDECLBINDING /**/
+#define ATRSHMLOGCDECLBINDING 
 
 #endif
 
@@ -368,18 +368,6 @@
 
 /** Include of types for unix stuff */
 # include <sys/types.h>
-
-/** The ipc stuff */
-# include <sys/ipc.h>
-
-/** The shm stuff */
-# include <sys/shm.h>
-
-/** All the rest of unix */
-# include <unistd.h>
-
-/** File creation masks */
-# include <fcntl.h>
 
 /* the shared memory key in posix */
 
@@ -402,18 +390,6 @@ typedef key_t atrshmlog_key_t;
 /** Include of types for unix stuff */
 # include <sys/types.h>
 
-/** The ipc stuff */
-# include <sys/ipc.h>
-
-/** The shm stuff */
-# include <sys/shm.h>
-
-/** All the rest of unix */
-# include <unistd.h>
-
-/** File creation masks */
-# include <fcntl.h>
-
 /* the shared memory key in posix XSI with cygserver and cygrunsrv */
 
 typedef key_t atrshmlog_key_t;
@@ -434,7 +410,7 @@ typedef key_t atrshmlog_key_t;
 typedef long atrshmlog_key_t;
 
 # if ATRSHMLOG_USE_PTHREAD == 1
-#  include <unistd.h>
+
 # else
 // for windows we need the native sleep
 #  define sleep(__s) Sleep((__s) * 1000)
@@ -451,11 +427,6 @@ typedef long atrshmlog_key_t;
 /** Include of types for unix stuff */
 # include <sys/types.h>
 
-/** The ipc stuff */
-# include <sys/ipc.h>
-
-/** The shm stuff */
-# include <sys/shm.h>
 
 // bsd freebsd 
 #if ATRSHMLOG_FLAVOUR == 3
@@ -464,15 +435,6 @@ typedef long atrshmlog_key_t;
 #endif
 
 // bsd openbsd
-#if ATRSHMLOG_FLAVOUR == 4
-#include <unistd.h>
-#endif
-
-/** All the rest of unix */
-# include <unistd.h>
-
-/** File creation masks */
-# include <fcntl.h>
 
 /* the shared memory key in posix */
 
@@ -489,23 +451,11 @@ typedef key_t atrshmlog_key_t;
 /** Include of types for unix stuff */
 # include <sys/types.h>
 
-/** The ipc stuff */
-# include <sys/ipc.h>
-
-/** The shm stuff */
-# include <sys/shm.h>
-
 // bsd netbsd 
 #if ATRSHMLOG_FLAVOUR == 5
 /** The thread stuff */
 #include <lwp.h>
 #endif
-
-/** All the rest of unix */
-# include <unistd.h>
-
-/** File creation masks */
-# include <fcntl.h>
 
 /* the shared memory key in posix */
 
@@ -524,23 +474,11 @@ typedef key_t atrshmlog_key_t;
 /** Include of types for unix stuff */
 # include <sys/types.h>
 
-/** The ipc stuff */
-# include <sys/ipc.h>
-
-/** The shm stuff */
-# include <sys/shm.h>
-
 // solaris 
 #if ATRSHMLOG_FLAVOUR == 6
 /** The thread stuff */
 #include <thread.h>
 #endif
-
-/** All the rest of unix */
-# include <unistd.h>
-
-/** File creation masks */
-# include <fcntl.h>
 
 /* the shared memory key in posix */
 
@@ -621,25 +559,6 @@ typedef void atrshmlog_thread_ret_t;
 #if ATRSHMLOG_USE_SOLARIS_THR_SELF == 1
 #define ATRSHMLOG_GETTHREADID(__o) ((__o) = (atrshmlog_tid_t)(thr_self()))
 #endif
-
-
-/** File io needed from 1.1.0 on */
-#include <stdio.h>
-
-/** Time meaturement - this includes structs */
-#include <time.h>
-
-/** Low level string ops , namely memcpy */
-#include <string.h>
-
-/** Error code */
-#include <errno.h>
-
-/** Checks for types of chars */
-#include <ctype.h>
-
-/** Standard c stuff for alloc */  
-#include <stdlib.h>
 
 /** 
  * atomics
@@ -869,6 +788,11 @@ typedef void atrshmlog_thread_ret_t;
 #define ATRSHMLOG_CHECKSUM_SUFFIX "_CHECKSUM"
 
 /**
+ * \brief The targetbuffer max count 
+ */
+#define ATRSHMLOG_TARGETBUFFERMAX_SUFFIX "_TARGETBUFFER_MAX"
+
+/**
  * \brief The dispose flag for reuse
  */
 #define ATRSHMLOG_DISPATCH_REUSE (-42)
@@ -908,7 +832,8 @@ typedef void atrshmlog_thread_ret_t;
  * Please dont misuse it.
  * You can corrupt the system by changing it by yourself.
  */
-extern volatile const void* atrshmlog_base_ptr;
+ATRSHMLOG_VARIABLE_DECORATOR extern
+volatile const void* atrshmlog_base_ptr;
 
 /*********************************************************************/
 
@@ -984,7 +909,7 @@ struct atrshmlog_buffer_s {
    * The initial time of the process that wrote the buffer
    */
   atrshmlog_internal_time_t inittime;
-
+  
   /**
    * The click before the real time
    */
@@ -1137,8 +1062,9 @@ struct atrshmlog_buffer_s {
    * So we use that index. We add this to the start and get the first byte
    * for the buffer data.
    */
-   int info;
+  int info;
 
+  char filler1[128];
 };
 
 /** The typedef for the struct */ 
@@ -1171,6 +1097,8 @@ struct atrshmlog_area_s {
    */
   volatile long shmsafeguard; 
 
+  char filler1[128];
+  
   /**
    * The anchor of the available list
    * \li Index -1 is empty, 
@@ -1178,6 +1106,8 @@ struct atrshmlog_area_s {
    */
   atomic_int shma;
   
+  char filler2[128];
+
   /**
    * The anchor of the full list.
    * \li Index -1 is empty,
@@ -1185,6 +1115,8 @@ struct atrshmlog_area_s {
    */
   atomic_int shmf;
 
+  char filler3[128];
+  
   /** The buffer count is ... ro for users   */
   volatile int shmcount; 
 
@@ -1196,7 +1128,7 @@ struct atrshmlog_area_s {
    *
    * rw
    */
-  atomic_int ich_habe_fertig;
+  volatile int ich_habe_fertig;
 
   /** 
    * The info for the reader rw 
@@ -1217,6 +1149,8 @@ struct atrshmlog_area_s {
    * The pid of the writer 
    */
   volatile atrshmlog_pid_t writerpid;
+
+  char filler4[128];
 
   /** 
    * The array of the descriptors for the buffers 
@@ -1576,6 +1510,16 @@ struct atrshmlog_g_tl_s {
   int atrshmlog_targetbuffer_index;
   
 
+  /**
+   * The count of buffers for this thread
+   */
+  int atrshmlog_targetbuffer_count;
+
+  /**
+   * The actual used buffer
+   */
+  atrshmlog_tbuff_t* atrshmlog_buff;
+  
   /**
    * The strategy for this thread.
    */
@@ -2087,12 +2031,18 @@ extern int atrshmlog_detach_mapped_file(void* p);
 extern void atrshmlog_memset_prealloced(void);
 extern atomic_int atrshmlog_last_mem_to_shm;
 extern atomic_int atrshmlog_base_ptr_use_flag;
+ATRSHMLOG_FUNCTION_DECORATOR
 extern void atrshmlog_fill_chunk_head (volatile const void *i_chunk, atrshmlog_chunk_head_t* c);
+ATRSHMLOG_FUNCTION_DECORATOR
 extern atrshmlog_int32_t atrshmlog_int32_change_order(atrshmlog_int32_t v);
+ATRSHMLOG_FUNCTION_DECORATOR
 extern uint64_t atrshmlog_int64_change_order(uint64_t v);
+ATRSHMLOG_FUNCTION_DECORATOR
 extern void atrshmlog_io_head_change_order(atrshmlog_io_head_t* h);
+ATRSHMLOG_FUNCTION_DECORATOR
 extern void atrshmlog_chunk_head_change_order(atrshmlog_chunk_head_t* h);
-
+extern void atrshmlog_remove_tbuff(atrshmlog_g_tl_t* i_g, int i);
+extern int atrshmlog_targetbuffer_max;
 
 /************************************************************************/
 /* helper macros*/
@@ -2124,7 +2074,6 @@ extern void atrshmlog_chunk_head_change_order(atrshmlog_chunk_head_t* h);
  */
 #define ATRSHMLOGSTATLOCAL(__tl,__e)			\
   (++(__tl->__e))
-
 
 /**
  * \brief Create the shm area. 
@@ -2170,10 +2119,9 @@ extern void atrshmlog_chunk_head_change_order(atrshmlog_chunk_head_t* h);
  */
 #define ATRSHMLOG_INIT_SHM_LOG(__a,__c) atrshmlog_init_shm_log((__a),(__c))
 
+
+
 /************************************************************************/
-
-/* the functions */
-
 /** 
  * \brief We create the shm  area.
  *
@@ -2187,8 +2135,9 @@ extern void atrshmlog_chunk_head_change_order(atrshmlog_chunk_head_t* h);
  * - Positive number for the shmid in case of success
  * - negative for error
  */
-extern int atrshmlog_create(const atrshmlog_key_t i_key,
-			    const int i_count);
+ATRSHMLOG_FUNCTION_DECORATOR extern
+int atrshmlog_create(const atrshmlog_key_t i_key,
+		     const int i_count);
 
 /** 
  * \brief We destroy the shm 
@@ -2199,7 +2148,8 @@ extern int atrshmlog_create(const atrshmlog_key_t i_key,
  * \return
  * The error code of the delete
  */
-extern atrshmlog_ret_t atrshmlog_delete(const int i_shmid);
+ATRSHMLOG_FUNCTION_DECORATOR extern
+atrshmlog_ret_t atrshmlog_delete(const int i_shmid);
 
 /** 
  * \brief We have to clean up the locks after error condition 
@@ -2210,7 +2160,8 @@ extern atrshmlog_ret_t atrshmlog_delete(const int i_shmid);
  * \return
  * void
  */
-extern void atrshmlog_cleanup_locks(volatile const void* i_area);
+ATRSHMLOG_FUNCTION_DECORATOR extern
+void atrshmlog_cleanup_locks(volatile const void* const i_area);
 
 /** 
  * \brief We initialize the buffer after it is attached 
@@ -2221,8 +2172,10 @@ extern void atrshmlog_cleanup_locks(volatile const void* i_area);
  * \param i_count_buffers
  * The number of buffers for the shm are.
  */
-extern atrshmlog_ret_t atrshmlog_init_shm_log(volatile const void *i_area,
-					      const atrshmlog_int32_t i_count_buffers);
+ATRSHMLOG_FUNCTION_DECORATOR extern
+atrshmlog_ret_t atrshmlog_init_shm_log(volatile const void * const i_area,
+				       const atrshmlog_int32_t i_count_buffers);
+
 
 #endif
 /* end of file */

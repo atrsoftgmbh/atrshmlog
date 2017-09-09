@@ -14,5 +14,5 @@
  *
  * There is an env in attach to set this.
  */
-int atrshmlog_delimiter = ' ';
+_Alignas(128) int atrshmlog_delimiter = ' ';
 

@@ -13,7 +13,7 @@
  * So we have to do the atomic thing here again.
  *
  */
-atomic_int atrshmlog_counter[100] = {
+_Alignas(128) atomic_int atrshmlog_counter[100] = {
   ATOMIC_VAR_INIT(0),
   ATOMIC_VAR_INIT(0),
   ATOMIC_VAR_INIT(0),

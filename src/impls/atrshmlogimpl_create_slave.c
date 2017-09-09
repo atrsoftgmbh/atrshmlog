@@ -1,6 +1,9 @@
 
 #include "../atrshmlog_internal.h"
 
+#include <string.h>
+
+#include <stdlib.h>
 
 /********************************************************************/
 
@@ -20,7 +23,7 @@
  *
  * But for now its only this last one.
  */
-volatile atrshmlog_tid_t atrshmlog_f_list_buffer_slave;
+_Alignas(128) volatile atrshmlog_tid_t atrshmlog_f_list_buffer_slave;
 
 
 /*******************************************************************/

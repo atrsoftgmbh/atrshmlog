@@ -12,7 +12,7 @@
 /**
  * We need a safe guard against race conditions 
  */
-static atomic_flag atrshmlog_init_in_write_once_flag = ATOMIC_FLAG_INIT;
+_Alignas(128) static atomic_flag atrshmlog_init_in_write_once_flag = ATOMIC_FLAG_INIT;
 
 
 /**
@@ -79,12 +79,11 @@ int atrshmlog_init_in_write(atrshmlog_g_tl_t* g)
    */
   atomic_flag_clear(&atrshmlog_init_in_write_once_flag);
  
-
   /* We reach this only if we are still ok 
    * and we are the initialized flag before 
    * so we now have to make all those buffers and list linking
    */
-  for (int i = 0; i < ATRSHMLOGTARGETBUFFERMAX; i++)
+  for (int i = 0; i < atrshmlog_targetbuffer_max; i++)
     {
       g->atrshmlog_targetbuffer_arr[i] = atrshmlog_acquire_buffer(g);
       
@@ -114,6 +113,12 @@ int atrshmlog_init_in_write(atrshmlog_g_tl_t* g)
   // we start by using first buffer
   g->atrshmlog_targetbuffer_index = 0;
 
+  // all went well... 
+  g->atrshmlog_targetbuffer_count = atrshmlog_targetbuffer_max;
+
+  // we set the actual used buffer to this
+  g->atrshmlog_buff = g->atrshmlog_targetbuffer_arr[0];
+  
   return atrshmlog_error_ok;
 }
 

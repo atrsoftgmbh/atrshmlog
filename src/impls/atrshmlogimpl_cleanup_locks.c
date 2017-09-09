@@ -19,9 +19,12 @@
  * So use a simple program for that
  * see the atrshmlogfinish.c
  *
+ * NOTE:
+ * we break here const deliberately
+ *
  * test t_cleanup_locks.c
  */
-void atrshmlog_cleanup_locks(volatile const void *i_area)
+void atrshmlog_cleanup_locks(volatile const void * const i_area)
 {
   ATRSHMLOGSTAT(atrshmlog_counter_cleanup_locks);
 
@@ -43,7 +46,7 @@ void atrshmlog_cleanup_locks(volatile const void *i_area)
   atrshmlog_buffer_t* b = &(a->logbuffers[0]);
 
   /* From now on the buffer is useless. So we switch to not logging */
-  atomic_store(&a->ich_habe_fertig,  1);
+  a->ich_habe_fertig =  1;
 
   for (int i = 0; i < a->shmcount; i++)
     {

@@ -14,7 +14,7 @@
  *
  * test t_set_autoflush_process.c
  */
-atrshmlog_ret_t atrshmlog_set_autoflush_process(int i_flag)
+atrshmlog_ret_t atrshmlog_set_autoflush_process(const int i_flag)
 {
   ATRSHMLOGSTAT(atrshmlog_counter_set_autoflush);
 

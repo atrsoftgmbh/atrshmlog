@@ -1,6 +1,10 @@
 
 #include "../atrshmlog_internal.h"
 
+#include <string.h>
+
+#include <stdlib.h>
+
 /*******************************************************************/
 
 /**
@@ -17,7 +21,7 @@
  *
  * test t_get_env.c
  */
-const char* atrshmlog_get_env(const char* i_suffix)
+const char* atrshmlog_get_env(const char* const i_suffix)
 {
   char buff[ATRSHMLOG_PREFIX_SIZE] ;
 
