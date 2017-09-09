@@ -28,7 +28,7 @@ atrshmlog_ret_t atrshmlog_get_logging(void)
 
   atrshmlog_area_t * a = ATRSHMLOG_GETAREA;
 
-  if (atomic_load(&a->ich_habe_fertig) != 0)
+  if (a->ich_habe_fertig != 0)
     return atrshmlog_error_get_logging_2;
   
   if (atrshmlog_logging_process_off_final != 0)

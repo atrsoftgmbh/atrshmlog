@@ -846,7 +846,7 @@ static PyAtrshmlog_reattach_RETURN PyAtrshmlog_reattach PyAtrshmlog_reattach_PRO
 {
   atrshmlog_int32_t pi[100];
   
-  for (int i = 0; i < 56; i++)
+  for (int i = 0; i < 58; i++)
     pi[i] = parms[i];
   
   return ATRSHMLOG_REATTACH(pi);
@@ -870,6 +870,11 @@ static PyAtrshmlog_get_thread_local_pid_RETURN PyAtrshmlog_get_thread_local_pid 
 static PyAtrshmlog_get_thread_local_index_RETURN PyAtrshmlog_get_thread_local_index PyAtrshmlog_get_thread_local_index_PROTO
 {
   return ATRSHMLOG_GET_THREAD_LOCAL_INDEX(tl);
+}
+
+static PyAtrshmlog_get_thread_local_count_RETURN PyAtrshmlog_get_thread_local_count PyAtrshmlog_get_thread_local_count_PROTO
+{
+  return ATRSHMLOG_GET_THREAD_LOCAL_COUNT(tl);
 }
 
 static PyAtrshmlog_get_thread_local_buffer_RETURN PyAtrshmlog_get_thread_local_buffer PyAtrshmlog_get_thread_local_buffer_PROTO
@@ -975,6 +980,16 @@ static PyAtrshmlog_get_buffer_full_anchor_RETURN PyAtrshmlog_get_buffer_full_anc
 static PyAtrshmlog_get_buffer_append_anchor_RETURN PyAtrshmlog_get_buffer_append_anchor PyAtrshmlog_get_buffer_append_anchor_PROTO
 {
   return ATRSHMLOG_GET_BUFFER_APPEND_ANCHOR();
+}
+
+static PyAtrshmlog_set_targetbuffer_max_RETURN PyAtrshmlog_set_targetbuffer_max PyAtrshmlog_set_targetbuffer_max_PROTO
+{
+  return ATRSHMLOG_SET_TARGETBUFFER_MAX(flag);
+}
+
+static PyAtrshmlog_get_targetbuffer_max_RETURN PyAtrshmlog_get_targetbuffer_max PyAtrshmlog_get_targetbuffer_max_PROTO
+{
+  return ATRSHMLOG_GET_TARGETBUFFER_MAX();
 }
 
 /************************************************************/
@@ -4373,7 +4388,7 @@ python_atrshmlog_reattach (PyObject *self, PyObject *args)
 
   int p[100];
   
-  if (!PyArg_ParseTuple(args, "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii",
+  if (!PyArg_ParseTuple(args, "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii",
 			&p[0],
 			&p[1],
 			&p[2],
@@ -4429,7 +4444,9 @@ python_atrshmlog_reattach (PyObject *self, PyObject *args)
 			&p[52],
 			&p[53],
 			&p[54],
-			&p[55]))
+			&p[55],
+			&p[56],
+			&p[57]))
     {
       PyErr_SetString(AtrshmlogError, "reattach : fetch failed ("
 		      "flag0,"
@@ -4488,6 +4505,8 @@ python_atrshmlog_reattach (PyObject *self, PyObject *args)
 		      "chk53," 
 		      "flag54," 
 		      "loff55"
+		      "flag56," 
+		      "tarbufmax57"
 		      ")");
       return NULL;
     }
@@ -4580,6 +4599,29 @@ python_atrshmlog_get_thread_local_index(PyObject *self, PyObject *args)
     }
 
   result = PyAtrshmlog_get_thread_local_index(u.a);
+ 
+  return PyLong_FromLong(result);
+}
+
+/*************************************************/
+
+/**
+ * \brief get the count
+ */
+static PyObject*
+python_atrshmlog_get_thread_local_count(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_thread_local_count_RETURN result;
+  
+  u_t u;
+  
+  if (!PyArg_ParseTuple(args, "K", &u.p))
+    {
+      PyErr_SetString(AtrshmlogError, "get_thread_local_count : fetch failed (threadlocal)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_get_thread_local_count(u.a);
  
   return PyLong_FromLong(result);
 }
@@ -5055,6 +5097,42 @@ python_atrshmlog_get_buffer_append_anchor(PyObject *self, PyObject *args)
 
 /******************************************************/
 
+/**
+ * \brief Set the targetbuffer_max
+ */
+static PyObject*
+python_atrshmlog_set_targetbuffer_max(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_set_targetbuffer_max_RETURN result;
+
+  int newsize;
+  
+  if (!PyArg_ParseTuple(args, "i", &newsize))
+    {
+      PyErr_SetString(AtrshmlogError, "set_targetbuffer_max : fetch failed (flag)");
+      return NULL;
+    }
+
+  result = PyAtrshmlog_set_targetbuffer_max(newsize);
+ 
+  return PyLong_FromLong(result);
+}
+
+/******************************************************/
+
+/**
+ * \brief  Get the targetbuffer_max
+ */
+static PyObject*
+python_atrshmlog_get_targetbuffer_max(PyObject *self, PyObject *args)
+{
+  PyAtrshmlog_get_targetbuffer_max_RETURN result;
+
+  result = PyAtrshmlog_get_targetbuffer_max();
+ 
+  return PyLong_FromLong(result);
+}
+
 
 static PyMethodDef AtrshmlogMethods[] = {
     {"gettime",  python_atrshmlog_gettime, METH_VARARGS,
@@ -5414,6 +5492,9 @@ static PyMethodDef AtrshmlogMethods[] = {
     {"get_thread_local_index",  python_atrshmlog_get_thread_local_index, METH_VARARGS,
      "We get the actual buffers index from a thread local."},
 
+    {"get_thread_local_count",  python_atrshmlog_get_thread_local_count, METH_VARARGS,
+     "We get the actual buffers count from a thread local."},
+
     {"get_thread_local_buffer",  python_atrshmlog_get_thread_local_buffer, METH_VARARGS,
      "We get the buffer adress from a thread local."},
 
@@ -5476,6 +5557,12 @@ static PyMethodDef AtrshmlogMethods[] = {
 
     {"get_buffer_append_anchor",  python_atrshmlog_get_buffer_append_anchor, METH_VARARGS,
      "We get the anchor of the append list."},
+
+    {"set_targetbuffer_max",  python_atrshmlog_set_targetbuffer_max, METH_VARARGS,
+     "We set the targetbuffer_max flag for the process."},
+
+    {"get_targetbuffer_max",  python_atrshmlog_get_targetbuffer_max, METH_VARARGS,
+     "We get the targetbuffer_max flag for the process."},
 
 
     {NULL, NULL, 0, NULL}        /* Sentinel */
@@ -5606,6 +5693,7 @@ static void init_core(pyatrshmlog_vfctv_t *PyAtrshmlog_API )
   PyAtrshmlog_API[PyAtrshmlog_get_thread_local_tid_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_local_tid;
   PyAtrshmlog_API[PyAtrshmlog_get_thread_local_pid_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_local_pid;
   PyAtrshmlog_API[PyAtrshmlog_get_thread_local_index_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_local_index;
+  PyAtrshmlog_API[PyAtrshmlog_get_thread_local_count_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_local_count;
   PyAtrshmlog_API[PyAtrshmlog_get_thread_local_buffer_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_local_buffer;
   PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_next_cleanup_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_buffer_next_cleanup;
   PyAtrshmlog_API[PyAtrshmlog_get_thread_buffer_next_full_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_thread_buffer_next_full;
@@ -5627,6 +5715,8 @@ static void init_core(pyatrshmlog_vfctv_t *PyAtrshmlog_API )
   PyAtrshmlog_API[PyAtrshmlog_get_buffer_cleanup_anchor_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_buffer_cleanup_anchor;
   PyAtrshmlog_API[PyAtrshmlog_get_buffer_full_anchor_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_buffer_full_anchor;
   PyAtrshmlog_API[PyAtrshmlog_get_buffer_append_anchor_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_buffer_append_anchor;
+  PyAtrshmlog_API[PyAtrshmlog_set_targetbuffer_max_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_set_targetbuffer_max;
+  PyAtrshmlog_API[PyAtrshmlog_get_targetbuffer_max_NUM] = (pyatrshmlog_vfctv_t)PyAtrshmlog_get_targetbuffer_max;
 }
 
 #if ATRSHMLOG_PYTHON_VERSION == 3

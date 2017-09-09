@@ -32,6 +32,16 @@
 #include <oci.h>
 #include <ocidfn.h>
 
+#include <stdlib.h>
+
+#include <stdio.h>
+
+#include <string.h>
+
+/** All the rest of unix */
+# include <unistd.h>
+
+
 // oracle dynamic bind helper call back functions
 // we need those in the returning clause callbacks.
 // see cdemodr2.c in rdbms/demo of your oralce for how

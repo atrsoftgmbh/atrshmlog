@@ -31,6 +31,14 @@
 
 #endif
 
+#include <stdio.h>
+
+#include <errno.h>
+
+#include <stdlib.h>
+
+/** All the rest of unix */
+# include <unistd.h>
 
 /*
  *------------------------------------------------

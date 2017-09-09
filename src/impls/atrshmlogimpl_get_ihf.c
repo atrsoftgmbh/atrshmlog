@@ -15,7 +15,7 @@
  *
  * test t_get_area_ihf.c
  */
-atrshmlog_ret_t atrshmlog_get_area_ich_habe_fertig(volatile const void* i_area)
+atrshmlog_ret_t atrshmlog_get_area_ich_habe_fertig(volatile const void* const i_area)
 {
   if (i_area && atrshmlog_attach_once != 0)
     return ((volatile atrshmlog_area_t *)i_area)->ich_habe_fertig;

@@ -365,6 +365,9 @@ static VALUE atrshmlogruby_get_thread_local_pid (VALUE obj,
 static VALUE atrshmlogruby_get_thread_local_index (VALUE obj,
 						   VALUE tl);
 
+static VALUE atrshmlogruby_get_thread_local_count (VALUE obj,
+						   VALUE tl);
+
 static VALUE atrshmlogruby_get_thread_local_buffer (VALUE obj,
 						    VALUE tl,
 						    VALUE index);
@@ -427,6 +430,11 @@ static VALUE atrshmlogruby_get_buffer_cleanup_anchor (VALUE obj);
 static VALUE atrshmlogruby_get_buffer_full_anchor (VALUE obj);
 
 static VALUE atrshmlogruby_get_buffer_append_anchor (VALUE obj);
+				
+static VALUE atrshmlogruby_set_targetbuffer_max (VALUE obj,
+						 VALUE flag);
+
+static VALUE atrshmlogruby_get_targetbuffer_max (VALUE obj);
 				
 
 /*******************************************************/
@@ -676,6 +684,8 @@ void Init_atrshmlog(void)
 				
   rb_define_singleton_method(m_atrshmlog, "get_thread_local_index", atrshmlogruby_get_thread_local_index , 1);
 
+  rb_define_singleton_method(m_atrshmlog, "get_thread_local_count", atrshmlogruby_get_thread_local_count , 1);
+
   rb_define_singleton_method(m_atrshmlog, "get_thread_local_buffer", atrshmlogruby_get_thread_local_buffer , 2);
 				
   rb_define_singleton_method(m_atrshmlog, "get_thread_buffer_next_cleanup", atrshmlogruby_get_thread_buffer_next_cleanup , 1);
@@ -718,6 +728,10 @@ void Init_atrshmlog(void)
 
   rb_define_singleton_method(m_atrshmlog, "get_buffer_append_anchor", atrshmlogruby_get_buffer_append_anchor , 0);
 
+  rb_define_singleton_method(m_atrshmlog, "set_targetbuffer_max", atrshmlogruby_set_targetbuffer_max , 1);
+
+  rb_define_singleton_method(m_atrshmlog, "get_targetbuffer_max", atrshmlogruby_get_targetbuffer_max , 0);
+				
   /********************/
 
   static const int ruby_EVENT_POINT_IN_TIME_UCS = ATRSHMLOGPOINTINTIMEp;
@@ -2270,8 +2284,8 @@ VALUE atrshmlogruby_reattach (VALUE obj,
   for (i = 0; i < len; i++)
     pi[i] = NUM2INT(rb_ary_entry(args, i));
 
-  /* version 1.2.0 */
-  for (; i < 56; i++)
+  /* version 2.0.0 */
+  for (; i < 58; i++)
     pi[i] = 0;
   
   int result =  ATRSHMLOG_REATTACH(pi);
@@ -2320,6 +2334,18 @@ VALUE atrshmlogruby_get_thread_local_index (VALUE obj,
   u.l = NUM2ULONG(tl);
   
   int result = ATRSHMLOG_GET_THREAD_LOCAL_INDEX(u.p);
+
+  return INT2NUM(result);
+}
+
+VALUE atrshmlogruby_get_thread_local_count (VALUE obj,
+					    VALUE tl)
+{
+  u_t u;
+  
+  u.l = NUM2ULONG(tl);
+  
+  int result = ATRSHMLOG_GET_THREAD_LOCAL_COUNT(u.p);
 
   return INT2NUM(result);
 }
@@ -2583,4 +2609,21 @@ VALUE atrshmlogruby_get_buffer_append_anchor (VALUE obj)
   return ULONG2NUM(u.l);
 }
 
+VALUE atrshmlogruby_set_targetbuffer_max (VALUE obj,
+					  VALUE flag)
+{
+  int f = NUM2INT(flag);
+  
+  int result = ATRSHMLOG_SET_TARGETBUFFER_MAX(f);
+
+  return INT2NUM(result);
+}
+
+
+VALUE atrshmlogruby_get_targetbuffer_max (VALUE obj)
+{
+  int result = ATRSHMLOG_GET_TARGETBUFFER_MAX();
+
+  return INT2NUM(result);
+}
 /* end of file */

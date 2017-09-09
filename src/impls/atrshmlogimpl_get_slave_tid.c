@@ -14,7 +14,7 @@
  *
  * test t_buffer_slave_proc.c
  */
-atrshmlog_tid_t atrshmlog_get_slave_tid (volatile const void *i_local)
+atrshmlog_tid_t atrshmlog_get_slave_tid (volatile const void * const i_local)
 {
   atrshmlog_slave_t *i = (atrshmlog_slave_t*) i_local;
 

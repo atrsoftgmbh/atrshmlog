@@ -2,6 +2,9 @@
 #include "../atrshmlog_internal.h"
 
 
+/** All the rest of unix */
+# include <unistd.h>
+
 
 /************************************************************/
 
@@ -21,7 +24,7 @@
  *
  * test t_reuse_thread_buffers.c
  */
-atrshmlog_ret_t atrshmlog_reuse_thread_buffers(atrshmlog_tid_t i_tid)
+atrshmlog_ret_t atrshmlog_reuse_thread_buffers(const atrshmlog_tid_t i_tid)
 {
   ATRSHMLOGSTAT(  atrshmlog_counter_reuse_thread_buffers);
   

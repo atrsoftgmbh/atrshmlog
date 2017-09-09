@@ -1,6 +1,7 @@
 
 #include "../atrshmlog_internal.h"
 
+#include <string.h>
 
 /*******************************************************************/
 
@@ -24,41 +25,41 @@
  *
  * test t_read_fetch.c
  */
-atrshmlog_ret_t atrshmlog_read_fetch(volatile const void* i_area,
-				     atrshmlog_int32_t *o_index_buffer,
-				     void *o_target,
-				     atrshmlog_int32_t *o_target_length,
-				     atrshmlog_pid_t* o_pid,
-				     atrshmlog_tid_t* o_tid,
-				     atrshmlog_internal_time_t* o_inittime,
-				     atrshmlog_time_t* o_inittimetsc_before,
-				     atrshmlog_time_t* o_inittimetsc_after,
-				     atrshmlog_internal_time_t* o_lasttime,
-				     atrshmlog_time_t* o_lasttimetsc_before,
-				     atrshmlog_time_t* o_lasttimetsc_after,
-				     atrshmlog_time_t* o_difftimetransfer,
-				     atrshmlog_time_t* o_starttransfer,
-				     atrshmlog_time_t* o_acquiretime,
-				     atrshmlog_int32_t* o_id,
-				     atrshmlog_int32_t* o_number_dispatched,
-				     atrshmlog_int32_t* o_counter_write0,
-				     atrshmlog_int32_t* o_counter_write0_discard,
-				     atrshmlog_int32_t* o_counter_write0_wait,
-				     atrshmlog_int32_t* o_counter_write0_adaptive,
-				     atrshmlog_int32_t* o_counter_write0_adaptive_fast,
-				     atrshmlog_int32_t* o_counter_write0_adaptive_very_fast,
-				     atrshmlog_int32_t* o_counter_write1,
-				     atrshmlog_int32_t* o_counter_write1_discard,
-				     atrshmlog_int32_t* o_counter_write1_wait,
-				     atrshmlog_int32_t* o_counter_write1_adaptive,
-				     atrshmlog_int32_t* o_counter_write1_adaptive_fast,
-				     atrshmlog_int32_t* o_counter_write1_adaptive_very_fast,
-				     atrshmlog_int32_t* o_counter_write2,
-				     atrshmlog_int32_t* o_counter_write2_discard,
-				     atrshmlog_int32_t* o_counter_write2_wait,
-				     atrshmlog_int32_t* o_counter_write2_adaptive,
-				     atrshmlog_int32_t* o_counter_write2_adaptive_fast,
-				     atrshmlog_int32_t* o_counter_write2_adaptive_very_fast
+atrshmlog_ret_t atrshmlog_read_fetch(volatile const void* const i_area,
+				     atrshmlog_int32_t * const o_index_buffer,
+				     void * const o_target,
+				     atrshmlog_int32_t * const o_target_length,
+				     atrshmlog_pid_t* const o_pid,
+				     atrshmlog_tid_t* const o_tid,
+				     atrshmlog_internal_time_t* const o_inittime,
+				     atrshmlog_time_t* const o_inittimetsc_before,
+				     atrshmlog_time_t* const o_inittimetsc_after,
+				     atrshmlog_internal_time_t* const o_lasttime,
+				     atrshmlog_time_t* const o_lasttimetsc_before,
+				     atrshmlog_time_t* const o_lasttimetsc_after,
+				     atrshmlog_time_t* const o_difftimetransfer,
+				     atrshmlog_time_t* const o_starttransfer,
+				     atrshmlog_time_t* const o_acquiretime,
+				     atrshmlog_int32_t* const o_id,
+				     atrshmlog_int32_t* const o_number_dispatched,
+				     atrshmlog_int32_t* const o_counter_write0,
+				     atrshmlog_int32_t* const o_counter_write0_discard,
+				     atrshmlog_int32_t* const o_counter_write0_wait,
+				     atrshmlog_int32_t* const o_counter_write0_adaptive,
+				     atrshmlog_int32_t* const o_counter_write0_adaptive_fast,
+				     atrshmlog_int32_t* const o_counter_write0_adaptive_very_fast,
+				     atrshmlog_int32_t* const o_counter_write1,
+				     atrshmlog_int32_t* const o_counter_write1_discard,
+				     atrshmlog_int32_t* const o_counter_write1_wait,
+				     atrshmlog_int32_t* const o_counter_write1_adaptive,
+				     atrshmlog_int32_t* const o_counter_write1_adaptive_fast,
+				     atrshmlog_int32_t* const o_counter_write1_adaptive_very_fast,
+				     atrshmlog_int32_t* const o_counter_write2,
+				     atrshmlog_int32_t* const o_counter_write2_discard,
+				     atrshmlog_int32_t* const o_counter_write2_wait,
+				     atrshmlog_int32_t* const o_counter_write2_adaptive,
+				     atrshmlog_int32_t* const o_counter_write2_adaptive_fast,
+				     atrshmlog_int32_t* const o_counter_write2_adaptive_very_fast
 				     )
 {
   ATRSHMLOGSTAT(atrshmlog_counter_read_fetch);

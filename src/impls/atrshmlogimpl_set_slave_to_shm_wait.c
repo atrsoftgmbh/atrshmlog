@@ -17,7 +17,7 @@
  *
  * test t_slave_to_shm_wait.c
  */
-atrshmlog_ret_t atrshmlog_set_slave_to_shm_wait(atrshmlog_int32_t i_nanos)
+atrshmlog_ret_t atrshmlog_set_slave_to_shm_wait(const atrshmlog_int32_t i_nanos)
 {
   int old = atrshmlog_slave_to_shm_wait;
 

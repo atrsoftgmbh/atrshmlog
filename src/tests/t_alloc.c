@@ -16,15 +16,7 @@
  * \brief We are a  test program.
  */
 
-#include "../atrshmlog.h"
-
-#include "../atrshmlog_internal.h"
-
-/*
- * ------------------------------------------------------------
- */
-
-#include <stdio.h>
+#include "tests.h"
 
 
 
